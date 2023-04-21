@@ -1,7 +1,8 @@
 <script lang="ts">
     import "./stylesheets/styles.css"
+    import WelcomeScreen from "./components/WelcomeScreen.svelte";
 </script>
 
 <main>
-  <h1>Hello world!</h1>
+    <WelcomeScreen/>
 </main>
