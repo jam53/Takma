@@ -1,6 +1,6 @@
 :root {
-    color: #0f0f0f;
-    background-color: #f6f6f6;
+    --background-color-dark: #282a2e;
+    --background-color-white: #ffffff;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

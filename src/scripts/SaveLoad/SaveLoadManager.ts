@@ -27,14 +27,12 @@ export class SaveLoadManager
          * --- If the user opens Takma for the first time, we will only have the default values and nothing will be overwritten
          * If the user updates to a new version, a part of the default values will be overwritten, and new variables that weren't there in the previous release, will have their default value
          */
-
-        this.loadSaveFileFromDisk();
     }
 
     /**
      * This method loads the save file from the disk. And overwrites the default values inside the "data" object
      */
-    private static async loadSaveFileFromDisk(): Promise<void>
+    public static async loadSaveFileFromDisk(): Promise<void>
     {
         if (await exists(this.saveFilename, {dir: this.saveDirectory})) //Check if the save file exists, before trying to use it to overwrite the default values
         {

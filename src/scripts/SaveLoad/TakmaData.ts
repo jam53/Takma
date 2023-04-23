@@ -7,22 +7,22 @@ import {SaveLoadManager} from "./SaveLoadManager";
 export class TakmaData
 {
     //region data/variables
-    private _appName: string = "Takma"; //The name of the app
+    private _darkTheme: boolean = true; //Whether or not the color theme of the app is set to dark
     //endregion
 
     //region getters and setters
     /**
-     * This function returns the name of the app
+     * This function returns the `true` if the color theme of the app is set to dark, `false` if white theme is selected
      */
-    get appName(): string
+    get darkTheme(): boolean
     {
-        return this._appName;
+        return this._darkTheme;
     }
 
-    // This function sets the name of the app
-    set appName(value: string)
+    // This function sets whether or not the app's selected color theme is dark
+    set darkTheme(value: boolean)
     {
-        this._appName = value;
+        this._darkTheme = value;
         SaveLoadManager.saveToDisk();
     }
     //endregion
