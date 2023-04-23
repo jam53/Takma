@@ -57,7 +57,7 @@ export class SaveLoadManager
             {
                 await writeTextFile("Corrupted_" + this.saveFilename, fileContents, {dir: this.saveDirectory});
                 const savePath: string = await appLocalDataDir() + "Corrupted_" + this.saveFilename;
-                await message("%The save file has been corrupted and will be replaced with a new, functional file. Additionally, a copy of the corrupted file will be created and placed at the following location: " + savePath, { title: "Takma", type: "error" });
+                await message("%%The save file has been corrupted and will be replaced with a new, functional file. Additionally, a copy of the corrupted file will be created and placed at the following location: " + savePath, { title: "Takma", type: "error" });
             }
         }
 

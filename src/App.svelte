@@ -16,6 +16,7 @@
 
 <style>
     :global(body) {
+        transition: 0.4s;
         background-color: var(--background-color-white);
     }
 

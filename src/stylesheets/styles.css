@@ -2,9 +2,21 @@
     --background-color-dark: #282a2e;
     --background-color-white: #ffffff;
 
+    --accent-dark: #3b81f4;
+    --accent-white: #0078be;
+
+    --main-text-dark: #ffffff;
+    --main-text-white: #000000;
+
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+}
+
+*:focus {
+    transition: 0;
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-dark);
 }
