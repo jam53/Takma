@@ -1,13 +1,4 @@
 :root {
-    --background-color-dark: #282a2e;
-    --background-color-white: #ffffff;
-
-    --accent-dark: #3b81f4;
-    --accent-white: #0078be;
-
-    --main-text-dark: #ffffff;
-    --main-text-white: #000000;
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -15,8 +6,19 @@
     -webkit-text-size-adjust: 100%;
 }
 
+html[data-theme="light"] {
+    --background-color: #ffffff;
+    --accent: #0078be;
+    --main-text: #000000;
+}
+
+html[data-theme="dark"] {
+    --background-color: #202020;
+    --accent: #3b81f4;
+    --main-text: #ffffff;
+}
+
 *:focus {
-    transition: 0;
     outline: none;
-    box-shadow: 0 0 0 3px var(--accent-dark);
+    box-shadow: 0 0 0 3px var(--accent);
 }

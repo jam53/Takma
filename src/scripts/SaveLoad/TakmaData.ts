@@ -7,7 +7,7 @@ import {SaveLoadManager} from "./SaveLoadManager";
 export class TakmaData
 {
     //region data/variables
-    private _darkTheme: boolean = true; //Whether or not the color theme of the app is set to dark
+    private _darkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)").matches; //This sets the value based on the user's preferred system color theme. If the os' color theme is set to dark, this will return true. Else it will returns false
     //endregion
 
     //region getters and setters

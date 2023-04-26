@@ -30,19 +30,14 @@
         scale: 105%;
     }
     .createButton {
-        color: var(--main-text-white);
+        color: var(--main-text);
         border: 2px dashed #b4b4b4;
     }
-    :global(body.darkTheme) .createButton {
-        color: var(--main-text-dark);
+    [data-theme='dark'] .createButton {
         border: 2px dashed #4b4b4b;
     }
     .createButton:hover {
-        border: 2px solid var(--accent-white);
-        color: var(--accent-white);
-    }
-    :global(body.darkTheme) .createButton:hover {
-        border: 2px solid var(--accent-dark);
-        color: var(--accent-dark);
+        border: 2px solid var(--accent);
+        color: var(--accent);
     }
 </style>

@@ -2,12 +2,15 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
 
     let darkTheme = SaveLoadManager.getData().darkTheme; //We create an extra variable, rather than using `SaveLoadManager.getData().darkTheme`. Because otherwise the UI of the toggle/button wouldn't update, because Svelte wouldn't know that the state changed
-    darkTheme && window.document.body.classList.add("darkTheme"); //Only add the darkTheme css class when the `darkTheme` variable is true
+    document.documentElement.setAttribute("data-theme", darkTheme ? "dark" : "light"); //This sets the value of the "data-theme" attribute in our html. The values of the color variables we defined in our CSS will be set based on the value of this attribute.
+    //https://lukelowrey.com/css-variable-theme-switcher/
+    document.documentElement.style.setProperty("color-scheme", darkTheme ? "dark" : "light"); //This sets the color theme of the html. We might overwrite certain styleclasses/colors etc. But at least this way some stuff will already be in a white/dark theme depending on the selected color-scheme. For example the background color of the page, buttons, scrollbars etc will be changed depending on the color-scheme property's value
 
     function toggleTheme()
     {
         darkTheme = !darkTheme;
-        window.document.body.classList.toggle("darkTheme");
+        document.documentElement.setAttribute("data-theme", darkTheme ? "dark" : "light");
+        document.documentElement.style.setProperty("color-scheme", darkTheme ? "dark" : "light");
         SaveLoadManager.getData().darkTheme = darkTheme;
     }
 

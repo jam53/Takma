@@ -7,7 +7,7 @@
 
 <main>
 {#await SaveLoadManager.loadSaveFileFromDisk()}
-    <h1>%Loading savefile</h1>
+    <h1>%%Loading savefile</h1>
 {:then _}
     <NavBar/>
     <WelcomeScreen/>
@@ -17,10 +17,6 @@
 <style>
     :global(body) {
         transition: 0.4s;
-        background-color: var(--background-color-white);
-    }
-
-    :global(body.darkTheme) {
-        background-color: var(--background-color-dark);
+        background-color: var(--background-color);
     }
 </style>
