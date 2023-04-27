@@ -72,5 +72,6 @@
 
     button:hover h2 {
         color: transparent;
+        transform: translateY(100%);
     }
 </style>
