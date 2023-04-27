@@ -68,6 +68,7 @@
         transition: 0.3s;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-weight: 400;
     }
 
     button:hover h2 {

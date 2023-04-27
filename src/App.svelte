@@ -1,5 +1,6 @@
 <script lang="ts">
     import "./stylesheets/styles.css"
+    import "./stylesheets/fonts.css"
     import WelcomeScreen from "./components/WelcomeScreen.svelte";
     import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
