@@ -1,4 +1,7 @@
 <script lang="ts">
+    import BoardButton from "./BoardButton.svelte";
+    import "../stylesheets/boardButtons.css"
+
     let boards = ([1, 2, 3, 4, 5]).map(i => {return {title: "board" + i, picture: "https://placekitten.com/512/512"}}); //placeholder
 </script>
 
@@ -6,29 +9,16 @@
     <button class="createButton">%%Create</button>
     <!-- placeholder -->
     {#each boards as board}
-    <button style="background-image: url({board.picture});">{board.title}</button>
+        <BoardButton image={board.picture} title={board.title}/>
     {/each}
 </div>
 
 <style>
-    button {
-        background-color: transparent;
-        transition-duration: 0.4s;
-        border-radius: 5px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 20px;
-        cursor: pointer;
-        width: 15em;
-        height: 8em;
-        margin: 1em;
-        background-size: cover;
-        border: none
+    div {
+        display: flex;
+        flex-flow: wrap;
     }
-    button:hover {
-        scale: 105%;
-    }
+
     .createButton {
         color: var(--main-text);
         border: 2px dashed #b4b4b4;

@@ -1,0 +1,19 @@
+button {
+    background-color: transparent;
+    transition-duration: 0.4s;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    cursor: pointer;
+    width: 15em;
+    height: 8em;
+    margin: 1em;
+    background-size: cover;
+    border: none;
+    padding: 0;
+}
+button:hover {
+    scale: 105%;
+}
