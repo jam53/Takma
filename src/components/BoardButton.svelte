@@ -3,7 +3,7 @@
     export let title: string;
 </script>
 
-<button style="background-image: url({image});">
+<button style="background-image: url({image});" class="boardButtons">
     <div class="bottomBar">
         <h2>
             {title}

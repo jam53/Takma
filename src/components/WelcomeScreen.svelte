@@ -5,7 +5,7 @@
 </script>
 
 <div>
-    <button class="createButton">%%Create</button>
+    <button class="createButton boardButtons">%%Create</button>
     <!-- placeholder -->
     {#each boards as board}
         <BoardButton image={board.picture} title={board.title}/>
@@ -30,7 +30,7 @@
         color: var(--accent);
     }
 
-    :global(button) {
+    :global(.boardButtons) {
         background-color: transparent;
         transition-duration: 0.4s;
         border-radius: 5px;
@@ -46,7 +46,7 @@
         border: none;
         padding: 0;
     }
-    :global(button:hover) {
+    :global(.boardButtons:hover) {
         scale: 105%;
     }
 </style>
