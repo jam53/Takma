@@ -10,15 +10,23 @@ html[data-theme="light"] {
     --background-color: #ffffff;
     --accent: #0078be;
     --main-text: #000000;
+    --border: #EBEBEB;
+
+    --unselected-buton: #939393;
+    --selected-button: #3C3C3C;
 }
 
 html[data-theme="dark"] {
     --background-color: #202020;
     --accent: #3b81f4;
     --main-text: #ffffff;
+    --border: #404040;
+
+    --unselected-buton: #7C7C7C;
+    --selected-button: #D1D1D1;
 }
 
-*:focus-visible {
+*:focus-visible { /*focus-visible makes it so that the style only gets applied when the element is being focused by using the keyboard. Because in the past the focused border would also appear when clicking on an element */
     outline: none;
     box-shadow: 0 0 0 3px var(--accent);
 }

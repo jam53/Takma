@@ -38,9 +38,8 @@
     }
     .tdnn {
         cursor: pointer;
-        margin: 0 auto;
         /*change size of toggle with font-size*/
-        font-size: 15%;
+        font-size: 13%;
         position: relative;
         height: var(--toggleHeight);
         width: var(--toggleWidth);
