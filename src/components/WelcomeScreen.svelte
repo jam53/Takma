@@ -1,6 +1,5 @@
 <script lang="ts">
     import BoardButton from "./BoardButton.svelte";
-    import "../stylesheets/boardButtons.css"
 
     let boards = ([1, 2, 3, 4, 5]).map(i => {return {title: "board" + i, picture: "https://placekitten.com/512/512"}}); //placeholder
 </script>
@@ -29,5 +28,25 @@
     .createButton:hover {
         border: 2px solid var(--accent);
         color: var(--accent);
+    }
+
+    :global(button) {
+        background-color: transparent;
+        transition-duration: 0.4s;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        cursor: pointer;
+        width: 15em;
+        height: 8em;
+        margin: 1em;
+        background-size: cover;
+        border: none;
+        padding: 0;
+    }
+    :global(button:hover) {
+        scale: 105%;
     }
 </style>

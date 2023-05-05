@@ -1,10 +1,6 @@
 <script lang="ts">
-    import "../stylesheets/boardButtons.css"
-
     export let image: string;
     export let title: string;
-
-
 </script>
 
 <button style="background-image: url({image});">
