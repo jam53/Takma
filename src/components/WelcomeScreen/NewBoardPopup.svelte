@@ -22,18 +22,7 @@
     onMount(() =>
     {
         window.addEventListener("keydown", e => (e.key === "Escape") && (showPopup = false));
-        boardTitleInputObject.style.width = (boardTitleInputObject.scrollWidth - boardTitleInputWidthOffset) + "px"; //Set the initial width of the boardTitle input bar
     });
-
-    /**
-     * This function makes the boardTitle input bar wider/less wide when the user types/removes text
-     */
-    function handleResizeBoardTitleInput()
-    {
-        boardTitleInputObject.style.width = "";
-        boardTitleInputObject.style.width = "auto";
-        boardTitleInputObject.style.width = (boardTitleInputObject.scrollWidth - boardTitleInputWidthOffset) + "px";
-    }
 
     //Deze lazyLoaded variabele en lazyLoad variabele worden gebruikt om ervoor te zorgen dat de intro animaite van het NewBoardPopup scherm deftig getoond wordt. Anders freezt de app vanaf dat het wordt aangemaakt, omdat de high rest includedInTakma foto's gerenderd moeten worden. Nu wordt eerst de popup getoond, en pas een seconde later de src van de foto's gezet.
     //Na een seconde zit het dus wel weer frozen, maar op die manier werd de intro animatie + het NewBoardPopup scherm toch direct getoond
@@ -131,7 +120,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                     {#each includedImages as img}
-                        <img on:click={() => selectedImg = img} src={img} style="object-fit: cover"/>
+                        <img on:click={async () => {selectedImg = img; selectedImgObject.setAttribute('src', await getImageUrl(selectedImg));}} src={img} style="object-fit: cover"/>
                     {/each}
                 {:else}
                     <p>%%Loading images...</p>
@@ -139,7 +128,9 @@
             </div>
             <br>
             <h2>%%Board name</h2>
-            <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:input={handleResizeBoardTitleInput}>
+            <div class="inputHolderDiv">
+                <input bind:this={boardTitleInputObject} bind:value={boardTitle}>
+            </div>
             <br>
             <br>
             <br>
@@ -238,12 +229,17 @@
         margin-bottom: 0.5em;
     }
 
+    .inputHolderDiv {
+        display: flex;
+    }
+
     input {
         padding: 1em;
         border-radius: 0.5em;
         border: 2px solid var(--border);
         background: none;
         transition: 0.3s;
+        flex-grow: 1;
     }
 
     input:focus, input:hover {
