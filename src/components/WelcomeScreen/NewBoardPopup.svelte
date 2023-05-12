@@ -120,7 +120,7 @@
             </div>
             <hr/>
             <div class="selectedImgHolder" >
-                <img bind:this={selectedImgObject} use:lazyload data-src={selectedImg}/>
+                <img bind:this={selectedImgObject} use:lazyload data-src={selectedImg} style="object-fit: cover"/>
                 <img src={boardPreview} alt="Board preview"/>
             </div>
             <br>
@@ -131,7 +131,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                     {#each includedImages as img}
-                        <img on:click={() => selectedImg = img} src={img}/>
+                        <img on:click={() => selectedImg = img} src={img} style="object-fit: cover"/>
                     {/each}
                 {:else}
                     <p>%%Loading images...</p>

@@ -18,7 +18,7 @@
     <p>%%Loading...</p>
 {:then imgSrc}
     <button on:click={passClickEventToParent} class="boardButtons">
-        <img src={imgSrc} style="height: inherit; width: inherit; border-radius: inherit; position: absolute"/>
+        <img src={imgSrc}/>
         <div class="bottomBar">
             <h2>
                 {title}
@@ -87,5 +87,13 @@
     button:hover h2 {
         color: transparent;
         transform: translateY(100%);
+    }
+
+    img {
+        height: inherit;
+        width: inherit;
+        border-radius: inherit;
+        position: absolute;
+        object-fit: cover;
     }
 </style>
