@@ -1,4 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
+import type {Board} from "../Board";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -8,6 +9,7 @@ export class TakmaData
 {
     //region data/variables
     private _darkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)").matches; //This sets the value based on the user's preferred system color theme. If the os' color theme is set to dark, this will return true. Else it will returns false
+    private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
     //region getters and setters
@@ -19,11 +21,39 @@ export class TakmaData
         return this._darkTheme;
     }
 
-    // This function sets whether or not the app's selected color theme is dark
+    /**
+     * This function sets whether or not the app's selected color theme is dark
+     */
     set darkTheme(value: boolean)
     {
         this._darkTheme = value;
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * This returns all the user's boards
+     */
+    get boards(): Board[]
+    {
+        return this._boards;
+    }
+
+    /**
+     * Given an id, this will return a board
+     */
+    public getBoard(id: string): Board
+    {
+        return this._boards.find(board => board.id === id);
+    }
+
+    /**
+     * Creates a new Board
+     */
+    public createNewBoard(board: Board): void
+    {
+        this._boards.push(board);
+        SaveLoadManager.saveToDisk();
+    }
+
     //endregion
 }

@@ -1,14 +1,19 @@
 <script lang="ts">
     import BoardButton from "./BoardButton.svelte";
+    import NewBoardPopup from "./NewBoardPopup.svelte";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import type {Board} from "../../scripts/Board";
+    import {selectedBoardId, selectedBoardTitle} from "../../scripts/stores";
 
-    let boards = ([1, 2, 3, 4, 5]).map(i => {return {title: "board" + i, picture: "https://placekitten.com/512/512"}}); //placeholder
+    let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
+
+    let boards: Board[] = SaveLoadManager.getData().boards;
 </script>
 
 <div>
-    <button class="createButton boardButtons">%%Create</button>
-    <!-- placeholder -->
+    <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">%%Create</button>
     {#each boards as board}
-        <BoardButton image={board.picture} title={board.title}/>
+        <BoardButton on:clicked={() => {$selectedBoardTitle = board.title; $selectedBoardId = board.id;}} image={board.backgroundImageUrl} title={board.title}/>
     {/each}
 </div>
 

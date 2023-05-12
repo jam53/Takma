@@ -1,15 +1,31 @@
 <script lang="ts">
+    import {getImageUrl} from "../../scripts/GetImageUrl";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import {createEventDispatcher} from "svelte";
+
     export let image: string;
     export let title: string;
+
+
+    const dispatch = createEventDispatcher(); //Deze createEventDispatcher en de passClickEventToParent stukken code worden gebruikt om het on click event door te geven naar de parent. Die kan wnr er geklikt is dat opvangen door on:clicked={...} te doen
+    function passClickEventToParent()
+    {
+        dispatch("clicked");
+    }
 </script>
 
-<button style="background-image: url({image});" class="boardButtons">
-    <div class="bottomBar">
-        <h2>
-            {title}
-        </h2>
-    </div>
-</button>
+{#await getImageUrl(image, SaveLoadManager.getSaveDirectory())}
+    <p>%%Loading...</p>
+{:then imgSrc}
+    <button on:click={passClickEventToParent} class="boardButtons">
+        <img src={imgSrc} style="height: inherit; width: inherit; border-radius: inherit; position: absolute"/>
+        <div class="bottomBar">
+            <h2>
+                {title}
+            </h2>
+        </div>
+    </button>
+{/await}
 
 <style>
     button {
@@ -65,6 +81,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         font-weight: 400;
+        white-space: nowrap;
     }
 
     button:hover h2 {

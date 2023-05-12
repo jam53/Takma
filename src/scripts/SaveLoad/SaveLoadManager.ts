@@ -90,4 +90,12 @@ export class SaveLoadManager
     {
         return this.data;
     }
+
+    /**
+     * This function returns the directory in which we save data
+     */
+    public static getSaveDirectory(): BaseDirectory
+    {
+        return this.saveDirectory;
+    }
 }

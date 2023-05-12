@@ -1,7 +1,7 @@
 <script lang="ts">
     import takmaIcon from "../../images/Takma.svg"
     import ThemeToggleButton from "./ThemeToggleButton.svelte";
-    import {boardSelected, selectedBoardTitle} from "../../scripts/stores";
+    import {selectedBoardId, selectedBoardTitle} from "../../scripts/stores";
     import SearchBar from "./SearchBar.svelte";
     import Filter from "./Filter.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
@@ -9,9 +9,9 @@
 
 <div class="containingDiv">
     <div class="leftSideContainer">
-        <img on:click={() => $boardSelected = false} src={takmaIcon} alt="Takma logo" class="takmaLogo"/>
-<!--        We zetten de $boardSelected store op false. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
-        {#if !$boardSelected}
+        <img on:click={() => $selectedBoardId = ""} src={takmaIcon} alt="Takma logo" class="takmaLogo"/>
+<!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
+        {#if $selectedBoardId === ""}
             <h1>Takma</h1>
         {:else}
             <input value={$selectedBoardTitle} />
@@ -19,7 +19,7 @@
     </div>
     <div class="rightSideContainer">
         <SearchBar/>
-        {#if $boardSelected}
+        {#if $selectedBoardId !== ""}
             <Filter/>
             <DeleteBoardButton/>
         {/if}

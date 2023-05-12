@@ -9,8 +9,9 @@
 html[data-theme="light"] {
     --background-color: #ffffff;
     --accent: #0078be;
+    --accent-button-hover: #1355be;
     --main-text: #000000;
-    --border: #EBEBEB;
+    --border: #e1e1e1;
 
     --unselected-buton: #939393;
     --selected-button: #3C3C3C;
@@ -19,6 +20,7 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
     --background-color: #202020;
     --accent: #3b81f4;
+    --accent-button-hover: #1c5ecb;
     --main-text: #ffffff;
     --border: #404040;
 
