@@ -13,9 +13,11 @@ export let includedImagesInTakma:string[] = [indigoDahlia];
  */
 export async function getImageUrl(path: string, baseDirectory?: BaseDirectory)
 {
-    if (includedImagesInTakma.includes(path))
+    const getFileName = (path) => path.split("/").pop().split("\\").pop().split(".")[0].replaceAll(",", "_");
+
+    if (includedImagesInTakma.find(img => getFileName(img).includes(getFileName(path))))
     {
-        return path;
+        return includedImagesInTakma.find(img => getFileName(img).includes(getFileName(path)));
     }
 
     let imageData;
