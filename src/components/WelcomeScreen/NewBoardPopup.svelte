@@ -168,6 +168,7 @@
     .titleDiv {
         display: flex;
         gap: 5em;
+        justify-content: space-between;
     }
 
     .titleDiv svg {
