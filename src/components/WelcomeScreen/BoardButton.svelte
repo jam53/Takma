@@ -2,6 +2,7 @@
     import {getImageUrl} from "../../scripts/GetImageUrl";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {createEventDispatcher} from "svelte";
+    import {scale} from "svelte/transition";
 
     export let image: string;
     export let title: string;
@@ -17,7 +18,7 @@
 {#await getImageUrl(image, SaveLoadManager.getSaveDirectory())}
     <p>%%Loading...</p>
 {:then imgSrc}
-    <button on:click={passClickEventToParent} class="boardButtons">
+    <button in:scale on:click={passClickEventToParent} class="boardButtons">
         <img src={imgSrc}/>
         <div class="bottomBar">
             <h2>
