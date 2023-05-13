@@ -27,8 +27,12 @@ export async function getImageUrl(path: string, baseDirectory?: BaseDirectory)
 {
     const getFileName = (path) => path.split("/").pop().split("\\").pop().split(".")[0].replaceAll(",", "_");
 
-    if (includedImagesInTakma.find(img => getFileName(img).includes(getFileName(path))))
-    {
+    if (includedImagesInTakma.find(img => getFileName(path).includes(getFileName(img))))
+    {//This is true in the case the saved picture is one of the pictures included with Takma, and if we are running a dev build or if we are running a release build where the image in question was saved during a release build
+        return includedImagesInTakma.find(img => getFileName(path).includes(getFileName(img)));
+    }
+    else if (includedImagesInTakma.find(img => getFileName(img).includes(getFileName(path))))
+    {//This is true in the case the saved picture is one of the pictures included with Takma, and if we are running a release build where the image in question was saved during a dev build
         return includedImagesInTakma.find(img => getFileName(img).includes(getFileName(path)));
     }
 
