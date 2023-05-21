@@ -67,6 +67,7 @@
 
     button:hover .bottomBar {
         backdrop-filter: blur(0);
+        background-color: transparent;
     }
 
     button:hover {
