@@ -21,7 +21,7 @@
 
     onMount(() =>
     {
-        window.addEventListener("keydown", e => (e.key === "Escape") && (showPopup = false));
+        window.addEventListener("keydown", e => (e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && (showPopup = false));
     });
 
     //Deze lazyLoaded variabele en lazyLoad variabele worden gebruikt om ervoor te zorgen dat de intro animaite van het NewBoardPopup scherm deftig getoond wordt. Anders freezt de app vanaf dat het wordt aangemaakt, omdat de high rest includedInTakma foto's gerenderd moeten worden. Nu wordt eerst de popup getoond, en pas een seconde later de src van de foto's gezet.
