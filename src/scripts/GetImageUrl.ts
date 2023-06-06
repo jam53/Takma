@@ -37,13 +37,21 @@ export async function getImageUrl(path: string, baseDirectory?: BaseDirectory)
     }
 
     let imageData;
-    if (baseDirectory)
+    try
     {
-        imageData = await readBinaryFile(path, { dir: baseDirectory });
+        if (baseDirectory)
+        {
+            imageData = await readBinaryFile(path, { dir: baseDirectory });
+        }
+        else
+        {
+            console.log("Couldn't load image with path: " + path)
+            imageData = await readBinaryFile(path);
+        }
     }
-    else
+    catch
     {
-        imageData = await readBinaryFile(path);
+        imageData = null; //Loading the image file caused an error, so instead we will return an empty image. In the UI this will show HTML's placeholder image icon thingy
     }
 
     const blob = new Blob([imageData], { type: "image" });
