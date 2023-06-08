@@ -120,7 +120,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                     {#each includedImages as img}
-                        <img on:click={async () => {selectedImg = img; selectedImgObject.setAttribute('src', await getImageUrl(selectedImg));}} src={img} style="object-fit: cover"/>
+                        <img on:click={async () => {selectedImg = img; selectedImgObject.setAttribute('src', await getImageUrl(selectedImg));}} src={img} style="object-fit: cover" tabindex="0"/>
+                        <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                     {/each}
                 {:else}
                     <p>%%Loading images...</p>
@@ -215,7 +216,7 @@
         cursor: pointer;
     }
 
-    .includedImagesHolder img:hover, .includedImagesHolder svg:hover {
+    .includedImagesHolder img:hover, .includedImagesHolder img:focus , .includedImagesHolder svg:hover {
         scale: 103%;
         box-shadow: 0 0 0 3px var(--accent);
         stroke: var(--accent);
