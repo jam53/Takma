@@ -4,7 +4,7 @@
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Board} from "../../scripts/Board";
-    import {selectedBoardId, selectedBoardTitle} from "../../scripts/stores";
+    import {selectedBoardId} from "../../scripts/stores";
     import {createDir, readBinaryFile, writeBinaryFile} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/dialog"
     import {getImageUrl, includedImagesInTakma} from "../../scripts/GetImageUrl";
@@ -75,7 +75,6 @@
         board.backgroundImageUrl = savePath;
         SaveLoadManager.getData().createNewBoard(board);
 
-        $selectedBoardTitle = board.title;
         $selectedBoardId = board.id;
         showPopup = false;
     }

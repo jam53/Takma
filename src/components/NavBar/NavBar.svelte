@@ -1,10 +1,11 @@
 <script lang="ts">
     import takmaIcon from "../../images/Takma.svg"
     import ThemeToggleButton from "./ThemeToggleButton.svelte";
-    import {selectedBoardId, selectedBoardTitle} from "../../scripts/stores";
+    import {selectedBoardId} from "../../scripts/stores";
     import SearchBar from "./SearchBar.svelte";
     import Filter from "./Filter.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
 </script>
 
 <div class="containingDiv">
@@ -14,7 +15,7 @@
         {#if $selectedBoardId === ""}
             <h1>Takma</h1>
         {:else}
-            <input value={$selectedBoardTitle} />
+            <input value={SaveLoadManager.getData().getBoard($selectedBoardId).title} on:input={e => SaveLoadManager.getData().setBoardTitle($selectedBoardId, e.target.value)}/>
         {/if}
     </div>
     <div class="rightSideContainer">

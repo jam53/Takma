@@ -55,5 +55,16 @@ export class TakmaData
         SaveLoadManager.saveToDisk();
     }
 
+    /**
+     * Sets a board's title
+     */
+    public setBoardTitle(id: string, title: string): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === id);
+
+        this._boards[indexOfBoard].title = title;
+        SaveLoadManager.saveToDisk();
+    }
+
     //endregion
 }
