@@ -63,7 +63,7 @@
             const imageData = await readBinaryFile(selectedImg);
 
             const filename = crypto.randomUUID() + selectedImg.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
-            savePath = `./pictures/${board.id}`;
+            savePath = `./Files/${board.id}`;
 
             await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
 
