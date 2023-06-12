@@ -129,7 +129,7 @@
             <br>
             <h2>%%Board name</h2>
             <div class="inputHolderDiv">
-                <input bind:this={boardTitleInputObject} bind:value={boardTitle}>
+                <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:keydown={e => e.key === "Enter" && createNewBoard()}>
             </div>
             <br>
             <br>
