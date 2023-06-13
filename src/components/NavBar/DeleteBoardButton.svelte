@@ -1,9 +1,23 @@
 <script lang="ts">
     import {ask} from "@tauri-apps/api/dialog";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {removeDir} from "@tauri-apps/api/fs";
 
     async function handleClick()
     {
         const response: boolean = await ask("%%Are you sure you want to remove this board?");
+
+        if (response === true)
+        {
+            SaveLoadManager.getData().deleteBoard($selectedBoardId);
+
+            const boardToDelete = $selectedBoardId;
+            $selectedBoardId = "";
+            $selectedCardId = "";
+
+            await removeDir(`./Files/${boardToDelete}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
+        }
     }
 </script>
 

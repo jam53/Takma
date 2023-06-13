@@ -66,5 +66,14 @@ export class TakmaData
         SaveLoadManager.saveToDisk();
     }
 
+    /**
+     * Deletes a board
+     */
+    public deleteBoard(id: string): void
+    {
+        this._boards = this.boards.filter(board => board.id != id);
+        SaveLoadManager.saveToDisk();
+    }
+
     //endregion
 }
