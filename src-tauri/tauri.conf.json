@@ -29,6 +29,17 @@
             },
             "path": {
                 "all": true
+            },
+            "window": {
+                "all": false,
+                "close": true,
+                "hide": true,
+                "show": true,
+                "maximize": true,
+                "minimize": true,
+                "unmaximize": true,
+                "unminimize": true,
+                "startDragging": true
             }
         },
         "bundle": {
@@ -53,9 +64,11 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 0.0.0 (115)",
+                "title": "Takma 0.0.0 (122)",
                 "width": 1600,
-                "height": 800
+                "height": 800,
+                "decorations": false,
+                "transparent": true
             }
         ]
     }

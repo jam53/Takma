@@ -36,6 +36,8 @@
         display: flex;
         flex-direction: column;
         justify-content: end;
+
+        position: relative;
     }
 
     .bottomBar {

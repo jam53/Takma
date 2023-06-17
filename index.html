@@ -1,14 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html class="html" lang="en" id="html">
+<head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="Takma.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Takma</title>
-  </head>
+</head>
 
-  <body>
+<body class="body" id="body">
+<div class="wrapper">
+    <div data-tauri-drag-region class="titlebar">
+<!--    `data-tauri-drag-region` allows us to drag the window    -->
+        <div class="titlebar-icon">
+            <img src="./src/images/Takma.svg" alt="Takma icon">
+        </div>
+        <div data-tauri-drag-region class="titlebar-title" id="titlebar-title">Window title</div>
+<!--    `Window title` gets replaced with "Takma x.y.z (build)" in the script tag of this index.html document    -->
+        <div class="titlebar-button" id="titlebar-minimize">
+            <svg width="11" height="2" viewBox="0 0 9 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1H8.5" stroke="black" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div class="titlebar-button" id="titlebar-maximize">
+            <svg width="11" height="11" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.5 0.5H2C1.44772 0.5 1 0.947715 1 1.5V6C1 6.55228 1.44772 7 2 7H6.5C7.05228 7 7.5 6.55228 7.5 6V1.5C7.5 0.947715 7.05228 0.5 6.5 0.5Z" stroke="black"/>
+            </svg>
+        </div>
+        <div class="titlebar-button titlebar-button-close" id="titlebar-close">
+            <svg width="11" height="11" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L4.75 4.75M8.5 8.5L4.75 4.75M4.75 4.75L8.5 1M4.75 4.75L1 8.5" stroke="black" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
-  </body>
+</div>
+</body>
 </html>
+
+<style>
+    .titlebar {
+        height: 30px;
+        border-radius: 8px 8px 0 0;
+        background: var(--background-color);
+        user-select: none;
+        display: flex;
+        position: sticky;
+        justify-content: flex-start;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        transition: 0.4s;
+    }
+
+    .titlebar-icon {
+        display: inline-flex;
+        align-items: center;
+        padding-left: 7px;
+        padding-right: 4px;
+    }
+
+    .titlebar-icon img {
+        max-height: 17px;
+    }
+
+    .titlebar-button svg path {
+        stroke: var(--unselected-buton);
+    }
+
+    .titlebar-button:hover svg path {
+        stroke: var(--main-text);
+    }
+
+    .titlebar-title {
+        user-select: none;
+        display: inline-flex;
+        align-items: center;
+        flex-grow: 1;
+        font-size: 12px;
+    }
+
+    .titlebar-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 27px;
+        transition: 0.3s;
+    }
+
+    .titlebar-button:hover {
+        background: var(--border);
+    }
+
+    .titlebar-button-close:hover {
+        background: rgb(196, 43, 28);
+    }
+
+    .titlebar-button-closeNotMaximized:hover {
+        border-radius: 0 9px 0 0;
+    }
+
+    .html {
+        background-color: rgba(0,0,0,0.01);
+        min-height: 100%;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 8px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--unselected-buton);
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    .body {
+        margin: 0;
+
+        overflow: hidden;
+
+        transition: 0.4s;
+        background-color: var(--background-color);
+
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+
+    .bodyNotMaximized {
+        min-height: calc(100vh - 4px); /* Adjust the value based on your border size */
+        border: 2px solid var(--border);
+        border-radius: 10px;
+    }
+</style>
+
+<script type="module">
+    import { appWindow } from '@tauri-apps/api/window'
+    import tauriConf from "./src-tauri/tauri.conf.json"
+
+    document.getElementById("titlebar-title").textContent = tauriConf.tauri.windows[0].title;
+
+    document.getElementById('titlebar-minimize').addEventListener('click', () => appWindow.minimize());
+    document.getElementById('titlebar-maximize').addEventListener('click', () => appWindow.toggleMaximize());
+    document.getElementById('titlebar-close').addEventListener('click', () => appWindow.close());
+
+    applyMaximizedNotMaximizedStyleClasses();
+    appWindow.onResized(() => applyMaximizedNotMaximizedStyleClasses());
+
+    async function applyMaximizedNotMaximizedStyleClasses()
+    {
+        let isMaximized = await appWindow.isMaximized();
+
+        if (isMaximized)
+        {
+            document.body.classList.remove("bodyNotMaximized");
+            document.getElementById("titlebar-close").classList.remove("titlebar-button-closeNotMaximized");
+        }
+        else
+        {
+            document.body.classList.add("bodyNotMaximized");
+            document.getElementById("titlebar-close").classList.add("titlebar-button-closeNotMaximized");
+        }
+    }
+</script>

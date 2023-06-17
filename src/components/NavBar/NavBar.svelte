@@ -40,6 +40,11 @@
         align-items: center;
         justify-content: space-between;
         height: 2em;
+
+        padding: 0.5em;
+        transition: 0.4s;
+
+        background-color: var(--background-color);
     }
 
     .leftSideContainer {
