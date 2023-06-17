@@ -9,9 +9,4 @@
 
 <div>
     <h1>Board screen</h1>
-    {#await getImageUrl(board.backgroundImageUrl, SaveLoadManager.getSaveDirectory())}
-        <p>%%Loading...</p>
-    {:then bgImg}
-        <img src={bgImg} style="max-height: 80vh; max-width: 100vw"/>
-    {/await}
 </div>

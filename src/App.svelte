@@ -10,6 +10,21 @@
     import {getImageUrl} from "./scripts/GetImageUrl";
     import {appWindow} from "@tauri-apps/api/window";
 
+    /**
+     * Sets the background image of the body to the image of the selected board
+     */
+    selectedBoardId.subscribe(async boardId => {
+        if (boardId != "")
+        {
+            const board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
+            const imgUrl: string = await getImageUrl(board.backgroundImageUrl, SaveLoadManager.getSaveDirectory());
+            document.body.style.backgroundImage = `url('${imgUrl}')`;
+        }
+        else
+        {
+            document.body.style.backgroundImage = "";
+        }
+    });
 
     applyMaximizedNotMaximizedStyleClasses();
     appWindow.onResized(() =>
