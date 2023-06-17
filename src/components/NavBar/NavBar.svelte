@@ -15,7 +15,7 @@
         {#if $selectedBoardId === ""}
             <h1>Takma</h1>
         {:else}
-            <input value={SaveLoadManager.getData().getBoard($selectedBoardId).title} on:input={e => SaveLoadManager.getData().setBoardTitle($selectedBoardId, e.target.value)}/>
+            <input class="boardTitle" value={SaveLoadManager.getData().getBoard($selectedBoardId).title} on:input={e => SaveLoadManager.getData().setBoardTitle($selectedBoardId, e.target.value)}/>
         {/if}
     </div>
     <div class="rightSideContainer">
@@ -52,6 +52,7 @@
         display: flex;
         align-items: center;
         gap: 0.5em;
+        flex-grow: 1;
     }
 
     h1 {
@@ -95,5 +96,16 @@
 
     .settingsImage:hover {
         fill: var(--selected-button);
+    }
+
+    .boardTitle {
+        background-color: transparent;
+        border: none;
+        border-radius: 8px;
+        font-size: 2em;
+        font-family: Nunito, sans-serif;
+        font-weight: bold;
+        padding: 0;
+        flex-grow: 1;
     }
 </style>
