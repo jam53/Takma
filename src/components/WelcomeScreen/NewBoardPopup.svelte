@@ -148,6 +148,7 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(5px);
+        border-radius: 10px;
     }
 
     .popup {
