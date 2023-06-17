@@ -111,8 +111,7 @@
                 <img bind:this={selectedImgObject} use:lazyload data-src={selectedImg} style="object-fit: cover"/>
                 <img src={boardPreview} alt="Board preview"/>
             </div>
-            <br>
-            <h2>%%Background</h2>
+            <h2 style="margin-bottom: 0">%%Background</h2>
             <div class="includedImagesHolder">
                 {#if lazyLoaded}
                     <svg on:click={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
@@ -126,13 +125,10 @@
                     <p>%%Loading images...</p>
                 {/if}
             </div>
-            <br>
             <h2>%%Board name</h2>
             <div class="inputHolderDiv">
                 <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:keydown={e => e.key === "Enter" && createNewBoard()}>
             </div>
-            <br>
-            <br>
             <br>
             <button disabled={!lazyLoaded} on:click={createNewBoard} class="createButton">%%Create</button>
         </div>
@@ -161,8 +157,8 @@
         border-radius: 0.5rem;
         box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
 
-        max-width: 100em;
-        overflow: scroll;
+        max-height: 80vh;
+        overflow: auto;
     }
 
     .popup h1 {
@@ -207,8 +203,13 @@
 
     .includedImagesHolder {
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: column wrap;
         gap: 1em;
+
+        padding: 0.5em;
+        max-height: calc(2 * (3em + 0.5em)); /* Amount of pictures above each other substracted by one * (height of one picture + border radius of pictures) */
+        overflow: auto;
+        white-space: nowrap;
     }
 
     .includedImagesHolder img, .includedImagesHolder svg {
