@@ -160,6 +160,9 @@
         padding: 1rem;
         border-radius: 0.5rem;
         box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3);
+
+        max-width: 100em;
+        overflow: scroll;
     }
 
     .popup h1 {
