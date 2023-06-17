@@ -7,7 +7,7 @@
         - PATCH version when making bugfixes or small improvements.
 
 
-- Edit `package.json`, `tauri.conf.json` and `Cargo.toml` to update the version number
+- Edit `package.json` and `Cargo.toml` to update the version number
 - Run `npm i`
 - Run `npm run tauri build`
 - The executable will be placed in: `src-tauri/target/release/Takma.exe`

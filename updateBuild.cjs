@@ -36,7 +36,10 @@ fs.readJson(packageJsonPath, (err, packageData) =>
                 return;
             }
 
-            // Update the windows.title property
+            // Update the package.version property
+            tauriConfData.package.version = version;
+
+            // Update the tauri.windows.title property
             tauriConfData.tauri.windows[0].title = `${name} ${version} (${updatedBuildNumber})`;
 
             // Write the updated tauri.conf.json
