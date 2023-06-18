@@ -75,5 +75,17 @@ export class TakmaData
         SaveLoadManager.saveToDisk();
     }
 
+    /**
+     * Sets the background image of a board
+     * @param id id of the board whose background image will be changed
+     * @param pathToImage
+     */
+    public setBoardBackgroundImage(id: string, pathToImage: string): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === id);
+
+        this._boards[indexOfBoard].backgroundImagePath = pathToImage;
+        SaveLoadManager.saveToDisk();
+    }
     //endregion
 }

@@ -13,7 +13,7 @@
 <div>
     <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">%%Create</button>
     {#each boards as board}
-        <BoardButton on:clicked={() => {$selectedBoardId = board.id;}} image={board.backgroundImageUrl} title={board.title}/>
+        <BoardButton on:clicked={() => {$selectedBoardId = board.id;}} image={board.backgroundImagePath} title={board.title}/>
     {/each}
 </div>
 

@@ -17,7 +17,7 @@
         if (boardId != "")
         {
             const board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
-            const imgUrl: string = await getImageUrl(board.backgroundImageUrl, SaveLoadManager.getSaveDirectory());
+            const imgUrl: string = await getImageUrl(board.backgroundImagePath, SaveLoadManager.getSaveDirectory());
             document.body.style.backgroundImage = `url('${imgUrl}')`;
         }
         else
@@ -52,13 +52,14 @@
     <h1>%%Loading savefile</h1>
 {:then _}
     <NavBar/>
-    <div class="scroll-container">
         {#if $selectedBoardId === ""}
-            <WelcomeScreen/>
+            <div class="scroll-container">
+            <!--Indien we op het boardscreen ook willen kunnen scrollen, dan zetten we die best ook in deze div. Maar dat willen we niet, we willen alleen kunnen scrollen in de lijsten. Niet het volledige boardscreen zelf-->
+                <WelcomeScreen/>
+            </div>
         {:else}
             <BoardScreen/>
         {/if}
-    </div>
 {/await}
 </main>
 

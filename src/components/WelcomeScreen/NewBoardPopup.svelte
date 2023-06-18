@@ -8,10 +8,10 @@
     import {createDir, readBinaryFile, writeBinaryFile} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/dialog"
     import {getImageUrl, includedImagesInTakma} from "../../scripts/GetImageUrl";
+    import {imageExtensions, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
 
     let showPopup = true;
-    let includedImages:string[] = includedImagesInTakma;
-    let selectedImg:string = includedImages[0]; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord
+    let selectedImg:string = includedImagesInTakma[0]; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
 
     let boardTitle = "";
     let boardTitleInputObject;
@@ -49,30 +49,21 @@
         let board: Board = {
             id: crypto.randomUUID(),
             creationDate: Date.now(),
-            backgroundImageUrl: "",
+            backgroundImagePath: "",
             title: boardTitle
         };
 
         let savePath;
-        if (includedImages.includes(selectedImg))
+        if (includedImagesInTakma.includes(selectedImg))
         {//True als het een foto is die samen met Takma wordt geleverd
             savePath = selectedImg;
         }
         else
         {//Anders is het een foto die de gebruiker heeft gekozen
-            const imageData = await readBinaryFile(selectedImg);
-
-            const filename = crypto.randomUUID() + selectedImg.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
-            savePath = `./Files/${board.id}`;
-
-            await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
-
-            savePath += "/" + filename;
-
-            await writeBinaryFile(savePath, imageData, {dir: SaveLoadManager.getSaveDirectory()});
+            savePath = await saveFilePathToDisk(selectedImg, $selectedBoardId)
         }
 
-        board.backgroundImageUrl = savePath;
+        board.backgroundImagePath = savePath;
         SaveLoadManager.getData().createNewBoard(board);
 
         $selectedBoardId = board.id;
@@ -84,8 +75,8 @@
         const selected = await open({
             multiple: false,
             filters: [{
-                name: 'Image',
-                extensions: []
+                name: '%%Image',
+                extensions: imageExtensions
             }]
         });
         if (selected !== null && typeof(selected) === "string")
@@ -117,7 +108,7 @@
                     <svg on:click={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                    {#each includedImages as img}
+                    {#each includedImagesInTakma as img}
                         <img on:click={async () => {selectedImg = img; selectedImgObject.setAttribute('src', await getImageUrl(selectedImg));}} src={img} style="object-fit: cover" tabindex="0"/>
                         <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                     {/each}
