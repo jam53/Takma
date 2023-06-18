@@ -55,7 +55,7 @@
     }
 </script>
 
-<div class="container" on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
+<div class="container" title="%%To change the background image, simply right-click or drag and drop a new image here." on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault>
         <h1>Board screen</h1>
     </div>
