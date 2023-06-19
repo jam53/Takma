@@ -161,6 +161,7 @@
         display: flex;
         gap: 5em;
         justify-content: space-between;
+        align-items: center;    
     }
 
     .titleDiv svg {
