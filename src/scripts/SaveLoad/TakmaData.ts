@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board} from "../Board";
+import type {Board, List} from "../Board";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -85,6 +85,26 @@ export class TakmaData
         const indexOfBoard = this._boards.findIndex(board => board.id === id);
 
         this._boards[indexOfBoard].backgroundImagePath = pathToImage;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Creates a new List within a board
+     * @param boardId id of the board to which the list should be added
+     * @param listTitle title of the list to be added
+     */
+    public createNewList(boardId: string, listTitle: string): void
+    {
+
+        let list: List = {
+            id: crypto.randomUUID(),
+            creationDate: Date.now(),
+            title: listTitle,
+        };
+
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        this._boards[indexOfBoard].lists.push(list);
+
         SaveLoadManager.saveToDisk();
     }
     //endregion

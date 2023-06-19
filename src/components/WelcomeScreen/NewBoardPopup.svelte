@@ -50,7 +50,8 @@
             id: crypto.randomUUID(),
             creationDate: Date.now(),
             backgroundImagePath: "",
-            title: boardTitle
+            title: boardTitle,
+            lists: []
         };
 
         let savePath;

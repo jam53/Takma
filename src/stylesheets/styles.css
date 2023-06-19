@@ -8,6 +8,7 @@
 
 html[data-theme="light"] {
     --background-color: #ffffff;
+    --background-color-rgb-values: 255, 255, 255;
     --accent: #0078be;
     --accent-button-hover: #1355be;
     --main-text: #000000;
@@ -19,6 +20,7 @@ html[data-theme="light"] {
 
 html[data-theme="dark"] {
     --background-color: #202020;
+    --background-color-rgb-values: 32, 32, 32;
     --accent: #3b81f4;
     --accent-button-hover: #1c5ecb;
     --main-text: #ffffff;
