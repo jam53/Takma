@@ -69,7 +69,7 @@
 
     let createNewListDiv;
     let newListTitleInput;
-    let newListTitleValue: string;
+    let newListTitleValue = "";
     function createNewList()
     {
         SaveLoadManager.getData().createNewList($selectedBoardId, newListTitleValue);
