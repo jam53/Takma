@@ -107,5 +107,15 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Given an id of a board and an id of a list within that board, this function will return a List
+     */
+    public getList(boardId: string, listId: string): List
+    {
+        let board:Board = this._boards.find(board => board.id === boardId);
+
+        return board.lists.find(list => list.id === listId);
+    }
     //endregion
 }
