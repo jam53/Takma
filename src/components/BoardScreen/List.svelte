@@ -36,7 +36,7 @@
 
 <style>
     .list {
-        background-color: rgba(var(--background-color-rgb-values), 0.2);
+        background-color: rgba(var(--background-color-rgb-values), 0.3);
         backdrop-filter: blur(10px);
         border-radius: 4px;
         padding: 0.75em 0.5em;
@@ -44,5 +44,6 @@
         color: var(--main-text);
         width: 16em;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
+        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 </style>

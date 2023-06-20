@@ -12,6 +12,7 @@ html[data-theme="light"] {
     --accent: #0078be;
     --accent-button-hover: #1355be;
     --main-text: #000000;
+    --main-text-rgb-values: 0, 0, 0;
     --border: #e1e1e1;
 
     --unselected-buton: #939393;
@@ -24,6 +25,7 @@ html[data-theme="dark"] {
     --accent: #3b81f4;
     --accent-button-hover: #1c5ecb;
     --main-text: #ffffff;
+    --main-text-rgb-values: 255, 255, 255;
     --border: #404040;
 
     --unselected-buton: #7C7C7C;
