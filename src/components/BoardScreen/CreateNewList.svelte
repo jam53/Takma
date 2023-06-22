@@ -1,6 +1,6 @@
 <script lang="ts">
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {slide} from "svelte/transition";
@@ -13,6 +13,15 @@
             if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewListDiv.classList.contains("newListCreating"))
             {// key(s) to close pressed && create new list div styleclass is applied i.e. we are "creating"/entering a new list title
                 closeCreateNewList();
+            }
+            else if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && !createNewListDiv.classList.contains("newListCreating") && $selectedCardId != "")
+            {// key(s) to close pressed && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. Otherwise we would want to close that in the if above, rather than closing the card(which is what this if does by setting `selectedCardId to ""`.
+                $selectedCardId = "";
+            }
+            else if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && !createNewListDiv.classList.contains("newListCreating") && $selectedCardId === "")
+            {// key(s) to close pressed && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. Otherwise we would want to close that in the if above, rather than closing the entire board (which is what this if does by setting `$selectedBoardId to ""`. We finally also check if there isn't a card selected, because in that case we would like to close the card, instead of the board
+                $selectedBoardId = "";
+                document.body.style.backgroundImage = "";
             }
         });
     });

@@ -18,7 +18,13 @@
         {
             const board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
             const imgUrl: string = await getImageUrl(board.backgroundImagePath, SaveLoadManager.getSaveDirectory());
-            document.body.style.backgroundImage = `url('${imgUrl}')`;
+
+            // Set the background image only if the current boardId hasn't changed during the image loading process.
+            //Otherwise it's possible that the user opened a board and quickly went back to the welcome screen. In that case we would set the backgroundImage to "" in the `else` below. And then once the backgroundImage of the previous subscribe event loaded in, we would set the background image. Causing us to see the backgroundImage of the board on the welcomescreen. We avoid this by checking whether or not the board is still selected once the image has actually been loaded.
+            if (boardId === $selectedBoardId)
+            {
+                document.body.style.backgroundImage = `url('${imgUrl}')`;
+            }
         }
         else
         {
