@@ -11,5 +11,14 @@ export interface List
 {
     id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
     creationDate: number, //in milliseconds unix time
-    title: string
+    title: string,
+    cards: Card[]
+}
+
+export interface Card
+{
+    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, //in milliseconds unix time
+    title: string,
+    description: string
 }

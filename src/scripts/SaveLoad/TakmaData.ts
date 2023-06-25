@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, List} from "../Board";
+import type {Board, Card, List} from "../Board";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -100,6 +100,7 @@ export class TakmaData
             id: crypto.randomUUID(),
             creationDate: Date.now(),
             title: listTitle,
+            cards: []
         };
 
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
@@ -113,9 +114,50 @@ export class TakmaData
      */
     public getList(boardId: string, listId: string): List
     {
-        let board:Board = this._boards.find(board => board.id === boardId);
+        let board: Board = this._boards.find(board => board.id === boardId);
+        let list: List = board.lists.find(list => list.id === listId);
 
-        return board.lists.find(list => list.id === listId);
+        let emptyList: List = {
+            id: "empty list",
+            creationDate: 0,
+            title: "",
+            cards: []
+        };
+
+        return list ? list : emptyList;
+    }
+
+    /**
+     * Given an id of a board and a list of `List`'s this function sets a board's lists
+     */
+    public setLists(boardId: string, lists: List[]): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        this._boards[indexOfBoard].lists = lists;
+
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Creates a new Card within a list, in a board
+     * @param cardTitle title of the card to be added
+     * @param boardId id of the board that contains the list
+     * @param listId id of the list to which the card should be added
+     */
+    public createNewCard(cardTitle: string, boardId: string, listId: string): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
+
+        let card: Card = {
+            id: crypto.randomUUID(),
+            creationDate: Date.now(),
+            title: cardTitle,
+            description: ""
+        };
+
+        this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
+        SaveLoadManager.saveToDisk();
     }
     //endregion
 }

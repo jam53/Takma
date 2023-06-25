@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "0.0.0",
-    "build": 147,
+    "build": 156,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -12,7 +12,8 @@
         "tauri": "node updateBuild.cjs && tauri"
     },
     "dependencies": {
-        "@tauri-apps/api": "^1.4.0"
+        "@tauri-apps/api": "^1.4.0",
+        "svelte-dnd-action": "^0.9.22"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.0.0",

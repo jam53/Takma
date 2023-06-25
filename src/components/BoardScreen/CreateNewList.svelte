@@ -5,7 +5,7 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import {slide} from "svelte/transition";
 
-    export let refreshBoardFunction; //We call this function for example when we add a new list to the board. We do so by passing this lambda function to the CreateNewList component, which then calls this lambda upon making a new list. When we change a member variable of the `board` variable (by adding a new list e.g.), Svelte thinks the board variable remained unchanged and therefore doesn't update the UI. If we call this lambda function Svelte sees that the value of `board` changed and will render the new list.
+    export let refreshListsFunction; //We call this function when we add a new list to the board. We do so by passing this lambda function to the CreateNewList component, which then calls this lambda upon making a new list. This function basically overwrites the previous value of the `lists` variable in the board with the new value it gets from `SaveLoadManager.getData().getBoard($selectedBoardId).lists`.
 
     onMount(() =>
     {
@@ -32,7 +32,7 @@
     function createNewList()
     {
         SaveLoadManager.getData().createNewList($selectedBoardId, newListTitleValue);
-        refreshBoardFunction(); //If we don't do this, the UI won't update to show the newly added list because Svelte would think the values of "board" didn't change in the parent component.
+        refreshListsFunction(); //If we don't do this, the UI won't update to show the newly added list because Svelte would have no way of knowing that the values of the `lists` variable parent component should now include this new list.
 
         newListTitleValue = ""; //When we just created a list, the createNewList "screen" will still be open in case the user wants to create another list. But we don't want the title of the list we just created to still be present in the input component, hence why we set the value of the input component to ""
     }

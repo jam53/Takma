@@ -1,16 +1,14 @@
 <script lang="ts">
     import {selectedBoardId} from "../../scripts/stores";
-    import type {Board} from "../../scripts/Board";
+    import type {List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
     import {getImageUrl} from "../../scripts/GetImageUrl";
     import {imageExtensions, removeFileFromTakmaDataFolder, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
     import CreateNewList from "./CreateNewList.svelte";
     import List from "./List.svelte";
-
-    let board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
-
-    const refreshBoard = () => board = SaveLoadManager.getData().getBoard($selectedBoardId); //We call this function for example when we add a new list to the board. We do so by passing this lambda function to the CreateNewList component, which then calls this lambda upon making a new list. When we change a member variable of the `board` variable (by adding a new list e.g.), Svelte thinks the board variable remained unchanged and therefore doesn't update the UI. If we call this lambda function Svelte sees that the value of `board` changed and will render the new list.
+    import {dndzone} from "svelte-dnd-action";
+    import {flip} from "svelte/animate";
 
     /**
      * If the user right clicks on the container div, i.e. the background image, this function gets called to replace the background image.
@@ -49,30 +47,67 @@
     {
         if (pathToImage != undefined)
         {
-            removeFileFromTakmaDataFolder(board.backgroundImagePath); //We don't await the deletion of the previous board image. If the previous board image was one of the images included in Takma, it will throw an error when we try to delete the file. Which makes sense since we don't store the included images with Takma on disk, but reference them from within the Takma binary. If we don't await this function however, execution will continue even if the function throws an error.
+            let backgroundImagePath: string = SaveLoadManager.getData().getBoard($selectedBoardId).backgroundImagePath;
+
+            removeFileFromTakmaDataFolder(backgroundImagePath); //We don't await the deletion of the previous board image. If the previous board image was one of the images included in Takma, it will throw an error when we try to delete the file. Which makes sense since we don't store the included images with Takma on disk, but reference them from within the Takma binary. If we don't await this function however, execution will continue even if the function throws an error.
 
             SaveLoadManager.getData().setBoardBackgroundImage($selectedBoardId, pathToImage);
 
-            const imgUrl: string = await getImageUrl(board.backgroundImagePath, SaveLoadManager.getSaveDirectory());
+            const imgUrl: string = await getImageUrl(backgroundImagePath, SaveLoadManager.getSaveDirectory());
             document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the getImageUrl function returns an url that we can then use here to display the image.
         }
     }
-</script>
 
+    let lists: ListInterface[] = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
+    let dragDisabled = false;
+    let setDragDisabled = (bool) => {
+        dragDisabled = bool;
+    };
+
+    /**
+     * This function gets called when we change the order of a list/card by dragging them around. Once the dragging is finalized, this function gets called
+     */
+    function onFinalDragUpdate(newListsData: ListInterface[])
+    {
+        lists = newListsData;
+        SaveLoadManager.getData().setLists($selectedBoardId, newListsData);
+    }
+
+    function handleDndConsiderLists(e)
+    {
+        lists = e.detail.items;
+    }
+
+    function handleDndFinalizeLists(e)
+    {
+        onFinalDragUpdate(e.detail.items);
+    }
+
+    function handleCardsFinalize(listIndex, newCardsData)
+    {
+        lists[listIndex].cards = newCardsData;
+        onFinalDragUpdate([...lists]);
+    }
+</script>
 <div class="container" title="%%To change the background image, simply right-click or drag and drop a new image here." on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
-    <div title="" class="listsHolder">
-        {#each board.lists as list, i}
-            <List listId={list.id} inTransitionDelay={i}/>
+    <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
+        {#each lists as list, listIndex (list.id)}
+            <div animate:flip={{duration: 300}}>
+                <List listId={list.id} cards={list.cards} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex}/>
+            </div>
         {/each}
-        <CreateNewList refreshBoardFunction={refreshBoard}/>
+        <div on:mouseenter={() => setDragDisabled(true)}>
+            <CreateNewList refreshListsFunction={() => lists = SaveLoadManager.getData().getBoard($selectedBoardId).lists}/>
+        </div>
     </div>
 </div>
 
 <style>
     .container {
-        height: calc(100vh - 4px - 30px - 2em - (2 * 10px)); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * heiht of the scrollbar at the bottom) */
+        height: calc(100vh - 4px - 30px - 2em - (2 * 8px)); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) */
         display: flex;
-        overflow: auto;
+        overflow-x: scroll;
+        overflow-y: hidden;
     }
 
     /* Handle */
