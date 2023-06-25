@@ -18,7 +18,7 @@
 {#await getImageUrl(image, SaveLoadManager.getSaveDirectory())}
     <p>%%Loading...</p>
 {:then imgSrc}
-    <button in:scale on:click={passClickEventToParent} class="boardButtons">
+    <button in:scale|global on:click={passClickEventToParent} class="boardButtons">
         <img src={imgSrc}/>
         <div class="bottomBar">
             <h2>

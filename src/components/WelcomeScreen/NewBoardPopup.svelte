@@ -89,8 +89,8 @@
 </script>
 
 {#if showPopup}
-    <div transition:blur class="overlay" on:click={() => showPopup = false}>
-        <div transition:slide class="popup" on:click={(e) => e.stopPropagation()}>
+    <div transition:blur|global class="overlay" on:click={() => showPopup = false}>
+        <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
         <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <h1>%%Create a new board</h1>

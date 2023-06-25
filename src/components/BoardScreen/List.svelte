@@ -50,7 +50,7 @@
 
 </script>
 
-<div class="list" in:slide={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)}>
+<div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)}>
     <span style="word-wrap: break-word">
         {getListTitle()}
     </span>

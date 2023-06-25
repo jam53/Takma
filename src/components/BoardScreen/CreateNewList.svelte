@@ -55,7 +55,7 @@
     }
 </script>
 
-<div id="createNewListDiv" class="newList" bind:this={createNewListDiv} on:click={openCreateNewList} use:clickOutside on:click_outside={closeCreateNewList} in:slide={{delay: 100 + ((SaveLoadManager.getData().getBoard($selectedBoardId)).lists.length * 100)}} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault>
+<div id="createNewListDiv" class="newList" bind:this={createNewListDiv} on:click={openCreateNewList} use:clickOutside on:click_outside={closeCreateNewList} in:slide|global={{delay: 100 + ((SaveLoadManager.getData().getBoard($selectedBoardId)).lists.length * 100)}} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
