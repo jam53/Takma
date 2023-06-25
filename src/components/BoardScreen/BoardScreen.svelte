@@ -53,7 +53,7 @@
 
             SaveLoadManager.getData().setBoardBackgroundImage($selectedBoardId, pathToImage);
 
-            const imgUrl: string = await getImageUrl(backgroundImagePath, SaveLoadManager.getSaveDirectory());
+            const imgUrl: string = await getImageUrl(pathToImage, SaveLoadManager.getSaveDirectory());
             document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the getImageUrl function returns an url that we can then use here to display the image.
         }
     }
