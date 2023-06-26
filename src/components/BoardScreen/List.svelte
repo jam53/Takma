@@ -41,18 +41,11 @@
         onDrop(e.detail.items);
     }
 
-    function getListTitle()
-    {
-        let title: string = SaveLoadManager.getData().getList($selectedBoardId, listId).title;
-
-        return title != undefined ? title : "%%Title not found";
-    }
-
 </script>
 
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)}>
     <span style="word-wrap: break-word">
-        {getListTitle()}
+        {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
     </span>
     <div class="cardsHolder" use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1, centreDraggedOnCursor: true}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
         {#each cards as card (card.id)}
