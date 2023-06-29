@@ -159,5 +159,17 @@ export class TakmaData
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Sets a list's title
+     */
+    public setListTitle(title: string, boardId: string, listId: string): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
+
+        this._boards[indexOfBoard].lists[indexOfList].title = title;
+        SaveLoadManager.saveToDisk();
+    }
     //endregion
 }

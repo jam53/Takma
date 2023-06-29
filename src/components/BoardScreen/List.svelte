@@ -41,12 +41,30 @@
         onDrop(e.detail.items);
     }
 
+    let editingTitle; //We use a span to display the list title when we are not editing it, and an input element when we are. We do this since we can't drag the list by the input element.
+    let titleTextAreaElement;
+
+    function autoHeightTextArea()
+    {
+        titleTextAreaElement = document.getElementById("titleTextAreaElement");
+        titleTextAreaElement.style.height = (titleTextAreaElement.scrollHeight) + "px";
+    }
 </script>
 
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)}>
-    <span style="word-wrap: break-word">
-        {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
-    </span>
+    {#if !editingTitle}
+        <span class="listTitle" on:click on:mousedown={() => editingTitle = true}>
+            {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
+        </span>
+    {:else}
+        <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
+            on:input={e => SaveLoadManager.getData().setListTitle(e.target.value, $selectedBoardId, listId)}
+            on:mouseover={() => titleTextAreaElement.focus()}
+            on:mouseleave={() => editingTitle = false}
+            use:autoHeightTextArea
+            on:keydown={e => (e.key === "Enter") && (editingTitle = false)}
+        >{SaveLoadManager.getData().getList($selectedBoardId, listId).title}</textarea>
+    {/if}
     <div class="cardsHolder" use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1, centreDraggedOnCursor: true}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
         {#each cards as card (card.id)}
             <div class="card" animate:flip="{{duration: 300}}">
@@ -83,5 +101,20 @@
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
         background: var(--unselected-buton);
+    }
+
+    .listTitle {
+        background-color: transparent;
+        border: none;
+        border-radius: 2px;
+        font-size: 1em;
+        font-weight: bold;
+        padding: 0;
+        max-width: 100%;
+        width: 100%;
+        height: 1.5em;
+        resize: none;
+        word-wrap: break-word;
+        display: inline-block;
     }
 </style>
