@@ -1,5 +1,6 @@
 import {SaveLoadManager} from "./SaveLoadManager";
 import type {Board, Card, List} from "../Board";
+import {removeDir} from "@tauri-apps/api/fs";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -69,10 +70,12 @@ export class TakmaData
     /**
      * Deletes a board
      */
-    public deleteBoard(id: string): void
+    public async deleteBoard(id: string): Promise<void>
     {
         this._boards = this.boards.filter(board => board.id != id);
         SaveLoadManager.saveToDisk();
+
+        await removeDir(`./Files/${id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
     }
 
     /**
@@ -169,6 +172,37 @@ export class TakmaData
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
         this._boards[indexOfBoard].lists[indexOfList].title = title;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Deletes a list
+     */
+    public deleteList(boardId: string, listId: string): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const listIndexToDelete = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
+
+        let deletedList = this._boards[indexOfBoard].lists.splice(listIndexToDelete, 1);
+
+        SaveLoadManager.saveToDisk();
+
+        deletedList[0].cards.forEach(card =>
+        {
+            //delete card attachements
+        });
+    }
+
+    /**
+     * Updates the content of a specific list
+     */
+    public updateList(boardId: string, listId: string, newListContent: List)
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const listIndexToReplace = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
+
+        this._boards[indexOfBoard].lists[listIndexToReplace] = newListContent;
+
         SaveLoadManager.saveToDisk();
     }
     //endregion

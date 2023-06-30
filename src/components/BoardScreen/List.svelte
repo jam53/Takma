@@ -6,6 +6,8 @@
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
+    import ListOptionsMenu from "./ListOptionsMenu.svelte";
+    import {clickOutside} from "../../scripts/ClickOutside";
 
     export let listId: string;
     export let cards: CardInterface[];
@@ -13,6 +15,7 @@
     export let dragDisabled;
     export let setDragDisabled;
     export let inTransitionDelay: number;
+    export let refreshListsFunction;
 
     /**
      * After we created a new list, this function will be called to scroll to the `createNewList` component, so that it is visible on screen again since it will be pushed to the side by the new list that was just created.
@@ -49,22 +52,31 @@
         titleTextAreaElement = document.getElementById("titleTextAreaElement");
         titleTextAreaElement.style.height = (titleTextAreaElement.scrollHeight) + "px";
     }
+
+    let listOptionsMenuElement;
 </script>
 
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)}>
-    {#if !editingTitle}
-        <span class="listTitle" on:click on:mousedown={() => editingTitle = true}>
-            {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
-        </span>
-    {:else}
-        <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
-            on:input={e => SaveLoadManager.getData().setListTitle(e.target.value, $selectedBoardId, listId)}
-            on:mouseover={() => titleTextAreaElement.focus()}
-            on:mouseleave={() => editingTitle = false}
-            use:autoHeightTextArea
-            on:keydown={e => (e.key === "Enter") && (editingTitle = false)}
-        >{SaveLoadManager.getData().getList($selectedBoardId, listId).title}</textarea>
-    {/if}
+    <div class="titleHolder">
+        {#if !editingTitle}
+            <span class="listTitle" on:click on:mousedown={() => editingTitle = true}>
+                {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
+            </span>
+        {:else}
+            <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
+                on:input={e => SaveLoadManager.getData().setListTitle(e.target.value, $selectedBoardId, listId)}
+                on:mouseover={() => titleTextAreaElement.focus()}
+                on:mouseleave={() => editingTitle = false}
+                use:autoHeightTextArea
+                on:keydown={e => (e.key === "Enter") && (editingTitle = false)}
+            >{SaveLoadManager.getData().getList($selectedBoardId, listId).title}</textarea>
+        {/if}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+             on:click={e => listOptionsMenuElement.openContextMenu(e)}
+             use:clickOutside on:click_outside={listOptionsMenuElement.closeContextMenu}>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+        </svg>
+    </div>
     <div class="cardsHolder" use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1, centreDraggedOnCursor: true}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
         {#each cards as card (card.id)}
             <div class="card" animate:flip="{{duration: 300}}">
@@ -73,6 +85,7 @@
         {/each}
     </div>
 </div>
+<ListOptionsMenu bind:this={listOptionsMenuElement} listId={listId} refreshListsFunction={refreshListsFunction}/>
 
 <style>
     .list {
@@ -116,5 +129,22 @@
         resize: none;
         word-wrap: break-word;
         display: inline-block;
+    }
+
+    .titleHolder {
+        display: flex;
+        align-items: center;
+    }
+
+    .titleHolder svg {
+        width: 1.5em;
+        stroke: var(--main-text);
+        transition: 0.3s;
+        border-radius: 4px;
+    }
+
+    .titleHolder svg:hover {
+        background-color: rgba(var(--main-text-rgb-values), 0.3);
+        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 </style>

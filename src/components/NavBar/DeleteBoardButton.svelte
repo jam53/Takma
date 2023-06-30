@@ -12,11 +12,8 @@
         {
             SaveLoadManager.getData().deleteBoard($selectedBoardId);
 
-            const boardToDelete = $selectedBoardId;
             $selectedBoardId = "";
             $selectedCardId = "";
-
-            await removeDir(`./Files/${boardToDelete}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
         }
     }
 </script>

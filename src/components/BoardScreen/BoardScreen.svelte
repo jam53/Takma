@@ -88,16 +88,21 @@
         lists[listIndex].cards = newCardsData;
         onFinalDragUpdate([...lists]);
     }
+
+    function refreshListsFunction()
+    {
+        lists = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
+    }
 </script>
 <div class="container" title="%%To change the background image, simply right-click or drag and drop a new image here." on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>
-                <List listId={list.id} cards={list.cards} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex}/>
+                <List listId={list.id} cards={list.cards} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListsFunction={refreshListsFunction}/>
             </div>
         {/each}
         <div on:mouseenter={() => setDragDisabled(true)}>
-            <CreateNewList refreshListsFunction={() => lists = SaveLoadManager.getData().getBoard($selectedBoardId).lists}/>
+            <CreateNewList refreshListsFunction={refreshListsFunction}/>
         </div>
     </div>
 </div>
