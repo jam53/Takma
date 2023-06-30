@@ -56,7 +56,7 @@
     let listOptionsMenuElement;
 </script>
 
-<div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)}>
+<div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)} on:contextmenu|stopPropagation>
     <div class="titleHolder">
         {#if !editingTitle}
             <span class="listTitle" on:click on:mousedown={() => editingTitle = true}>
