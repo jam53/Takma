@@ -92,10 +92,10 @@
         background-color: rgba(var(--background-color-rgb-values), 0.3);
         backdrop-filter: blur(10px);
         border-radius: 4px;
-        padding: 0.75em 0.5em;
+        padding: 0 0.25em;
         transition: 0.4s;
         color: var(--main-text);
-        width: 16em;
+        width: 16.5em;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         cursor: pointer;
@@ -103,7 +103,8 @@
 
     .cardsHolder {
         max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 1em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) - padding bottom en top van .listHolder in BoardScreen - (2 * padding van .list in dit bestand) - (2 * breedte van de border van de lists) - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus */
-        overflow-y: scroll;
+        overflow-y: auto;
+        padding: 0 0.25em;
     }
 
     /* Handle */
@@ -134,6 +135,7 @@
     .titleHolder {
         display: flex;
         align-items: center;
+        margin: 0.75em 0.25em;
     }
 
     .titleHolder svg {
