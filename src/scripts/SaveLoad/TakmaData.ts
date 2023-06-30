@@ -1,6 +1,7 @@
 import {SaveLoadManager} from "./SaveLoadManager";
 import type {Board, Card, List} from "../Board";
 import {removeDir} from "@tauri-apps/api/fs";
+import {saveFilePathToDisk} from "../TakmaDataFolderIO";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -49,11 +50,26 @@ export class TakmaData
 
     /**
      * Creates a new Board
+     * @param title title of the board
+     * @param backgroundImagePath path to the background image of the board. This should be the path the user picked, not the path obtained after saving the file to Takma's "Files" data folder. We save to the "Files" data folder in this function
+     * @returns id of the created board
      */
-    public createNewBoard(board: Board): void
+    public async createNewBoard(title: string, backgroundImagePath: string): Promise<string>
     {
+        let boardId = crypto.randomUUID();
+
+        let board: Board = {
+            id: boardId,
+            creationDate: Date.now(),
+            backgroundImagePath: await saveFilePathToDisk(backgroundImagePath, boardId),
+            title: title,
+            lists: []
+        };
+
         this._boards.push(board);
         SaveLoadManager.saveToDisk();
+
+        return boardId;
     }
 
     /**

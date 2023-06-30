@@ -3,15 +3,15 @@
     import boardPreview from "../../images/BoardPreview.svg"
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Board} from "../../scripts/Board";
     import {selectedBoardId} from "../../scripts/stores";
-    import {createDir, readBinaryFile, writeBinaryFile} from "@tauri-apps/api/fs";
+    import {readDir} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/dialog"
-    import {getImageUrl, includedImagesInTakma} from "../../scripts/GetImageUrl";
-    import {imageExtensions, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {getImageUrl} from "../../scripts/GetImageUrl";
+    import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
+    import {resolveResource} from "@tauri-apps/api/path";
 
     let showPopup = true;
-    let selectedImg:string = includedImagesInTakma[0]; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
+    let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
 
     let boardTitle = "";
     let boardTitleInputObject;
@@ -28,46 +28,31 @@
     //Na een seconde zit het dus wel weer frozen, maar op die manier werd de intro animatie + het NewBoardPopup scherm toch direct getoond
     //Eenmaal we een keer het NewBoardPopup scherm hebben geopenend, worden de high res images somehow gecached. We moeten dus niet meer wachten om de src te setten van de images maar kunnen dit direct doen. We passen de lazyLoaded variabele als een prop. Want elke keer dat we op de create board knop drukken wordt er een nieuwe instantie van NewBoardPopup gemaakt. Elke nieuwe instantie zou niet meer weten als lazyLoaded nu true was of niet. Maar omdat dit bijgehouden wordt in de parent en gepassed wordt als een prop kan dit wel
     export let lazyLoaded: boolean;
-    function lazyload(node)
+    function lazyload()
     {
-        if (lazyLoaded)
-        {
-            node.setAttribute('src', node.dataset.src);
-        }
-        else
+        if (!lazyLoaded)
         {
             setTimeout(() =>
             {
-                node.setAttribute('src', node.dataset.src);
                 lazyLoaded = true;
             }, 1000);
         }
     }
 
+    async function loadImagesIncludedInTakma()
+    {
+        let includedImagesPaths = (await readDir((await resolveResource("resources/backgrounds/")))).map(fileEntry => fileEntry.path);
+
+        selectedImg = includedImagesPaths[0];
+
+        return includedImagesPaths;
+    }
+
     async function createNewBoard()
     {
-        let board: Board = {
-            id: crypto.randomUUID(),
-            creationDate: Date.now(),
-            backgroundImagePath: "",
-            title: boardTitle,
-            lists: []
-        };
+        let idCreatedBoard = await SaveLoadManager.getData().createNewBoard(boardTitle, selectedImg);
 
-        let savePath;
-        if (includedImagesInTakma.includes(selectedImg))
-        {//True als het een foto is die samen met Takma wordt geleverd
-            savePath = selectedImg;
-        }
-        else
-        {//Anders is het een foto die de gebruiker heeft gekozen
-            savePath = await saveFilePathToDisk(selectedImg, $selectedBoardId)
-        }
-
-        board.backgroundImagePath = savePath;
-        SaveLoadManager.getData().createNewBoard(board);
-
-        $selectedBoardId = board.id;
+        $selectedBoardId = idCreatedBoard;
         showPopup = false;
     }
 
@@ -99,24 +84,34 @@
                 </svg>
             </div>
             <hr/>
-            <div class="selectedImgHolder" >
-                <img bind:this={selectedImgObject} use:lazyload data-src={selectedImg} style="object-fit: cover"/>
-                <img src={boardPreview} alt="Board preview"/>
-            </div>
-            <h2 style="margin-bottom: 0">%%Background</h2>
-            <div class="includedImagesHolder">
-                {#if lazyLoaded}
-                    <svg on:click={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    {#each includedImagesInTakma as img}
-                        <img on:click={async () => {selectedImg = img; selectedImgObject.setAttribute('src', await getImageUrl(selectedImg));}} src={img} style="object-fit: cover" tabindex="0"/>
-                        <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
-                    {/each}
-                {:else}
-                    <p>%%Loading images...</p>
-                {/if}
-            </div>
+            {#await loadImagesIncludedInTakma()}
+                %%Loading
+            {:then includedImagesInTakma}
+                <div class="selectedImgHolder" >
+                    {#await getImageUrl(includedImagesInTakma[0])}
+                    {:then defaultImage}
+                    <img bind:this={selectedImgObject} use:lazyload src={defaultImage} style="object-fit: cover"/>
+                    <img src={boardPreview} alt="Board preview"/>
+                    {/await}
+                </div>
+                <h2 style="margin-bottom: 0">%%Background</h2>
+                <div class="includedImagesHolder">
+                    {#if lazyLoaded}
+                        <svg on:click={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        {#each includedImagesInTakma as imgPath}
+                            {#await getImageUrl(imgPath)}
+                            {:then imgUrl}
+                            <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getImageUrl(imgPath));}} src={imgUrl} style="object-fit: cover" tabindex="0"/>
+                            <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
+                            {/await}
+                        {/each}
+                    {:else}
+                        <p>%%Loading images...</p>
+                    {/if}
+                </div>
+            {/await}
             <h2>%%Board name</h2>
             <div class="inputHolderDiv">
                 <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:keydown={e => e.key === "Enter" && createNewBoard()}>

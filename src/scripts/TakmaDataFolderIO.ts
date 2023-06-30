@@ -1,6 +1,5 @@
 import {createDir, readBinaryFile, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {includedImagesInTakma} from "./GetImageUrl";
 
 /**
  * This function takes the path to a file the user selected and the board the file belongs to.
@@ -37,7 +36,7 @@ async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string,
 
     await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
 
-    savePath += "/" + filename;
+    savePath += filename;
 
     await writeBinaryFile(savePath, arrayBuffer, {dir: SaveLoadManager.getSaveDirectory()});
 
