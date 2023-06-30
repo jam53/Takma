@@ -76,15 +76,15 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function duplicateList()
     {
-        let allLists = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
         let thisList = structuredClone(SaveLoadManager.getData().getList($selectedBoardId, listId));
-        let thisListIndex = allLists.indexOf(thisList);
+        let thisListIndex = SaveLoadManager.getData().getBoard($selectedBoardId).lists.findIndex(list => list.id === listId);
 
-        thisList.id = thisList.id + "-copy";
-        thisList.creationDate = Date.now();
-        allLists.splice(thisListIndex, 0, thisList); //Insert the duplicated list
+        SaveLoadManager.getData().createNewList($selectedBoardId, thisList.title, thisList.cards.map(card =>
+        {
+            card.id = crypto.randomUUID();
+            return card;
+        }), thisListIndex);
 
-        SaveLoadManager.getData().setLists($selectedBoardId, allLists);
         refreshListsFunction();
     }
 

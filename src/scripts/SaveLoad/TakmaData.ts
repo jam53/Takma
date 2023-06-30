@@ -95,19 +95,29 @@ export class TakmaData
      * Creates a new List within a board
      * @param boardId id of the board to which the list should be added
      * @param listTitle title of the list to be added
+     * @param cards optional argument, if not passed a list with an empty card array will be created
+     * @param indexToInsert optional argument, will create a list at a certain index, if not passed the list will be added to the end of the array of lists
      */
-    public createNewList(boardId: string, listTitle: string): void
+    public createNewList(boardId: string, listTitle: string, cards?: Card[], indexToInsert?: number): void
     {
 
         let list: List = {
             id: crypto.randomUUID(),
             creationDate: Date.now(),
             title: listTitle,
-            cards: []
+            cards: cards ?? []
         };
 
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
-        this._boards[indexOfBoard].lists.push(list);
+
+        if (indexToInsert != undefined)
+        {
+            this._boards[indexOfBoard].lists.splice(indexToInsert, 0, list);
+        }
+        else
+        {
+            this._boards[indexOfBoard].lists.push(list);
+        }
 
         SaveLoadManager.saveToDisk();
     }
