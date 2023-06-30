@@ -245,7 +245,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 </script>
 
 {#if showMenu}
-    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px">
+    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1;">
         <div class="navbar" id="navbar" transition:slide>
             <ul>
                 {#each menuItems as item}
