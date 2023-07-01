@@ -70,7 +70,7 @@ export class SaveLoadManager
      */
     public static async saveToDisk(): Promise<void>
     {
-        await writeTextFile(this.saveFilename, JSON.stringify(this.data, null, 4), {dir: this.saveDirectory});
+        await writeTextFile(this.saveFilename, JSON.stringify(this.data, null, 0), {dir: this.saveDirectory});
     }
 
     /**
