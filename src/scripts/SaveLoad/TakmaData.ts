@@ -182,7 +182,11 @@ export class TakmaData
             id: crypto.randomUUID(),
             creationDate: Date.now(),
             title: cardTitle,
-            description: ""
+            description: "",
+            attachments: [],
+            coverImageIndex: -1,
+            todos: [],
+            labels: []
         };
 
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
