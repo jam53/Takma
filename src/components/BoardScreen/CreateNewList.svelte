@@ -63,7 +63,7 @@
         %%Add another list
     </span>
     <!--     The things above this line are only displayed when the `newListCreating` styleclass isn't applied. The elements below this line are only displayed when the `newListCreating` styleclass is applied       -->
-    <input bind:this={newListTitleInput} bind:value={newListTitleValue} on:keydown={e => e.key === "Enter" && createNewList()}>
+    <input bind:this={newListTitleInput} bind:value={newListTitleValue} on:keydown={e => e.key === "Enter" && createNewList()} placeholder="%%Enter list title...">
     <div>
         <button on:click|stopPropagation={createNewList}>
             %%Add list

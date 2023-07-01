@@ -8,6 +8,7 @@
     import Card from "./Card.svelte";
     import ListOptionsMenu from "./ListOptionsMenu.svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
+    import CreateNewCard from "./CreateNewCard.svelte";
 
     export let listId: string;
     export let cards: CardInterface[];
@@ -54,6 +55,28 @@
     }
 
     let listOptionsMenuElement;
+    let outerWrapperElement;
+    let cardsHolderElement;
+
+    function applyOverFlowedStyleClasses()
+    {
+        if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight != outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
+        {
+            outerWrapperElement.classList.add('overflowed');
+        }
+        else if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight === outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
+        {
+            outerWrapperElement.classList.add('overflowedNoBottomMargin');
+        }
+        else
+        {
+            outerWrapperElement.classList.remove('overflowed');
+            outerWrapperElement.classList.remove('overflowedNoBottomMargin');
+        }
+    }
+
+    $: outerWrapperElement && applyOverFlowedStyleClasses();
+
 </script>
 
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)} on:contextmenu|stopPropagation>
@@ -77,12 +100,23 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
     </div>
-    <div class="cardsHolder" use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
-        {#each cards as card (card.id)}
-            <div class="card" animate:flip="{{duration: 500}}">
-                <Card card={card}/>
-            </div>
-        {/each}
+    <div class="outerWrapper" bind:this={outerWrapperElement} on:scroll={applyOverFlowedStyleClasses}>
+<!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the -webkit-box-shadow doesn't appear cut off when hovering over a card-->
+        <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
+            {#each cards as card (card.id)}
+                <div class="card" animate:flip="{{duration: 500}}">
+                    <Card card={card}/>
+                </div>
+            {/each}
+            {#if cards.length === 0}
+                <div class="emptyCard" on:mouseenter={() => setDragDisabled(true)}>
+                    %%Drop a card here
+                </div>
+            {/if}
+        </div>
+    </div>
+    <div on:mouseenter={() => setDragDisabled(true)}>
+        <CreateNewCard refreshListsFunction={() => refreshListsFunction()} listId={listId} outerWrapperElement={outerWrapperElement}/>
     </div>
 </div>
 <ListOptionsMenu bind:this={listOptionsMenuElement} listId={listId} refreshListsFunction={refreshListsFunction}/>
@@ -92,19 +126,54 @@
         background-color: rgba(var(--background-color-rgb-values), 0.3);
         backdrop-filter: blur(10px);
         border-radius: 4px;
-        padding: 0 0.25em;
+        padding: 0;
         transition: 0.4s;
         color: var(--main-text);
-        width: 16.5em;
+        width: 17.25em;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         cursor: pointer;
     }
 
     .cardsHolder {
-        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 2.5em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) - padding bottom en top van .listHolder in BoardScreen - (2 * padding van .titleHolder in dit bestand) - (2 * breedte van de border van de lists) - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus */
+        padding: 0.5em 0.5em 0.5em 0.5em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        overflow: visible;
+    }
+
+    .outerWrapper {
+        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 5.5em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) - padding bottom en top van .listHolder in BoardScreen - (2 * padding van .titleHolder in dit bestand) - (2 * breedte van de border van de lists) - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus*/
         overflow-y: auto;
-        padding: 0 0.25em;
+    }
+
+    :is(.outerWrapper.overflowed) {
+        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 5.5em - 0.5em);
+        margin-bottom: 0.5em;
+        margin-right: 0.25em;
+    }
+
+    :is(.outerWrapper.overflowedNoBottomMargin) {
+        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 5.5em);
+        margin-bottom: 0;
+        margin-right: 0.25em;
+    }
+
+    .emptyCard {
+        height: 3em;
+        border: 2px dashed rgba(var(--main-text-rgb-values), 0.5);
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        cursor: auto;
+    }
+
+    ::-webkit-scrollbar-track {
+        margin: 0.5em 0;
     }
 
     /* Handle */
@@ -123,7 +192,7 @@
         border-radius: 2px;
         font-size: 1em;
         font-weight: bold;
-        padding: 0;
+        padding: 0 0 0 0.5em;
         max-width: 100%;
         width: 100%;
         height: 1.5em;
@@ -135,7 +204,7 @@
     .titleHolder {
         display: flex;
         align-items: center;
-        margin: 0.75em 0.25em;
+        margin: 0.75em 0.5em 0.25em 0.25em;
     }
 
     .titleHolder svg {
