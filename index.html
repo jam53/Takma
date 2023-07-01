@@ -150,7 +150,7 @@
         background-color: var(--background-color);
 
         background-size: cover;
-        background-position: center calc((4px + 30px + 2em)/2); /* Because of the border, titlebar and navbar we need to offset the image slightly towards the bottom. We devide by 2, this way a bit of the top and a bit of the bottom is cut off. Rather than the top being fully on there and only the bottom being cutoff (the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` + height title bar in the `.titlebar` styleclass in `index.html` + navbar height in the `.containingDiv` styleclass in `NavBar.svelte`) / 2 */
+        background-position: center center; /* Because of the border, titlebar and navbar we need to offset the image slightly towards the bottom. We devide by 2, this way a bit of the top and a bit of the bottom is cut off. Rather than the top being fully on there and only the bottom being cutoff (the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` + height title bar in the `.titlebar` styleclass in `index.html` + navbar height in the `.containingDiv` styleclass in `NavBar.svelte`) / 2 */
         background-attachment: fixed;
         background-repeat: no-repeat;
     }
