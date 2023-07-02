@@ -2,12 +2,18 @@
     import type {Card} from "../../scripts/Board";
     import {getImageUrl} from "../../scripts/GetImageUrl";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import {selectedCardId} from "../../scripts/stores";
 
     export let card: Card;
 
+    function displayCardDetails()
+    {
+        $selectedCardId = card.id
+    }
+
 </script>
 
-<div class="cardContainer" on:click={() => alert("card clicked")} tabindex="0" on:keydown={e => e.key === "Enter" && alert("pressed enter on card")}>
+<div class="cardContainer" on:click={displayCardDetails} tabindex="0" on:keydown={e => e.key === "Enter" && (displayCardDetails())}>
     {#if card.coverImageIndex !== -1}
         {#await getImageUrl(card.attachments[card.coverImageIndex], SaveLoadManager.getSaveDirectory())}
             %%Loading
