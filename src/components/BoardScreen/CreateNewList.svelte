@@ -7,24 +7,18 @@
 
     export let refreshListsFunction; //We call this function when we add a new list to the board. We do so by passing this lambda function to the CreateNewList component, which then calls this lambda upon making a new list. This function basically overwrites the previous value of the `lists` variable in the board with the new value it gets from `SaveLoadManager.getData().getBoard($selectedBoardId).lists`.
 
-    onMount(() =>
+    function handleKeyDown(e)
     {
-        window.addEventListener("keydown", e => {
-            if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewListDiv.classList.contains("newListCreating"))
-            {// key(s) to close pressed && create new list div styleclass is applied i.e. we are "creating"/entering a new list title
-                closeCreateNewList();
-            }
-            else if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && !createNewListDiv.classList.contains("newListCreating") && $selectedCardId != "")
-            {// key(s) to close pressed && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. Otherwise we would want to close that in the if above, rather than closing the card(which is what this if does by setting `selectedCardId to ""`.
-                $selectedCardId = "";
-            }
-            else if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && !createNewListDiv.classList.contains("newListCreating") && $selectedCardId === "")
-            {// key(s) to close pressed && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. Otherwise we would want to close that in the if above, rather than closing the entire board (which is what this if does by setting `$selectedBoardId to ""`. We finally also check if there isn't a card selected, because in that case we would like to close the card, instead of the board
-                $selectedBoardId = "";
-                document.body.style.backgroundImage = "";
-            }
-        });
-    });
+        if (e.key === "Enter")
+        {
+            openCreateNewList();
+        }
+
+        if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewListDiv.classList.contains("newListCreating"))
+        {// key(s) to close pressed && create new list div styleclass is applied i.e. we are "creating"/entering a new list title
+            closeCreateNewList();
+        }
+    }
 
     let createNewListDiv;
     let newListTitleInput;
@@ -55,7 +49,7 @@
     }
 </script>
 
-<div id="createNewListDiv" class="newList" bind:this={createNewListDiv} on:click={openCreateNewList} use:clickOutside on:click_outside={closeCreateNewList} in:slide|global={{delay: 100 + ((SaveLoadManager.getData().getBoard($selectedBoardId)).lists.length * 100)}} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault>
+<div id="createNewListDiv" class="newList" bind:this={createNewListDiv} on:click={openCreateNewList} use:clickOutside on:click_outside={closeCreateNewList} in:slide|global={{delay: 100 + ((SaveLoadManager.getData().getBoard($selectedBoardId)).lists.length * 100)}} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault tabindex="0" on:keydown|stopPropagation={handleKeyDown}>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>

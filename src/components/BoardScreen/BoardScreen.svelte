@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {selectedBoardId} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import type {List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
@@ -9,6 +9,22 @@
     import List from "./List.svelte";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
+    import {onMount} from "svelte";
+
+    onMount(() =>
+    {
+        const createNewCardElements = Array.from(document.querySelectorAll('.newCard'));
+        const createNewListElement = document.getElementById('createNewListDiv');
+
+        window.addEventListener("keydown" ,e =>
+        {
+            if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && $selectedCardId === "")
+            {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
+                $selectedBoardId = "";
+                document.body.style.backgroundImage = "";
+            }
+        });
+    });
 
     /**
      * If the user right clicks on the container div, i.e. the background image, this function gets called to replace the background image.

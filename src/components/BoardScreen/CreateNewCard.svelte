@@ -8,24 +8,18 @@
     export let listId; //The id of the list this CreateNewCard component is in
     export let outerWrapperElement; //The outer div which contains the cards and scrollbar. We use this reference to the element to scroll to the bottom when adding a new card
 
-    onMount(() =>
+    function handleKeyDown(e)
     {
-        window.addEventListener("keydown", e => {
-            if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardDiv.classList.contains("newCardCreating"))
-            {// key(s) to close pressed && create new card div styleclass is applied i.e. we are "creating"/entering a new card title
-                closeCreateNewCard();
-            }
-            else if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && !createNewCardDiv.classList.contains("newCardCreating") && $selectedCardId != "")
-            {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title. Otherwise we would want to close that in the if above, rather than closing the card(which is what this if does by setting `selectedCardId to ""`.
-                $selectedCardId = "";
-            }
-            else if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && !createNewCardDiv.classList.contains("newCardCreating") && $selectedCardId === "")
-            {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title. Otherwise we would want to close that in the if above, rather than closing the entire board (which is what this if does by setting `$selectedBoardId to ""`. We finally also check if there isn't a card selected, because in that case we would like to close the card, instead of the board
-                $selectedBoardId = "";
-                document.body.style.backgroundImage = "";
-            }
-        });
-    });
+        if (e.key === "Enter")
+        {
+            openCreateNewCard();
+        }
+
+        if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardDiv.classList.contains("newCardCreating"))
+        {// key(s) to close pressed && create new card div styleclass is applied i.e. we are "creating"/entering a new card title
+            closeCreateNewCard();
+        }
+    }
 
     let createNewCardDiv;
     let newCardTitleInput;
@@ -84,7 +78,7 @@
     }
 </script>
 
-<div id="createNewCardDiv" class="newCard" bind:this={createNewCardDiv} on:click={openCreateNewCard} use:clickOutside on:click_outside={closeCreateNewCard} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault tabindex="0" on:keydown={e => e.key === "Enter" && openCreateNewCard()}>
+<div id="createNewCardDiv" class="newCard" bind:this={createNewCardDiv} on:click={openCreateNewCard} use:clickOutside on:click_outside={closeCreateNewCard} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault tabindex="0" on:keydown|stopPropagation={handleKeyDown}>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
