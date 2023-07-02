@@ -23,6 +23,8 @@ export interface Card
     description: string,
     attachments: string[],
     coverImageIndex: number, //The index points to an image file in the array of attachments in this card, -1 means there is no image to be used as a coverimage for this card
-    todos: string[],
+    todos: TodoItem[],
     labels: string[] //Each string in the array represents a hexadecimal color value, including the #
 }
+
+type TodoItem = [boolean, string];
