@@ -9,7 +9,7 @@
 
 <body class="body" id="body">
 <div class="wrapper">
-    <div data-tauri-drag-region class="titlebar">
+    <div data-tauri-drag-region class="titlebar" id="titlebar">
 <!--    `data-tauri-drag-region` allows us to drag the window    -->
         <div class="titlebar-icon">
             <img src="./src/images/Takma.svg" alt="Takma icon">
@@ -41,7 +41,6 @@
 <style>
     .titlebar {
         height: 30px;
-        border-radius: 8px 8px 0 0;
         background: var(--background-color);
         user-select: none;
         display: flex;
@@ -52,6 +51,10 @@
         right: 0;
         z-index: 9999;
         transition: 0.4s;
+    }
+
+    .titlebarNotMaximized {
+        border-radius: 8px 8px 0 0;
     }
 
     .titlebar-icon {
@@ -183,11 +186,13 @@
         {
             document.body.classList.remove("bodyNotMaximized");
             document.getElementById("titlebar-close").classList.remove("titlebar-button-closeNotMaximized");
+            document.getElementById("titlebar").classList.remove("titlebarNotMaximized");
         }
         else
         {
             document.body.classList.add("bodyNotMaximized");
             document.getElementById("titlebar-close").classList.add("titlebar-button-closeNotMaximized");
+            document.getElementById("titlebar").classList.add("titlebarNotMaximized");
         }
     }
 </script>
