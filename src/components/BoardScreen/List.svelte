@@ -9,6 +9,7 @@
     import ListOptionsMenu from "./ListOptionsMenu.svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import CreateNewCard from "./CreateNewCard.svelte";
+    import {afterUpdate, onMount} from "svelte";
 
     export let listId: string;
     export let cards: CardInterface[];
@@ -17,6 +18,17 @@
     export let setDragDisabled;
     export let inTransitionDelay: number;
     export let refreshListsFunction;
+
+    afterUpdate(() =>
+    {
+        //Svelte dnd automatically adds `tabindex=0` to the card divs which contain the Card component. Since we don't want the containing div to be tabbable, we set the tabindex to -1
+        const cardElements = document.querySelectorAll('.card');
+        let cards = Array.from(cardElements);
+
+        cards.forEach(card => {
+            card.tabIndex = -1;
+        });
+    });
 
     /**
      * After we created a new list, this function will be called to scroll to the `createNewList` component, so that it is visible on screen again since it will be pushed to the side by the new list that was just created.
