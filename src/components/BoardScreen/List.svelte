@@ -63,15 +63,12 @@
         if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight != outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
         {
             outerWrapperElement.classList.add('overflowed');
+            outerWrapperElement.classList.remove('overflowedNoBottomMargin');
         }
         else if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight === outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
         {
-            outerWrapperElement.classList.add('overflowedNoBottomMargin');
-        }
-        else
-        {
             outerWrapperElement.classList.remove('overflowed');
-            outerWrapperElement.classList.remove('overflowedNoBottomMargin');
+            outerWrapperElement.classList.add('overflowedNoBottomMargin');
         }
     }
 
