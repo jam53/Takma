@@ -28,7 +28,9 @@
                 </div>
             {/each}
         </div>
-        {card.title}
+        <span class="cardTitle">
+            {card.title}
+        </span>
         {#if card.description !== "" || card.attachments.length > 0 || card.todos.length > 0}
             <div class="icons">
                 {#if card.description !== ""}
@@ -109,5 +111,9 @@
         width: 100%;
         max-height: 15em;
         object-fit: contain;
+    }
+
+    .cardTitle {
+        word-break: break-word;
     }
 </style>

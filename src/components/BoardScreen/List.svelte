@@ -9,7 +9,7 @@
     import ListOptionsMenu from "./ListOptionsMenu.svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import CreateNewCard from "./CreateNewCard.svelte";
-    import {afterUpdate, onMount} from "svelte";
+    import {afterUpdate} from "svelte";
 
     export let listId: string;
     export let cards: CardInterface[];
@@ -91,14 +91,15 @@
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)} on:contextmenu|stopPropagation>
     <div class="titleHolder">
         {#if !editingTitle}
-            <span class="listTitle" on:click on:mousedown={() => editingTitle = true}>
+            <span class="listTitle" on:click on:mousedown={() => editingTitle = true} style="height: 100%; min-height: 1em">
                 {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
             </span>
         {:else}
             <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
-                on:input={e => SaveLoadManager.getData().setListTitle(e.target.value, $selectedBoardId, listId)}
+                on:focusout={e => SaveLoadManager.getData().setListTitle(e.target.value.trim(), $selectedBoardId, listId)}
                 on:mouseover={() => titleTextAreaElement.focus()}
-                on:mouseleave={() => editingTitle = false}
+                on:focusout={() => editingTitle = false}
+                on:input={autoHeightTextArea}
                 use:autoHeightTextArea
                 on:keydown={e => (e.key === "Enter") && (editingTitle = false)}
             >{SaveLoadManager.getData().getList($selectedBoardId, listId).title}</textarea>
@@ -201,12 +202,12 @@
         border-radius: 2px;
         font-size: 1em;
         font-weight: bold;
-        padding: 0 0 0 0.5em;
+        padding: 0 0.5em 0 0.5em;
         max-width: 100%;
         width: 100%;
         height: 1.5em;
         resize: none;
-        word-wrap: break-word;
+        word-break: break-word;
         display: inline-block;
     }
 

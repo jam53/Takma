@@ -235,5 +235,51 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Given an id of a board, an id of a list within that board, and an id of card in that list, this function will return a card
+     */
+    public getCard(boardId: string, cardId: string): Card|null
+    {
+        let board: Board = this._boards.find(board => board.id === boardId);
+
+        for (const list of board.lists)
+        {
+            for (const card of list.cards)
+            {
+                if (card.id === cardId)
+                {
+                    return card;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Updates the content of a specific card
+     */
+    public updateCard(card: Card, boardId: string, cardId: string): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        let currentList: List;
+
+        for (let indexOfList = 0; indexOfList < this._boards[indexOfBoard].lists.length; indexOfList++)
+        {
+            currentList = this._boards[indexOfBoard].lists[indexOfList];
+
+            for (let indexOfCard = 0; indexOfCard < currentList.cards.length; indexOfCard++)
+            {
+                if (currentList.cards[indexOfCard].id === cardId)
+                {
+                    this._boards[indexOfBoard].lists[indexOfList].cards[indexOfCard] = card;
+
+                    SaveLoadManager.saveToDisk();
+                    return;
+                }
+            }
+        }
+    }
     //endregion
 }

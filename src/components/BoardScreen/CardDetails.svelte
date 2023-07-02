@@ -1,22 +1,38 @@
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
     import {afterUpdate, onMount} from "svelte";
-    import {selectedCardId} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import type {Card} from "../../scripts/Board";
 
     export let refreshListsFunction;
+
+    let typing: boolean; //If we are currently typing, we make sure we don't focus in `afterUpdate` on the containing div. Otherwise we would lose focus of whatever element we are typing in, after every keystroke. As for why we focus one the containing div (overlayElement), this is because otherwise we wouldn't be able to detect keyDown events; these are used to check for Esc / Ctrl+W events to close the CardDetails window
+    let cardToSave: Card; //Rather than saving every single time for every change, we will keep track of the current card in this variable, and once we close the CardDetails window, only then will we save the card to disk.
 
     onMount(() =>
     {
         selectedCardId.subscribe(value =>
         {
-            showPopup = value != "";
+            if (value != "")
+            {
+                showPopup = true;
+                cardToSave = SaveLoadManager.getData().getCard($selectedBoardId, value);
+            }
+            else
+            {
+                showPopup = false;
+            }
         });
 
     });
 
     afterUpdate(() =>
     {
-        overlayElement && overlayElement.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
+        if (!typing && showPopup)
+        {
+            overlayElement && overlayElement.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
+        }
     });
 
 
@@ -30,7 +46,10 @@
 
     function closeCard()
     {
-        $selectedCardId = ""
+        SaveLoadManager.getData().updateCard(cardToSave, $selectedBoardId, $selectedCardId);
+        cardToSave = null;
+        refreshListsFunction();
+        $selectedCardId = "";
     }
 
     let showPopup = false;
@@ -43,7 +62,14 @@
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
-                <input value="" placeholder="%Enter a title for this card..." />
+                <span role="textbox" contenteditable
+                       on:focus={() => typing = true}
+                       on:focusout={(e) => {typing = false; cardToSave.title = e.target.textContent}}
+                       on:keydown|stopPropagation={e => (e.keyCode === 13) && e.preventDefault()}
+                       >
+<!--This keycode 13 check prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
+                    {cardToSave.title}
+                </span>
                 <svg on:click={closeCard} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -93,8 +119,8 @@
         transition: 0.2s;
     }
 
-    .titleDiv input {
-        padding: 0.5em 0.5em 0.5em 0;
+    .titleDiv span {
+        padding: 0.5em 0.25em;
         border-radius: 0.5em;
         border: 2px solid transparent;
         background: none;
@@ -103,9 +129,21 @@
         width: 100%;
         font-size: x-large;
         font-weight: bold;
+        resize: none;
+        cursor: text;
+        display: block;
+        overflow: hidden;
+        min-height: 1em;
+        min-width: min(28em, 70vw);
+        max-width: min(28em, 70vw);
     }
 
-    .titleDiv input:focus, .titleDiv input:hover {
+    .titleDiv span[contenteditable]:empty::before {
+        content: "%%Enter a title for this card...";
+        color: gray;
+    }
+
+    .titleDiv span:focus, .titleDiv span:hover {
         border: 2px solid var(--accent);
         box-shadow: 0 0 0 0;
     }
