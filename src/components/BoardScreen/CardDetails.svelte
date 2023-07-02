@@ -14,7 +14,7 @@
     {
         selectedCardId.subscribe(value =>
         {
-            if (value != "")
+            if (value != "" && $selectedCardId != "")
             {
                 showPopup = true;
                 cardToSave = SaveLoadManager.getData().getCard($selectedBoardId, value);
