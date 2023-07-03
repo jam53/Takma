@@ -40,6 +40,9 @@
                 "unmaximize": true,
                 "unminimize": true,
                 "startDragging": true
+            },
+            "notification": {
+                "all": true
             }
         },
         "bundle": {
@@ -67,7 +70,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 0.0.0 (185)",
+                "title": "Takma 0.0.0 (187)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,

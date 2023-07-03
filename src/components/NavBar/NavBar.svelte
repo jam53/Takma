@@ -22,6 +22,9 @@
         <SearchBar/>
         {#if $selectedBoardId !== ""}
             <Filter/>
+            <button>
+                %%Copy a link to this board
+            </button>
             <DeleteBoardButton/>
         {/if}
         <button class="settingsButton">
