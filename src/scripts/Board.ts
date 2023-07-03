@@ -27,4 +27,8 @@ export interface Card
     labels: string[] //Each string in the array represents a hexadecimal color value, including the #
 }
 
-type TodoItem = [boolean, string];
+export interface TodoItem
+{
+    completed: boolean;
+    content: string;
+}
