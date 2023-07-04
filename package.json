@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "0.0.0",
-    "build": 190,
+    "build": 197,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -13,14 +13,16 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^1.4.0",
-        "@types/dompurify": "^3.0.2",
-        "@types/marked": "^5.0.0",
+        "dompurify": "^3.0.4",
+        "marked": "^5.1.0",
         "svelte-dnd-action": "^0.9.22"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.4.2",
         "@tauri-apps/cli": "^1.4.0",
         "@tsconfig/svelte": "^4.0.1",
+        "@types/dompurify": "^3.0.2",
+        "@types/marked": "^5.0.0",
         "@types/node": "^20.3.1",
         "fs-extra": "^11.1.1",
         "svelte": "^4.0.0",

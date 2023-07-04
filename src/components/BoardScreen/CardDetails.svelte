@@ -6,15 +6,19 @@
     import type {Card} from "../../scripts/Board";
     import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
     import {clickOutside} from "../../scripts/ClickOutside";
+    import {marked} from "marked";
+    import DOMPurify from "dompurify";
+    import {open} from "@tauri-apps/api/shell"
+    import {readText, writeText} from "@tauri-apps/api/clipboard";
 
     export let refreshListsFunction;
 
     let typing: boolean; //If we are currently typing, we make sure we don't focus in `afterUpdate` on the containing div. Otherwise we would lose focus of whatever element we are typing in, after every keystroke. As for why we focus one the containing div (overlayElement), this is because otherwise we wouldn't be able to detect keyDown events; these are used to check for Esc / Ctrl+W events to close the CardDetails window
     let cardToSave: Card; //Rather than saving every single time for every change, we will keep track of the current card in this variable, and once we close the CardDetails window, only then will we save the card to disk.
 
-    let cardDesc; // We use a separate variable, and not `cardToSave.description`. This because in the <span> where we use this `cardDesc`, if we would use `cardToSave.description`. The content of the <span> would be updated as we typed, causing weird behaviour like the stuff we typed appearing twice and so on. Doing it this way with a separate variable circumvents that issue
+    let cardDesc; // We use a separate variable, and not `cardToSave.description`. This because in the <pre> where we use this `cardDesc`, if we would use `cardToSave.description`. The content of the <pre> would be updated as we typed, causing weird behaviour like the stuff we typed appearing twice and so on. Doing it this way with a separate variable circumvents that issue
 
-    let editingDescription: boolean = false; //We use this to know whether or not we should display the rendered html of the description, or display the <span> so that the user can edit the description
+    let editingDescription: boolean = false; //We use this to know whether or not we should display the rendered html of the description, or display the <pre> so that the user can edit the description
 
     onMount(() =>
     {
@@ -24,6 +28,8 @@
             {
                 showPopup = true;
                 cardToSave = SaveLoadManager.getData().getCard($selectedBoardId, value);
+                cardDesc = cardToSave.description;
+                editingDescription = cardDesc === ""; //If the card has no description yet, we enter the description editing "mode" by default. Instead of having requiring the user to click on it.
             }
             else
             {
@@ -73,6 +79,153 @@
             sendNotification({ title: 'Takma', body: message });
         }
     }
+
+    //region markedjs custom renderer
+    const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
+    // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
+    // `([\w-]+)` - This is the first capturing group (`(...)`) and it matches one or more word characters `(\w)` or hyphens (`-`). The hyphen is included within the character set `[\w-]`. Word characters include uppercase and lowercase letters, digits, and underscores. This capturing group captures the board ID.
+    // `(?:\/([\w-]+))?` - This is a non-capturing group (`(?:...)`) followed by a question mark ?, which makes it optional. It matches a forward slash (`\/`) followed by one or more word characters or hyphens. The hyphen is included within the character set `[\w-]`. This capturing group captures the card ID, which is also allowed to contain hyphens. The non-capturing group is used because we're not interested in capturing the forward slash itself.
+    // `/i` - This is a flag indicating case-insensitive matching. It allows the pattern to match both uppercase and lowercase characters.
+
+    // Create a custom renderer
+    const markedCustomRenderer = new marked.Renderer();
+
+    // Override the link rendering function
+    markedCustomRenderer.link = function(href, title, text) {
+        // Check if the link matches your custom pattern
+        const match = href.match(takmaLinkPattern);
+
+        if (match)
+        {
+            const boardId = match[1];
+            const cardId = match[2];
+
+            let boardTitle;
+            let cardTitle;
+
+            let styledLink;
+
+            try
+            {
+                boardTitle = SaveLoadManager.getData().getBoard(boardId).title;
+                cardTitle = SaveLoadManager.getData().getCard(boardId, cardId).title;
+            }
+            catch (e)
+            {
+                console.log(e);
+
+                boardTitle = boardTitle ?? "%%Board not found";
+                cardTitle = cardId === undefined ? "" : "%%Card not found";
+            }
+            finally
+            {
+                styledLink = `
+                <button id="${href}" class="takma-link">
+                    <h4 class="takma-linkBoardTitle">${boardTitle}</h4>
+                    <span class="takma-linkCardTitle">${cardTitle}</span>
+                </button>`;
+            }
+
+            return styledLink;
+        } else
+        {
+            // Use the default link rendering for other links
+            return marked.Renderer.prototype.link.call(this, href, title, text);
+        }
+    };
+    //endregion
+
+    const markedJsOptions = {
+        mangle: false,
+        headerIds: false,
+        renderer: markedCustomRenderer
+    };
+
+    function parseMarkdown(textToParse: string): string
+    {
+        textToParse = textToParse.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,""); // remove the most common zerowidth characters from the start of the file
+
+        let preprocessed = preprocessMarkdown(textToParse);
+        let parsedText = marked.parse(preprocessed, markedJsOptions);
+        let sanitized = DOMPurify.sanitize(parsedText);
+
+        return sanitized;
+    }
+
+    /**
+     * Custom preprocessing function to convert custom takmaLink format to valid Markdown links
+     * In our custom renderer, we overwrite the link function `markedCustomRenderer.link`. But since takma://, unlike http:// and https:// isn't considered a link; that `markedCustomRenderer.link` wouldn't "catch" our takmaLinks. So here we make a markdown link from the takma links `[takmaLink](takmaLink)`. This way the parser considers it a link
+     */
+    function preprocessMarkdown(markdown)
+    {
+        return markdown.replace(takmaLinkPattern, '[$&]($&)');
+    }
+
+    function handleDescriptionHolderClick(e)
+    {
+        if (e.target.tagName === "A")
+        {
+            e.stopPropagation(); //Otherwise we start editing the description when we click on a link
+
+            open(e.target.href); //Op deze manier wordt de link in de default browser van de gebruiker geopend. Als we dit niet doen wordt de link geopend in het Tauri venster
+            e.preventDefault(); //Als we dit niet doen, wordt de links alsnog in het Tauri venster geopend, nadat het is geopend geweest in de default browser.
+        }
+        else if (e.target.tagName === "BUTTON" || e.target.tagName === "H4" || e.target.tagName === "SPAN")
+        {//Our custom takmaLinks get turned in a button which has a H4 and SPAN in it. So if that is the target, it means we clicked on a takmaLink
+            e.stopPropagation(); //Otherwise we start editing the description when we click on this button
+
+            let takmaLink;
+
+            if (e.target.tagName === "BUTTON")
+            {
+                takmaLink = e.target.id;
+            }
+            else
+            {
+                takmaLink = e.target.parentNode.id;
+            }
+
+            let match = takmaLink.match(takmaLinkPattern);
+            let boardId = match[1];
+            let cardId = match[2];
+
+            let boardTitle;
+            let cardTitle;
+
+            try
+            {
+                boardTitle = SaveLoadManager.getData().getBoard(boardId).title;
+                cardTitle = SaveLoadManager.getData().getCard(boardId, cardId).title;
+            }
+            catch (e)
+            {
+                console.log(`Couldn't get title from board and/ord card with takmaLink:${takmaLink}. Meaning the id of either the board/card is wrong.`)
+            }
+            finally
+            {
+                if (boardTitle != undefined && cardTitle != undefined)
+                {
+                    $selectedBoardId = boardId;
+                    $selectedCardId = cardId;
+                }
+                else if (boardTitle != undefined)
+                {
+                    $selectedBoardId = boardId;
+                    $selectedCardId = "";
+                }
+
+                refreshListsFunction();
+            }
+        }
+        else
+        {
+            cardDesc = cardToSave.description;
+            editingDescription = true;
+        }
+    }
+
+    let descriptionPreElement;
+    $: (editingDescription && descriptionPreElement) && descriptionPreElement.focus();
 </script>
 
 {#if showPopup}
@@ -97,19 +250,20 @@
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
                     {#if editingDescription}
-                        <span role="textbox" contenteditable
-                              on:input={(e) => cardToSave.description = e.target.innerText.replace(/\n{2}/g, "\n")}
+                        <pre role="textbox" contenteditable
+                             bind:this={descriptionPreElement}
+                              on:input={(e) => cardToSave.description = e.target.innerText.trim()}
                               on:focus={() => typing = true}
                               on:focusout={() => typing = false}
                               on:paste|preventDefault={e => document.execCommand("insertText", false, e.clipboardData.getData("text/plain"))}
                               use:clickOutside
                               on:click_outside={() => editingDescription = false}
-                        >{cardDesc}</span>
+                        >{cardDesc}</pre>
                     {:else}
                         <div class="renderedDescriptionHolder"
-                            on:click={() => cardDesc = cardToSave.description}
-                            on:click={() => editingDescription = true}>
-                            {@html cardToSave.description}
+                             on:click={handleDescriptionHolderClick}
+                        >
+                            {@html parseMarkdown(cardToSave.description)}
                         </div>
                     {/if}
                 </div>
@@ -137,7 +291,22 @@
                     <span>
                         %%Actions
                     </span>
-                    <button on:click={() => showNotification("%%Copied link to this card to clipboard, paste it in any other card's description")}>
+                    <button
+                            on:click={async () => {
+                                let linkToThisCard = `takma://${$selectedBoardId}/${cardToSave.id}`
+                                await writeText(linkToThisCard);
+
+                                let textInClipboard = await readText();
+                                if (textInClipboard === linkToThisCard)
+                                {
+                                    showNotification("%%Copied link to this card to clipboard, paste it in any other card's description")
+                                }
+                                else
+                                {
+                                    showNotification("%%Couldn't copy link to clipboard, the link to this card is: " + linkToThisCard);
+                                }
+                            }}
+                    >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                         %%Link
                     </button>
@@ -242,7 +411,7 @@
         width: 100%;
     }
 
-    .cardMainAreaHolder span {
+    .cardMainAreaHolder pre {
         padding: 0.5em 0.25em;
         border-radius: 0.5em;
         border: 2px solid transparent;
@@ -254,14 +423,17 @@
         display: block;
         overflow: hidden;
         min-height: 3em;
+        margin: 0;
+        word-break: break-word;
+        white-space: break-spaces;
     }
 
-    .cardMainAreaHolder span[contenteditable]:empty::before {
-        content: "%%Add a more detailed description...";
+    .cardMainAreaHolder pre[contenteditable]:empty::before {
+        content: "%%Add a more detailed description using Markdown...";
         color: gray;
     }
 
-    .cardMainAreaHolder span:focus, .cardMainAreaHolder span:hover {
+    .cardMainAreaHolder pre:focus, .cardMainAreaHolder pre:hover {
         border: 2px solid var(--accent);
         box-shadow: 0 0 0 0;
     }
@@ -278,6 +450,14 @@
         border: 2px solid var(--accent);
         box-shadow: 0 0 0 0;
         cursor: pointer;
+    }
+
+    :global(.renderedDescriptionHolder *:first-child) {
+        margin-top: 0;
+    }
+
+    :global(.renderedDescriptionHolder *) {
+        word-break: break-word;
     }
 
     .cardActionsHolder {
@@ -312,5 +492,35 @@
 
     .cardActionsHolder button svg {
         height: 1.25em;
+    }
+
+    :global(.takma-link) {
+        display: inline-flex;
+        background: transparent;
+        border: 2px solid var(--border);
+        border-radius: 4px;
+        align-items: center;
+        padding: 0 0.5em 0 0;
+        gap: 0.5em;
+        cursor: pointer;
+        min-height: 1em;
+    }
+
+    :global(.takma-linkBoardTitle) {
+        background: var(--border);
+        padding: 0.25em;
+        text-transform: uppercase;
+        margin: 0;
+        font-weight: bold;
+        min-height: 1em;
+        height: 100%;
+        min-width: 1em;
+    }
+
+    :global(.takma-linkCardTitle) {
+        color: var(--accent);
+        font-style: italic;
+        min-height: 1em;
+        min-width: 2em;
     }
 </style>
