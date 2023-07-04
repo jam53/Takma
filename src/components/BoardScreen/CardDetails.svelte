@@ -5,11 +5,16 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card} from "../../scripts/Board";
     import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+    import {clickOutside} from "../../scripts/ClickOutside";
 
     export let refreshListsFunction;
 
     let typing: boolean; //If we are currently typing, we make sure we don't focus in `afterUpdate` on the containing div. Otherwise we would lose focus of whatever element we are typing in, after every keystroke. As for why we focus one the containing div (overlayElement), this is because otherwise we wouldn't be able to detect keyDown events; these are used to check for Esc / Ctrl+W events to close the CardDetails window
     let cardToSave: Card; //Rather than saving every single time for every change, we will keep track of the current card in this variable, and once we close the CardDetails window, only then will we save the card to disk.
+
+    let cardDesc; // We use a separate variable, and not `cardToSave.description`. This because in the <span> where we use this `cardDesc`, if we would use `cardToSave.description`. The content of the <span> would be updated as we typed, causing weird behaviour like the stuff we typed appearing twice and so on. Doing it this way with a separate variable circumvents that issue
+
+    let editingDescription: boolean = false; //We use this to know whether or not we should display the rendered html of the description, or display the <span> so that the user can edit the description
 
     onMount(() =>
     {
@@ -25,7 +30,6 @@
                 showPopup = false;
             }
         });
-
     });
 
     afterUpdate(() =>
@@ -69,7 +73,6 @@
             sendNotification({ title: 'Takma', body: message });
         }
     }
-
 </script>
 
 {#if showPopup}
@@ -78,11 +81,12 @@
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <span role="textbox" contenteditable
+                      on:input={(e) => cardToSave.title = e.target.textContent}
                       on:focus={() => typing = true}
-                      on:focusout={(e) => {typing = false; cardToSave.title = e.target.textContent}}
-                      on:keydown|stopPropagation={e => (e.keyCode === 13) && e.preventDefault()}
+                      on:focusout={() => typing = false}
+                      on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
                 >
-<!--This keycode 13 check prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
+<!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
                     {cardToSave.title}
                 </span>
                 <svg on:click={closeCard} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
@@ -92,7 +96,22 @@
             <hr/>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
-                    description
+                    {#if editingDescription}
+                        <span role="textbox" contenteditable
+                              on:input={(e) => cardToSave.description = e.target.innerText.replace(/\n{2}/g, "\n")}
+                              on:focus={() => typing = true}
+                              on:focusout={() => typing = false}
+                              on:paste|preventDefault={e => document.execCommand("insertText", false, e.clipboardData.getData("text/plain"))}
+                              use:clickOutside
+                              on:click_outside={() => editingDescription = false}
+                        >{cardDesc}</span>
+                    {:else}
+                        <div class="renderedDescriptionHolder"
+                            on:click={() => cardDesc = cardToSave.description}
+                            on:click={() => editingDescription = true}>
+                            {@html cardToSave.description}
+                        </div>
+                    {/if}
                 </div>
                 <div class="cardActionsHolder">
                     <span>
@@ -215,10 +234,50 @@
 
     .bottomPart {
         display: flex;
+        gap: 1em;
+        justify-content: space-between;
     }
 
     .cardMainAreaHolder {
-        border: 1px solid red;
+        width: 100%;
+    }
+
+    .cardMainAreaHolder span {
+        padding: 0.5em 0.25em;
+        border-radius: 0.5em;
+        border: 2px solid transparent;
+        background: var(--border);
+        transition: 0.3s;
+        font-size: medium;
+        resize: none;
+        cursor: text;
+        display: block;
+        overflow: hidden;
+        min-height: 3em;
+    }
+
+    .cardMainAreaHolder span[contenteditable]:empty::before {
+        content: "%%Add a more detailed description...";
+        color: gray;
+    }
+
+    .cardMainAreaHolder span:focus, .cardMainAreaHolder span:hover {
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 0 0;
+    }
+
+    .renderedDescriptionHolder {
+        transition: 0.3s;
+        border: 2px solid transparent;
+        border-radius: 0.5em;
+        min-height: 3em;
+        padding: 0.5em 0.25em;
+    }
+
+    .renderedDescriptionHolder:hover {
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 0 0;
+        cursor: pointer;
     }
 
     .cardActionsHolder {
@@ -248,6 +307,7 @@
 
     #deleteButton:hover {
         background-color: #c43420;
+        color: white;
     }
 
     .cardActionsHolder button svg {

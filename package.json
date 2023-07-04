@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "0.0.0",
-    "build": 187,
+    "build": 190,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -13,6 +13,8 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^1.4.0",
+        "@types/dompurify": "^3.0.2",
+        "@types/marked": "^5.0.0",
         "svelte-dnd-action": "^0.9.22"
     },
     "devDependencies": {
