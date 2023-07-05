@@ -260,7 +260,7 @@
                               on:click_outside={() => editingDescription = false}
                         >{cardDesc}</pre>
                     {:else}
-                        <div class="renderedDescriptionHolder"
+                        <div class="renderedDescriptionHolder markdown-body"
                              on:click={handleDescriptionHolderClick}
                         >
                             {@html parseMarkdown(cardToSave.description)}
