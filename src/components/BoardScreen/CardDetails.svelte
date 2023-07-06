@@ -1,39 +1,3 @@
-<svelte:head>
-
-<!--If we would apply these styles in this component's <style> part rather than here. Than there styleclasses would be overriden by the github-markdown.css file. By putting the styles here that is no longer the case-->
-<style>
-    .markdown-body .takma-link {
-        display: inline-flex;
-        background: transparent;
-        border: 2px solid var(--border);
-        border-radius: 4px;
-        align-items: center;
-        padding: 0 0.5em 0 0;
-        gap: 0.5em;
-        cursor: pointer;
-        min-height: 1em;
-    }
-
-    .markdown-body .takma-linkBoardTitle {
-        background: var(--border);
-        padding: 0.25em;
-        text-transform: uppercase;
-        margin: 0;
-        font-weight: bold;
-        min-height: 1em;
-        height: 100%;
-        min-width: 1em;
-    }
-
-    .markdown-body .takma-linkCardTitle {
-        color: var(--accent);
-        font-style: italic;
-        min-height: 1em;
-        min-width: 2em;
-    }
-</style>
-</svelte:head>
-
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
     import {afterUpdate, onMount} from "svelte";
@@ -79,6 +43,12 @@
         if (!typing && showPopup)
         {
             overlayElement && overlayElement.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
+        }
+
+        if (!typing)
+        {
+            hljs.highlightAll(); //Applies syntax highlighting to codeblocks. We don't need to do this after every update when we are editing the description, only when we are viewing the "rendered" Markdown version of the description. Hence the if.
+            //The IDE throws an error for `hljs`, saying it isn't defined. This is fine because we import the script in our index.html as `<script src="./src/scripts/highlight.min.js"><\/script>`
         }
     });
 
@@ -528,5 +498,39 @@
 
     .cardActionsHolder button svg {
         height: 1.25em;
+    }
+
+    :global(code > *) {
+        font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+    }
+
+    :global(.markdown-body .takma-link) {
+        display: inline-flex;
+        background: transparent;
+        border: 2px solid var(--border);
+        border-radius: 4px;
+        align-items: center;
+        padding: 0 0.5em 0 0;
+        gap: 0.5em;
+        cursor: pointer;
+        min-height: 1em;
+    }
+
+    :global(.markdown-body .takma-linkBoardTitle) {
+        background: var(--border);
+        padding: 0.25em;
+        text-transform: uppercase;
+        margin: 0;
+        font-weight: bold;
+        min-height: 1em;
+        height: 100%;
+        min-width: 1em;
+    }
+
+    :global(.markdown-body .takma-linkCardTitle) {
+        color: var(--accent);
+        font-style: italic;
+        min-height: 1em;
+        min-width: 2em;
     }
 </style>
