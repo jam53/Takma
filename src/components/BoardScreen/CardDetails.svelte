@@ -1,3 +1,39 @@
+<svelte:head>
+
+<!--If we would apply these styles in this component's <style> part rather than here. Than there styleclasses would be overriden by the github-markdown.css file. By putting the styles here that is no longer the case-->
+<style>
+    .markdown-body .takma-link {
+        display: inline-flex;
+        background: transparent;
+        border: 2px solid var(--border);
+        border-radius: 4px;
+        align-items: center;
+        padding: 0 0.5em 0 0;
+        gap: 0.5em;
+        cursor: pointer;
+        min-height: 1em;
+    }
+
+    .markdown-body .takma-linkBoardTitle {
+        background: var(--border);
+        padding: 0.25em;
+        text-transform: uppercase;
+        margin: 0;
+        font-weight: bold;
+        min-height: 1em;
+        height: 100%;
+        min-width: 1em;
+    }
+
+    .markdown-body .takma-linkCardTitle {
+        color: var(--accent);
+        font-style: italic;
+        min-height: 1em;
+        min-width: 2em;
+    }
+</style>
+</svelte:head>
+
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
     import {afterUpdate, onMount} from "svelte";
@@ -492,35 +528,5 @@
 
     .cardActionsHolder button svg {
         height: 1.25em;
-    }
-
-    :global(.takma-link) {
-        display: inline-flex;
-        background: transparent;
-        border: 2px solid var(--border);
-        border-radius: 4px;
-        align-items: center;
-        padding: 0 0.5em 0 0;
-        gap: 0.5em;
-        cursor: pointer;
-        min-height: 1em;
-    }
-
-    :global(.takma-linkBoardTitle) {
-        background: var(--border);
-        padding: 0.25em;
-        text-transform: uppercase;
-        margin: 0;
-        font-weight: bold;
-        min-height: 1em;
-        height: 100%;
-        min-width: 1em;
-    }
-
-    :global(.takma-linkCardTitle) {
-        color: var(--accent);
-        font-style: italic;
-        min-height: 1em;
-        min-width: 2em;
     }
 </style>
