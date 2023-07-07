@@ -255,6 +255,12 @@
             <hr/>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
+                    <div class="labels">
+                        {#each cardToSave.labels as label}
+                            <div style="background-color: {label}">
+                            </div>
+                        {/each}
+                    </div>
                     {#if editingDescription}
                         <pre role="textbox" contenteditable
                              bind:this={descriptionPreElement}
@@ -532,5 +538,23 @@
         font-style: italic;
         min-height: 1em;
         min-width: 2em;
+    }
+
+    .labels {
+        padding-bottom: 0.5em;
+        display: flex;
+        gap: 0.5em;
+        flex-wrap: wrap;
+    }
+
+    .labels:empty {
+        padding: 0;
+    }
+
+    .labels div {
+        height: 1.5em;
+        width: 2.5em;
+        border-radius: 4px;
+        cursor: pointer;
     }
 </style>
