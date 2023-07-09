@@ -10,6 +10,7 @@
     import DOMPurify from "dompurify";
     import {open} from "@tauri-apps/api/shell"
     import {readText, writeText} from "@tauri-apps/api/clipboard";
+    import hljs from "highlight.js";
 
     export let refreshListsFunction;
 
@@ -48,7 +49,7 @@
         if (!typing)
         {
             hljs.highlightAll(); //Applies syntax highlighting to codeblocks. We don't need to do this after every update when we are editing the description, only when we are viewing the "rendered" Markdown version of the description. Hence the if.
-            //The IDE throws an error for `hljs`, saying it isn't defined. This is fine because we import the script in our index.html as `<script src="./src/scripts/highlight.min.js"><\/script>`
+            //The IDE throws an error for `highlightAll()`, saying it isn't defined. This is fine because we import hljs as so: `import hljs from "highlight.js";`. Which does include the function `highlightAll()`
         }
     });
 
