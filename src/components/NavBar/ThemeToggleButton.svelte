@@ -46,6 +46,7 @@
         border-radius: var(--toggleHeight);
         transition: all 500ms ease-in-out;
         background: var(--bgColor--night);
+        -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
     .day {
         background: #ffbf71;

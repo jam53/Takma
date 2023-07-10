@@ -47,7 +47,7 @@
         padding: 0.5em;
         transition: 0.4s;
 
-        background-color: var(--background-color);
+        background: transparent;
     }
 
     .leftSideContainer {
@@ -66,6 +66,7 @@
         height: inherit;
         cursor: pointer;
         transition: 0.3s;
+        -webkit-filter: drop-shadow(0 0 3px rgba(0, 0, 0, .35));
     }
 
     .takmaLogo:hover {
@@ -95,6 +96,7 @@
         height: inherit;
         cursor: pointer;
         fill: var(--unselected-buton);
+        -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 
     .settingsImage:hover {
@@ -110,5 +112,6 @@
         font-weight: bold;
         padding: 0;
         flex-grow: 1;
+        -webkit-filter: drop-shadow( 0 0 10px rgba(var(--background-color-rgb-values), .75));
     }
 </style>

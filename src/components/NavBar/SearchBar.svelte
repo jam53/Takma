@@ -58,6 +58,9 @@
     .containingDiv:hover, .containingDiv:focus-within, .containingDiv.active {
         border: var(--unselected-buton) 1px solid;
         border-radius: 0.75em;
+        background-color: rgba(var(--background-color-rgb-values), 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     .searchBar {
@@ -81,6 +84,7 @@
         cursor: pointer;
         padding: 0;
         transition: 0.5s;
+        -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 
     .containingDiv:hover .searchIcon, .containingDiv:focus-within .searchIcon, .searchIcon.active {

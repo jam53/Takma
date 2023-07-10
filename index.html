@@ -43,7 +43,7 @@
 <style>
     .titlebar {
         height: 30px;
-        background: var(--background-color);
+        background: transparent;
         user-select: none;
         display: flex;
         position: sticky;
@@ -93,6 +93,8 @@
         width: 46px;
         height: 27px;
         transition: 0.3s;
+        -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .35));
+        cursor: pointer;
     }
 
     .titlebar-button-close {

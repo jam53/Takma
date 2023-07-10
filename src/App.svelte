@@ -24,11 +24,13 @@
             if (boardId === $selectedBoardId)
             {
                 document.body.style.backgroundImage = `url('${imgUrl}')`;
+                document.body.style.backgroundColor = `transparent`;
             }
         }
         else
         {
             document.body.style.backgroundImage = "";
+            document.body.style.backgroundColor = `var(--background-color)`;
         }
     });
 

@@ -38,6 +38,7 @@
         height: inherit;
         transition: 0.5s;
         cursor: pointer;
+        -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 
     .deleteIcon:hover {
