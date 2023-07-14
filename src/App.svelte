@@ -9,6 +9,7 @@
     import type {Board} from "./scripts/Board";
     import {getImageUrl} from "./scripts/GetImageUrl";
     import {appWindow} from "@tauri-apps/api/window";
+    import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
 
     /**
      * Sets the background image of the body to the image of the selected board
@@ -60,7 +61,9 @@
     <h1>%%Loading savefile</h1>
 {:then _}
     <NavBar/>
-        {#if $selectedBoardId === ""}
+        {#if localStorage.getItem("saveLocation") === null}
+          <ChooseSaveLocationScreen/>
+        {:else if $selectedBoardId === ""}
             <div class="scroll-container">
             <!--Indien we op het boardscreen ook willen kunnen scrollen, dan zetten we die best ook in deze div. Maar dat willen we niet, we willen alleen kunnen scrollen in de lijsten. Niet het volledige boardscreen zelf-->
                 <WelcomeScreen/>

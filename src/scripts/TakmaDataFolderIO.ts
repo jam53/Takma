@@ -32,7 +32,7 @@ export async function saveFileToDisk(file: File, boardID: string): Promise<strin
  */
 async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
 {
-    let savePath = `./Files/${boardID}/`;
+    let savePath = `./Takma/Files/${boardID}/`;
 
     await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
 

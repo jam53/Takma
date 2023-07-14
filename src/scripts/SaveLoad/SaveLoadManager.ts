@@ -1,7 +1,7 @@
-import {BaseDirectory, exists, readTextFile, writeTextFile} from "@tauri-apps/api/fs";
+import {BaseDirectory, createDir, exists, readTextFile, writeTextFile} from "@tauri-apps/api/fs";
 import {TakmaData} from "./TakmaData";
 import {message} from "@tauri-apps/api/dialog";
-import {appLocalDataDir} from "@tauri-apps/api/path";
+import {appLocalDataDir, documentDir} from "@tauri-apps/api/path";
 
 /**
  * This class is used to save/load data within Takma
@@ -14,12 +14,18 @@ export class SaveLoadManager
 
     static
     {
-        this.saveFilename = "Takma.json";
-        this.saveDirectory = BaseDirectory.AppLocalData;
+        this.saveFilename = "./Takma/Takma.json";
+        this.saveDirectory = parseInt(localStorage.getItem("saveLocation") ?? BaseDirectory.AppLocalData.toString());
         /* Rather than using one of the predefined paths under `BaseDirectory`, we could also just save our data in an arbitrary location.
          * However, this would require us to call a function from Rust who would then write/read to/from the disk.
          * Since we are happy with AppData/Local/com.jam54.Takma, we didn't bother to write to a specific location using a function in the Rust backend.
          * And instead opted to use one of the predefined location to save/load from. Thus allowing us to do the IO entirely in TS, without having to call a Rust function.
+         */
+        /* The `saveDirectory` variable of type `BaseDirectory` is basically an enum. Where Document = 7 and AppLocalData = 23.
+         * So depending on the value of `localStorage.getItem("saveLocation")`, either 7 or 23 we set the `saveDirectory` value.
+         * The value of "saveLocation" gets selected by the user in the ChooseSaveLocationScreen.svelte screen.
+         * This screen gets show when the value of "saveLocation" === null. But here we also fallback to AppLocalData in case the value of
+         * "saveLocation" should be null with the ?? operator
          */
         this.data = new TakmaData();
         /* Our TakmaData object holds all the variables + instantiated with their default values.
@@ -34,6 +40,9 @@ export class SaveLoadManager
      */
     public static async loadSaveFileFromDisk(): Promise<void>
     {
+        const folderToSave = this.saveFilename.substring(0, this.saveFilename.lastIndexOf("/")); //Extracts the path to the folder where the saveFile is located by removing the saveFile name from the given path.
+        await createDir(folderToSave, {dir: SaveLoadManager.getSaveDirectory(), recursive: true}); //Should the folder not exist and we don't create it here, the next if will throw an error.
+
         if (await exists(this.saveFilename, {dir: this.saveDirectory})) //Check if the save file exists, before trying to use it to overwrite the default values
         {
             let fileContents: string = await readTextFile(this.saveFilename, {dir: this.saveDirectory});
@@ -55,8 +64,9 @@ export class SaveLoadManager
             }
             catch (error)
             {
-                await writeTextFile("Corrupted_" + this.saveFilename, fileContents, {dir: this.saveDirectory});
-                const savePath: string = await appLocalDataDir() + "Corrupted_" + this.saveFilename;
+                await writeTextFile(this.saveFilename + "_Corrupted", fileContents, {dir: this.saveDirectory});
+                const saveDir: string = this.getSaveDirectory() === BaseDirectory.AppLocalData ? await appLocalDataDir() : await documentDir();
+                const savePath: string = saveDir + this.saveFilename + "_Corrupted";
                 await message("%%The save file has been corrupted and will be replaced with a new, functional file. Additionally, a copy of the corrupted file will be created and placed at the following location: " + savePath, { title: "Takma", type: "error" });
             }
         }
