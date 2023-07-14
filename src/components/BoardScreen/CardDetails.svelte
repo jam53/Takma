@@ -263,12 +263,11 @@
                         {/each}
                     </div>
                     {#if editingDescription}
-                        <pre role="textbox" contenteditable
+                        <pre role="textbox" contenteditable="plaintext-only"
                              bind:this={descriptionPreElement}
                               on:input={(e) => cardToSave.description = e.target.innerText.trim()}
                               on:focus={() => typing = true}
                               on:focusout={() => typing = false}
-                              on:paste|preventDefault={e => document.execCommand("insertText", false, e.clipboardData.getData("text/plain"))}
                               use:clickOutside
                               on:click_outside={() => editingDescription = false}
                         >{cardDesc}</pre>
