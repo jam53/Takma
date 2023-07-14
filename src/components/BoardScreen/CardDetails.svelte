@@ -88,6 +88,7 @@
     }
 
     //region markedjs custom renderer
+    const takmaLinkPatternGlobal = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/ig;
     const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
     // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
     // `([\w-]+)` - This is the first capturing group (`(...)`) and it matches one or more word characters `(\w)` or hyphens (`-`). The hyphen is included within the character set `[\w-]`. Word characters include uppercase and lowercase letters, digits, and underscores. This capturing group captures the board ID.
@@ -165,7 +166,7 @@
      */
     function preprocessMarkdown(markdown)
     {
-        return markdown.replace(takmaLinkPattern, '[$&]($&)');
+        return markdown.replaceAll(takmaLinkPatternGlobal, '[$&]($&)');
     }
 
     function handleDescriptionHolderClick(e)
