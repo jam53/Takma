@@ -526,7 +526,7 @@
         background: var(--border);
         padding: 0.25em;
         text-transform: uppercase;
-        margin: 0;
+        margin: -1px;
         font-weight: bold;
         min-height: 1em;
         height: 100%;
