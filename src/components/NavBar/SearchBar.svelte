@@ -1,6 +1,6 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import {searchBarValue} from "../../scripts/stores";
+    import {searchBarValue, selectedBoardId} from "../../scripts/stores";
 
     let searchBar;
     let containingDiv;
@@ -38,6 +38,12 @@
             searchBarIcon.classList.add("active");
         }
     }
+
+    selectedBoardId.subscribe(value =>
+    {
+        $searchBarValue = ""; //Every time the selectedBoardId changes, we clear the value of the searchbar. I.e. when going from the welcome screen -> board screen, board screen -> welcome screen, board screen -> another board screen
+        searchBar && handleSearchBar(); //If the `searchBar` is undefined,  `handleSearchBar()` will throw an error. Therefore the inline if
+    });
 </script>
 
 <div bind:this={containingDiv} class="containingDiv active">
