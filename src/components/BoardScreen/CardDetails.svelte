@@ -128,10 +128,10 @@
             finally
             {
                 styledLink = `
-                <button id="${href}" class="takma-link">
-                    <h4 class="takma-linkBoardTitle">${boardTitle}</h4>
-                    <span class="takma-linkCardTitle">${cardTitle}</span>
-                </button>`;
+                <span data-takmalink="${href}" class="takma-link">
+                    <span data-takmalink="${href}" class="takma-linkBoardTitle">${boardTitle}</span>
+                    <span data-takmalink="${href}" class="takma-linkCardTitle">${cardTitle}</span>
+                </span>`;
             }
 
             return styledLink;
@@ -171,27 +171,11 @@
 
     function handleDescriptionHolderClick(e)
     {
-        if (e.target.tagName === "A")
-        {
-            e.stopPropagation(); //Otherwise we start editing the description when we click on a link
-
-            open(e.target.href); //Op deze manier wordt de link in de default browser van de gebruiker geopend. Als we dit niet doen wordt de link geopend in het Tauri venster
-            e.preventDefault(); //Als we dit niet doen, wordt de links alsnog in het Tauri venster geopend, nadat het is geopend geweest in de default browser.
-        }
-        else if (e.target.tagName === "BUTTON" || e.target.tagName === "H4" || e.target.tagName === "SPAN")
-        {//Our custom takmaLinks get turned in a button which has a H4 and SPAN in it. So if that is the target, it means we clicked on a takmaLink
+        if (e.target.dataset.takmalink)
+        {//Our custom takmaLinks get turned in a SPAN tag which has 2 child SPAN elements, all of which have `takmalink` as a custom data attribute. So if the target contains a `takmalink` data attribute, it means we clicked on a takmaLink
             e.stopPropagation(); //Otherwise we start editing the description when we click on this button
 
-            let takmaLink;
-
-            if (e.target.tagName === "BUTTON")
-            {
-                takmaLink = e.target.id;
-            }
-            else
-            {
-                takmaLink = e.target.parentNode.id;
-            }
+            let takmaLink = e.target.dataset.takmalink;
 
             let match = takmaLink.match(takmaLinkPattern);
             let boardId = match[1];
@@ -224,6 +208,13 @@
 
                 refreshListsFunction();
             }
+        }
+        else if (e.target.tagName === "A")
+        {
+            e.stopPropagation(); //Otherwise we start editing the description when we click on a link
+
+            open(e.target.href); //Op deze manier wordt de link in de default browser van de gebruiker geopend. Als we dit niet doen wordt de link geopend in het Tauri venster
+            e.preventDefault(); //Als we dit niet doen, wordt de links alsnog in het Tauri venster geopend, nadat het is geopend geweest in de default browser.
         }
         else
         {
@@ -512,13 +503,11 @@
     }
 
     :global(.markdown-body .takma-link) {
-        display: inline-flex;
         background: transparent;
         border: 2px solid var(--border);
         border-radius: 4px;
         align-items: center;
-        padding: 0 0.5em 0 0;
-        gap: 0.5em;
+        padding: 0 0 1px 0;
         cursor: pointer;
         min-height: 1em;
     }
@@ -527,11 +516,12 @@
         background: var(--border);
         padding: 0.25em;
         text-transform: uppercase;
-        margin: -1px;
+        margin: 0;
+        font-size: small;
         font-weight: bold;
         min-height: 1em;
         height: 100%;
-        min-width: 1em;
+        word-break: break-all;
     }
 
     :global(.markdown-body .takma-linkCardTitle) {
@@ -539,6 +529,8 @@
         font-style: italic;
         min-height: 1em;
         min-width: 2em;
+        word-break: break-all;
+        padding: 0 0.5em 0 0.25em;
     }
 
     .labels {
