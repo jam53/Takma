@@ -63,6 +63,7 @@ export class TakmaData
             creationDate: Date.now(),
             backgroundImagePath: await saveFilePathToDisk(backgroundImagePath, boardId),
             title: title,
+            labels: [],
             lists: []
         };
 
@@ -186,7 +187,7 @@ export class TakmaData
             attachments: [],
             coverImageIndex: -1,
             todos: [],
-            labels: []
+            labelIds: []
         };
 
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
@@ -280,6 +281,17 @@ export class TakmaData
                 }
             }
         }
+    }
+
+    /**
+     * Given a labelId, returns the color matching that labelId
+     * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
+     */
+    public getLabelColor(boardId: string, labelId): string
+    {
+        let board: Board = this._boards.find(board => board.id === boardId);
+
+        return board.labels.find(label => label.id === labelId).color;
     }
     //endregion
 }

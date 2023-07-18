@@ -11,6 +11,7 @@
     import {open} from "@tauri-apps/api/shell"
     import {readText, writeText} from "@tauri-apps/api/clipboard";
     import hljs from "highlight.js";
+    import LabelsPopup from "./LabelsPopup.svelte";
 
     export let refreshListsFunction;
 
@@ -225,6 +226,11 @@
 
     let descriptionPreElement;
     $: (editingDescription && descriptionPreElement) && descriptionPreElement.focus();
+
+    function refreshCardFunction()
+    {
+        cardToSave = cardToSave;
+    }
 </script>
 
 {#if showPopup}
@@ -249,8 +255,10 @@
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
                     <div class="labels">
-                        {#each cardToSave.labels as label}
-                            <div style="background-color: {label}">
+                        {#each cardToSave.labelIds as labelId}
+                            <div style="background-color: {SaveLoadManager.getData().getLabelColor($selectedBoardId, labelId)}"
+                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction}, target: document.body, intro: true})}
+                            >
                             </div>
                         {/each}
                     </div>
@@ -275,7 +283,9 @@
                     <span>
                         %%Add to card
                     </span>
-                    <button>
+                    <button
+                            on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction}, target: document.body, intro: true})}
+                    >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         %%Labels
                     </button>
@@ -549,5 +559,10 @@
         width: 2.5em;
         border-radius: 4px;
         cursor: pointer;
+        transition: 0.1s;
+    }
+
+    .labels div:hover {
+        filter: brightness(70%);
     }
 </style>

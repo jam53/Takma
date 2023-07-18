@@ -4,7 +4,8 @@ export interface Board
     creationDate: number, //in milliseconds unix time
     title: string,
     backgroundImagePath: string, //path to the background image
-    lists: List[] //The lists in this board
+    lists: List[], //The lists in this board,
+    labels: Label[] //The labels in this board, which can be assigned to/are visible on cards
 }
 
 export interface List
@@ -24,11 +25,17 @@ export interface Card
     attachments: string[],
     coverImageIndex: number, //The index points to an image file in the array of attachments in this card, -1 means there is no image to be used as a coverimage for this card
     todos: TodoItem[],
-    labels: string[] //Each string in the array represents a hexadecimal color value, including the #
+    labelIds: string[] //The label ids in this array refer to ids of the labels in the board to which this card belongs to
+}
+
+export interface Label
+{
+    id: string,
+    color: string //Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
 }
 
 export interface TodoItem
 {
-    completed: boolean;
-    content: string;
+    completed: boolean,
+    content: string
 }

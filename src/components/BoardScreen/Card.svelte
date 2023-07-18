@@ -2,7 +2,7 @@
     import type {Card} from "../../scripts/Board";
     import {getImageUrl} from "../../scripts/GetImageUrl";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedCardId} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
 
     export let card: Card;
 
@@ -23,8 +23,8 @@
     {/if}
     <div class="nonCoverImageContainer">
         <div class="labels">
-            {#each card.labels as label}
-                <div style="background-color: {label}">
+            {#each card.labelIds as labelId}
+                <div style="background-color: {SaveLoadManager.getData().getLabelColor($selectedBoardId, labelId)}">
                 </div>
             {/each}
         </div>
