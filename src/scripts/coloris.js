@@ -9,6 +9,7 @@
     const currentColor = { r: 0, g: 0, b: 0, h: 0, s: 0, v: 0, a: 1 };
     let container, picker, colorArea, colorAreaDims, colorMarker, colorPreview, colorValue, clearButton, closeButton,
         hueSlider, hueMarker, alphaSlider, alphaMarker, currentEl, currentFormat, oldColor, keyboardNav;
+    let isOpen = false;
 
     // Default settings
     const settings = {
@@ -310,6 +311,7 @@
             oldColor = currentEl.value;
             currentFormat = getColorFormatFromStr(oldColor);
             picker.classList.add('clr-open');
+            isOpen = true;
 
             updatePickerPosition();
             setColorFromStr(oldColor);
@@ -450,6 +452,7 @@
      * @param {boolean} [revert] If true, revert the color to the original value.
      */
     function closePicker(revert) {
+        isOpen = false;
         if (currentEl && !settings.inline) {
             const prevEl = currentEl;
 
@@ -1051,7 +1054,7 @@
             const shiftKey = event.shiftKey;
             const navKeys = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
-            if (key === 'Escape' || (key === "w" && event.ctrlKey)) {
+            if ((key === 'Escape' || (key === "w" && event.ctrlKey)) && isOpen) {
                 closePicker(true);
                 event.stopPropagation();
 

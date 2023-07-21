@@ -32,6 +32,7 @@
     export let mouseClickEvent;
     export let cardToSave;
     export let refreshCardFunction;
+    export let focusOnCardDetailsFunction;
 
     let navElement;
     $: (mouseClickEvent && navElement) && openContextMenu(mouseClickEvent); //Runs the `openContextMenu()` function to show the context menu, once the `mouseClickEvent` and `navElement` variables are set i.e. no longer undefined
@@ -82,6 +83,7 @@
             // To make context menu disappear when
             // mouse is clicked outside context menu
             showMenu = false;
+            focusOnCardDetailsFunction(); //If we don't do this after closing the LabelsPopup, the CardDetails element wouldn't be selected (as it lost focus as soon as the LabelsPopup element was displayed). Therefore CardDetails wouldn't register the on:keydown event. Instead the Board would register that. If we would then press Escape or Ctrl+W. The board would close, whereas it should be the CardDetails element that is open that should be the one to actually close
         }
     }
 

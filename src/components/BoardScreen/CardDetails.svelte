@@ -248,6 +248,11 @@
             overlayElement.classList.remove("overlayScreenMaximized");
         }
     }
+
+    function focusOnCardDetailsFunction()
+    {
+        overlayElement && overlayElement.focus();
+    }
 </script>
 
 {#if showPopup}
@@ -274,7 +279,7 @@
                     <div class="labels">
                         {#each cardToSave.labelIds as labelId}
                             <div style="background-color: {SaveLoadManager.getData().getLabelColor($selectedBoardId, labelId)}"
-                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction}, target: document.body, intro: true})}
+                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                             >
                             </div>
                         {/each}
@@ -301,7 +306,7 @@
                         %%Add to card
                     </span>
                     <button
-                            on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction}, target: document.body, intro: true})}
+                            on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         %%Labels
