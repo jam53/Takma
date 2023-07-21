@@ -131,6 +131,7 @@
 
 
         refreshCardFunction(); //Refresh the card's UI, so that the newly added label appears
+        closeContextMenu();
     }
 
     function editLabelColor(labelId: string)
@@ -139,6 +140,18 @@
 
         document.getElementById(`colorDiv${labelId}`).style.backgroundColor = lastPickedColor; //Sets the updated color in the labelsPopup UI
         refreshCardFunction(); //Refresh the card's UI, so that the color change appears in the card
+    }
+
+    /**
+     * Deletes a label from the board and from all the cards to which the label has been assigned
+     * @param labelId
+     */
+    function deleteLabel(labelId: string)
+    {
+        SaveLoadManager.getData().removeLabel($selectedBoardId, labelId);
+
+        document.getElementById(`labelOptionDiv${labelId}`).remove();
+        refreshCardFunction(); //Refresh the card's UI, so that the removed label vanishes from the card
     }
 </script>
 
@@ -155,7 +168,7 @@
             <br>
             <div class="labelsHolder">
                 {#each SaveLoadManager.getData().getBoard($selectedBoardId).labels as label}
-                    <div class="labelOption">
+                    <div id={`labelOptionDiv${label.id}`} class="labelOption">
                         <input type="checkbox" checked={cardToSave.labelIds.includes(label.id)}
                              on:click={() => handleLabelClick(label.id)}/>
                         <div id={`colorDiv${label.id}`} style="background-color: {label.color}"
@@ -165,6 +178,11 @@
                         ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         <input id={label.id} value={label.color} on:change={() => editLabelColor(label.id)} class="coloris instance1" style="width: 0; height: 0; border: none; position: absolute"/>
 <!--When we add the `coloris instance1` styleclasses to an `input` or `button`, the color picker will be shown when we click on them. Unfortunately when they contain an svg, the color picker doesn't show up. That's why we have an invisible input here. When we click on the svg, we will programmatically click the input field, thus showing the color picker-->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                             on:click={() => deleteLabel(label.id)}
+                        >
+                            <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+                        </svg>
                     </div>
                 {/each}
             </div>
@@ -208,7 +226,7 @@
         gap: 0.5em;
         max-height: 30vh;
         overflow-y: auto;
-        padding: 0 1em 0 0.5em;
+        padding: 0 0.5em;
     }
 
     .labelOption {
@@ -235,7 +253,7 @@
     }
 
     .labelOption svg {
-        height: 1.4em;
+        width: 2em;
         cursor: pointer;
         transition: 0.3s;
     }

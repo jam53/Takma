@@ -318,5 +318,40 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Removes a label from a board and from all the cards in that board
+     */
+    public removeLabel(boardId: string, labelId: string)
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfLabelInBoard = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
+
+        this._boards[indexOfBoard].labels.splice(indexOfLabelInBoard, 1);
+
+
+        let currentList: List;
+        let currentCard: Card;
+        for (let indexOfList = 0; indexOfList < this._boards[indexOfBoard].lists.length; indexOfList++)
+        {
+            currentList = this._boards[indexOfBoard].lists[indexOfList];
+
+            for (let indexOfCard = 0; indexOfCard < currentList.cards.length; indexOfCard++)
+            {
+                currentCard = currentList.cards[indexOfCard];
+
+                for (let indexOfLabelId = 0; indexOfLabelId < currentCard.labelIds.length; indexOfLabelId++)
+                {
+                    if (currentCard.labelIds[indexOfLabelId] === labelId)
+                    {
+                        this._boards[indexOfBoard].lists[indexOfList].cards[indexOfCard].labelIds.splice(indexOfLabelId, 1);
+                    }
+                }
+            }
+        }
+
+
+        SaveLoadManager.saveToDisk();
+    }
     //endregion
 }
