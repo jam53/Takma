@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, List} from "../Board";
+import type {Board, Card, Label, List} from "../Board";
 import {removeDir} from "@tauri-apps/api/fs";
 import {saveFilePathToDisk} from "../TakmaDataFolderIO";
 
@@ -287,11 +287,23 @@ export class TakmaData
      * Given a labelId, returns the color matching that labelId
      * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
      */
-    public getLabelColor(boardId: string, labelId): string
+    public getLabelColor(boardId: string, labelId: string): string
     {
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId).color;
+    }
+
+    /**
+     * Adds a label to a board
+     */
+    public addLabelToBoard(boardId: string, label: Label)
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+
+        this._boards[indexOfBoard].labels.push(label)
+
+        SaveLoadManager.saveToDisk();
     }
     //endregion
 }

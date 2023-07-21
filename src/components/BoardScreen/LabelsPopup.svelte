@@ -1,8 +1,33 @@
+<svelte:head>
+    <script type="text/javascript">
+        Coloris({
+            el: '.coloris',
+        });
+
+        /** Instances **/
+
+        Coloris.setInstance('.instance1', {
+            theme: 'default',
+            themeMode: document.documentElement.style.getPropertyValue("color-scheme"),
+            formatToggle: true,
+            swatches: [
+                '#067bc2',
+                '#84bcda',
+                '#80e377',
+                '#ffdd00',
+                '#f5771e',
+                '#e73136'
+            ]
+        });
+    </script>
+</svelte:head>
+
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/stores";
+    import type {Label} from "../../scripts/Board";
 
     export let mouseClickEvent;
     export let cardToSave;
@@ -10,6 +35,9 @@
 
     let navElement;
     $: (mouseClickEvent && navElement) && openContextMenu(mouseClickEvent); //Runs the `openContextMenu()` function to show the context menu, once the `mouseClickEvent` and `navElement` variables are set i.e. no longer undefined
+
+    let lastPickedColor: string;  //The last color that was selected using the color picker. Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
+    document.addEventListener('coloris:pick', event => lastPickedColor = event.detail.color);
 
     // pos is cursor position when right click occur
     let pos = {x: 0, y: 0}
@@ -48,9 +76,13 @@
 
     function closeContextMenu()
     {
-        // To make context menu disappear when
-        // mouse is clicked outside context menu
-        showMenu = false;
+        //This makes it so we don't close the LabelsPopup whilst the color picker is open. Clickoutside would fire and cause this function to be executed when we click on the color picker, since the color picker is a seperate object in the DOM and not part of the LabelsPopup
+        if (document.querySelector(".clr-open") === null)
+        {
+            // To make context menu disappear when
+            // mouse is clicked outside context menu
+            showMenu = false;
+        }
     }
 
     function getContextMenuDimension(node)
@@ -82,6 +114,24 @@
         cardToSave = cardToSave; //We do this so that when we select/unselect a label by clicking on the colored div bar, rather than the checbkox. That the checkbox would also update to reflect the new state
         refreshCardFunction(); //We do this so that once we add/remove a label. The card which shows the labels, updates, otherwise the newly added/removed labels wouldn't appear until the next time we open this card.
     }
+
+    function createNewLabel()
+    {
+        const newLabelId = crypto.randomUUID();
+
+        //region add label to board
+        const newLabel: Label = {
+            id: newLabelId,
+            color: lastPickedColor
+        };
+        SaveLoadManager.getData().addLabelToBoard($selectedBoardId, newLabel);
+        //endregion
+
+        cardToSave.labelIds.push(newLabelId); //Add label to this card
+
+
+        refreshCardFunction(); //Refresh the card's UI, so that the newly added label appears
+    }
 </script>
 
 {#if showMenu}
@@ -107,7 +157,10 @@
                 {/each}
             </div>
             <br>
-            <button class="createNewLabelButton">
+            <button class="createNewLabelButton coloris instance1" value="red"
+                on:change={createNewLabel}
+            >
+<!--When clicking on this  button, the color picker will automatically be opened-->
                 %%Create a new label
             </button>
         </div>
@@ -130,7 +183,7 @@
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         width: 18em;
-        padding: 1em;
+        padding: 1em 0.5em 0.5em 0.5em;
     }
 
     .title {
@@ -141,6 +194,9 @@
         display: flex;
         flex-direction: column;
         gap: 0.5em;
+        max-height: 30vh;
+        overflow-y: auto;
+        padding: 0 1em 0 0.5em;
     }
 
     .labelOption {
