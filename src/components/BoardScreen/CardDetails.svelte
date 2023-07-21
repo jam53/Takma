@@ -12,6 +12,7 @@
     import {readText, writeText} from "@tauri-apps/api/clipboard";
     import hljs from "highlight.js";
     import LabelsPopup from "./LabelsPopup.svelte";
+    import {appWindow} from "@tauri-apps/api/window";
 
     export let refreshListsFunction;
 
@@ -231,6 +232,22 @@
     {
         cardToSave = cardToSave;
     }
+
+    $: overlayElement && applyMaximizedNotMaximizedStyleClasses();
+    appWindow.onResized(() => applyMaximizedNotMaximizedStyleClasses());
+    async function applyMaximizedNotMaximizedStyleClasses()
+    {
+        let isMaximized = await appWindow.isMaximized();
+
+        if (isMaximized)
+        {
+            overlayElement.classList.add("overlayScreenMaximized");
+        }
+        else
+        {
+            overlayElement.classList.remove("overlayScreenMaximized");
+        }
+    }
 </script>
 
 {#if showPopup}
@@ -347,6 +364,10 @@
         background-color: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(5px);
         border-radius: 10px;
+    }
+
+    :is(.overlayScreenMaximized) {
+        border-radius: 0;
     }
 
     .popup {
