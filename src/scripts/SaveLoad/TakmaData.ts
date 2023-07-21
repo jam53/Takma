@@ -305,5 +305,18 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Changes the color of a label in a board
+     */
+    public editLabelColor(boardId: string, labelId: string, labelColor: string)
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
+
+        this._boards[indexOfBoard].labels[indexOfLabel].color = labelColor;
+
+        SaveLoadManager.saveToDisk();
+    }
     //endregion
 }

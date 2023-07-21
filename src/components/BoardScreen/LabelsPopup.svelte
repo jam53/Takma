@@ -132,6 +132,14 @@
 
         refreshCardFunction(); //Refresh the card's UI, so that the newly added label appears
     }
+
+    function editLabelColor(labelId: string)
+    {
+        SaveLoadManager.getData().editLabelColor($selectedBoardId, labelId, lastPickedColor);
+
+        document.getElementById(`colorDiv${labelId}`).style.backgroundColor = lastPickedColor; //Sets the updated color in the labelsPopup UI
+        refreshCardFunction(); //Refresh the card's UI, so that the color change appears in the card
+    }
 </script>
 
 {#if showMenu}
@@ -150,15 +158,19 @@
                     <div class="labelOption">
                         <input type="checkbox" checked={cardToSave.labelIds.includes(label.id)}
                              on:click={() => handleLabelClick(label.id)}/>
-                        <div style="background-color: {label.color}"
+                        <div id={`colorDiv${label.id}`} style="background-color: {label.color}"
                              on:click={() => handleLabelClick(label.id)}></div>
-                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"
+                             on:click={() => document.getElementById(label.id).click()}
+                        ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <input id={label.id} value={label.color} on:change={() => editLabelColor(label.id)} class="coloris instance1" style="width: 0; height: 0; border: none; position: absolute"/>
+<!--When we add the `coloris instance1` styleclasses to an `input` or `button`, the color picker will be shown when we click on them. Unfortunately when they contain an svg, the color picker doesn't show up. That's why we have an invisible input here. When we click on the svg, we will programmatically click the input field, thus showing the color picker-->
                     </div>
                 {/each}
             </div>
             <br>
-            <button class="createNewLabelButton coloris instance1" value="red"
-                on:change={createNewLabel}
+            <button class="createNewLabelButton coloris instance1"
+                    on:change={createNewLabel}
             >
 <!--When clicking on this  button, the color picker will automatically be opened-->
                 %%Create a new label
