@@ -239,11 +239,11 @@
     {
         let isMaximized = await appWindow.isMaximized();
 
-        if (isMaximized)
+        if (isMaximized && overlayElement)
         {
             overlayElement.classList.add("overlayScreenMaximized");
         }
-        else
+        else if (overlayElement)
         {
             overlayElement.classList.remove("overlayScreenMaximized");
         }
