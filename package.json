@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "0.0.0",
-    "build": 243,
+    "build": 247,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -16,7 +16,8 @@
         "dompurify": "^3.0.4",
         "highlight.js": "^11.8.0",
         "marked": "^5.1.0",
-        "svelte-dnd-action": "^0.9.22"
+        "svelte-dnd-action": "^0.9.22",
+        "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^2.4.2",
