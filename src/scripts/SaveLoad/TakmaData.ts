@@ -186,7 +186,7 @@ export class TakmaData
             description: "",
             attachments: [],
             coverImageIndex: -1,
-            todos: [],
+            checklists: [],
             labelIds: []
         };
 
