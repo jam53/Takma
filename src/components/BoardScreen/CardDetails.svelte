@@ -4,7 +4,6 @@
     import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card} from "../../scripts/Board";
-    import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
     import {clickOutside} from "../../scripts/ClickOutside";
     import {marked} from "marked";
     import DOMPurify from "dompurify";
@@ -13,6 +12,7 @@
     import hljs from "highlight.js";
     import LabelsPopup from "./LabelsPopup.svelte";
     import {appWindow} from "@tauri-apps/api/window";
+    import {toast, Toaster} from "svelte-sonner";
 
     export let refreshListsFunction;
 
@@ -74,20 +74,6 @@
 
     let showPopup = false;
     let overlayElement;
-
-    async function showNotification(message: string)
-    {
-        let permissionGranted = await isPermissionGranted();
-        if (!permissionGranted)
-        {
-            const permission = await requestPermission();
-            permissionGranted = permission === 'granted';
-        }
-        if (permissionGranted)
-        {
-            sendNotification({ title: 'Takma', body: message });
-        }
-    }
 
     //region markedjs custom renderer
     const takmaLinkPatternGlobal = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/ig;
@@ -335,11 +321,11 @@
                                 let textInClipboard = await readText();
                                 if (textInClipboard === linkToThisCard)
                                 {
-                                    showNotification("%%Copied link to this card to clipboard, paste it in any other card's description")
+                                    toast("%%Copied link to this card to clipboard, paste it in any other card's description")
                                 }
                                 else
                                 {
-                                    showNotification("%%Couldn't copy link to clipboard, the link to this card is: " + linkToThisCard);
+                                    toast.error("%%Couldn't copy link to clipboard, the link to this card is: " + linkToThisCard);
                                 }
                             }}
                     >
@@ -357,6 +343,7 @@
             </div>
         </div>
     </div>
+    <Toaster richColors theme={document.documentElement.style.getPropertyValue("color-scheme")}/>
 {/if}
 
 <style>
