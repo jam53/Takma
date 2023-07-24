@@ -15,7 +15,7 @@
     {
         let todos: TodoItem[] = [];
 
-        cardd.checklists.forEach(checklist => todos = [...todos, ...checklist.todos]);
+        cardd.checklists?.forEach(checklist => todos = [...todos, ...checklist.todos]);
 
         return completedOnly ? (todos.filter(todo => todo.completed)).length : todos.length;
     }

@@ -45,7 +45,7 @@
     {
         if (!typing && showPopup)
         {
-            overlayElement && overlayElement.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
+            overlayElement?.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
         }
 
         if (!typing)
@@ -212,7 +212,7 @@
     }
 
     let descriptionPreElement;
-    $: (editingDescription && descriptionPreElement) && descriptionPreElement.focus();
+    $: editingDescription && descriptionPreElement?.focus();
 
     function refreshCardFunction()
     {
@@ -225,19 +225,19 @@
     {
         let isMaximized = await appWindow.isMaximized();
 
-        if (isMaximized && overlayElement)
+        if (isMaximized)
         {
-            overlayElement.classList.add("overlayScreenMaximized");
+            overlayElement?.classList.add("overlayScreenMaximized");
         }
-        else if (overlayElement)
+        else
         {
-            overlayElement.classList.remove("overlayScreenMaximized");
+            overlayElement?.classList.remove("overlayScreenMaximized");
         }
     }
 
     function focusOnCardDetailsFunction()
     {
-        overlayElement && overlayElement.focus();
+        overlayElement?.focus();
     }
 </script>
 
