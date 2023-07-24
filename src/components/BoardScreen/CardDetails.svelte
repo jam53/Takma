@@ -242,7 +242,9 @@
 </script>
 
 {#if showPopup}
-    <div transition:blur|global bind:this={overlayElement} class="overlay" on:click={closeCard} tabindex="1" on:keydown|stopPropagation={handleKeyDown}>
+    <div transition:blur|global bind:this={overlayElement} class="overlay" on:click={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" on:keydown|stopPropagation={handleKeyDown}>
+        <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->
+
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
@@ -277,8 +279,9 @@
                               on:focus={() => typing = true}
                               on:focusout={() => typing = false}
                               use:clickOutside
-                              on:click_outside={() => editingDescription = false}
+                              on:click_outside={() => (window.getSelection().toString().length === 0) && (editingDescription = false)}
                         >{cardDesc}</pre>
+<!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the description. This would be considered as a click outside the description, therefore closing the description. With this check we only close the description if we aren't selecting anything-->
                     {:else}
                         <div class="renderedDescriptionHolder markdown-body"
                              on:click={handleDescriptionHolderClick}
