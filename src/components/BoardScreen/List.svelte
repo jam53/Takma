@@ -2,7 +2,7 @@
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card as CardInterface, List} from "../../scripts/Board";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {draggingCardOrList, selectedBoardId} from "../../scripts/stores";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
@@ -49,11 +49,13 @@
 
     function handleDndConsiderCards(e)
     {
+        $draggingCardOrList = true;
         cards = e.detail.items;
     }
 
     function handleDndFinalizeCards(e)
     {
+        $draggingCardOrList = false;
         onDrop(e.detail.items);
     }
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {draggingCardOrList, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import type {List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
@@ -92,11 +92,13 @@
 
     function handleDndConsiderLists(e)
     {
+        $draggingCardOrList = true;
         lists = e.detail.items;
     }
 
     function handleDndFinalizeLists(e)
     {
+        $draggingCardOrList = false;
         onFinalDragUpdate(e.detail.items);
     }
 
