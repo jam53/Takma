@@ -10,6 +10,7 @@
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {resolveResource} from "@tauri-apps/api/path";
     import {resizeImg} from "../../scripts/ResizeImg";
+    import {shuffle} from "../../scripts/KnuthShuffle";
 
     let showPopup = true;
     let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -42,6 +43,7 @@
     async function loadImagesIncludedInTakma()
     {
         let includedImagesPaths = (await readDir((await resolveResource("resources/backgrounds/")))).map(fileEntry => fileEntry.path);
+        shuffle(includedImagesPaths);
 
         selectedImg = includedImagesPaths[0];
 
