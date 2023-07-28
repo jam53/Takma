@@ -9,6 +9,7 @@
     import {getImageUrl} from "../../scripts/GetImageUrl";
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {resolveResource} from "@tauri-apps/api/path";
+    import {resizeImg} from "../../scripts/ResizeImg";
 
     let showPopup = true;
     let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -102,7 +103,7 @@
                         {#each includedImagesInTakma as imgPath}
                             {#await getImageUrl(imgPath)}
                             {:then imgUrl}
-                            <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getImageUrl(imgPath));}} src={imgUrl} style="object-fit: cover" tabindex="0"/>
+                            <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getImageUrl(imgPath));}} src={imgUrl} style="object-fit: cover" tabindex="0" use:resizeImg/>
                             <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                             {/await}
                         {/each}
