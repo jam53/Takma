@@ -24,7 +24,7 @@
 <div class="cardContainer" on:click={displayCardDetails} tabindex="0" on:keydown={e => e.key === "Enter" && (displayCardDetails())}>
     {#if card.coverImageIndex !== -1}
         {#await getImageUrl(card.attachments[card.coverImageIndex], SaveLoadManager.getSaveDirectory())}
-            %%Loading
+            <span class="loader"></span>
         {:then coverImage}
             <img class="coverImage" src={coverImage}/>
         {/await}

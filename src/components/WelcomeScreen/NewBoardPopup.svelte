@@ -15,7 +15,6 @@
 
     let boardTitle = "";
     let boardTitleInputObject;
-    let boardTitleInputWidthOffset = 20;
 
     let selectedImgObject;
 
@@ -85,7 +84,7 @@
             </div>
             <hr/>
             {#await loadImagesIncludedInTakma()}
-                %%Loading
+                <span class="loader"></span>
             {:then includedImagesInTakma}
                 <div class="selectedImgHolder" >
                     {#await getImageUrl(includedImagesInTakma[0])}
@@ -108,7 +107,7 @@
                             {/await}
                         {/each}
                     {:else}
-                        <p>%%Loading images...</p>
+                        <span class="loader"></span>
                     {/if}
                 </div>
             {/await}

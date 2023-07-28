@@ -16,7 +16,9 @@
 </script>
 
 {#await getImageUrl(image, SaveLoadManager.getSaveDirectory())}
-    <p>%%Loading...</p>
+    <button class="boardButtons">
+        <span class="loader"></span>
+    </button>
 {:then imgSrc}
     <button in:scale|global on:click={passClickEventToParent} class="boardButtons">
         <img src={imgSrc}/>
