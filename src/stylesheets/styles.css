@@ -50,7 +50,7 @@ html[data-theme="dark"] {
     width: 3em;
     height: 3em;
     border-radius: 50%;
-    background: var(--selected-button);
+    background: var(--accent);
     position: absolute;
     left: calc(50% - 1.5em); /*To find the middle we have to subtract the width/2 from 50% */
     top: calc(50% - 1.5em); /*To find the middle we have to subtract the height/2 from 50% */
