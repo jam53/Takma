@@ -40,6 +40,8 @@ export function resizeImg(imgElement) {
                 canvas.height = imageHeight;
 
                 const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
                 ctx.drawImage(picture, 0, 0, imageWidth, imageHeight);
 
                 const resizedDataUrl = canvas.toDataURL();
