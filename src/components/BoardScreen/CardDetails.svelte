@@ -255,8 +255,9 @@
                       on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
                 >
 <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
-                    {cardToSave.title}
+                    {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).title}
                 </span>
+<!--In principe is het logischer dat we {cardToSave.title} schrijven in plaats van {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).title}. Maar dan hadden we het probleem dat wanneer de kaart nog geen description/titel had. Dat wanneer we een titel begonnen te typen elke toetsaanslag dubbel in de span zichtbaar was. Waarschijnlijk omdat we in on:input de waarde van cardToSave.title setten en dan die hier weer toonden. Op deze manier met de SaveLoadManager hebben we geen last meer van die bug-->
                 <svg on:click={closeCard} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
