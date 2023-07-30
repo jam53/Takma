@@ -65,7 +65,7 @@ export class SaveLoadManager
             catch (error)
             {
                 await writeTextFile(this.saveFilename + "_Corrupted", fileContents, {dir: this.saveDirectory});
-                const saveDir: string = this.getSaveDirectory() === BaseDirectory.AppLocalData ? await appLocalDataDir() : await documentDir();
+                const saveDir: string = await this.getAbsoluteSaveDirectory();
                 const savePath: string = saveDir + this.saveFilename + "_Corrupted";
                 await message("%%The save file has been corrupted and will be replaced with a new, functional file. Additionally, a copy of the corrupted file will be created and placed at the following location: " + savePath, { title: "Takma", type: "error" });
             }
@@ -107,5 +107,13 @@ export class SaveLoadManager
     public static getSaveDirectory(): BaseDirectory
     {
         return this.saveDirectory;
+    }
+
+    /**
+     * This function returns the directory in which we save data as an absolute path
+     */
+    public static async getAbsoluteSaveDirectory(): Promise<string>
+    {
+        return this.getSaveDirectory() === BaseDirectory.AppLocalData ? await appLocalDataDir() : await documentDir();
     }
 }
