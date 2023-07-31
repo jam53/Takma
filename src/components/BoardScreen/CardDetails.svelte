@@ -293,6 +293,34 @@
                             {@html parseMarkdown(cardToSave.description)}
                         </div>
                     {/if}
+                    {#if cardToSave.checklists.length > 0}
+                        <hr>
+                        {#each cardToSave.checklists as checklist, i}
+                            <div class="checklistTop">
+                                <div id="checklistTopTitleHolder" class="checklistTopTitleHolder">
+                                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
+                                    <span role="textbox" contenteditable="plaintext-only"
+                                          on:input={(e) => checklist.title = e.target.textContent}
+                                          on:focus={() => {typing = true; document.getElementById("checklistTopTitleHolder").classList.add("typingChecklistTitle")}}
+                                          on:focusout={() => {typing = false; document.getElementById("checklistTopTitleHolder").classList.remove("typingChecklistTitle")}}
+                                          on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
+                                    >
+    <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
+                                        {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).checklists[i].title}
+                                    </span>
+<!--In principe is het logischer dat we {checklist.title} schrijven in plaats van {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).cheklists[i].title}. Maar dan hadden we het probleem dat wanneer de checklist nog geen titel had. Dat wanneer we een titel begonnen te typen elke toetsaanslag dubbel in de span zichtbaar was. Waarschijnlijk omdat we in on:input de waarde van checklist.title setten en dan die hier weer toonden. Op deze manier met de SaveLoadManager hebben we geen last meer van die bug-->
+                                </div>
+                                <div class="checklistTopButtonsHolder">
+                                    <button>
+                                        %%Hide checked items
+                                    </button>
+                                    <button>
+                                        %%Delete
+                                    </button>
+                                </div>
+                            </div>
+                        {/each}
+                    {/if}
                 </div>
                 <div class="cardActionsHolder">
                     <span>
@@ -444,7 +472,6 @@
 
     hr {
         border: 1px solid var(--border);
-        margin-bottom: 1.5em;
     }
 
     .separator {
@@ -594,6 +621,7 @@
         padding: 0 0 1px 0;
         cursor: pointer;
         min-height: 1em;
+        margin-right: 0.3em;
     }
 
     :global(.markdown-body .takma-linkBoardTitle) {
@@ -638,5 +666,65 @@
 
     .labels div:hover {
         filter: brightness(70%);
+    }
+
+    .checklistTop {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    .checklistTopTitleHolder {
+        border: 2px solid transparent;
+        border-radius: 0.5em;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    .checklistTopTitleHolder:hover, :is(.typingChecklistTitle) {
+        border: 2px solid var(--accent);
+        box-shadow: none;
+    }
+
+    .checklistTopTitleHolder span {
+        font-weight: bold;
+        font-size: large;
+        padding: 0.25em 0.25em;
+        background: none;
+        cursor: text;
+        word-break: break-all;
+        box-shadow: none;
+    }
+
+    .checklistTopTitleHolder span[contenteditable]:empty::before {
+        content: "%%Checklist";
+    }
+
+    .checklistTopTitleHolder svg {
+        min-width: 1.5em;
+        max-width: 1.5em;
+    }
+
+    .checklistTopButtonsHolder {
+        display: inline-flex;
+        gap: 0.5em;
+        margin-left: auto;
+    }
+
+    .checklistTopButtonsHolder button {
+        border: none;
+        background: var(--border);
+        padding: 0.5em;
+        font-size: medium;
+        border-radius: 4px;
+        transition: 0.3s;
+    }
+
+    .checklistTopButtonsHolder button:hover {
+        cursor: pointer;
+        background: var(--unselected-buton);
     }
 </style>
