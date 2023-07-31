@@ -262,7 +262,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
-            <hr/>
+            <div class="separator"
+            >
+                %%Created on {(new Date(cardToSave.creationDate)).toDateString()}
+            </div>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
                     <div class="labels">
@@ -442,6 +445,39 @@
     hr {
         border: 1px solid var(--border);
         margin-bottom: 1.5em;
+    }
+
+    .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        transition: 0.3s;
+        color: transparent;
+    }
+
+    .separator:hover {
+        color: var(--unselected-buton);
+        font-size: medium;
+    }
+
+    .separator::before,
+    .separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1.5px solid var(--border);
+        transition: 0.3s;
+    }
+
+    .separator::before {
+        margin-right: -100%; /* We doen dit zodat wanneer we niet hoveren, de border één volle lijn is. Je zou ook kunnen zeggen waarom zet je de font size niet op 0 in de div. Dan is er "geen tekst" en zal de border ook één volle lijn zijn. Maar met font size 0 is de div zogezegd leeg en kan je er dus alleen maar hoveren door op de heel dunne border te klikken. Dus doen we het door de tekst by default transparant te maken, tenzij we hoveren. De tekst neemt dan echter nog altijd plaats in, maar door de margin hier -100% te doen, wordt de border toch één volle lijn (eigenlijk gaat de border dan door/over de tekst, maar sinds die transparant is zien we dat toch niet. En wanneer de tekst dan wel weer zichtbaar is on hover, doen we de -100% margin weg. */
+    }
+
+    .separator:hover:not(:empty)::before {
+        margin-right: .25em;
+    }
+
+    .separator:hover:not(:empty)::after {
+        margin-left: .25em;
     }
 
     .bottomPart {
