@@ -15,7 +15,7 @@ html[data-theme="light"] {
     --main-text-rgb-values: 0, 0, 0;
     --border: #e1e1e1;
 
-    --unselected-buton: #939393;
+    --unselected-button: #939393;
     --selected-button: #3C3C3C;
 }
 
@@ -28,7 +28,7 @@ html[data-theme="dark"] {
     --main-text-rgb-values: 255, 255, 255;
     --border: #404040;
 
-    --unselected-buton: #7C7C7C;
+    --unselected-button: #7C7C7C;
     --selected-button: #D1D1D1;
 }
 

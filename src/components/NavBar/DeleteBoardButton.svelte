@@ -34,7 +34,7 @@
     }
 
     .deleteIcon {
-        fill: var(--unselected-buton);
+        fill: var(--unselected-button);
         height: inherit;
         transition: 0.5s;
         cursor: pointer;

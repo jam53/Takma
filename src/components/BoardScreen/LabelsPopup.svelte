@@ -263,7 +263,7 @@
         width: 2em;
         cursor: pointer;
         transition: 0.3s;
-        color: var(--unselected-buton);
+        color: var(--unselected-button);
     }
 
     .labelOption svg:hover {
@@ -281,7 +281,7 @@
     }
 
     .createNewLabelButton:hover {
-        background-color: var(--unselected-buton);
+        background-color: var(--unselected-button);
     }
 
     [type=checkbox] {
@@ -308,7 +308,7 @@
         border: 0;
         background-color: transparent;
         background-size: contain;
-        box-shadow: inset 0 0 0 2px var(--unselected-buton);
+        box-shadow: inset 0 0 0 2px var(--unselected-button);
         transition: 0.3s;
     }
 

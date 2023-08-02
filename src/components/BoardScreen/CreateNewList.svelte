@@ -151,7 +151,7 @@
     }
 
     :is(.newListCreating div svg) {
-        stroke: var(--unselected-buton);
+        stroke: var(--unselected-button);
         display: unset;
         height: 1.75em;
         width: 1.75em;

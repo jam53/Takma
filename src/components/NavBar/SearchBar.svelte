@@ -62,7 +62,7 @@
     }
 
     .containingDiv:hover, .containingDiv:focus-within, .containingDiv.active {
-        border: var(--unselected-buton) 1px solid;
+        border: var(--unselected-button) 1px solid;
         border-radius: 0.75em;
         background-color: rgba(var(--background-color-rgb-values), 0.5);
         backdrop-filter: blur(5px);
@@ -84,8 +84,8 @@
 
     .searchIcon {
         height: 100%;
-        fill: var(--unselected-buton);
-        stroke: var(--unselected-buton);
+        fill: var(--unselected-button);
+        stroke: var(--unselected-button);
         stroke-width: 1px;
         cursor: pointer;
         padding: 0;

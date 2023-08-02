@@ -164,7 +164,7 @@
     .titleDiv svg {
         height: 2em;
         cursor: pointer;
-        stroke: var(--unselected-buton);
+        stroke: var(--unselected-button);
         transition: 0.2s;
     }
 

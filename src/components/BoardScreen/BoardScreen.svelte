@@ -143,7 +143,7 @@
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: var(--unselected-buton);
+        background: var(--unselected-button);
     }
 
     .listsHolder {

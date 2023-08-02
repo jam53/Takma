@@ -95,7 +95,7 @@
         transition: 0.5s;
         height: inherit;
         cursor: pointer;
-        fill: var(--unselected-buton);
+        fill: var(--unselected-button);
         -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 

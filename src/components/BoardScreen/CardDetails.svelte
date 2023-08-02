@@ -433,7 +433,7 @@
     .titleDiv svg {
         height: 2em;
         cursor: pointer;
-        stroke: var(--unselected-buton);
+        stroke: var(--unselected-button);
         transition: 0.2s;
     }
 
@@ -483,7 +483,7 @@
     }
 
     .separator:hover {
-        color: var(--unselected-buton);
+        color: var(--unselected-button);
         font-size: medium;
     }
 
@@ -597,7 +597,7 @@
     }
 
     .cardActionsHolder button:hover {
-        background-color: var(--unselected-buton);
+        background-color: var(--unselected-button);
     }
 
     #deleteButton:hover {
@@ -725,6 +725,6 @@
 
     .checklistTopButtonsHolder button:hover {
         cursor: pointer;
-        background: var(--unselected-buton);
+        background: var(--unselected-button);
     }
 </style>
