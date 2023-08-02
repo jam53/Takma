@@ -259,19 +259,15 @@
         filter: brightness(70%);
     }
 
-    .labelOption input {
-        transform: scale(1.3);
-        cursor: pointer;
-    }
-
     .labelOption svg {
         width: 2em;
         cursor: pointer;
         transition: 0.3s;
+        color: var(--unselected-buton);
     }
 
     .labelOption svg:hover {
-        color: var(--unselected-buton);
+        color: var(--main-text);
     }
 
     .createNewLabelButton {
@@ -286,5 +282,52 @@
 
     .createNewLabelButton:hover {
         background-color: var(--unselected-buton);
+    }
+
+    [type=checkbox] {
+        width: 1.5em;
+        height: 1.5em;
+        color: var(--accent);
+        vertical-align: middle;
+        -webkit-appearance: none;
+        background: none;
+        outline: 0;
+        flex-grow: 0;
+        border-radius: 0.25em;
+        transition: background 300ms;
+        cursor: pointer;
+    }
+
+    [type=checkbox]::before {
+        content: "";
+        color: transparent;
+        display: block;
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+        border: 0;
+        background-color: transparent;
+        background-size: contain;
+        box-shadow: inset 0 0 0 2px var(--unselected-buton);
+        transition: 0.3s;
+    }
+
+    [type=checkbox]:hover::before {
+        box-shadow: inset 0 0 0 2px var(--selected-button);
+    }
+
+    [type=checkbox]:checked {
+        background-color: currentcolor;
+    }
+
+    [type=checkbox]:checked::before {
+        box-shadow: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 2 20 20'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+    }
+
+    [type=checkbox]:disabled {
+        background-color: #CCD3D8;
+        opacity: 0.84;
+        cursor: not-allowed;
     }
 </style>
