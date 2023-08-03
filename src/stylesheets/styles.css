@@ -17,6 +17,8 @@ html[data-theme="light"] {
 
     --unselected-button: #939393;
     --selected-button: #3C3C3C;
+
+    --danger: #c43420;
 }
 
 html[data-theme="dark"] {
@@ -30,6 +32,8 @@ html[data-theme="dark"] {
 
     --unselected-button: #7C7C7C;
     --selected-button: #D1D1D1;
+
+    --danger: #c43420;
 }
 
 *:focus-visible { /*focus-visible makes it so that the style only gets applied when the element is being focused by using the keyboard. Because in the past the focused border would also appear when clicking on an element */
