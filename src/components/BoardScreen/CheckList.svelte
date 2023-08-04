@@ -3,6 +3,7 @@
     import {selectedBoardId, selectedCardId} from "../../scripts/stores.js";
     import {tweened} from "svelte/motion";
     import {cubicOut} from "svelte/easing";
+    import {slide} from "svelte/transition";
 
     export let cardToSave;
     export let setTypingFunction;
@@ -33,6 +34,22 @@
 
             return prevValue; //The value of the <progress> will be set/overwritten by the subscribe method of the `progress` store above this line. But since this function needs to return a value for the <progress>, we return the old value.
         }
+    }
+
+    let idAddTodoItemButtonToScrollTo = "";
+    let idTodoItemToFocus = "";
+    /**
+     * This function adds a new todo, focuses on it so the title can be edited and scrolls to the bottom of the todo list (i.e./lees: scroll to the "add new todo item" button of that checklist.
+     */
+    function addTodoItem(checklist)
+    {
+        const newTodoId = crypto.randomUUID();
+        checklist.todos.push({id: newTodoId, completed: false, content: ""});
+
+        idAddTodoItemButtonToScrollTo = `addTodoButton-${checklist.id}`; //The refresh of the UI at the end of this function, will trigger the intro animation of the todoitems. And when that intro animation ends (on:introend) AKA once the todoitem is visible in the UI, the value of this variable will be used to scroll to the "add new todo item" button of the checklist
+        idTodoItemToFocus = `todo-${newTodoId}`; //In the same way as above, this will be used to select the newly added todo item so it can be edited without having to click on it; once the todoitem's intro animation ends (=by using the introanimation to do this action we know that the elment exist in the DOM. Else we wouldn't be playing/finishing an intro animation. And we need to make sure the element exists in the DOM or else writing element.focus() in this function here would throw an error since the element of this todo isn't present in the DOM yet.
+
+        cardToSave = cardToSave; //Refresh UI
     }
 </script>
 
@@ -79,18 +96,45 @@
         </div>
         <div class="todosHolder">
             {#each checklist.todos as todo, j}
-                <div class="todoContainer">
+                <div class="todoContainer"
+                     in:slide|global={{duration: 0}}
+                     on:introend={() => {
+                         if (idTodoItemToFocus === `todo-${todo.id}`)
+                         {
+                             document.getElementById(`todo-${todo.id}`).focus(); //Focusing on the span makes it so it\'s being edited
+                             document.getElementById(`todo-${todo.id}`).dataset.newlyCreatedTodo = "true"; //We use this data attribute to know whether or not after pressing enter if we should create another todo item or not. Normally we just unfocus the span of the todo element on pressing enter. But when this is a todo element that was just created, it is more convenient that when we press enter, we create another new todo item. Which is done by checking if the data attribute is "true" or not.
+                             idTodoItemToFocus = "";
+                         }
+                         if (idAddTodoItemButtonToScrollTo === `addTodoButton-${checklist.id}`)
+                         {
+                             document.getElementById(`addTodoButton-${checklist.id}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+                             idAddTodoItemButtonToScrollTo = "";
+                         }
+                     }}
+                >
                     <input
                             type="checkbox"
                             checked={todo.completed}
                             on:input={e => todo.completed = e.target.checked}
                     />
                     <span role="textbox" contenteditable="plaintext-only"
+                          id={`todo-${todo.id}`}
                           style={`text-decoration: ${todo.completed ? "line-through" : "none"}`}
                           on:input={(e) => todo.content = e.target.textContent}
                           on:focus={() => setTypingFunction(true)}
                           on:focusout={() => setTypingFunction(false)}
-                          on:keydown={e => (e.keyCode === 13) && e.target.blur()}
+                          on:keydown={e => {
+                              if (e.keyCode === 13 && document.getElementById(`todo-${todo.id}`).dataset.newlyCreatedTodo === "true")
+                              {//This means we pressed the enter key on a todoitem that was just added. So here it is more convenient to create another new todoitem when pressing enter. Instead of just unfocussing it by e.target.blur() => unfocussing makes it so we are no longer editting it
+                                  e.preventDefault();
+                                  document.getElementById(`todo-${todo.id}`).dataset.newlyCreatedTodo = "false";
+                                  addTodoItem(checklist);
+                              }
+                              else if (e.keyCode === 13)
+                              {
+                                  e.target.blur();
+                              }
+                          }}
                     >
     <!--This checks if the enter keys was pressed and if it was, it unfocuses the span, so we no longer edit the content of it-->
                         {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].todos[j].content}
@@ -103,6 +147,13 @@
                 </div>
             {/each}
         </div>
+        <button
+            id={`addTodoButton-${checklist.id}`}
+            class="addTodoButton"
+            on:click={() => addTodoItem(checklist)}
+        >
+            %%Add item
+        </button>
     {/each}
 {/if}
 
@@ -173,9 +224,10 @@
 
     .checklistProgressBar {
         display: flex;
-        gap: 0.75em;
+        gap: 1em;
         margin-top: 0.5em;
         align-items: center;
+        margin-left: 0.25em;
     }
 
     .checklistProgressBar span {
@@ -250,7 +302,7 @@
     .todoContainer {
         display: flex;
         align-items: center;
-        gap: 1em;
+        gap: 0.5em;
         align-content: space-around;
     }
 
@@ -273,5 +325,21 @@
 
     .todoContainer svg:hover {
         color: var(--danger)
+    }
+
+    .addTodoButton {
+        margin-top: 0.75em;
+        border: none;
+        background: var(--border);
+        padding: 0.5em;
+        font-size: medium;
+        border-radius: 4px;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+    .addTodoButton:hover {
+        cursor: pointer;
+        background: var(--unselected-button);
     }
 </style>
