@@ -46,9 +46,18 @@
                       on:input={(e) => checklist.title = e.target.textContent}
                       on:focus={() => {setTypingFunction(true); document.getElementById("checklistTopTitleHolder").classList.add("typingChecklistTitle")}}
                       on:focusout={() => {setTypingFunction(false); document.getElementById("checklistTopTitleHolder").classList.remove("typingChecklistTitle")}}
-                      on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
+                      on:keydown={e => {
+                          if (e.keyCode === 13 && e.target.matches(":hover"))
+                          {//If we press enter and we are hovering over the element.
+                              e.preventDefault(); //Basically captures the event and makes it so no enter/new lines can be typed.
+                          }
+                          else if (e.keyCode === 13 && !e.target.matches(":hover"))
+                          {//We pressed enter and are not hovering over the element
+                              e.target.blur(); //Unfocus the span so that it makes it seem like when pressing enter we stop editing the span
+                          }
+
+                      }}
                 >
-    <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
                     {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].title}
                 </span>
                 <!--In principe is het logischer dat we {checklist.title} schrijven in plaats van {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).cheklists[i].title}. Maar dan hadden we het probleem dat wanneer de checklist nog geen titel had. Dat wanneer we een titel begonnen te typen elke toetsaanslag dubbel in de span zichtbaar was. Waarschijnlijk omdat we in on:input de waarde van checklist.title setten en dan die hier weer toonden. Op deze manier met de SaveLoadManager hebben we geen last meer van die bug-->
@@ -81,9 +90,9 @@
                           on:input={(e) => todo.content = e.target.textContent}
                           on:focus={() => setTypingFunction(true)}
                           on:focusout={() => setTypingFunction(false)}
-                          on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
+                          on:keydown={e => (e.keyCode === 13) && e.target.blur()}
                     >
-    <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
+    <!--This checks if the enter keys was pressed and if it was, it unfocuses the span, so we no longer edit the content of it-->
                         {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].todos[j].content}
                     </span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
