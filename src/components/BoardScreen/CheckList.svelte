@@ -5,6 +5,7 @@
     import {cubicOut} from "svelte/easing";
     import {slide} from "svelte/transition";
     import {dndzone} from "svelte-dnd-action";
+    import {ask} from "@tauri-apps/api/dialog";
 
     export let cardToSave;
     export let setTypingFunction;
@@ -58,12 +59,12 @@
     <hr>
     {#each cardToSave.checklists as checklist, i}
         <div class="checklistTop">
-            <div id="checklistTopTitleHolder" class="checklistTopTitleHolder">
+            <div id={`checklistTopTitleHolder-${checklist.id}`} class="checklistTopTitleHolder">
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
                 <span role="textbox" contenteditable="plaintext-only"
                       on:input={(e) => checklist.title = e.target.textContent}
-                      on:focus={() => {setTypingFunction(true); document.getElementById("checklistTopTitleHolder").classList.add("typingChecklistTitle")}}
-                      on:focusout={() => {setTypingFunction(false); document.getElementById("checklistTopTitleHolder").classList.remove("typingChecklistTitle")}}
+                      on:focus={() => {setTypingFunction(true); document.getElementById(`checklistTopTitleHolder-${checklist.id}`).classList.add("typingChecklistTitle")}}
+                      on:focusout={() => {setTypingFunction(false); document.getElementById(`checklistTopTitleHolder-${checklist.id}`).classList.remove("typingChecklistTitle")}}
                       on:keydown={e => {
                           if (e.keyCode === 13 && e.target.matches(":hover"))
                           {//If we press enter and we are hovering over the element.
@@ -81,10 +82,14 @@
                 <!--In principe is het logischer dat we {checklist.title} schrijven in plaats van {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).cheklists[i].title}. Maar dan hadden we het probleem dat wanneer de checklist nog geen titel had. Dat wanneer we een titel begonnen te typen elke toetsaanslag dubbel in de span zichtbaar was. Waarschijnlijk omdat we in on:input de waarde van checklist.title setten en dan die hier weer toonden. Op deze manier met de SaveLoadManager hebben we geen last meer van die bug-->
             </div>
             <div class="checklistTopButtonsHolder">
-                <button>
-                    %%Hide checked items
-                </button>
-                <button>
+                <button on:click={async () => {
+                    const response = await ask("%%Are you sure you want to remove this checklist?");
+
+                    if (response === true)
+                    {
+                        cardToSave.checklists = cardToSave.checklists.filter(checklistt => checklistt.id !== checklist.id)
+                    }
+                }}>
                     %%Delete
                 </button>
             </div>
@@ -338,6 +343,10 @@
         border-radius: 4px;
         transition: 0.3s;
         width: 100%;
+    }
+
+    .addTodoButton:not(:last-child) {
+        margin-bottom: 2em;
     }
 
     .addTodoButton:hover {
