@@ -50,7 +50,7 @@
                 >
     <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
                     {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].title}
-                                    </span>
+                </span>
                 <!--In principe is het logischer dat we {checklist.title} schrijven in plaats van {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).cheklists[i].title}. Maar dan hadden we het probleem dat wanneer de checklist nog geen titel had. Dat wanneer we een titel begonnen te typen elke toetsaanslag dubbel in de span zichtbaar was. Waarschijnlijk omdat we in on:input de waarde van checklist.title setten en dan die hier weer toonden. Op deze manier met de SaveLoadManager hebben we geen last meer van die bug-->
             </div>
             <div class="checklistTopButtonsHolder">
@@ -69,18 +69,22 @@
             <progress id={`checklist-progress-${checklist.id}`} value={tweenProgressBarValue(checklist.id, amountOfTodosInChecklistFunction(checklist, true) / amountOfTodosInChecklistFunction(checklist))}/>
         </div>
         <div class="todosHolder">
-            {#each checklist.todos as todo}
+            {#each checklist.todos as todo, j}
                 <div class="todoContainer">
                     <input
                             type="checkbox"
                             checked={todo.completed}
                             on:input={e => todo.completed = e.target.checked}
                     />
-                    <span
-                            style={`text-decoration: ${todo.completed ? "line-through" : "none"}`}
-                            on:click={() => todo.completed = !todo.completed}
+                    <span role="textbox" contenteditable="plaintext-only"
+                          style={`text-decoration: ${todo.completed ? "line-through" : "none"}`}
+                          on:input={(e) => todo.content = e.target.textContent}
+                          on:focus={() => setTypingFunction(true)}
+                          on:focusout={() => setTypingFunction(false)}
+                          on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
                     >
-                        {todo.content}
+    <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
+                        {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].todos[j].content}
                     </span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                          on:click={() => checklist.todos = checklist.todos.filter(todoo => todoo.id !== todo.id)}
@@ -244,6 +248,10 @@
     .todoContainer span {
         width: 100%;
         cursor: pointer;
+        transition: 0.2s;
+        border-radius: 0.25em;
+        padding: 0.25em;
+        word-break: break-word;
     }
 
     .todoContainer svg {
