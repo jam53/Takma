@@ -17,6 +17,8 @@
      */
     function tweenProgressBarValue(checklistId:string, newValue: number): number
     {
+        newValue = isNaN(newValue) ? 0 : newValue; //This is the case when the checklist has no todos
+
         if (document.getElementById(`checklist-progress-${checklistId}`) === null)
         {//As this function is in the value={} field of the <progress>, this function will get called before the <progress> element has been added to the DOM. Because the DOM needs to know which value it has before it gets added to the DOM. So, in this case we immediately return the new value.
             return newValue;
@@ -43,10 +45,10 @@
     /**
      * This function adds a new todo, focuses on it so the title can be edited and scrolls to the bottom of the todo list (i.e./lees: scroll to the "add new todo item" button of that checklist.
      */
-    function addTodoItem(checklist)
+    export function addTodoItem(checklist)
     {
         const newTodoId = crypto.randomUUID();
-        checklist.todos.push({id: newTodoId, completed: false, content: ""});
+        checklist.todos.push({id: newTodoId, completed: false, content: " "}); //Als we ipv " ", "" zouden setten als content. Dan hebben we het probleem dat wanneer we een todo toevoegen aan een lege checklist, elke toetsaanslag dubbel wordt geregistreert wanneer we typen om de titel/content van de todo aan te passen. Met een spatie " " als de content, hebben we geen last van dat probleem
 
         idAddTodoItemButtonToScrollTo = `addTodoButton-${checklist.id}`; //The refresh of the UI at the end of this function, will trigger the intro animation of the todoitems. And when that intro animation ends (on:introend) AKA once the todoitem is visible in the UI, the value of this variable will be used to scroll to the "add new todo item" button of the checklist
         idTodoItemToFocus = `todo-${newTodoId}`; //In the same way as above, this will be used to select the newly added todo item so it can be edited without having to click on it; once the todoitem's intro animation ends (=by using the introanimation to do this action we know that the elment exist in the DOM. Else we wouldn't be playing/finishing an intro animation. And we need to make sure the element exists in the DOM or else writing element.focus() in this function here would throw an error since the element of this todo isn't present in the DOM yet.
@@ -96,7 +98,7 @@
         </div>
         <div class="checklistProgressBar">
             <span id={`checklist-span-${checklist.id}`}>
-                {Math.round((amountOfTodosInChecklistFunction(checklist, true) / amountOfTodosInChecklistFunction(checklist)) * 100)}%
+                {isNaN(Math.round((amountOfTodosInChecklistFunction(checklist, true) / amountOfTodosInChecklistFunction(checklist)) * 100)) ? 0 : Math.round((amountOfTodosInChecklistFunction(checklist, true) / amountOfTodosInChecklistFunction(checklist)) * 100)}%
             </span>
             <progress id={`checklist-progress-${checklist.id}`} value={tweenProgressBarValue(checklist.id, amountOfTodosInChecklistFunction(checklist, true) / amountOfTodosInChecklistFunction(checklist))}/>
         </div>
@@ -113,7 +115,7 @@
                          }
                          if (idAddTodoItemButtonToScrollTo === `addTodoButton-${checklist.id}`)
                          {
-                             document.getElementById(`addTodoButton-${checklist.id}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+                             document.getElementById(`addTodoButton-${checklist.id}`).scrollIntoView({ behavior: 'smooth', block: 'end' });
                              idAddTodoItemButtonToScrollTo = "";
                          }
                      }}
