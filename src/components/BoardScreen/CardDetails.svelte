@@ -13,7 +13,7 @@
     import LabelsPopup from "./LabelsPopup.svelte";
     import {appWindow} from "@tauri-apps/api/window";
     import {toast, Toaster} from "svelte-sonner";
-    import CheckList from "./CheckList.svelte";
+    import CheckLists from "./CheckLists.svelte";
 
     export let refreshListsFunction;
 
@@ -301,7 +301,7 @@
                             {@html parseMarkdown(cardToSave.description)}
                         </div>
                     {/if}
-                    <CheckList bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist}/>
+                    <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist}/>
                 </div>
                 <div class="cardActionsHolder">
                     <span>
