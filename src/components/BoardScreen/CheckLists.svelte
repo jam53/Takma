@@ -159,6 +159,7 @@
         <button
             id={`addTodoButton-${checklist.id}`}
             class="addTodoButton"
+            style={`margin-bottom: ${i === cardToSave.checklists.length - 1 ? "0.5em" : "2em"}`}
             on:click={() => addTodoItem(checklist)}
         >
             %%Add item
@@ -346,10 +347,6 @@
         border-radius: 4px;
         transition: 0.3s;
         width: 100%;
-    }
-
-    .addTodoButton:not(:last-child) {
-        margin-bottom: 2em;
     }
 
     .addTodoButton:hover {
