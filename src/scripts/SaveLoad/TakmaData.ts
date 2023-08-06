@@ -11,6 +11,9 @@ export class TakmaData
 {
     //region data/variables
     private _darkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)").matches; //This sets the value based on the user's preferred system color theme. If the os' color theme is set to dark, this will return true. Else it will returns false
+    private _totalBoardsCreated: number = 0; //The total amount of boards the user has created
+    private _totalListsCreated: number = 0; //The total amount of lists the user has created
+    private _totalCardsCreated: number = 0; //The total amount of cards the user has created
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -30,6 +33,38 @@ export class TakmaData
     {
         this._darkTheme = value;
         SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * This function increments the value of the `_totalBoardsCreated` variable by one
+     */
+    public incrementTotalBoardsCreated(): void
+    {
+        this._totalBoardsCreated++;
+    }
+
+    /**
+     * This function increments the value of the `_totalListsCreated` variable by one
+     */
+    public incrementTotalListsCreated(): void
+    {
+        this._totalListsCreated++;
+    }
+
+    /**
+     * This function increments the value of the `_totalCardsCreated` variable by one
+     */
+    public incrementTotalCardsCreated(): void
+    {
+        this._totalCardsCreated++;
+    }
+
+    /**
+     * Returns the total amount of cards created by the user in Takma
+     */
+    get totalCardsCrated(): number
+    {
+        return this._totalCardsCreated;
     }
 
     /**
@@ -68,6 +103,7 @@ export class TakmaData
         };
 
         this._boards.push(board);
+        this.incrementTotalBoardsCreated();
         SaveLoadManager.saveToDisk();
 
         return boardId;
@@ -136,6 +172,7 @@ export class TakmaData
             this._boards[indexOfBoard].lists.push(list);
         }
 
+        this.incrementTotalListsCreated();
         SaveLoadManager.saveToDisk();
     }
 
@@ -191,6 +228,7 @@ export class TakmaData
         };
 
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
+        this.incrementTotalCardsCreated();
         SaveLoadManager.saveToDisk();
     }
 

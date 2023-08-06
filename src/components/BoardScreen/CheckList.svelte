@@ -322,6 +322,7 @@
         border-radius: 0.25em;
         padding: 0.25em;
         word-break: break-word;
+        cursor: text;
     }
 
     .todoContainer svg {
