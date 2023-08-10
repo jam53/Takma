@@ -14,6 +14,7 @@
     import {appWindow} from "@tauri-apps/api/window";
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
+    import Attachments from "./Attachments.svelte";
 
     export let refreshListsFunction;
 
@@ -302,6 +303,7 @@
                         </div>
                     {/if}
                     <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist}/>
+                    <Attachments cardToSave={cardToSave}/>
                 </div>
                 <div class="cardActionsHolder">
                     <span>
