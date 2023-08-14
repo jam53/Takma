@@ -15,6 +15,8 @@
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
     import Attachments from "./Attachments.svelte";
+    import {imageExtensions, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {open as openDialog} from "@tauri-apps/api/dialog";
 
     export let refreshListsFunction;
 
@@ -248,6 +250,29 @@
     }
 
     let checkListComponent;
+
+    async function addAttachment()
+    {
+        const selectedFile = await openDialog({
+            multiple: true,
+        });
+
+        if (Array.isArray(selectedFile))
+        {//User selected multiple files
+            for (let file of selectedFile)
+            {
+                let savedFilePath = await saveFilePathToDisk(file, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+                cardToSave.attachments.push(savedFilePath);
+            }
+        }
+        else if (selectedFile !== null)
+        {//User selected a single file
+            let savedFilePath = await saveFilePathToDisk(selectedFile, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+            cardToSave.attachments.push(savedFilePath);
+        }
+
+        cardToSave = cardToSave;
+    }
 </script>
 
 {#if showPopup}
@@ -303,7 +328,7 @@
                         </div>
                     {/if}
                     <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist}/>
-                    <Attachments cardToSave={cardToSave}/>
+                    <Attachments cardToSave={cardToSave} addAttachmentFunction={addAttachment}/>
                 </div>
                 <div class="cardActionsHolder">
                     <span>
@@ -332,7 +357,9 @@
                             %%Checklist
                         </span>
                     </button>
-                    <button title="%%Attachments">
+                    <button title="%%Attachments"
+                            on:click={addAttachment}
+                    >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-width="2" d="M22,12 C22,12 19.0000009,15.0000004 13.0000004,21.0000004 C6.99999996,27.0000004 -2.00000007,18.0000004 3.99999994,12.0000004 C9.99999996,6.00000037 9,7.00000011 13,3.00000008 C17,-0.999999955 23,4.99999994 19,9.00000005 C15,13.0000002 12.0000004,16.0000007 9.99999995,18.0000004 C7.99999952,20 5,17 6.99999995,15.0000004 C8.99999991,13.0000007 16,6 16,6"></path></svg>
                         <span>
                             %%Attachments
