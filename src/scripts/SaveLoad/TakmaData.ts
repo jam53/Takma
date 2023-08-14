@@ -222,7 +222,7 @@ export class TakmaData
             title: cardTitle,
             description: "",
             attachments: [],
-            coverImageIndex: -1,
+            coverImage: "",
             checklists: [],
             labelIds: []
         };

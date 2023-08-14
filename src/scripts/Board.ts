@@ -23,7 +23,7 @@ export interface Card
     title: string,
     description: string,
     attachments: string[],
-    coverImageIndex: number, //The index points to an image file in the array of attachments in this card, -1 means there is no image to be used as a coverimage for this card
+    coverImage: string, //The path to the cover image of this card. An empty string means this card has no cover image
     checklists: Checklist[],
     labelIds: string[] //The label ids in this array refer to ids of the labels in the board to which this card belongs to
 }

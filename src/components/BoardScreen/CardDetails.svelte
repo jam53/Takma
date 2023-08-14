@@ -15,7 +15,7 @@
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
     import Attachments from "./Attachments.svelte";
-    import {saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {imageExtensions, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
 
     export let refreshListsFunction;
@@ -289,6 +289,35 @@
 
         cardToSave = cardToSave;
     }
+
+    /**
+     * Prompts the user with a file picker to select a cover image, or removes the current cover image if there was already a cover image set for this card.
+     */
+    async function setCoverImage()
+    {
+        if (cardToSave.coverImage !== "")
+        {
+            cardToSave.coverImage = "";
+            toast("%%Removed cover image from card");
+        }
+        else
+        {
+            const selected = await openDialog({
+                multiple: false,
+                filters: [{
+                    name: '%%Image',
+                    extensions: imageExtensions
+                }]
+            });
+            
+            if (selected !== null && typeof(selected) === "string")
+            {
+                cardToSave.coverImage = await saveFilePathToDisk(selected, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+
+                toast("%%Added cover image to card")
+            }
+        }
+    }
 </script>
 
 {#if showPopup}
@@ -384,7 +413,9 @@
                             %%Attachments
                         </span>
                     </button>
-                    <button title="%%Cover">
+                    <button title="%%Cover"
+                            on:click={setCoverImage}
+                    >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 13H3V5h18v11z"></path></svg>
                         <span>
                             %%Cover
