@@ -4,6 +4,7 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {draggingCardOrList, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {resizeImg} from "../../scripts/ResizeImg";
+    import {exists} from "@tauri-apps/api/fs";
 
     export let card: Card;
 
@@ -19,6 +20,24 @@
         cardd.checklists?.forEach(checklist => todos = [...todos, ...checklist.todos]);
 
         return completedOnly ? (todos.filter(todo => todo.completed)).length : todos.length;
+    }
+
+    /**
+     * Given a list of attachments, returns the amount of attachments that actually exist on the disk
+     */
+    async function amountOfExistingAttachments(attachments: String[])
+    {
+        let amount = 0;
+
+        for (let attachment of attachments)
+        {
+            if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+            {
+                amount++;
+            }
+        }
+
+        return amount;
     }
 </script>
 
@@ -41,17 +60,19 @@
         <span class="cardTitle">
             {card.title}
         </span>
-        {#if card.description !== "" || card.attachments.length > 0 || amountOfTodosInCard(card) > 0}
+        {#await amountOfExistingAttachments(card.attachments)}
+        {:then amountOfExistingAttachments}
+        {#if card.description !== "" || amountOfExistingAttachments > 0 || amountOfTodosInCard(card) > 0}
             <div class="icons">
                 {#if card.description !== ""}
                     <svg style="height: 1.4em" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
                     </svg>
                 {/if}
-                {#if card.attachments.length > 0}
+                {#if amountOfExistingAttachments > 0}
                     <div class="attachments">
                         <svg style="height: 1em" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-width="2" d="M22,12 C22,12 19.0000009,15.0000004 13.0000004,21.0000004 C6.99999996,27.0000004 -2.00000007,18.0000004 3.99999994,12.0000004 C9.99999996,6.00000037 9,7.00000011 13,3.00000008 C17,-0.999999955 23,4.99999994 19,9.00000005 C15,13.0000002 12.0000004,16.0000007 9.99999995,18.0000004 C7.99999952,20 5,17 6.99999995,15.0000004 C8.99999991,13.0000007 16,6 16,6"></path></svg>
-                        {card.attachments.length}
+                        {amountOfExistingAttachments}
                     </div>
                 {/if}
                 {#if amountOfTodosInCard(card) > 0}
@@ -62,6 +83,7 @@
                 {/if}
             </div>
         {/if}
+        {/await}
     </div>
 </div>
 
