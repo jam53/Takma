@@ -15,7 +15,7 @@
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
     import Attachments from "./Attachments.svelte";
-    import {imageExtensions, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
 
     export let refreshListsFunction;
@@ -273,10 +273,29 @@
 
         cardToSave = cardToSave;
     }
+
+    /**
+     * If the user drops one or more files onto the card, this function will add the files as attachments to the card
+     */
+    async function fileDropAttachments(e)
+    {
+        const droppedFiles: File[] = e.dataTransfer.files;
+
+        for (let droppedFile of droppedFiles)
+        {
+            let savedPath = await saveFileToDisk(droppedFile, $selectedBoardId);
+            cardToSave.attachments.push(savedPath);
+        }
+
+        cardToSave = cardToSave;
+    }
 </script>
 
 {#if showPopup}
-    <div transition:blur|global bind:this={overlayElement} class="overlay" on:click={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" on:keydown|stopPropagation={handleKeyDown}>
+    <div transition:blur|global bind:this={overlayElement} class="overlay" on:click={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" on:keydown|stopPropagation={handleKeyDown}
+         on:drop|preventDefault={fileDropAttachments} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault
+
+    >
         <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->
 
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
