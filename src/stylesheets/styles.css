@@ -4,6 +4,22 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+
+    --sdt-bg-main: transparent; /* The `--sdt` related properties are for the datepicker in the DueDatePopup.svelte component */
+    --sdt-shadow-color: transparent;
+    --sdt-color: var(--main-text);
+    --sdt-primary: var(--accent);
+    --sdt-btn-bg-hover: var(--border);
+    --sdt-btn-header-bg-hover: var(--border);
+    --sdt-color-selected: var(--main-text);
+    --sdt-today-indicator: var(--accent);
+    --sdt-clock-bg: var(--border);
+    --sdt-today-bg: var(--accent-button-hover);
+    --sdt-today-color: white;
+    --sdt-clear-color: var(--danger);
+    --sdt-clear-bg: transparent;
+    --sdt-clear-hover-color: white;
+    --sdt-clear-hover-bg: var(--danger);
 }
 
 html[data-theme="light"] {
@@ -19,6 +35,7 @@ html[data-theme="light"] {
     --selected-button: #3C3C3C;
 
     --danger: #c43420;
+    --warning: orange;
 }
 
 html[data-theme="dark"] {
@@ -34,6 +51,7 @@ html[data-theme="dark"] {
     --selected-button: #D1D1D1;
 
     --danger: #c43420;
+    --warning: orange;
 }
 
 *:focus-visible { /*focus-visible makes it so that the style only gets applied when the element is being focused by using the keyboard. Because in the past the focused border would also appear when clicking on an element */
@@ -41,6 +59,7 @@ html[data-theme="dark"] {
     box-shadow: 0 0 0 3px var(--accent);
 }
 
+/* The `loader` related styleclasses are for the loading spinner */
 .loader {
     width: 3em;
     height: 3em;

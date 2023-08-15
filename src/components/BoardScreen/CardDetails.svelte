@@ -17,6 +17,7 @@
     import Attachments from "./Attachments.svelte";
     import {imageExtensions, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
+    import DueDatePopup from "./DueDatePopup.svelte";
 
     export let refreshListsFunction;
 
@@ -309,7 +310,7 @@
                     extensions: imageExtensions
                 }]
             });
-            
+
             if (selected !== null && typeof(selected) === "string")
             {
                 cardToSave.coverImage = await saveFilePathToDisk(selected, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
@@ -350,6 +351,19 @@
             </div>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
+                    {#if cardToSave.dueDate !== null}
+                        <button class="dueDate"
+                                title="%%Due date"
+                                class:dueDateOrange={parseInt(cardToSave.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(cardToSave.dueDate)}
+                                class:dueDateRed={Date.now() > parseInt(cardToSave.dueDate)}
+                                on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
+                        >
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
+                            <span>
+                                    {`${(new Date(parseInt(cardToSave.dueDate))).toLocaleString("default", {dateStyle: "full", timeStyle: "short", hour12: false})}`}
+                            </span>
+                        </button>
+                    {/if}
                     <div class="labels">
                         {#each cardToSave.labelIds as labelId}
                             <div style="background-color: {SaveLoadManager.getData().getLabelColor($selectedBoardId, labelId)}"
@@ -403,6 +417,14 @@
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="12 12 488 488" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
                         <span>
                             %%Checklist
+                        </span>
+                    </button>
+                    <button title="%%Due date"
+                            on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
+                    >
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
+                        <span>
+                            %%Due date
                         </span>
                     </button>
                     <button title="%%Attachments"
@@ -735,5 +757,40 @@
 
     .labels div:hover {
         filter: brightness(70%);
+    }
+
+    .dueDate {
+        display: flex;
+        background-color: var(--border);
+        border-radius: 4px;
+        border: none;
+        align-items: center;
+        gap: 0.5em;
+        cursor: pointer;
+        transition: 0.3s;
+        height: 2em;
+        font-size: medium;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 0.5em;
+    }
+
+    .dueDateRed {
+        background-color: var(--danger);
+        color: white;
+    }
+
+    .dueDateOrange {
+        background-color: var(--warning);
+        color: white;
+    }
+
+    .dueDate:hover {
+        filter: brightness(70%);
+    }
+
+    .dueDate svg {
+        width: 1.5em;
+        height: 1.5em;
     }
 </style>

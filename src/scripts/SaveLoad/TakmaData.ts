@@ -224,7 +224,8 @@ export class TakmaData
             attachments: [],
             coverImage: "",
             checklists: [],
-            labelIds: []
+            labelIds: [],
+            dueDate: null
         };
 
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
