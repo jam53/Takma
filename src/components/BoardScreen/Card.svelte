@@ -146,6 +146,7 @@
         display: flex;
         gap: 0.2em;
         align-items: center;
+        user-select: none;
     }
 
     .coverImage {
