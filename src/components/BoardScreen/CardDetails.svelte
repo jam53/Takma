@@ -743,6 +743,7 @@
 
     .cardActionsHolder button svg {
         min-width: 1em;
+        height: 1.25em;
     }
 
     .cardActionsHolder button span {
@@ -757,10 +758,6 @@
     #deleteButton:hover {
         background-color: var(--danger);
         color: white;
-    }
-
-    .cardActionsHolder button svg {
-        height: 1.25em;
     }
 
     :global(code > *) {

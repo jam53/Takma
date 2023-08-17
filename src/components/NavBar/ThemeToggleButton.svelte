@@ -16,7 +16,7 @@
 
 </script>
 
-<div on:click={() => toggleTheme()} class="tdnn" class:day={!darkTheme}>
+<div on:click={() => toggleTheme()} class="tdnn" class:day={!darkTheme} title="%%Toggle color theme">
     <div class="moon" class:sun={!darkTheme}></div>
 <!--  The syntax `class:cssClass={booleanVar}` only applies/adds the css class if the `booleanVar` is true  -->
 </div>
