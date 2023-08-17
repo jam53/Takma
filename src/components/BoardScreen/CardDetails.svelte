@@ -327,6 +327,32 @@
         refreshListsFunction();
         $selectedCardId = "";
     }
+
+    let isCardFullscreen = SaveLoadManager.getData().cardsFullscreen;
+    let popupElement;
+    function toggleFullscreen()
+    {
+        isCardFullscreen = !isCardFullscreen;
+
+        if (isCardFullscreen)
+        {
+            overlayElement.classList.add("overlayCardFullscreen");
+            popupElement.classList.add("popupCardFullscreen");
+
+            Array.from(document.getElementsByClassName("titleAndActionsHolder")).forEach(attachment => attachment.classList.add("titleAndActionsHolderCardFullscreen"));
+        }
+        else
+        {
+            overlayElement.classList.remove("overlayCardFullscreen");
+            popupElement.classList.remove("popupCardFullscreen");
+
+            Array.from(document.getElementsByClassName("titleAndActionsHolder")).forEach(attachment => attachment.classList.remove("titleAndActionsHolderCardFullscreen"));
+        }
+
+        SaveLoadManager.getData().cardsFullscreen = isCardFullscreen;
+    }
+    $: overlayElement && toggleFullscreen(); //When we open the card, we wait until the overlayElement AKA the UI is loaded. Then we proceed to call the toggleFullscreen() function twice. This way the necessary styleclasses get applied/removed. Should we call it just once, then we would toggle the fullscreen state. Which is not what we want, we just want to apply/remove the necessary styleclasses. So we call the function a second time to toggle back the original fullscreen state of the card.
+    $: overlayElement && toggleFullscreen();
 </script>
 
 {#if showPopup}
@@ -336,7 +362,7 @@
     >
         <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->
 
-        <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
+        <div bind:this={popupElement} transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <span role="textbox" contenteditable="plaintext-only"
@@ -490,6 +516,15 @@
                 </div>
             </div>
         </div>
+        <div class="fullScreenButton"
+             on:click|stopPropagation={toggleFullscreen}
+        >
+            {#if isCardFullscreen}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" /> </svg>
+            {:else}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" /></svg>
+            {/if}
+        </div>
     </div>
     <Toaster richColors theme={document.documentElement.style.getPropertyValue("color-scheme")}/>
 {/if}
@@ -504,6 +539,12 @@
         background-color: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(5px);
         border-radius: 10px;
+
+        transition: all 0.3s;
+    }
+
+    :is(.overlayCardFullscreen) {
+        background-color: var(--background-color);
     }
 
     :is(.overlayScreenMaximized) {
@@ -522,6 +563,18 @@
 
         max-height: 80vh;
         overflow: auto;
+
+        transition: all 0.3s;
+        min-width: 1em;
+        min-height: 1em;
+    }
+
+    :is(.popupCardFullscreen) {
+        max-height: 100vh;
+        min-height: calc(100vh - 4em);
+        min-width: calc(100vw - 2.5em);
+        background-color: transparent;
+        box-shadow: none;
     }
 
     .titleDiv {
@@ -802,5 +855,22 @@
     .dueDate svg {
         width: 1.5em;
         height: 1.5em;
+    }
+
+    .fullScreenButton {
+        display: block;
+        position: fixed;
+        height: 2.5em;
+        width: 2.5em;
+        bottom: 0.75em;
+        right: 0.75em;
+        color: white;
+        transition: 0.3s;
+        cursor: pointer;
+        -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .5));
+    }
+
+    .fullScreenButton:hover {
+        color: grey;
     }
 </style>

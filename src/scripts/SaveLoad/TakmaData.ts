@@ -11,6 +11,7 @@ export class TakmaData
 {
     //region data/variables
     private _darkTheme: boolean = window.matchMedia("(prefers-color-scheme: dark)").matches; //This sets the value based on the user's preferred system color theme. If the os' color theme is set to dark, this will return true. Else it will returns false
+    private _cardsFullscreen: boolean = false; //Whether or not the cards should be displayed in fullscreen
     private _totalBoardsCreated: number = 0; //The total amount of boards the user has created
     private _totalListsCreated: number = 0; //The total amount of lists the user has created
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
@@ -19,7 +20,7 @@ export class TakmaData
 
     //region getters and setters
     /**
-     * This function returns the `true` if the color theme of the app is set to dark, `false` if white theme is selected
+     * This function returns `true` if the color theme of the app is set to dark, `false` if white theme is selected
      */
     get darkTheme(): boolean
     {
@@ -32,6 +33,23 @@ export class TakmaData
     set darkTheme(value: boolean)
     {
         this._darkTheme = value;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * This function returns `true` if cards should be displayed in fullscreen, `false` if not
+     */
+    get cardsFullscreen(): boolean
+    {
+        return this._cardsFullscreen;
+    }
+
+    /**
+     * This function sets whether or not the cards should be displayed in fullscreen
+     */
+    set cardsFullscreen(value: boolean)
+    {
+        this._cardsFullscreen = value;
         SaveLoadManager.saveToDisk();
     }
 

@@ -228,6 +228,10 @@
         transition: 0.2s;
     }
 
+    :is(.titleAndActionsHolderCardFullscreen p) {
+        width: calc(100vw - 22em);
+    }
+
     .titleAndActionsHolder p:hover {
         color: var(--unselected-button)
     }
