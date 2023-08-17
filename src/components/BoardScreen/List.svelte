@@ -117,7 +117,7 @@
         <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
-                    <Card card={card}/>
+                    <Card card={card} refreshListFunction={() => cards = cards}/>
                 </div>
             {/each}
             {#if cards.length === 0}

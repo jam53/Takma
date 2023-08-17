@@ -7,6 +7,7 @@
     import {exists} from "@tauri-apps/api/fs";
 
     export let card: Card;
+    export let refreshListFunction;
 
     function displayCardDetails()
     {
@@ -39,9 +40,30 @@
 
         return amount;
     }
+
+    let hovering = false; //Is this component being hovered over
+    let shiftKeyPressed = false;
+    window.addEventListener("keydown", e => e.key === "Shift" && (shiftKeyPressed = true));
+    window.addEventListener("keyup", e => e.key === "Shift" && (shiftKeyPressed = false));
 </script>
 
-<div class="cardContainer" on:click={displayCardDetails} tabindex="0" on:keydown={e => e.key === "Enter" && (displayCardDetails())}>
+<div class="cardContainer" tabindex="0"
+     on:click={() => {
+         if (hovering && shiftKeyPressed)
+         {
+             SaveLoadManager.getData().deleteCard($selectedBoardId, card.id);
+             refreshListFunction();
+         }
+         else
+         {
+             displayCardDetails();
+         }
+     }}
+     class:deleteCard={hovering && shiftKeyPressed}
+     on:keydown={e => e.key === "Enter" && displayCardDetails()}
+     on:mouseenter={() => hovering = true}
+     on:mouseleave={() => hovering = false}
+>
     {#if card.coverImage !== "" && $draggingCardOrList === false}
         <!--We only display/update the cover image of this card when we are not dragging any cards/lists. This is because as soon as we start dragging cards/lists we refresh the board/lists which causes all of the cover images to be rerendered. This makes it very laggy to drag/drop cards/lists if there are any cards with cover images. That is why we only display/update the cover image if we aren't dragging any cards/lists.-->
         {#await getImageUrl(card.coverImage, SaveLoadManager.getSaveDirectory())}
@@ -102,12 +124,27 @@
         border-radius: 4px;
         border: 1px solid var(--border);
         background: rgba(var(--background-color-rgb-values), 0.5);
+        background-position: center;
         transition: 0.3s;
+        min-height: 1em;
     }
 
     .cardContainer:hover {
         background: var(--background-color);
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.5);
+    }
+
+    :is(.deleteCard):hover {
+        background: var(--danger);
+        border: 1px solid var(--danger);
+        background-image: url("data:image/svg+xml;charset=utf-8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z' clip-rule='evenodd' /%3E%3C/svg%3E"); /* https://stackoverflow.com/a/41407516 */
+        background-repeat: no-repeat;
+        background-position: center;
+        min-height: 2em;
+    }
+
+    :is(.deleteCard img), :is(.deleteCard div) {
+        visibility: hidden;
     }
 
     .nonCoverImageContainer {

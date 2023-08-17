@@ -1,6 +1,6 @@
 import {SaveLoadManager} from "./SaveLoadManager";
 import type {Board, Card, Label, List} from "../Board";
-import {removeDir} from "@tauri-apps/api/fs";
+import {removeDir, removeFile} from "@tauri-apps/api/fs";
 import {saveFilePathToDisk} from "../TakmaDataFolderIO";
 
 /**
@@ -257,10 +257,53 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
 
-        deletedList[0].cards.forEach(card =>
+        deletedList[0].cards.forEach(card => this.deleteAllFilesTiedToCard(card));
+    }
+
+    /**
+     * Deletes all the files on disk associated with this card
+     */
+    private deleteAllFilesTiedToCard(card: Card)
+    {
+        card.attachments.forEach(async attachment =>
         {
-            //delete card attachements
+            await removeFile(attachment, {dir: SaveLoadManager.getSaveDirectory()})
         });
+
+        if (card.coverImage !== "")
+        {
+            removeFile(card.coverImage, {dir: SaveLoadManager.getSaveDirectory()});
+        }
+    }
+
+    /**
+     * Deletes a card
+     */
+    public deleteCard(boardId: string, cardId: string): void
+    {
+        const indexOfBoard: number = this._boards.findIndex(board => board.id === boardId);
+        let indexOfList: number;
+        let indexOfCardToDelete: number;
+
+
+        for (let i = 0; i < this._boards[indexOfBoard].lists.length; i++)
+        {
+            for (let j = 0; j < this._boards[indexOfBoard].lists[i].cards.length; j++)
+            {
+                if (this._boards[indexOfBoard].lists[i].cards[j].id === cardId)
+                {
+                    indexOfList = i;
+                    indexOfCardToDelete = j;
+                    break;
+                }
+            }
+        }
+
+        const deletedCard: Card[] = this._boards[indexOfBoard].lists[indexOfList].cards.splice(indexOfCardToDelete, 1);
+
+        SaveLoadManager.saveToDisk();
+
+        this.deleteAllFilesTiedToCard(deletedCard[0]);
     }
 
     /**
