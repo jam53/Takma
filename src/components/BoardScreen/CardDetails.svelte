@@ -75,6 +75,7 @@
         cardToSave = null;
         refreshListsFunction();
         $selectedCardId = "";
+        document.activeElement.blur(); //This should or could help preventing the issue where cards can't be dragged at times.
     }
 
     let showPopup = false;
