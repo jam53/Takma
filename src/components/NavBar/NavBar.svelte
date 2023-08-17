@@ -1,7 +1,7 @@
 <script lang="ts">
     import takmaIcon from "../../images/Takma.svg"
     import ThemeToggleButton from "./ThemeToggleButton.svelte";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import SearchBar from "./SearchBar.svelte";
     import Filter from "./Filter.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
@@ -52,7 +52,10 @@
         <ThemeToggleButton/>
     </div>
 </div>
-<Toaster richColors theme={document.documentElement.style.getPropertyValue("color-scheme")}/>
+{#key [$selectedBoardId, $selectedCardId]}
+    <!--This makes it so that if the user toggles the color theme. The toast will use the correct color. Now this change will only be reflected if either the selected board/card changes. This is the best we can do, since we can't listen for a color theme changed event-->
+    <Toaster richColors theme={document.documentElement.style.getPropertyValue("color-scheme")}/>
+{/key}
 
 <style>
     .containingDiv {
