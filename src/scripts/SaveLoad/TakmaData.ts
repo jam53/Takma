@@ -128,7 +128,7 @@ export class TakmaData
         this._boards = this.boards.filter(board => board.id != id);
         SaveLoadManager.saveToDisk();
 
-        await removeDir(`./Files/${id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
+        await removeDir(`./Takma/Files/${id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
     }
 
     /**
