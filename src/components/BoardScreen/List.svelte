@@ -2,7 +2,7 @@
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card as CardInterface, List} from "../../scripts/Board";
-    import {draggingCardOrList, selectedBoardId} from "../../scripts/stores";
+    import {draggingCardOrList, searchBarValue, selectedBoardId} from "../../scripts/stores";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
@@ -88,6 +88,10 @@
 
     $: outerWrapperElement && applyOverFlowedStyleClasses();
 
+    async function filterCards(cards: CardInterface[])
+    {
+        return cards.filter(card => card.title.includes($searchBarValue.trim()) || card.description.includes($searchBarValue.trim()));
+    }
 </script>
 
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)} on:contextmenu|stopPropagation>
@@ -115,11 +119,15 @@
     <div class="outerWrapper" bind:this={outerWrapperElement} on:scroll={applyOverFlowedStyleClasses}>
 <!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the -webkit-box-shadow doesn't appear cut off when hovering over a card-->
         <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
-            {#each cards as card (card.id)}
-                <div class="card" animate:flip="{{duration: 500}}">
-                    <Card card={card} refreshListFunction={() => cards = cards}/>
-                </div>
-            {/each}
+            {#key $searchBarValue}
+            {#await filterCards(cards) then filteredCards}
+                {#each filteredCards as card (card.id)}
+                    <div class="card" animate:flip="{{duration: 500}}">
+                        <Card card={card} refreshListFunction={() => cards = cards}/>
+                    </div>
+                {/each}
+            {/await}
+            {/key}
             {#if cards.length === 0}
                 <div class="emptyCard" on:mouseenter={() => setDragDisabled(true)}>
                     %%Drop a card here
