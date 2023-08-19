@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {draggingCardOrList, selectedBoardId} from "../../scripts/stores";
-    import type {List as ListInterface} from "../../scripts/Board";
+    import {cardFilters, draggingCardOrList, selectedBoardId} from "../../scripts/stores";
+    import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
     import {getImageUrl} from "../../scripts/GetImageUrl";
@@ -22,7 +22,7 @@
             if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating"))
             {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
                 $selectedBoardId = "";
-                document.body.style.backgroundImage = "";
+                $cardFilters = {labelIds: [], dueDates: []};
             }
         });
     });
@@ -112,12 +112,29 @@
     {
         lists = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
     }
+
+    function filterCards(cardsToFilter: Card[]): Card[]
+    {
+        for (let dueDate of $cardFilters.dueDates)
+        {
+            cardsToFilter = cardsToFilter.filter(card => card.dueDate - Date.now() < dueDate && card.dueDate !== null);
+        }
+
+        for (let labelId of $cardFilters.labelIds)
+        {
+            cardsToFilter = cardsToFilter.filter(card => card.labelIds.includes(labelId));
+        }
+
+        return cardsToFilter;
+    }
 </script>
 <div class="container" title="%%To change the background image, simply right-click or drag and drop a new image here." on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>
-                <List listId={list.id} cards={list.cards} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListsFunction={refreshListsFunction}/>
+                {#key $cardFilters}
+                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListsFunction={refreshListsFunction}/>
+                {/key}
             </div>
         {/each}
         <div on:mouseenter={() => setDragDisabled(true)}>

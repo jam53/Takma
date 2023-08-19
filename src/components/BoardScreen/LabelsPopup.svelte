@@ -26,7 +26,7 @@
     import {slide} from "svelte/transition";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {cardFilters, selectedBoardId} from "../../scripts/stores";
     import type {Label} from "../../scripts/Board";
 
     export let mouseClickEvent;
@@ -151,6 +151,7 @@
     function deleteLabel(labelId: string)
     {
         SaveLoadManager.getData().removeLabel($selectedBoardId, labelId);
+        $cardFilters.labelIds = $cardFilters.labelIds.filter(id => id != labelId);
 
         document.getElementById(`labelOptionDiv${labelId}`).remove();
         refreshCardFunction(); //Refresh the card's UI, so that the removed label vanishes from the card
