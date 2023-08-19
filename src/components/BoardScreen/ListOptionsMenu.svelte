@@ -255,10 +255,22 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         },
     ];
 
+    let navElement;
+    $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+    function handleKeyDown(e)
+    {
+        if(e.key === "Escape" || (e.key === "w" && e.ctrlKey))
+        {
+            closeContextMenu();
+        }
+    }
 </script>
 
 {#if showMenu}
-    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1;">
+    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
+         bind:this={navElement}
+         on:keydown|stopPropagation={handleKeyDown} tabindex="1"
+    >
         <div class="navbar" id="navbar" transition:slide>
             <ul>
                 {#each menuItems as item}
