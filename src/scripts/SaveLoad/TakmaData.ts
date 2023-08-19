@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, Label, List} from "../Board";
+import type {Board, Card, Label, List, sortBoardsFunctionName} from "../Board";
 import {removeDir, removeFile} from "@tauri-apps/api/fs";
 import {saveFilePathToDisk} from "../TakmaDataFolderIO";
 
@@ -15,6 +15,7 @@ export class TakmaData
     private _totalBoardsCreated: number = 0; //The total amount of boards the user has created
     private _totalListsCreated: number = 0; //The total amount of lists the user has created
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
+    private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -86,11 +87,37 @@ export class TakmaData
     }
 
     /**
+     * Returns the name of the function that is used to sort the boards
+     */
+    get sortBoardsFunctionName(): sortBoardsFunctionName
+    {
+        return this._sortBoardsFunctionName;
+    }
+
+    /**
+     * Sets the name of the function that is used to sort the boards
+     */
+    set sortBoardsFunctionName(sortBoardsFunctionName: sortBoardsFunctionName)
+    {
+        this._sortBoardsFunctionName = sortBoardsFunctionName;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
      * This returns all the user's boards
      */
     get boards(): Board[]
     {
         return this._boards;
+    }
+
+    /**
+     * This sets all the user's boards
+     */
+    set boards(boards: Board[])
+    {
+        this._boards = boards;
+        SaveLoadManager.saveToDisk();
     }
 
     /**
@@ -114,6 +141,7 @@ export class TakmaData
         let board: Board = {
             id: boardId,
             creationDate: Date.now(),
+            lastOpened: Date.now(),
             backgroundImagePath: await saveFilePathToDisk(backgroundImagePath, boardId),
             title: title,
             labels: [],
@@ -450,6 +478,18 @@ export class TakmaData
             }
         }
 
+
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Updates the lastOpened field of the board with the current time or the time passed as an argument
+     */
+    public setBoardLastOpenedTime(boardId: string, lastOpenedTime: number = Date.now())
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+
+        this._boards[indexOfBoard].lastOpened = lastOpenedTime;
 
         SaveLoadManager.saveToDisk();
     }

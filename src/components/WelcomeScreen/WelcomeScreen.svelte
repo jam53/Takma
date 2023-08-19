@@ -7,14 +7,31 @@
 
     let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
-    let boards: Board[] = SaveLoadManager.getData().boards;
+    let sortBoardFunctions = new Map<string, (board1: Board, board2: Board) => number>([
+        ["sortByCreationDateAscending", (a, b) => a.creationDate - b.creationDate],
+        ["sortByCreationDateDescending", (a, b) => b.creationDate - a.creationDate],
+        ["sortByMostRecentlyOpened", (a, b) => b.lastOpened - a.lastOpened],
+        ["sortByLeastRecentlyOpened", (a, b) => a.lastOpened - b.lastOpened],
+        ["sortAlphabeticallyAscending", (a, b) => a.title.localeCompare(b.title)],
+        ["sortAlphabeticallyDescending", (a, b) => b.title.localeCompare(a.title)],
+        ["dontSort", (a, b) => 0]
+    ]);
+
+    let boards: Board[] = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
 </script>
 
 <div>
     <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">%%Create</button>
     {#each boards as board}
         {#if board.title.includes($searchBarValue.trim())}
-            <BoardButton on:clicked={() => {$selectedBoardId = board.id;}} image={board.backgroundImagePath} title={board.title}/>
+            <BoardButton
+                on:clicked={() => {
+                    $selectedBoardId = board.id;
+                    SaveLoadManager.getData().setBoardLastOpenedTime($selectedBoardId);
+                }}
+                image={board.backgroundImagePath}
+                title={board.title}
+            />
         {/if}
     {/each}
 </div>

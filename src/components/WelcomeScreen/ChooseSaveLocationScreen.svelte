@@ -4,7 +4,7 @@
     function setSaveLocation(saveLocation: BaseDirectory)
     {
         localStorage.setItem("saveLocation", saveLocation.toString());
-        window.location.href = window.location.href; //Zorgt dat onze app/website refreshed. Anders zouden we op het ChooseSaveLocationScreen.svelte blijven staan omdat svelte niet zal zien dat `{#if localstorage.getItem(“saveLocation”) === null}` werd aangepast in App.svelte
+        location.reload(); //Zorgt dat onze app/website refreshed. Anders zouden we op het ChooseSaveLocationScreen.svelte blijven staan omdat svelte niet zal zien dat `{#if localstorage.getItem(“saveLocation”) === null}` werd aangepast in App.svelte
     }
 
 </script>

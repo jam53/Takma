@@ -8,6 +8,10 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {readText, writeText} from "@tauri-apps/api/clipboard";
     import {toast, Toaster} from "svelte-sonner";
+    import OrderBoardsMenu from "./OrderBoardsMenu.svelte";
+    import {clickOutside} from "../../scripts/ClickOutside";
+
+    let orderBoardsMenuElement;
 </script>
 
 <div class="containingDiv">
@@ -22,7 +26,14 @@
     </div>
     <div class="rightSideContainer">
         <SearchBar/>
-        {#if $selectedBoardId !== ""}
+        {#if $selectedBoardId === ""}
+            <button class="orderBoardsButton" title="%%Order boards"
+                on:click={e => orderBoardsMenuElement.openContextMenu(e)}
+                use:clickOutside on:click_outside={orderBoardsMenuElement.closeContextMenu}
+            >
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
+            </button>
+        {:else}
             <Filter/>
             <button class="copyLinkButton" title="%%Copy link to this board"
                  on:click={async () => {
@@ -56,6 +67,7 @@
     <!--This makes it so that if the user toggles the color theme. The toast will use the correct color. Now this change will only be reflected if either the selected board/card changes. This is the best we can do, since we can't listen for a color theme changed event-->
     <Toaster richColors theme={document.documentElement.style.getPropertyValue("color-scheme")}/>
 {/key}
+<OrderBoardsMenu bind:this={orderBoardsMenuElement}/>
 
 <style>
     .containingDiv {
@@ -103,7 +115,7 @@
         gap: 0.5em;
     }
 
-    .settingsButton, .copyLinkButton {
+    .settingsButton, .copyLinkButton, .orderBoardsButton {
         height: inherit;
         width: auto;
         margin: 0;
@@ -112,7 +124,7 @@
         border: none;
     }
 
-    .settingsButton svg, .copyLinkButton svg {
+    .settingsButton svg, .copyLinkButton svg, .orderBoardsButton svg {
         transition: 0.5s;
         height: inherit;
         cursor: pointer;
@@ -120,7 +132,7 @@
         -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 
-    .copyLinkButton svg {
+    .copyLinkButton svg, .orderBoardsButton svg {
         fill: none;
         color: var(--unselected-button);
     }
@@ -129,7 +141,7 @@
         fill: var(--selected-button);
     }
 
-    .copyLinkButton:hover svg {
+    .copyLinkButton:hover svg, .orderBoardsButton:hover svg {
         color: var(--selected-button);
     }
 
