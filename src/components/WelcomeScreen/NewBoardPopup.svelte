@@ -11,6 +11,7 @@
     import {resolveResource} from "@tauri-apps/api/path";
     import {resizeImg} from "../../scripts/ResizeImg";
     import {shuffle} from "../../scripts/KnuthShuffle";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     let showPopup = true;
     let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -119,7 +120,7 @@
                 <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:keydown={e => e.key === "Enter" && createNewBoard()}>
             </div>
             <br>
-            <button disabled={!lazyLoaded} on:click={createNewBoard} class="createButton">%%Create</button>
+            <button disabled={!lazyLoaded} on:click={createNewBoard} class="createButton">{I18n.t("createBoard")}</button>
         </div>
     </div>
 {/if}

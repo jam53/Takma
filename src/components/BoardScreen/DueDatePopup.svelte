@@ -2,7 +2,7 @@
     import {slide} from "svelte/transition";
     import {clickOutside} from "../../scripts/ClickOutside";
     import SveltyPicker from "svelty-picker";
-    // import {ar, de, en, es, et, fr, hi, id, jp, ko, nl, pt_BR, ru, tr, zh} from "svelty-picker/i18n";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     export let mouseClickEvent;
     export let cardToSave;
@@ -101,7 +101,7 @@
                 %%Due date
             </h3>
             <br>
-            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={cardToSave.dueDate}/>
+            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={cardToSave.dueDate} i18n={I18n.t("sveltyPicker")}/>
         </div>
     </nav>
 {/if}

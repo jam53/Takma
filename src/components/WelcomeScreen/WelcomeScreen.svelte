@@ -4,6 +4,7 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Board} from "../../scripts/Board";
     import {searchBarValue, selectedBoardId} from "../../scripts/stores";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -21,7 +22,7 @@
 </script>
 
 <div>
-    <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">%%Create</button>
+    <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
     {#each boards as board}
         {#if board.title.includes($searchBarValue.trim())}
             <BoardButton

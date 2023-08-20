@@ -16,6 +16,7 @@ export class TakmaData
     private _totalListsCreated: number = 0; //The total amount of lists the user has created
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
     private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
+    private _displayLanguage: string = navigator.language.substring(0,2); //The language Takma should be displayed in
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -100,6 +101,23 @@ export class TakmaData
     set sortBoardsFunctionName(sortBoardsFunctionName: sortBoardsFunctionName)
     {
         this._sortBoardsFunctionName = sortBoardsFunctionName;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Returns the display language in which Takma should be displayed
+     */
+    get displayLanguage(): string
+    {
+        return this._displayLanguage;
+    }
+
+    /**
+     * Sets the display language in which Takma should be displayed
+     */
+    set displayLanguage(value: string)
+    {
+        this._displayLanguage = value;
         SaveLoadManager.saveToDisk();
     }
 
