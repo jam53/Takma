@@ -135,7 +135,7 @@
             {/if}
         </div>
     </div>
-    <div on:mouseenter={() => setDragDisabled(true)}>
+    <div on:mouseenter={() => setDragDisabled(true)} on:mouseleave={() => setDragDisabled(false)}>
         <CreateNewCard refreshListsFunction={() => refreshListsFunction()} listId={listId} outerWrapperElement={outerWrapperElement}/>
     </div>
 </div>
