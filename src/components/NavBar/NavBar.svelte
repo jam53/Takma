@@ -9,6 +9,7 @@
     import {toast, Toaster} from "svelte-sonner";
     import OrderBoardsMenu from "./OrderBoardsMenu.svelte";
     import FilterCardsPopup from "../BoardScreen/FilterCardsPopup.svelte";
+    import jam54LogoMonochrome from "../../images/Jam54LogoMonochrome.webp";
 
     let orderBoardsMenuElement;
     let filterCardsPopupElement;
@@ -16,51 +17,59 @@
 
 <div class="containingDiv">
     <div class="leftSideContainer">
-        <img on:click={() => {
-                $selectedBoardId = "";
-                $cardFilters = {labelIds: [], dueDates: []};
-             }}
-             src={takmaIcon} alt="Takma logo" class="takmaLogo"/>
-<!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
-        {#if $selectedBoardId === ""}
+        {#if localStorage.getItem("saveLocation") === null}
+            <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em"/>
+        {:else}
+            <img on:click={() => {
+                    $selectedBoardId = "";
+                    $cardFilters = {labelIds: [], dueDates: []};
+                 }}
+                 src={takmaIcon} alt="Takma logo" class="takmaLogo"/>
+            <!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
+        {/if}
+        {#if localStorage.getItem("saveLocation") === null}
+            <h1 style="color: white; font-family: Inter">Jam54</h1>
+        {:else if $selectedBoardId === ""}
             <h1>Takma</h1>
         {:else}
             <input class="boardTitle" value={SaveLoadManager.getData().getBoard($selectedBoardId).title} on:input={e => SaveLoadManager.getData().setBoardTitle($selectedBoardId, e.target.value)}/>
         {/if}
     </div>
     <div class="rightSideContainer">
-        <SearchBar/>
-        {#if $selectedBoardId === ""}
-            <button class="orderBoardsButton" title="%%Order boards"
-                on:click={e => orderBoardsMenuElement.openContextMenu(e)}
-            >
-                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
-            </button>
-        {:else}
-            <button class="filterButton" title="%%Filter cards"
-                on:click={e => filterCardsPopupElement.openContextMenu(e)}
-            >
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M472 168H40a24 24 0 010-48h432a24 24 0 010 48zm-80 112H120a24 24 0 010-48h272a24 24 0 010 48zm-96 112h-80a24 24 0 010-48h80a24 24 0 010 48z"></path></svg>
-            </button>
-            <button class="copyLinkButton" title="%%Copy link to this board"
-                 on:click={async () => {
-                     let linkToThisBoard = `takma://${$selectedBoardId}`
-                     await writeText(linkToThisBoard);
+        {#if localStorage.getItem("saveLocation") !== null}
+            <SearchBar/>
+            {#if $selectedBoardId === ""}
+                <button class="orderBoardsButton" title="%%Order boards"
+                        on:click={e => orderBoardsMenuElement.openContextMenu(e)}
+                >
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
+                </button>
+            {:else}
+                <button class="filterButton" title="%%Filter cards"
+                        on:click={e => filterCardsPopupElement.openContextMenu(e)}
+                >
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M472 168H40a24 24 0 010-48h432a24 24 0 010 48zm-80 112H120a24 24 0 010-48h272a24 24 0 010 48zm-96 112h-80a24 24 0 010-48h80a24 24 0 010 48z"></path></svg>
+                </button>
+                <button class="copyLinkButton" title="%%Copy link to this board"
+                        on:click={async () => {
+                         let linkToThisBoard = `takma://${$selectedBoardId}`
+                         await writeText(linkToThisBoard);
 
-                     let textInClipboard = await readText();
-                     if (textInClipboard === linkToThisBoard)
-                     {
-                         toast("%%Copied link to this board to clipboard, paste it in any card's description")
-                     }
-                     else
-                     {
-                         toast.error("%%Couldn't copy link to clipboard, the link to this board is: " + linkToThisBoard);
-                     }
-                }}
-            >
-                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-            </button>
-            <DeleteBoardButton/>
+                         let textInClipboard = await readText();
+                         if (textInClipboard === linkToThisBoard)
+                         {
+                             toast("%%Copied link to this board to clipboard, paste it in any card's description")
+                         }
+                         else
+                         {
+                             toast.error("%%Couldn't copy link to clipboard, the link to this board is: " + linkToThisBoard);
+                         }
+                    }}
+                >
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                </button>
+                <DeleteBoardButton/>
+            {/if}
         {/if}
         <button class="settingsButton" title="%%Change display language">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

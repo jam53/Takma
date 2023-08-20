@@ -16,10 +16,13 @@
 
 </script>
 
-<div on:click={() => toggleTheme()} class="tdnn" class:day={!darkTheme} title="%%Toggle color theme">
-    <div class="moon" class:sun={!darkTheme}></div>
-<!--  The syntax `class:cssClass={booleanVar}` only applies/adds the css class if the `booleanVar` is true  -->
-</div>
+{#if localStorage.getItem("saveLocation") !== null}
+    <!--  We renderen de color theme toggle alleen als we reeds een save locatie hebben. In dat geval wil het zeggen dat we op het ChooseSaveLocationScreen scherm staan, op dat punt willen we niet dat de gebruiker het kleurenthema kan aanpassen, dus hidden we deze toggle. Nu kan je je afvragen wrm we de {#if} check hier doen in het component zelf, en niet in NavBar.svelte zoals bij alle andere knoppen in de navbar. Dat is omdat als we in NavBar.svelte de {#if} zouden zetten rond deze toggle, dan zal hij wnr er nog geen save locatie is niet getoond worden. Maar dan wordt ook de code niet uitgevoerd. In dit geval wordt de UI ook niet getoond, maar de code in het <script> blok wordt wel uitgevoerd. Dit is belangrijk want anders hebben we proberen met het accessen van kleuren in css adhv var(--variabeleNaam)-->
+    <div on:click={() => toggleTheme()} class="tdnn" class:day={!darkTheme} title="%%Toggle color theme">
+        <div class="moon" class:sun={!darkTheme}></div>
+    <!--  The syntax `class:cssClass={booleanVar}` only applies/adds the css class if the `booleanVar` is true  -->
+    </div>
+{/if}
 
 <style>
     :root {

@@ -10,12 +10,18 @@
     import {getImageUrl} from "./scripts/GetImageUrl";
     import {appWindow} from "@tauri-apps/api/window";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
+    import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
 
     /**
      * Sets the background image of the body to the image of the selected board
      */
     selectedBoardId.subscribe(async boardId => {
-        if (boardId != "")
+        if (localStorage.getItem("saveLocation") === null)
+        {
+            document.body.style.backgroundImage = `url('${paintDrops}')`;
+            document.body.style.backgroundColor = `transparent`;
+        }
+        else if (boardId != "")
         {
             const board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
             const imgUrl: string = await getImageUrl(board.backgroundImagePath, SaveLoadManager.getSaveDirectory());
