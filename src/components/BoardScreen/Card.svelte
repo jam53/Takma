@@ -127,6 +127,7 @@
         background-position: center;
         transition: 0.3s;
         min-height: 1em;
+        user-select: none;
     }
 
     .cardContainer:hover {
@@ -183,7 +184,6 @@
         display: flex;
         gap: 0.2em;
         align-items: center;
-        user-select: none;
     }
 
     .coverImage {

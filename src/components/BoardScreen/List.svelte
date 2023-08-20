@@ -88,9 +88,9 @@
 
     $: outerWrapperElement && applyOverFlowedStyleClasses();
 
-    async function filterCards(cards: CardInterface[])
+    function shouldCardBeHidden(card: CardInterface)
     {
-        return cards.filter(card => card.title.includes($searchBarValue.trim()) || card.description.includes($searchBarValue.trim()));
+        return !(card.title.includes($searchBarValue.trim()) || card.description.includes($searchBarValue.trim()));
     }
 </script>
 
@@ -119,15 +119,15 @@
     <div class="outerWrapper" bind:this={outerWrapperElement} on:scroll={applyOverFlowedStyleClasses}>
 <!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the -webkit-box-shadow doesn't appear cut off when hovering over a card-->
         <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
-            {#key $searchBarValue}
-            {#await filterCards(cards) then filteredCards}
-                {#each filteredCards as card (card.id)}
-                    <div class="card" animate:flip="{{duration: 500}}">
-                        <Card card={card} refreshListFunction={() => cards = cards}/>
-                    </div>
-                {/each}
-            {/await}
-            {/key}
+            {#each cards as card (card.id)}
+                <div class="card" animate:flip="{{duration: 500}}">
+                    {#key $searchBarValue}
+                        {#if !shouldCardBeHidden(card)}
+                            <Card card={card} refreshListFunction={() => cards = cards}/>
+                        {/if}
+                    {/key}
+                </div>
+            {/each}
             {#if cards.length === 0}
                 <div class="emptyCard" on:mouseenter={() => setDragDisabled(true)}>
                     %%Drop a card here
@@ -161,6 +161,10 @@
         flex-direction: column;
         gap: 0.5em;
         overflow: visible;
+    }
+
+    .card:empty {
+        display: none;
     }
 
     .outerWrapper {
