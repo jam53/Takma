@@ -50,7 +50,7 @@
 </div>
 <div class="licenseAgreement">
     <span>
-        By proceeding, you indicate your acceptance of the terms and conditions outlined in the <a on:click={async () => open((await resolveResource("resources/LICENSE.txt")).substring(4))}>license agreement.</a>
+        %%By proceeding, you indicate your acceptance of the terms and conditions outlined in the <a on:click={async () => open((await resolveResource("resources/LICENSE.txt")).substring(4))}>license agreement.</a>
     </span>
 </div>
 
@@ -87,21 +87,31 @@
         width: 30vw;
         height: 40vh;
         padding: 1em;
-        transition: 0.4s;
         overflow-y: auto;
-        background-color: rgba(0, 0, 0, 0.3);
         backdrop-filter: blur(10px);
+
+        /*  needed for firefox to have a valid output */
+        --transparency: 100%;
+        /**/
+        transition: --transparency 0.4s, all 0.4s;
+        background: linear-gradient(transparent var(--transparency), #404040);
     }
 
-    ::-webkit-scrollbar-track {
-        margin: 0.35em 0;
+    @property --transparency{
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
     }
 
     .option:hover {
         cursor: pointer;
         border: 3px solid var(--accent);
-        background: linear-gradient(transparent 30%, #404040);
+        --transparency:30%;
         -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.25);
+    }
+
+    ::-webkit-scrollbar-track {
+        margin: 0.35em 0;
     }
 
     .option h1 {
@@ -116,17 +126,25 @@
         left: 0;
         padding: 0.5em;
         color: white;
+        width: 100%;
+        text-align: center;
     }
 
     .licenseAgreement span {
         background-color: rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(10px);
         border-radius: 1em;
+        color: dimgrey;
     }
 
     .licenseAgreement span a {
-        color: var(--accent);
+        color: #3c609b;
         text-decoration: underline;
         cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .licenseAgreement span a:hover {
+        color: #3B81F4FF;
     }
 </style>
