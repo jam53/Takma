@@ -3,6 +3,7 @@
     import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {afterUpdate, onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     export let refreshListsFunction; //We call this function when we add a new card to the board. We do so by passing this lambda function to the CreateNewCard component, which then calls this lambda upon making a new card. This function basically overwrites the previous value of the `lists` variable in the board with the new value it gets from `SaveLoadManager.getData().getBoard($selectedBoardId).lists`.
     export let listId; //The id of the list this CreateNewCard component is in
@@ -83,13 +84,13 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
     <span>
-        %%Add a card
+        {I18n.t("addACard")}
     </span>
     <!--     The things above this line are only displayed when the `newCardCreating` styleclass isn't applied. The elements below this line are only displayed when the `newCardCreating` styleclass is applied       -->
-    <input bind:this={newCardTitleInput} bind:value={newCardTitleValue} on:keydown={e => e.key === "Enter" && createNewCard()} placeholder="%%Enter card title...">
+    <input bind:this={newCardTitleInput} bind:value={newCardTitleValue} on:keydown={e => e.key === "Enter" && createNewCard()} placeholder={I18n.t("enterCardTitle")}>
     <div>
         <button on:click|stopPropagation={createNewCard}>
-            %%Add card
+            {I18n.t("addCard")}
         </button>
         <svg on:click|stopPropagation={closeCreateNewCard} xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />

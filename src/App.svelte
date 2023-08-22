@@ -11,6 +11,7 @@
     import {appWindow} from "@tauri-apps/api/window";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
+    import {I18n} from "./scripts/I18n/I18n";
 
     /**
      * Sets the background image of the body to the image of the selected board
@@ -64,7 +65,7 @@
 
 <main class="wrapper wrapperNotMaximized" id="main">
 {#await SaveLoadManager.loadSaveFileFromDisk()}
-    <h1>%%Loading savefile</h1>
+    <h1>{I18n.t("loadSaveFile")}</h1>
 {:then _}
     <NavBar/>
         {#if localStorage.getItem("saveLocation") === null}

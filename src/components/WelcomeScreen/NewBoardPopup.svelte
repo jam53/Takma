@@ -64,7 +64,7 @@
         const selected = await open({
             multiple: false,
             filters: [{
-                name: '%%Image',
+                name: I18n.t("image"),
                 extensions: imageExtensions
             }]
         });
@@ -81,7 +81,7 @@
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
         <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
-                <h1>%%Create a new board</h1>
+                <h1>{I18n.t("createNewBoard")}</h1>
                 <svg on:click={() => showPopup = false} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -97,7 +97,7 @@
                     <img src={boardPreview} alt="Board preview"/>
                     {/await}
                 </div>
-                <h2 style="margin-bottom: 0">%%Background</h2>
+                <h2 style="margin-bottom: 0">{I18n.t("background")}</h2>
                 <div class="includedImagesHolder">
                     {#if lazyLoaded}
                         <svg on:click={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
@@ -115,7 +115,7 @@
                     {/if}
                 </div>
             {/await}
-            <h2>%%Board name</h2>
+            <h2>{I18n.t("boardName")}</h2>
             <div class="inputHolderDiv">
                 <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:keydown={e => e.key === "Enter" && createNewBoard()}>
             </div>

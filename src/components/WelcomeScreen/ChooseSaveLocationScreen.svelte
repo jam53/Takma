@@ -2,6 +2,7 @@
     import {BaseDirectory} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/shell";
     import {resolveResource} from "@tauri-apps/api/path";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     function setSaveLocation(saveLocation: BaseDirectory)
     {
@@ -12,45 +13,45 @@
 </script>
 
 <h1 class="title">
-    %%Where would you like Takma to store its data?
+    {I18n.t("storeDataLocation")}
 </h1>
 <div class="optionsHolder">
     <div>
         <span class="defaultTag">
-            %%Default
+            {I18n.t("default")}
         </span>
         <div class="option" on:click={() => setSaveLocation(BaseDirectory.AppLocalData)}>
             <h1>
-                %%Local App Data
+                {I18n.t("localAppData")}
             </h1>
             <p>
-                %%Takma will save its data in the localappdata folder on your PC.
+                {I18n.t("storeDataLocalAppData")}
             </p>
             <p>
-                %%This is the recommended option if you're unsure or have no preference.
+                {I18n.t("recommendedChoice")}
             </p>
         </div>
     </div>
     <div>
         <span class="defaultTag" style="visibility: hidden">
-            %%Default
+            {I18n.t("default")}
         </span>
         <div class="option" on:click={() => setSaveLocation(BaseDirectory.Document)}>
             <h1>
-                %%My Documents
+                {I18n.t("myDocumentsDirectory")}
             </h1>
             <p>
-                %%Takma will save its data to your My Documents folder.
+                {I18n.t("storeDataMyDocuments")}
             </p>
             <p>
-                %%This option is recommended if you have OneDrive set up, as the contents of the folder get synced across multiple PCs. Hence, choosing this option ensures that your Takma data is easily accessible and synchronized across different computers.
+                {I18n.t("recommendedChoiceOneDrive")}
             </p>
         </div>
     </div>
 </div>
 <div class="licenseAgreement">
     <span>
-        %%By proceeding, you indicate your acceptance of the terms and conditions outlined in the <a on:click={async () => open((await resolveResource("resources/LICENSE.txt")).substring(4))}>license agreement.</a>
+        {I18n.t("acceptTermsAndConditions")}<a on:click={async () => open((await resolveResource("resources/LICENSE.txt")).substring(4))}>{I18n.t("licenseAgreement")}</a>
     </span>
 </div>
 

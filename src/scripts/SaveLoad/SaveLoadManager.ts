@@ -2,6 +2,7 @@ import {BaseDirectory, createDir, exists, readTextFile, writeTextFile} from "@ta
 import {TakmaData} from "./TakmaData";
 import {message} from "@tauri-apps/api/dialog";
 import {appLocalDataDir, documentDir} from "@tauri-apps/api/path";
+import {I18n} from "../I18n/I18n";
 
 /**
  * This class is used to save/load data within Takma
@@ -67,7 +68,7 @@ export class SaveLoadManager
                 await writeTextFile(this.saveFilename + "_Corrupted", fileContents, {dir: this.saveDirectory});
                 const saveDir: string = await this.getAbsoluteSaveDirectory();
                 const savePath: string = saveDir + this.saveFilename + "_Corrupted";
-                await message("%%The save file has been corrupted and will be replaced with a new, functional file. Additionally, a copy of the corrupted file will be created and placed at the following location: " + savePath, { title: "Takma", type: "error" });
+                await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", type: "error" });
             }
         }
 

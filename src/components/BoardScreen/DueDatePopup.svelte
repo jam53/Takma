@@ -98,7 +98,7 @@
     >
         <div class="navbar" id="navbar" transition:slide|global>
             <h3 class="title">
-                %%Due date
+                {I18n.t("dueDate")}
             </h3>
             <br>
             <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={cardToSave.dueDate} i18n={I18n.t("sveltyPicker")}/>

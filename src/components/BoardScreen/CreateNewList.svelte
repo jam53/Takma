@@ -4,6 +4,7 @@
     import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {slide} from "svelte/transition";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     export let refreshListsFunction; //We call this function when we add a new list to the board. We do so by passing this lambda function to the CreateNewList component, which then calls this lambda upon making a new list. This function basically overwrites the previous value of the `lists` variable in the board with the new value it gets from `SaveLoadManager.getData().getBoard($selectedBoardId).lists`.
 
@@ -54,13 +55,13 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
     <span>
-        %%Add another list
+        {I18n.t("addAnotherList")}
     </span>
     <!--     The things above this line are only displayed when the `newListCreating` styleclass isn't applied. The elements below this line are only displayed when the `newListCreating` styleclass is applied       -->
-    <input bind:this={newListTitleInput} bind:value={newListTitleValue} on:keydown={e => e.key === "Enter" && createNewList()} placeholder="%%Enter list title...">
+    <input bind:this={newListTitleInput} bind:value={newListTitleValue} on:keydown={e => e.key === "Enter" && createNewList()} placeholder={I18n.t("enterListTitle")}>
     <div>
         <button on:click|stopPropagation={createNewList}>
-            %%Add list
+            {I18n.t("addList")}
         </button>
         <svg on:click|stopPropagation={closeCreateNewList} xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />

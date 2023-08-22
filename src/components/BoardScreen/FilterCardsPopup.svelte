@@ -17,6 +17,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {cardFilters, selectedBoardId} from "../../scripts/stores";
     import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     // pos is cursor position when right click occur
     let pos = {x: -1000000, y: 0}
@@ -121,10 +122,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
 
     let dueDateValues = [
-        {value: 0, title: "%%Overdue"},
-        {value: 24 * 60 * 60 * 1000, title: "%%Due in the next day"},
-        {value: 7 * 24 * 60 * 60 * 1000, title: "%%Due in the next week"},
-        {value: 30 * 24 * 60 * 60 * 1000, title: "%%Due in the next month"},
+        {value: 0, title: I18n.t("overdue")},
+        {value: 24 * 60 * 60 * 1000, title: I18n.t("dueNextDay")},
+        {value: 7 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextWeek")},
+        {value: 30 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextMonth")},
     ];
 </script>
 
@@ -137,10 +138,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     >
         <div class="navbar" id="navbar" transition:slide>
             <h3 class="title">
-                %%Filter cards
+                {I18n.t("filterCards")}
             </h3>
             <br>
-            <h4>%%Due date</h4>
+            <h4>{I18n.t("dueDate")}</h4>
             <div class="dueDatesHolder">
                 {#each dueDateValues as dueDate}
                     <div class="dueDate"
@@ -156,7 +157,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             </div>
             {#if SaveLoadManager.getData().getBoard($selectedBoardId)?.labels.length > 0}
                 <hr>
-                <h4>%%Labels</h4>
+                <h4>{I18n.t("labels")}</h4>
                 <div class="labelsHolder">
                     {#if $selectedBoardId !== ""}
                     {#each SaveLoadManager.getData().getBoard($selectedBoardId).labels as label}

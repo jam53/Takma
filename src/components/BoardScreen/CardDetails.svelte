@@ -18,6 +18,7 @@
     import {imageExtensions, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     export let refreshListsFunction;
 
@@ -116,8 +117,8 @@
             {
                 console.log(e);
 
-                boardTitle = boardTitle ?? "%%Board not found";
-                cardTitle = cardId === undefined ? "" : "%%Card not found";
+                boardTitle = boardTitle ?? I18n.t("boardNotFound");
+                cardTitle = cardId === undefined ? "" : I18n.t("cardNotFound");
             }
             finally
             {
@@ -300,14 +301,14 @@
         if (cardToSave.coverImage !== "")
         {
             cardToSave.coverImage = "";
-            toast("%%Removed cover image from card");
+            toast(I18n.t("removeCardCoverImage"));
         }
         else
         {
             const selected = await openDialog({
                 multiple: false,
                 filters: [{
-                    name: '%%Image',
+                    name: I18n.t("image"),
                     extensions: imageExtensions
                 }]
             });
@@ -316,7 +317,7 @@
             {
                 cardToSave.coverImage = await saveFilePathToDisk(selected, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
 
-                toast("%%Added cover image to card")
+                toast(I18n.t("addCardCoverImage"))
             }
         }
     }
@@ -365,7 +366,7 @@
         <div bind:this={popupElement} transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
-                <span role="textbox" contenteditable="plaintext-only"
+                <span role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("enterACardTitle")}
                       on:input={(e) => cardToSave.title = e.target.textContent}
                       on:focus={() => typing = true}
                       on:focusout={() => typing = false}
@@ -381,13 +382,13 @@
             </div>
             <div class="separator"
             >
-                %%Created on {(new Date(cardToSave.creationDate)).toDateString()}
+                {I18n.t("createdOn") + (new Date(cardToSave.creationDate)).toDateString()}
             </div>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
                     {#if cardToSave.dueDate !== null}
                         <button class="dueDate"
-                                title="%%Due date"
+                                title={I18n.t("dueDate")}
                                 class:dueDateOrange={parseInt(cardToSave.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(cardToSave.dueDate)}
                                 class:dueDateRed={Date.now() > parseInt(cardToSave.dueDate)}
                                 on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
@@ -407,7 +408,7 @@
                         {/each}
                     </div>
                     {#if editingDescription}
-                        <pre role="textbox" contenteditable="plaintext-only"
+                        <pre role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("addDetailedDescriptionMarkdown")}
                              bind:this={descriptionPreElement}
                               on:input={(e) => cardToSave.description = e.target.innerText.trim()}
                               on:focus={() => typing = true}
@@ -428,17 +429,17 @@
                 </div>
                 <div class="cardActionsHolder">
                     <span>
-                        %%Add to card
+                        {I18n.t("addToCard")}
                     </span>
-                    <button title="%%Labels"
+                    <button title={I18n.t("labels")}
                             on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         <span>
-                            %%Labels
+                            {I18n.t("labels")}
                         </span>
                     </button>
-                    <button title="%%Checklist"
+                    <button title={I18n.t("checklist")}
                             on:click={() => {
                                 const newChecklist = {id: crypto.randomUUID(), title: "", todos: []};
 
@@ -450,38 +451,38 @@
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="12 12 488 488" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
                         <span>
-                            %%Checklist
+                            {I18n.t("checklist")}
                         </span>
                     </button>
-                    <button title="%%Due date"
+                    <button title={I18n.t("dueDate")}
                             on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                         <span>
-                            %%Due date
+                            {I18n.t("dueDate")}
                         </span>
                     </button>
-                    <button title="%%Attachments" id="cardDetailsAttachmentsButton"
+                    <button title={I18n.t("attachments")} id="cardDetailsAttachmentsButton"
                             on:click={addAttachment}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-width="2" d="M22,12 C22,12 19.0000009,15.0000004 13.0000004,21.0000004 C6.99999996,27.0000004 -2.00000007,18.0000004 3.99999994,12.0000004 C9.99999996,6.00000037 9,7.00000011 13,3.00000008 C17,-0.999999955 23,4.99999994 19,9.00000005 C15,13.0000002 12.0000004,16.0000007 9.99999995,18.0000004 C7.99999952,20 5,17 6.99999995,15.0000004 C8.99999991,13.0000007 16,6 16,6"></path></svg>
                         <span>
-                            %%Attachments
+                            {I18n.t("attachments")}
                         </span>
                     </button>
-                    <button title="%%Cover"
+                    <button title={I18n.t("cover")}
                             on:click={setCoverImage}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 13H3V5h18v11z"></path></svg>
                         <span>
-                            %%Cover
+                            {I18n.t("cover")}
                         </span>
                     </button>
                     <br>
                     <span>
-                        %%Actions
+                        {I18n.t("actions")}
                     </span>
-                    <button title="%%Link" id="cardDetailsCopyLinkButton"
+                    <button title={I18n.t("link")} id="cardDetailsCopyLinkButton"
                             on:click={async () => {
                                 let linkToThisCard = `takma://${$selectedBoardId}/${cardToSave.id}`
                                 await writeText(linkToThisCard);
@@ -489,28 +490,28 @@
                                 let textInClipboard = await readText();
                                 if (textInClipboard === linkToThisCard)
                                 {
-                                    toast("%%Copied link to this card to clipboard, paste it in any other card's description")
+                                    toast(I18n.t("cardLinkCopiedToClipboard"))
                                 }
                                 else
                                 {
-                                    toast.error("%%Couldn't copy link to clipboard, the link to this card is: " + linkToThisCard);
+                                    toast.error(I18n.t("clipboardCopyCardErrorLink") + linkToThisCard);
                                 }
                             }}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                         <span>
-                            %%Link
+                            {I18n.t("link")}
                         </span>
                     </button>
                     <hr style="margin: 0">
-                    <button id="deleteButton"  title="%%Delete"
+                    <button id="deleteButton"  title={I18n.t("delete")}
                             on:click={deleteCard}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                             <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
                         </svg>
                         <span>
-                            %%Delete
+                            {I18n.t("delete")}
                         </span>
                     </button>
                 </div>
@@ -611,7 +612,7 @@
     }
 
     .titleDiv span[contenteditable]:empty::before {
-        content: "%%Enter a title for this card...";
+        content: attr(data-txt-content);
         color: gray;
     }
 
@@ -689,7 +690,7 @@
     }
 
     .cardMainAreaHolder pre[contenteditable]:empty::before {
-        content: "%%Add a more detailed description using Markdown...";
+        content: attr(data-txt-content);
         color: gray;
     }
 

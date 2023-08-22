@@ -10,6 +10,7 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import CreateNewCard from "./CreateNewCard.svelte";
     import {afterUpdate} from "svelte";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     export let listId: string;
     export let cards: CardInterface[];
@@ -130,7 +131,7 @@
             {/each}
             {#if cards.length === 0}
                 <div class="emptyCard" on:mouseenter={() => setDragDisabled(true)}>
-                    %%Drop a card here
+                    {I18n.t("dropCardHere")}
                 </div>
             {/if}
         </div>

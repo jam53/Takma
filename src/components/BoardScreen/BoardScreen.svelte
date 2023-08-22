@@ -11,6 +11,7 @@
     import {flip} from "svelte/animate";
     import {onMount} from "svelte";
     import CardDetails from "./CardDetails.svelte";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     onMount(() =>
     {
@@ -35,7 +36,7 @@
         const selectedFile = await open({
             multiple: false,
             filters: [{
-                name: "%%Image",
+                name: I18n.t("image"),
                 extensions: imageExtensions
             }]
         });
@@ -128,7 +129,7 @@
         return cardsToFilter;
     }
 </script>
-<div class="container" title="%%To change the background image, simply right-click or drag and drop a new image here." on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
+<div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>

@@ -28,6 +28,7 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {cardFilters, selectedBoardId} from "../../scripts/stores";
     import type {Label} from "../../scripts/Board";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     export let mouseClickEvent;
     export let cardToSave;
@@ -176,7 +177,7 @@
     >
         <div class="navbar" id="navbar" transition:slide|global>
             <h3 class="title">
-                %%Labels
+                {I18n.t("labels")}
             </h3>
             <br>
             <div class="labelsHolder">
@@ -204,7 +205,7 @@
                     on:change={createNewLabel}
             >
 <!--When clicking on this  button, the color picker will automatically be opened-->
-                %%Create a new label
+                {I18n.t("createNewLabel")}
             </button>
         </div>
     </nav>
