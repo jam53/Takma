@@ -16,25 +16,25 @@
         "dompurify": "^3.0.5",
         "highlight.js": "^11.8.0",
         "intro.js": "^7.2.0",
-        "marked": "^5.1.1",
-        "svelte-dnd-action": "^0.9.24",
-        "svelte-sonner": "^0.1.2",
-        "svelty-picker": "^4.0.9",
+        "marked": "^7.0.4",
+        "svelte-dnd-action": "^0.9.25",
+        "svelte-sonner": "^0.1.4",
+        "svelty-picker": "^4.1.0",
         "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1"
     },
     "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^2.4.2",
+        "@sveltejs/vite-plugin-svelte": "^2.4.5",
         "@tauri-apps/cli": "^1.4.0",
-        "@tsconfig/svelte": "^5.0.0",
+        "@tsconfig/svelte": "^5.0.1",
         "@types/dompurify": "^3.0.2",
         "@types/marked": "^5.0.1",
-        "@types/node": "^20.4.4",
+        "@types/node": "^20.5.2",
         "fs-extra": "^11.1.1",
-        "svelte": "^4.1.1",
-        "svelte-check": "^3.4.6",
+        "svelte": "^4.2.0",
+        "svelte-check": "^3.5.0",
         "svelte-preprocess": "^5.0.4",
-        "tslib": "^2.6.0",
+        "tslib": "^2.6.2",
         "typescript": "^5.1.6",
-        "vite": "^4.4.6"
+        "vite": "^4.4.9"
     }
 }
