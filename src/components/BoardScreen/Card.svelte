@@ -190,6 +190,7 @@
         width: 100%;
         max-height: 15em;
         object-fit: contain;
+        border-radius: 4px 4px 0 0;
     }
 
     .cardTitle {
