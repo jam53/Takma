@@ -17,6 +17,7 @@ export class TakmaData
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
     private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
     private _displayLanguage: string = navigator.language.substring(0,2); //The language Takma should be displayed in
+    private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -122,6 +123,23 @@ export class TakmaData
     }
 
     /**
+     * Returns true if the user has completed the onboarding process at least once, else returns false
+     */
+    get onboardingCompleted(): boolean
+    {
+        return this._onboardingCompleted;
+    }
+
+    /**
+     * Sets whether or not the user has completed the onboarding process at least once
+     */
+    set onboardingCompleted(value: boolean)
+    {
+        this._onboardingCompleted = value;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
      * This returns all the user's boards
      */
     get boards(): Board[]
@@ -168,7 +186,7 @@ export class TakmaData
 
         this._boards.push(board);
         this.incrementTotalBoardsCreated();
-        SaveLoadManager.saveToDisk();
+        await SaveLoadManager.saveToDisk();
 
         return boardId;
     }
@@ -190,7 +208,7 @@ export class TakmaData
     public async deleteBoard(id: string): Promise<void>
     {
         this._boards = this.boards.filter(board => board.id != id);
-        SaveLoadManager.saveToDisk();
+        await SaveLoadManager.saveToDisk();
 
         await removeDir(`./Takma/Files/${id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
     }
@@ -215,7 +233,7 @@ export class TakmaData
      * @param cards optional argument, if not passed a list with an empty card array will be created
      * @param indexToInsert optional argument, will create a list at a certain index, if not passed the list will be added to the end of the array of lists
      */
-    public createNewList(boardId: string, listTitle: string, cards?: Card[], indexToInsert?: number): void
+    public createNewList(boardId: string, listTitle: string, cards?: Card[], indexToInsert?: number): string
     {
 
         let list: List = {
@@ -238,6 +256,7 @@ export class TakmaData
 
         this.incrementTotalListsCreated();
         SaveLoadManager.saveToDisk();
+        return list.id;
     }
 
     /**
@@ -275,7 +294,7 @@ export class TakmaData
      * @param boardId id of the board that contains the list
      * @param listId id of the list to which the card should be added
      */
-    public createNewCard(cardTitle: string, boardId: string, listId: string): void
+    public createNewCard(cardTitle: string, boardId: string, listId: string): string
     {
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
@@ -295,6 +314,8 @@ export class TakmaData
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
         this.incrementTotalCardsCreated();
         SaveLoadManager.saveToDisk();
+
+        return card.id;
     }
 
     /**

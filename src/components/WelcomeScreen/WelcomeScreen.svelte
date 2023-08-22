@@ -3,8 +3,11 @@
     import NewBoardPopup from "./NewBoardPopup.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Board} from "../../scripts/Board";
-    import {searchBarValue, selectedBoardId} from "../../scripts/stores";
+    import {searchBarValue, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {I18n} from "../../scripts/I18n/I18n";
+    import startOnboarding from "../../scripts/Onboarding";
+    import {onMount} from "svelte";
+    import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
 
     let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -19,6 +22,14 @@
     ]);
 
     let boards: Board[] = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
+
+    onMount(() =>
+    {
+        if (!SaveLoadManager.getData().onboardingCompleted)
+        {
+            startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId); //In IntroJs we can reference other elements during the onboarding, but if they don't exist yet when we start the onboarding it doesn't work. That is why we start in onMount, once all the UI components are loaded in
+        }
+    });
 </script>
 
 <div>
