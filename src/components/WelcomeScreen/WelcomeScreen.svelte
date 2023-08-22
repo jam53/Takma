@@ -8,6 +8,8 @@
     import startOnboarding from "../../scripts/Onboarding";
     import {onMount} from "svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
+    import {saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {resolveResource} from "@tauri-apps/api/path";
 
     let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -23,11 +25,26 @@
 
     let boards: Board[] = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
 
-    onMount(() =>
+    onMount(async () =>
     {
         if (!SaveLoadManager.getData().onboardingCompleted)
         {
             startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId); //In IntroJs we can reference other elements during the onboarding, but if they don't exist yet when we start the onboarding it doesn't work. That is why we start in onMount, once all the UI components are loaded in
+        }
+
+        if (SaveLoadManager.getData().totalCardsCreated >= 25 && !SaveLoadManager.getData().easterEggBoardAdded)
+        { //If the user has created more than 25 cards, add the easter egg board to their savefile
+            const boards = SaveLoadManager.getData().boards;
+
+            const easterEggBoard = I18n.t("easterEggBoard");
+            easterEggBoard.backgroundImagePath = await saveFilePathToDisk((await resolveResource("resources/EasterEggBoardBg.webp")).substring(4), easterEggBoard.id);
+            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|00|$", await SaveLoadManager.getAbsoluteSaveDirectory());
+            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|01|$", (await resolveResource("resources/backgrounds")).substring(4));
+
+
+            boards.push(easterEggBoard);
+            SaveLoadManager.getData().boards = boards;
+            SaveLoadManager.getData().easterEggBoardAdded = true;
         }
     });
 </script>

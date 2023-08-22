@@ -1,3 +1,5 @@
+import type {Board} from "../Board";
+
 export default interface Translation
 {
     createBoard: string;
@@ -138,4 +140,5 @@ export default interface Translation
     dueNextMonth: string;
     enterACardTitle: string;
     addDetailedDescriptionMarkdown: string;
+    easterEggBoard: Board;
 }

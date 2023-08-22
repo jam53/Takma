@@ -18,6 +18,7 @@ export class TakmaData
     private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
     private _displayLanguage: string = navigator.language.substring(0,2); //The language Takma should be displayed in
     private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
+    private _easterEggBoardAdded: boolean = false; //Whether or not the easteregg board has been added to the user's savefile yet
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -83,7 +84,7 @@ export class TakmaData
     /**
      * Returns the total amount of cards created by the user in Takma
      */
-    get totalCardsCrated(): number
+    get totalCardsCreated(): number
     {
         return this._totalCardsCreated;
     }
@@ -136,6 +137,23 @@ export class TakmaData
     set onboardingCompleted(value: boolean)
     {
         this._onboardingCompleted = value;
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Returns whether or not the easter egg board has been added to the user's savefile
+     */
+    get easterEggBoardAdded(): boolean
+    {
+        return this._easterEggBoardAdded;
+    }
+
+    /**
+     * Sets whether or not the easter egg board has been added to the user's savefile
+     */
+    set easterEggBoardAdded(value: boolean)
+    {
+        this._easterEggBoardAdded = value;
         SaveLoadManager.saveToDisk();
     }
 
