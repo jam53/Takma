@@ -23,7 +23,18 @@
 
     onMount(() =>
     {
-        window.addEventListener("keydown", e => (e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && (showPopup = false));
+        window.addEventListener("keydown", e => {
+            if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
+            {
+                showPopup = false;
+            }
+            else if (e.key === "Enter")
+            {
+                createNewBoard();
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
     });
 
     //Deze lazyLoaded variabele en lazyLoad variabele worden gebruikt om ervoor te zorgen dat de intro animaite van het NewBoardPopup scherm deftig getoond wordt. Anders freezt de app vanaf dat het wordt aangemaakt, omdat de high rest includedInTakma foto's gerenderd moeten worden. Nu wordt eerst de popup getoond, en pas een seconde later de src van de foto's gezet.
@@ -117,7 +128,7 @@
             {/await}
             <h2>{I18n.t("boardName")}</h2>
             <div class="inputHolderDiv">
-                <input bind:this={boardTitleInputObject} bind:value={boardTitle} on:keydown={e => e.key === "Enter" && createNewBoard()}>
+                <input bind:this={boardTitleInputObject} bind:value={boardTitle}>
             </div>
             <br>
             <button disabled={!lazyLoaded} on:click={createNewBoard} class="createButton">{I18n.t("createBoard")}</button>
