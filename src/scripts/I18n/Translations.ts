@@ -186,6 +186,10 @@ export let en: Translation = {
         }]
     },
     dueDatesOverview: "Due dates overview",
+    addCover: "You can set a card's cover image here.",
+    cardFullscreen: "This toggle enables you to switch between the fullscreen and windowed view for the card.",
+    dueDatesOverviewExplanation: "Here, you can access an overview of cards with upcoming due dates that are about to expire.",
+    noCardsWithDueDates: "None of the boards currently have cards with due dates.",
 };
 
 export let ar: Translation = {
@@ -374,6 +378,10 @@ export let ar: Translation = {
         }]
     },
     dueDatesOverview: "نظرة عامة على المواعيد النهائية",
+    addCover: "يمكنك تعيين صورة غلاف للبطاقة هنا.",
+    cardFullscreen: "يمكنك استخدام هذا التبديل للتبديل بين وضعية ملء الشاشة والوضع النافذة للبطاقة.",
+    dueDatesOverviewExplanation: "هنا، يمكنك الوصول إلى نظرة عامة على البطاقات ذات تواريخ استحقاق قادمة على وشك الانتهاء.",
+    noCardsWithDueDates: "لا تحتوي الألواح حاليًا على بطاقات بتواريخ استحقاق.",
 };
 
 export let de: Translation = {
@@ -562,6 +570,10 @@ export let de: Translation = {
         }]
     },
     dueDatesOverview: "Fälligkeitsdaten Übersicht",
+    addCover: "Hier können Sie das Titelbild einer Karte festlegen.",
+    cardFullscreen: "Diese Umschaltung ermöglicht Ihnen den Wechsel zwischen der Vollbild- und Fensteransicht für die Karte.",
+    dueDatesOverviewExplanation: "Hier können Sie eine Übersicht über Karten mit bevorstehenden Fälligkeitsdaten aufrufen, die kurz vor dem Ablauf stehen.",
+    noCardsWithDueDates: "Keine derzeitigen Karten auf den Boards haben Fälligkeitsdaten.",
 };
 
 export let es: Translation = {
@@ -750,6 +762,10 @@ export let es: Translation = {
         }]
     },
     dueDatesOverview: "Resumen de fechas de vencimiento",
+    addCover: "Aquí puedes establecer la imagen de portada de una tarjeta.",
+    cardFullscreen: "Este interruptor te permite cambiar entre la vista de pantalla completa y la vista en ventana para la tarjeta.",
+    dueDatesOverviewExplanation: "Aquí puedes acceder a una vista general de las tarjetas con fechas de vencimiento próximas que están a punto de expirar.",
+    noCardsWithDueDates: "Ninguno de los tableros tiene actualmente tarjetas con fechas de vencimiento.",
 };
 
 export let et: Translation = {
@@ -937,6 +953,10 @@ export let et: Translation = {
         }]
     },
     dueDatesOverview: "Käimasolevate tähtaegade ülevaade",
+    addCover: "Siin saate määrata kaardi kaane pildi.",
+    cardFullscreen: "See lüliti võimaldab teil vahetada kaardi täisekraani ja akna vaate vahel.",
+    dueDatesOverviewExplanation: "Siin saate juurdepääsu kaartide ülevaatele, millel on lähenevad tähtajad, mis on peagi lõppemas.",
+    noCardsWithDueDates: "Ühelgi tahvlil pole praegu kaarte, millel oleksid tähtajad.",
 };
 
 export let fr: Translation = {
@@ -1125,6 +1145,10 @@ export let fr: Translation = {
         }]
     },
     dueDatesOverview: "Vue d'ensemble des dates d'échéanc",
+    addCover: "Vous pouvez définir l'image de couverture de la carte ici.",
+    cardFullscreen: "Cette bascule vous permet de passer entre la vue en plein écran et la vue fenêtrée pour la carte.",
+    dueDatesOverviewExplanation: "Ici, vous pouvez accéder à une vue d'ensemble des cartes avec des dates d'échéance à venir qui sont sur le point d'expirer.",
+    noCardsWithDueDates: "Aucun des tableaux n'a actuellement de cartes avec des dates d'échéance.",
 };
 
 export let hi: Translation = {
@@ -1313,6 +1337,10 @@ export let hi: Translation = {
         }]
     },
     dueDatesOverview: "नियत तिथियों का अवलोकन",
+    addCover: "आप यहाँ पर कार्ड की कवर छवि सेट कर सकते हैं।",
+    cardFullscreen: "यह टॉगल आपको कार्ड के फुलस्क्रीन और विंडोड दृश्य के बीच स्विच करने की अनुमति देता है।",
+    dueDatesOverviewExplanation: "यहाँ, आप उपकोमिंग ड्यू डेट्स वाले कार्डों की एक ओवरव्यू तक पहुँचने की अनुमति देता है जो समय समय पर समाप्त होने वाले हैं।",
+    noCardsWithDueDates: "मौजूदा में कोई भी बोर्ड ऐसी कार्ड नहीं रखता जिनमें ड्यू डेट्स हों।",
 };
 
 export let id: Translation = {
@@ -1501,6 +1529,10 @@ export let id: Translation = {
         }]
     },
     dueDatesOverview: "Ringkasan Tanggal Jatuh Tempo",
+    addCover: "Anda dapat mengatur gambar sampul kartu di sini.",
+    cardFullscreen: "Pengalihan ini memungkinkan Anda beralih antara tampilan layar penuh dan tampilan berjendela untuk kartu.",
+    dueDatesOverviewExplanation: "Di sini, Anda dapat mengakses gambaran kartu-kartu dengan tanggal jatuh tempo yang akan datang yang hampir kadaluwarsa.",
+    noCardsWithDueDates: "Tidak ada papan saat ini yang memiliki kartu dengan tanggal jatuh tempo.",
 };
 
 export let ja: Translation = {
@@ -1689,6 +1721,10 @@ export let ja: Translation = {
         }]
     },
     dueDatesOverview: "期限日の概要",
+    addCover: "ここでカードのカバー画像を設定できます。",
+    cardFullscreen: "このトグルを使用すると、カードのフルスクリーン表示とウィンドウ表示を切り替えることができます。",
+    dueDatesOverviewExplanation: "ここでは、期限が迫っているカードの概要にアクセスできます。",
+    noCardsWithDueDates: "現在、どのボードにも期限付きのカードはありません。",
 };
 
 export let ko: Translation = {
@@ -1877,6 +1913,10 @@ export let ko: Translation = {
         }]
     },
     dueDatesOverview: "마감일 개요",
+    addCover: "여기에서 카드의 커버 이미지를 설정할 수 있습니다.",
+    cardFullscreen: "이 토글을 사용하면 카드의 전체 화면 및 창 모드 전환이 가능합니다.",
+    dueDatesOverviewExplanation: "여기에서 예정된 마감일을 가진 카드들의 개요에 접근할 수 있습니다. 이들은 곧 만료될 예정입니다.",
+    noCardsWithDueDates: "현재 어느 보드에도 마감일이 있는 카드가 없습니다.",
 };
 
 export let nl: Translation = {
@@ -2065,6 +2105,10 @@ export let nl: Translation = {
         }]
     },
     dueDatesOverview: "Overzicht van vervaldatums",
+    addCover: "Hier kunt u de omslagafbeelding van een kaart instellen.",
+    cardFullscreen: "Deze knop stelt u in staat om te wisselen tussen de volledige schermweergave en de vensterweergave voor de kaart.",
+    dueDatesOverviewExplanation: "Hier kunt u een overzicht bekijken van kaarten met naderende vervaldatums die binnenkort verlopen.",
+    noCardsWithDueDates: "Geen van de borden heeft momenteel kaarten met vervaldatums.",
 };
 
 export let pt: Translation = {
@@ -2253,6 +2297,10 @@ export let pt: Translation = {
         }]
     },
     dueDatesOverview: "Visão geral de prazos",
+    addCover: "Você pode definir a imagem de capa do cartão aqui.",
+    cardFullscreen: "Esta alternância permite alternar entre a visualização em tela cheia e a visualização em janela para o cartão.",
+    dueDatesOverviewExplanation: "Aqui, você pode acessar uma visão geral dos cartões com datas de vencimento próximas que estão prestes a expirar.",
+    noCardsWithDueDates: "Nenhum dos quadros atualmente possui cartões com datas de vencimento.",
 };
 
 export let ru: Translation = {
@@ -2441,6 +2489,10 @@ export let ru: Translation = {
         }]
     },
     dueDatesOverview: "Обзор сроков выполнения",
+    addCover: "Здесь вы можете установить обложку карточки.",
+    cardFullscreen: "Этот переключатель позволяет вам переключаться между полноэкранным и оконным режимом просмотра для карточки.",
+    dueDatesOverviewExplanation: "Здесь вы можете получить обзор карт с ближайшими сроками выполнения, которые скоро истекут.",
+    noCardsWithDueDates: "В настоящее время на досках нет карточек с установленными сроками выполнения.",
 };
 
 export let tr: Translation = {
@@ -2629,6 +2681,10 @@ export let tr: Translation = {
         }]
     },
     dueDatesOverview: "Son teslim tarihleri genel bakış",
+    addCover: "Bir kartın kapak resmini buradan ayarlayabilirsiniz.",
+    cardFullscreen: "Bu düğme kartın tam ekran ve pencere görünümü arasında geçiş yapmanıza olanak sağlar.",
+    dueDatesOverviewExplanation: "Burada, yaklaşan son tarihleri olan kartların genel bir bakışını görebilirsiniz, bu tarihler yakında sona eriyor.",
+    noCardsWithDueDates: "Şu anda hiçbir panoda son tarihi olan kart bulunmuyor.",
 };
 
 export let zh: Translation = {
@@ -2817,4 +2873,8 @@ export let zh: Translation = {
         }]
     },
     dueDatesOverview: "截止日期概览",
+    addCover: "您可以在此设置卡片的封面图片。",
+    cardFullscreen: "此切换允许您在全屏和窗口视图之间切换卡片。",
+    dueDatesOverviewExplanation: "在这里，您可以查看即将到期的卡片的概述。",
+    noCardsWithDueDates: "目前没有任何板上有带有到期日期的卡片。",
 };

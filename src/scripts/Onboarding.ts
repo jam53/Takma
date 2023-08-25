@@ -21,6 +21,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         steps:[
             {title: I18n.t("welcomeToTakma"), intro:I18n.t("quickGuideEssentials")},
             {intro: I18n.t("redoOnboardingProcess"), element: document.querySelector(".startOnboarding")},
+            {intro: I18n.t("dueDatesOverviewExplanation"), element: document.querySelector(".dueDatesOverviewButton")},
             {intro: I18n.t("createNewBoards"), element: document.querySelector(".createButton")},
         ],
         disableInteraction: true,
@@ -102,7 +103,9 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
             {intro: I18n.t("viewCreationDateHover") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${CardCreationDateVideo} autoplay loop width=208 height=74</video></div>`, element: document.querySelector(".separator")},
             {intro: I18n.t("markdownCardDescriptions"), element: document.querySelector(".renderedDescriptionHolder")},
             {intro: I18n.t("addAttachmentsDragDrop"), element: document.getElementById("cardDetailsAttachmentsButton")},
+            {intro: I18n.t("addCover"), element: document.getElementById("cardDetailsCoverButton")},
             {intro: I18n.t("copyCardLink"), element: document.getElementById("cardDetailsCopyLinkButton")},
+            {intro: I18n.t("cardFullscreen"), element: document.querySelector(".fullScreenButton")},
         ],
         disableInteraction: false,
         tooltipClass: "IntroJsCSSOverride",

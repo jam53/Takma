@@ -142,4 +142,8 @@ export default interface Translation
     addDetailedDescriptionMarkdown: string;
     easterEggBoard: Board;
     dueDatesOverview: string;
+    addCover: string;
+    cardFullscreen: string;
+    dueDatesOverviewExplanation: string;
+    noCardsWithDueDates: string;
 }

@@ -53,6 +53,21 @@
         });
     });
 
+    function getAllCardsWithDueDates()
+    {
+        let allDueDates = [];
+        SaveLoadManager.getData().boards.forEach(board => {
+            board.lists.forEach(list => {
+                list.cards.filter(card => card.dueDate !== null).forEach(card =>
+                {
+                    allDueDates.push({title: "<b>" + board.title + "</b> | " + card.title, dueDate: parseInt(card.dueDate), boardId: board.id, cardId: card.id})
+                });
+            });
+        });
+
+        return allDueDates;
+    }
+
     function calculateAllDueDates()
     {
         function removeValueFromArray(array, value)
@@ -64,15 +79,7 @@
             }
         }
 
-        let allDueDates = [];
-        SaveLoadManager.getData().boards.forEach(board => {
-            board.lists.forEach(list => {
-                list.cards.filter(card => card.dueDate !== "").forEach(card =>
-                {
-                    allDueDates.push({title: "<b>" + board.title + "</b> | " + card.title, dueDate: parseInt(card.dueDate), boardId: board.id, cardId: card.id})
-                });
-            });
-        });
+        let allDueDates = getAllCardsWithDueDates();
 
         return dueDateValues.map(dueDateValue =>
         {
@@ -108,6 +115,9 @@
                 </svg>
             </div>
             <hr/>
+            {#if getAllCardsWithDueDates().length === 0}
+                <span>{I18n.t("noCardsWithDueDates")}</span>
+            {/if}
             {#each calculateAllDueDates() as dueDateValue}
                 {#if dueDateValue.dueDates.length > 0}
                     <h2>{dueDateValue.title}</h2>
