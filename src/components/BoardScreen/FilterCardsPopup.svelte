@@ -17,6 +17,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {cardFilters, selectedBoardId} from "../../scripts/stores";
     import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     // pos is cursor position when right click occur
     let pos = {x: -1000000, y: 0}
@@ -119,11 +120,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             closeContextMenu();
         }
     }
-</script>
-<script context="module">
-    import {I18n} from "../../scripts/I18n/I18n";
 
-    export let dueDateValues = [
+    let dueDateValues = [
         {value: 0, title: I18n.t("overdue"), color: "danger"},
         {value: 24 * 60 * 60 * 1000, title: I18n.t("dueNextDay"), color: "warning"},
         {value: 7 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextWeek"), color: "normal"},

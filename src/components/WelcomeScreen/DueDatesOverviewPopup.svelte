@@ -36,7 +36,6 @@
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
     import {onMount} from "svelte";
-    import {dueDateValues} from "../BoardScreen/FilterCardsPopup.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {I18n} from "../../scripts/I18n/I18n";
@@ -81,7 +80,12 @@
 
         let allDueDates = getAllCardsWithDueDates();
 
-        return dueDateValues.map(dueDateValue =>
+        return [
+            {value: 0, title: I18n.t("overdue"), color: "danger"},
+            {value: 24 * 60 * 60 * 1000, title: I18n.t("dueNextDay"), color: "warning"},
+            {value: 7 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextWeek"), color: "normal"},
+            {value: 30 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextMonth"), color: "normal"},
+        ].map(dueDateValue =>
         {
             let dueDates = [];
 
