@@ -91,7 +91,7 @@
 
     function shouldCardBeHidden(card: CardInterface)
     {
-        return !(card.title.includes($searchBarValue.trim()) || card.description.includes($searchBarValue.trim()));
+        return !(card.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) || card.description.toLowerCase().includes($searchBarValue.toLowerCase().trim()));
     }
 </script>
 

@@ -52,7 +52,7 @@
 <div>
     <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
     {#each boards as board}
-        {#if board.title.includes($searchBarValue.trim())}
+        {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim())}
             <BoardButton
                 on:clicked={() => {
                     $selectedBoardId = board.id;
