@@ -59,7 +59,7 @@ export let en: Translation = {
     listTitle: "Title of list",
     cardTitle: "Title of Card",
     boardScreen: "The board screen",
-    efficientTaskManagement: "On to the board screen you can efficiently manage your tasks using lists and cards.",
+    efficientTaskManagement: "On the board screen you can efficiently manage your tasks using lists and cards.",
     returnToHomeScreen: "To return to the home screen, simply click on the Takma icon, or alternatively, use the keyboard shortcuts ESC or Ctrl+W.",
     renameBoardTitle: "Boards can be renamed by clicking on their title.",
     setNewBoardBackground: "A new background image for the board can be set by right clicking on the board's background or by dragging and dropping an image onto the existing background.",
