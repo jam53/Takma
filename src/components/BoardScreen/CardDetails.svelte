@@ -635,6 +635,7 @@
         text-align: center;
         transition: 0.3s;
         color: transparent;
+        margin-bottom: 0.25em;
     }
 
     .separator:hover {
