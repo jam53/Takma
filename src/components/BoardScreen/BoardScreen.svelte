@@ -118,7 +118,7 @@
     {
         for (let dueDate of $cardFilters.dueDates)
         {
-            cardsToFilter = cardsToFilter.filter(card => card.dueDate - Date.now() < dueDate && card.dueDate !== null);
+            cardsToFilter = cardsToFilter.filter(card => card.dueDate !== null && parseInt(card.dueDate) - Date.now() < dueDate);
         }
 
         for (let labelId of $cardFilters.labelIds)

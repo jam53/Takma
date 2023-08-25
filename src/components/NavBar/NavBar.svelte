@@ -13,6 +13,7 @@
     import ChangeDisplayLanguageMenu from "./ChangeDisplayLanguageMenu.svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {I18n} from "../../scripts/I18n/I18n";
+    import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
 
     let orderBoardsMenuElement;
     let filterCardsPopupElement;
@@ -47,6 +48,11 @@
                         on:click={e => orderBoardsMenuElement.openContextMenu(e)}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
+                </button>
+                <button class="dueDatesOverviewButton" title={I18n.t("dueDatesOverview")}
+                        on:click={() => new DueDatesOverviewPopup({target: document.body, intro: true})}
+                >
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                 </button>
                 <button class="startOnboarding" title={I18n.t("beginOnboarding")}
                         on:click={() => startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId)}
@@ -142,7 +148,7 @@
         gap: 0.5em;
     }
 
-    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding {
+    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton {
         height: inherit;
         width: auto;
         margin: 0;
@@ -151,7 +157,7 @@
         border: none;
     }
 
-    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg {
+    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg, .dueDatesOverviewButton svg {
         transition: 0.5s;
         height: inherit;
         cursor: pointer;
@@ -168,7 +174,7 @@
         color: var(--unselected-button);
     }
 
-    .i18nButton:hover svg, .filterButton:hover svg, .startOnboarding:hover svg  {
+    .i18nButton:hover svg, .filterButton:hover svg, .startOnboarding:hover svg, .dueDatesOverviewButton:hover svg {
         fill: var(--selected-button);
     }
 

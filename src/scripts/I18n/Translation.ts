@@ -141,4 +141,5 @@ export default interface Translation
     enterACardTitle: string;
     addDetailedDescriptionMarkdown: string;
     easterEggBoard: Board;
+    dueDatesOverview: string;
 }

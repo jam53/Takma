@@ -185,6 +185,7 @@ export let en: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Due dates overview",
 };
 
 export let ar: Translation = {
@@ -372,6 +373,7 @@ export let ar: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "نظرة عامة على المواعيد النهائية",
 };
 
 export let de: Translation = {
@@ -559,6 +561,7 @@ export let de: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Fälligkeitsdaten Übersicht",
 };
 
 export let es: Translation = {
@@ -746,6 +749,7 @@ export let es: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Resumen de fechas de vencimiento",
 };
 
 export let et: Translation = {
@@ -932,6 +936,7 @@ export let et: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Käimasolevate tähtaegade ülevaade",
 };
 
 export let fr: Translation = {
@@ -1119,6 +1124,7 @@ export let fr: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Vue d'ensemble des dates d'échéanc",
 };
 
 export let hi: Translation = {
@@ -1306,6 +1312,7 @@ export let hi: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "नियत तिथियों का अवलोकन",
 };
 
 export let id: Translation = {
@@ -1493,6 +1500,7 @@ export let id: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Ringkasan Tanggal Jatuh Tempo",
 };
 
 export let ja: Translation = {
@@ -1680,6 +1688,7 @@ export let ja: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "期限日の概要",
 };
 
 export let ko: Translation = {
@@ -1867,6 +1876,7 @@ export let ko: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "마감일 개요",
 };
 
 export let nl: Translation = {
@@ -2054,6 +2064,7 @@ export let nl: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Overzicht van vervaldatums",
 };
 
 export let pt: Translation = {
@@ -2241,6 +2252,7 @@ export let pt: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Visão geral de prazos",
 };
 
 export let ru: Translation = {
@@ -2428,6 +2440,7 @@ export let ru: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Обзор сроков выполнения",
 };
 
 export let tr: Translation = {
@@ -2615,6 +2628,7 @@ export let tr: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "Son teslim tarihleri genel bakış",
 };
 
 export let zh: Translation = {
@@ -2802,4 +2816,5 @@ export let zh: Translation = {
             ]
         }]
     },
+    dueDatesOverview: "截止日期概览",
 };
