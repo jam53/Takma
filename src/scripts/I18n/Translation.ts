@@ -146,4 +146,5 @@ export default interface Translation
     cardFullscreen: string;
     dueDatesOverviewExplanation: string;
     noCardsWithDueDates: string;
+    confirmRestartOnboarding: string;
 }

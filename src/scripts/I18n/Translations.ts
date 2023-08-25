@@ -190,6 +190,7 @@ export let en: Translation = {
     cardFullscreen: "This toggle enables you to switch between the fullscreen and windowed view for the card.",
     dueDatesOverviewExplanation: "Here, you can access an overview of cards with upcoming due dates that are about to expire.",
     noCardsWithDueDates: "None of the boards currently have cards with due dates.",
+    confirmRestartOnboarding: "Are you sure you want to redo the onboarding process?",
 };
 
 export let ar: Translation = {
@@ -382,6 +383,7 @@ export let ar: Translation = {
     cardFullscreen: "يمكنك استخدام هذا التبديل للتبديل بين وضعية ملء الشاشة والوضع النافذة للبطاقة.",
     dueDatesOverviewExplanation: "هنا، يمكنك الوصول إلى نظرة عامة على البطاقات ذات تواريخ استحقاق قادمة على وشك الانتهاء.",
     noCardsWithDueDates: "لا تحتوي الألواح حاليًا على بطاقات بتواريخ استحقاق.",
+    confirmRestartOnboarding: "هل أنت متأكد أنك تريد إعادة عملية التعريف؟",
 };
 
 export let de: Translation = {
@@ -574,6 +576,7 @@ export let de: Translation = {
     cardFullscreen: "Diese Umschaltung ermöglicht Ihnen den Wechsel zwischen der Vollbild- und Fensteransicht für die Karte.",
     dueDatesOverviewExplanation: "Hier können Sie eine Übersicht über Karten mit bevorstehenden Fälligkeitsdaten aufrufen, die kurz vor dem Ablauf stehen.",
     noCardsWithDueDates: "Keine derzeitigen Karten auf den Boards haben Fälligkeitsdaten.",
+    confirmRestartOnboarding: "Sind Sie sicher, dass Sie den Onboarding-Prozess erneut durchführen möchten?",
 };
 
 export let es: Translation = {
@@ -766,6 +769,7 @@ export let es: Translation = {
     cardFullscreen: "Este interruptor te permite cambiar entre la vista de pantalla completa y la vista en ventana para la tarjeta.",
     dueDatesOverviewExplanation: "Aquí puedes acceder a una vista general de las tarjetas con fechas de vencimiento próximas que están a punto de expirar.",
     noCardsWithDueDates: "Ninguno de los tableros tiene actualmente tarjetas con fechas de vencimiento.",
+    confirmRestartOnboarding: "¿Estás seguro/a de que quieres volver a realizar el proceso de incorporación?",
 };
 
 export let et: Translation = {
@@ -957,6 +961,7 @@ export let et: Translation = {
     cardFullscreen: "See lüliti võimaldab teil vahetada kaardi täisekraani ja akna vaate vahel.",
     dueDatesOverviewExplanation: "Siin saate juurdepääsu kaartide ülevaatele, millel on lähenevad tähtajad, mis on peagi lõppemas.",
     noCardsWithDueDates: "Ühelgi tahvlil pole praegu kaarte, millel oleksid tähtajad.",
+    confirmRestartOnboarding: "Olete kindel, et soovite alustamisprotsessi uuesti teha?",
 };
 
 export let fr: Translation = {
@@ -1149,6 +1154,7 @@ export let fr: Translation = {
     cardFullscreen: "Cette bascule vous permet de passer entre la vue en plein écran et la vue fenêtrée pour la carte.",
     dueDatesOverviewExplanation: "Ici, vous pouvez accéder à une vue d'ensemble des cartes avec des dates d'échéance à venir qui sont sur le point d'expirer.",
     noCardsWithDueDates: "Aucun des tableaux n'a actuellement de cartes avec des dates d'échéance.",
+    confirmRestartOnboarding: "Êtes-vous sûre de vouloir refaire le processus d'intégration ?",
 };
 
 export let hi: Translation = {
@@ -1341,6 +1347,7 @@ export let hi: Translation = {
     cardFullscreen: "यह टॉगल आपको कार्ड के फुलस्क्रीन और विंडोड दृश्य के बीच स्विच करने की अनुमति देता है।",
     dueDatesOverviewExplanation: "यहाँ, आप उपकोमिंग ड्यू डेट्स वाले कार्डों की एक ओवरव्यू तक पहुँचने की अनुमति देता है जो समय समय पर समाप्त होने वाले हैं।",
     noCardsWithDueDates: "मौजूदा में कोई भी बोर्ड ऐसी कार्ड नहीं रखता जिनमें ड्यू डेट्स हों।",
+    confirmRestartOnboarding: "क्या आप यकीनी हैं कि आप प्रारंभिक प्रक्रिया को फिर से करना चाहते हैं?",
 };
 
 export let id: Translation = {
@@ -1533,6 +1540,7 @@ export let id: Translation = {
     cardFullscreen: "Pengalihan ini memungkinkan Anda beralih antara tampilan layar penuh dan tampilan berjendela untuk kartu.",
     dueDatesOverviewExplanation: "Di sini, Anda dapat mengakses gambaran kartu-kartu dengan tanggal jatuh tempo yang akan datang yang hampir kadaluwarsa.",
     noCardsWithDueDates: "Tidak ada papan saat ini yang memiliki kartu dengan tanggal jatuh tempo.",
+    confirmRestartOnboarding: "Apakah Anda yakin ingin mengulangi proses onboarding?",
 };
 
 export let ja: Translation = {
@@ -1725,6 +1733,7 @@ export let ja: Translation = {
     cardFullscreen: "このトグルを使用すると、カードのフルスクリーン表示とウィンドウ表示を切り替えることができます。",
     dueDatesOverviewExplanation: "ここでは、期限が迫っているカードの概要にアクセスできます。",
     noCardsWithDueDates: "現在、どのボードにも期限付きのカードはありません。",
+    confirmRestartOnboarding: "オンボーディングプロセスをやり直しますか？",
 };
 
 export let ko: Translation = {
@@ -1917,6 +1926,7 @@ export let ko: Translation = {
     cardFullscreen: "이 토글을 사용하면 카드의 전체 화면 및 창 모드 전환이 가능합니다.",
     dueDatesOverviewExplanation: "여기에서 예정된 마감일을 가진 카드들의 개요에 접근할 수 있습니다. 이들은 곧 만료될 예정입니다.",
     noCardsWithDueDates: "현재 어느 보드에도 마감일이 있는 카드가 없습니다.",
+    confirmRestartOnboarding: "온보딩 프로세스를 다시 진행하시겠습니까?",
 };
 
 export let nl: Translation = {
@@ -2109,6 +2119,7 @@ export let nl: Translation = {
     cardFullscreen: "Deze knop stelt u in staat om te wisselen tussen de volledige schermweergave en de vensterweergave voor de kaart.",
     dueDatesOverviewExplanation: "Hier kunt u een overzicht bekijken van kaarten met naderende vervaldatums die binnenkort verlopen.",
     noCardsWithDueDates: "Geen van de borden heeft momenteel kaarten met vervaldatums.",
+    confirmRestartOnboarding: "Weet je zeker dat je de onboarding opnieuw wilt doen?",
 };
 
 export let pt: Translation = {
@@ -2301,6 +2312,7 @@ export let pt: Translation = {
     cardFullscreen: "Esta alternância permite alternar entre a visualização em tela cheia e a visualização em janela para o cartão.",
     dueDatesOverviewExplanation: "Aqui, você pode acessar uma visão geral dos cartões com datas de vencimento próximas que estão prestes a expirar.",
     noCardsWithDueDates: "Nenhum dos quadros atualmente possui cartões com datas de vencimento.",
+    confirmRestartOnboarding: "Tem certeza de que deseja refazer o processo de integração?",
 };
 
 export let ru: Translation = {
@@ -2493,6 +2505,7 @@ export let ru: Translation = {
     cardFullscreen: "Этот переключатель позволяет вам переключаться между полноэкранным и оконным режимом просмотра для карточки.",
     dueDatesOverviewExplanation: "Здесь вы можете получить обзор карт с ближайшими сроками выполнения, которые скоро истекут.",
     noCardsWithDueDates: "В настоящее время на досках нет карточек с установленными сроками выполнения.",
+    confirmRestartOnboarding: "Вы уверены, что хотите перезапустить процесс встраивания?",
 };
 
 export let tr: Translation = {
@@ -2685,6 +2698,7 @@ export let tr: Translation = {
     cardFullscreen: "Bu düğme kartın tam ekran ve pencere görünümü arasında geçiş yapmanıza olanak sağlar.",
     dueDatesOverviewExplanation: "Burada, yaklaşan son tarihleri olan kartların genel bir bakışını görebilirsiniz, bu tarihler yakında sona eriyor.",
     noCardsWithDueDates: "Şu anda hiçbir panoda son tarihi olan kart bulunmuyor.",
+    confirmRestartOnboarding: "Onboarding işlemini yeniden yapmak istediğinizden emin misiniz?",
 };
 
 export let zh: Translation = {
@@ -2877,4 +2891,5 @@ export let zh: Translation = {
     cardFullscreen: "此切换允许您在全屏和窗口视图之间切换卡片。",
     dueDatesOverviewExplanation: "在这里，您可以查看即将到期的卡片的概述。",
     noCardsWithDueDates: "目前没有任何板上有带有到期日期的卡片。",
+    confirmRestartOnboarding: "您确定要重新进行入职流程吗？",
 };
