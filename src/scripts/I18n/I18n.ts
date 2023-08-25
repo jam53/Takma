@@ -39,7 +39,10 @@ export class I18n
      */
     public static t(key: string, ...wordsToInsert: string[]): any
     {
-        let translation = this.translations.get(SaveLoadManager.getData().displayLanguage)[key] ?? `Translation not found for ${key}`;
+        let displayLanguage = SaveLoadManager.getData().displayLanguage;
+        displayLanguage = this.translations.has(displayLanguage) ? displayLanguage : "en"; //Default display language to "en" in case the user has a display language set that isn't supported/translated by Takma
+
+        let translation = this.translations.get(displayLanguage)[key] ?? `Translation not found for ${key}`;
 
         for (let i = 0; i < wordsToInsert.length; i++)
         {
