@@ -9,7 +9,7 @@
     import {toast, Toaster} from "svelte-sonner";
     import OrderBoardsMenu from "./OrderBoardsMenu.svelte";
     import FilterCardsPopup from "../BoardScreen/FilterCardsPopup.svelte";
-    import jam54LogoMonochrome from "../../images/Jam54LogoMonochrome.webp";
+    import jam54LogoMonochrome from "../../images/Jam54LogoMonochrome.svg";
     import ChangeDisplayLanguageMenu from "./ChangeDisplayLanguageMenu.svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {I18n} from "../../scripts/I18n/I18n";
