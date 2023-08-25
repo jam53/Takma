@@ -55,7 +55,10 @@
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                 </button>
                 <button class="startOnboarding" title={I18n.t("beginOnboarding")}
-                        on:click={() => startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId)}
+                        on:click={() => {
+                            SaveLoadManager.getData().onboardingCompleted = false;
+                            startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId);
+                        }}
                 >
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="40" d="M160 164s1.44-33 33.54-59.46C212.6 88.83 235.49 84.28 256 84c18.73-.23 35.47 2.94 45.48 7.82C318.59 100.2 352 120.6 352 164c0 45.67-29.18 66.37-62.35 89.18S248 298.36 248 324"></path><circle cx="248" cy="399.99" r="32"></circle></svg>
                 </button>
