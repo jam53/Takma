@@ -148,6 +148,8 @@
     {
         textToParse = textToParse.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,""); // remove the most common zerowidth characters from the start of the file
 
+        textToParse = textToParse.replace(/__(.*?)__/g, '<u>$1</u>'); //Add support for underlining with __ __
+
         let preprocessed = preprocessMarkdown(textToParse);
         let parsedText = marked.parse(preprocessed, markedJsOptions);
         let sanitized = DOMPurify.sanitize(parsedText);
