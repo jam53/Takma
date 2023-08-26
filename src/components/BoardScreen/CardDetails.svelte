@@ -294,7 +294,8 @@
             cardToSave.attachments.push(savedPath);
         }
 
-        cardToSave = cardToSave;
+        cardToSave = cardToSave; //If we don't do this, the function below `attachmentsComponent.refreshComponent()` will cause the component to refresh but it will still use the "old" values of the cardToSave variable because it would think it hasn't changed. So the component would refresh but nothing would visibly change because the old value of cardToSave would still be used
+        attachmentsComponent.refreshComponent()
     }
 
     /**
