@@ -5,8 +5,8 @@
     import {cubicOut} from "svelte/easing";
     import {slide} from "svelte/transition";
     import {dndzone} from "svelte-dnd-action";
-    import {ask} from "@tauri-apps/api/dialog";
     import {I18n} from "../../scripts/I18n/I18n";
+    import PopupWindow from "../PopupWindow.svelte";
 
     export let cardToSave;
     export let setTypingFunction;
@@ -86,9 +86,9 @@
             </div>
             <div class="checklistTopButtonsHolder">
                 <button on:click={async () => {
-                    const response = await ask(I18n.t("confirmChecklistRemoval"));
+                    const popup = new PopupWindow({props: {description: I18n.t("confirmChecklistRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
 
-                    if (response === true)
+                    if (await popup.getAnswer() === true)
                     {
                         cardToSave.checklists = cardToSave.checklists.filter(checklistt => checklistt.id !== checklist.id)
                     }

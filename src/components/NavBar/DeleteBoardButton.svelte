@@ -1,15 +1,14 @@
 <script lang="ts">
-    import {ask} from "@tauri-apps/api/dialog";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId, selectedCardId} from "../../scripts/stores";
-    import {removeDir} from "@tauri-apps/api/fs";
     import {I18n} from "../../scripts/I18n/I18n";
+    import PopupWindow from "../PopupWindow.svelte";
 
     async function handleClick()
     {
-        const response: boolean = await ask(I18n.t("confirmBoardRemoval"));
+        const popup = new PopupWindow({props: {description: I18n.t("confirmBoardRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
 
-        if (response === true)
+        if (await popup.getAnswer() === true)
         {
             SaveLoadManager.getData().deleteBoard($selectedBoardId);
 

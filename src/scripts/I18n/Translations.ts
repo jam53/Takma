@@ -191,6 +191,9 @@ export let en: Translation = {
     dueDatesOverviewExplanation: "Here, you can access an overview of cards with upcoming due dates that are about to expire.",
     noCardsWithDueDates: "None of the boards currently have cards with due dates.",
     confirmRestartOnboarding: "Are you sure you want to redo the onboarding process?",
+    no: "No",
+    yes: "Yes",
+    ok: "OK",
 };
 
 export let ar: Translation = {
@@ -384,6 +387,9 @@ export let ar: Translation = {
     dueDatesOverviewExplanation: "هنا، يمكنك الوصول إلى نظرة عامة على البطاقات ذات تواريخ استحقاق قادمة على وشك الانتهاء.",
     noCardsWithDueDates: "لا تحتوي الألواح حاليًا على بطاقات بتواريخ استحقاق.",
     confirmRestartOnboarding: "هل أنت متأكد أنك تريد إعادة عملية التعريف؟",
+    no: "لا",
+    yes: "نعم",
+    ok: "موافق",
 };
 
 export let de: Translation = {
@@ -577,6 +583,9 @@ export let de: Translation = {
     dueDatesOverviewExplanation: "Hier können Sie eine Übersicht über Karten mit bevorstehenden Fälligkeitsdaten aufrufen, die kurz vor dem Ablauf stehen.",
     noCardsWithDueDates: "Keine derzeitigen Karten auf den Boards haben Fälligkeitsdaten.",
     confirmRestartOnboarding: "Sind Sie sicher, dass Sie den Onboarding-Prozess erneut durchführen möchten?",
+    no: "Nein",
+    yes: "Ja",
+    ok: "OK",
 };
 
 export let es: Translation = {
@@ -770,6 +779,9 @@ export let es: Translation = {
     dueDatesOverviewExplanation: "Aquí puedes acceder a una vista general de las tarjetas con fechas de vencimiento próximas que están a punto de expirar.",
     noCardsWithDueDates: "Ninguno de los tableros tiene actualmente tarjetas con fechas de vencimiento.",
     confirmRestartOnboarding: "¿Estás seguro/a de que quieres volver a realizar el proceso de incorporación?",
+    no: "No",
+    yes: "Sí",
+    ok: "Aceptar",
 };
 
 export let et: Translation = {
@@ -962,6 +974,9 @@ export let et: Translation = {
     dueDatesOverviewExplanation: "Siin saate juurdepääsu kaartide ülevaatele, millel on lähenevad tähtajad, mis on peagi lõppemas.",
     noCardsWithDueDates: "Ühelgi tahvlil pole praegu kaarte, millel oleksid tähtajad.",
     confirmRestartOnboarding: "Olete kindel, et soovite alustamisprotsessi uuesti teha?",
+    no: "Ei",
+    yes: "Jah",
+    ok: "OK",
 };
 
 export let fr: Translation = {
@@ -1155,6 +1170,9 @@ export let fr: Translation = {
     dueDatesOverviewExplanation: "Ici, vous pouvez accéder à une vue d'ensemble des cartes avec des dates d'échéance à venir qui sont sur le point d'expirer.",
     noCardsWithDueDates: "Aucun des tableaux n'a actuellement de cartes avec des dates d'échéance.",
     confirmRestartOnboarding: "Êtes-vous sûre de vouloir refaire le processus d'intégration ?",
+    no: "Non",
+    yes: "Oui",
+    ok: "OK",
 };
 
 export let hi: Translation = {
@@ -1348,6 +1366,9 @@ export let hi: Translation = {
     dueDatesOverviewExplanation: "यहाँ, आप उपकोमिंग ड्यू डेट्स वाले कार्डों की एक ओवरव्यू तक पहुँचने की अनुमति देता है जो समय समय पर समाप्त होने वाले हैं।",
     noCardsWithDueDates: "मौजूदा में कोई भी बोर्ड ऐसी कार्ड नहीं रखता जिनमें ड्यू डेट्स हों।",
     confirmRestartOnboarding: "क्या आप यकीनी हैं कि आप प्रारंभिक प्रक्रिया को फिर से करना चाहते हैं?",
+    no: "नहीं",
+    yes: "हाँ",
+    ok: "ठीक",
 };
 
 export let id: Translation = {
@@ -1541,6 +1562,9 @@ export let id: Translation = {
     dueDatesOverviewExplanation: "Di sini, Anda dapat mengakses gambaran kartu-kartu dengan tanggal jatuh tempo yang akan datang yang hampir kadaluwarsa.",
     noCardsWithDueDates: "Tidak ada papan saat ini yang memiliki kartu dengan tanggal jatuh tempo.",
     confirmRestartOnboarding: "Apakah Anda yakin ingin mengulangi proses onboarding?",
+    no: "Tidak",
+    yes: "Ya",
+    ok: "Oke",
 };
 
 export let ja: Translation = {
@@ -1734,6 +1758,9 @@ export let ja: Translation = {
     dueDatesOverviewExplanation: "ここでは、期限が迫っているカードの概要にアクセスできます。",
     noCardsWithDueDates: "現在、どのボードにも期限付きのカードはありません。",
     confirmRestartOnboarding: "オンボーディングプロセスをやり直しますか？",
+    no: "いいえ",
+    yes: "はい",
+    ok: "OK",
 };
 
 export let ko: Translation = {
@@ -1927,6 +1954,9 @@ export let ko: Translation = {
     dueDatesOverviewExplanation: "여기에서 예정된 마감일을 가진 카드들의 개요에 접근할 수 있습니다. 이들은 곧 만료될 예정입니다.",
     noCardsWithDueDates: "현재 어느 보드에도 마감일이 있는 카드가 없습니다.",
     confirmRestartOnboarding: "온보딩 프로세스를 다시 진행하시겠습니까?",
+    no: "아니오",
+    yes: "예",
+    ok: "확인",
 };
 
 export let nl: Translation = {
@@ -2120,6 +2150,9 @@ export let nl: Translation = {
     dueDatesOverviewExplanation: "Hier kunt u een overzicht bekijken van kaarten met naderende vervaldatums die binnenkort verlopen.",
     noCardsWithDueDates: "Geen van de borden heeft momenteel kaarten met vervaldatums.",
     confirmRestartOnboarding: "Weet je zeker dat je de onboarding opnieuw wilt doen?",
+    no: "Nee",
+    yes: "Ja",
+    ok: "OK",
 };
 
 export let pt: Translation = {
@@ -2313,6 +2346,9 @@ export let pt: Translation = {
     dueDatesOverviewExplanation: "Aqui, você pode acessar uma visão geral dos cartões com datas de vencimento próximas que estão prestes a expirar.",
     noCardsWithDueDates: "Nenhum dos quadros atualmente possui cartões com datas de vencimento.",
     confirmRestartOnboarding: "Tem certeza de que deseja refazer o processo de integração?",
+    no: "Não",
+    yes: "Sim",
+    ok: "OK",
 };
 
 export let ru: Translation = {
@@ -2506,6 +2542,9 @@ export let ru: Translation = {
     dueDatesOverviewExplanation: "Здесь вы можете получить обзор карт с ближайшими сроками выполнения, которые скоро истекут.",
     noCardsWithDueDates: "В настоящее время на досках нет карточек с установленными сроками выполнения.",
     confirmRestartOnboarding: "Вы уверены, что хотите перезапустить процесс встраивания?",
+    no: "Нет",
+    yes: "Да",
+    ok: "ОК",
 };
 
 export let tr: Translation = {
@@ -2699,6 +2738,9 @@ export let tr: Translation = {
     dueDatesOverviewExplanation: "Burada, yaklaşan son tarihleri olan kartların genel bir bakışını görebilirsiniz, bu tarihler yakında sona eriyor.",
     noCardsWithDueDates: "Şu anda hiçbir panoda son tarihi olan kart bulunmuyor.",
     confirmRestartOnboarding: "Onboarding işlemini yeniden yapmak istediğinizden emin misiniz?",
+    no: "Hayır",
+    yes: "Evet",
+    ok: "Tamam",
 };
 
 export let zh: Translation = {
@@ -2892,4 +2934,7 @@ export let zh: Translation = {
     dueDatesOverviewExplanation: "在这里，您可以查看即将到期的卡片的概述。",
     noCardsWithDueDates: "目前没有任何板上有带有到期日期的卡片。",
     confirmRestartOnboarding: "您确定要重新进行入职流程吗？",
+    no: "不",
+    yes: "是",
+    ok: "确定",
 };

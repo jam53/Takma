@@ -15,9 +15,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/stores";
-    import {ask} from "@tauri-apps/api/dialog";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
+    import PopupWindow from "../PopupWindow.svelte";
 
     export let listId;
     export let refreshListsFunction;
@@ -98,9 +98,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function deleteList()
     {
-        const response: boolean = await ask(I18n.t("confirmListRemoval"));
+        const popup = new PopupWindow({props: {description: I18n.t("confirmListRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
 
-        if (response === true)
+        if (await popup.getAnswer() === true)
         {
             SaveLoadManager.getData().deleteList($selectedBoardId, listId);
             refreshListsFunction();

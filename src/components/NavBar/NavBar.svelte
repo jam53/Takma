@@ -14,7 +14,7 @@
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {I18n} from "../../scripts/I18n/I18n";
     import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
-    import {ask} from "@tauri-apps/api/dialog";
+    import PopupWindow from "../PopupWindow.svelte";
 
     let orderBoardsMenuElement;
     let filterCardsPopupElement;
@@ -57,9 +57,9 @@
                 </button>
                 <button class="startOnboarding" title={I18n.t("beginOnboarding")}
                         on:click={async () => {
-                            const response = await ask(I18n.t("confirmRestartOnboarding"));
+                            const popup = new PopupWindow({props: {description: I18n.t("confirmRestartOnboarding"), buttonType: "yesno"}, target: document.body, intro: true});
 
-                            if (response === true)
+                            if (await popup.getAnswer() === true)
                             {
                                 SaveLoadManager.getData().onboardingCompleted = false;
                                 startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId);
