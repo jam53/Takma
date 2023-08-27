@@ -33,6 +33,11 @@
             {
                 showPopup = false;
             }
+            else if (e.key === "Enter")
+            {
+                answer = true;
+                showPopup = false;
+            }
         });
     });
 
