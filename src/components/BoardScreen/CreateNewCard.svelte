@@ -54,12 +54,19 @@
      */
     function resizeCardsHolderIfNeeded()
     {
-        if (createNewCardDiv.classList.contains("newCardCreating") && outerWrapperElement.scrollHeight + createNewCardDiv.clientHeight > parseInt(getComputedStyle(outerWrapperElement).maxHeight)) //If there is a scrollbar already or if the extra height added by clicking on the createNewCard button makes it so the createNewCard thingy goes off-screen, make the outerWrapperElements that contains the cards less high, that way the createNewCard thingy won't go off the screen
+        if (createNewCardDiv.classList.contains("newCardCreating") && outerWrapperElement.scrollHeight + createNewCardDiv.clientHeight - createNewDivInitialHeight > parseInt(getComputedStyle(outerWrapperElement).maxHeight)) //If there is a scrollbar already or if the extra height added by clicking on the createNewCard button makes it so the createNewCard thingy goes off-screen, make the outerWrapperElements that contains the cards less high, that way the createNewCard thingy won't go off the screen
+            //or in other words: if (we are creating a new card && height of the div that holds the cards + the height of our createNewCardDiv (the createNewCardDiv when entering a new card title) - height of the createNewCardDiv (the createNewCardDiv that's visible by default, if we click on it we apply different styleclasses and get the createNewCardDiv where we enter the card title. The height of this default createNewCardDiv is included in the height of the div that holds the cards though, hence why we substract it) > maximum height of the div that holds the cards
         {
             scrollToBottomOfCardsList();
             outerWrapperElement.style.height = `calc(${parseInt(getComputedStyle(outerWrapperElement).maxHeight)}px - 3.5em)`;
         }
     }
+
+    let createNewDivInitialHeight;
+    onMount(() =>
+    {
+        createNewDivInitialHeight = createNewCardDiv.clientHeight;
+    });
 
     afterUpdate(() =>
     {

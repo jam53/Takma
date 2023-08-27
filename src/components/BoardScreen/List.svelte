@@ -78,25 +78,40 @@
         if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight != outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
         {
             outerWrapperElement.classList.add('overflowed');
-            outerWrapperElement.classList.remove('overflowedNoBottomMargin');
         }
         else if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight === outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
         {
             outerWrapperElement.classList.remove('overflowed');
-            outerWrapperElement.classList.add('overflowedNoBottomMargin');
         }
     }
-
-    $: outerWrapperElement && applyOverFlowedStyleClasses();
 
     function shouldCardBeHidden(card: CardInterface)
     {
         return !(card.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) || card.description.toLowerCase().includes($searchBarValue.toLowerCase().trim()));
     }
+
+    let titleHolderElement;
+    afterUpdate(() =>
+    {
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px)`);
+    /*
+        100vh        - hoogte scherm
+        4px          - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html`
+        30px         - height title bar in the `.titlebar` styleclass in `index.html`
+        2em          - navbar height in the `.containingDiv` styleclass in `NavBar.svelte`
+        (2 * 8px)    - (2 * height of the scrollbar at the bottom)
+        (2 * 0.5em)  - padding bottom en top van .listHolder in BoardScreen
+        (2 * 1px)    - (2 * breedte van de border van de lists)
+        5.5em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
+        ${...}       - hoogte van de titel van de lijst
+     */
+
+        applyOverFlowedStyleClasses();
+    });
 </script>
 
 <div class="list" in:slide|global={{delay: inTransitionDelay*100}} on:introstart={scrollToCreateNewListDiv} on:mouseenter={() => setDragDisabled(false)} on:contextmenu|stopPropagation>
-    <div class="titleHolder">
+    <div class="titleHolder" bind:this={titleHolderElement}>
         {#if !editingTitle}
             <span class="listTitle" on:click on:mousedown={() => editingTitle = true} style="height: 100%; min-height: 1em">
                 {SaveLoadManager.getData().getList($selectedBoardId, listId).title}
@@ -169,19 +184,12 @@
     }
 
     .outerWrapper {
-        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 5.5em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) - padding bottom en top van .listHolder in BoardScreen - (2 * padding van .titleHolder in dit bestand) - (2 * breedte van de border van de lists) - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus*/
+        /* max-height: gets set through js*/
         overflow-y: auto;
     }
 
+    /*Gets applied when there are too many cards so a scrollbar gets displayed. In that case we add a right margin so that the scrollbar isn't glued to side of the container but that there is some space in between.*/
     :is(.outerWrapper.overflowed) {
-        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 5.5em - 0.5em);
-        margin-bottom: 0.5em;
-        margin-right: 0.25em;
-    }
-
-    :is(.outerWrapper.overflowedNoBottomMargin) {
-        max-height: calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 0.75em) - (2 * 1px) - 5.5em);
-        margin-bottom: 0;
         margin-right: 0.25em;
     }
 
