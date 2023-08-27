@@ -37,6 +37,8 @@
             {
                 answer = true;
                 showPopup = false;
+                e.stopPropagation();
+                e.preventDefault();
             }
         });
     });
