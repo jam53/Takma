@@ -75,11 +75,11 @@
 
     function applyOverFlowedStyleClasses()
     {
-        if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight != outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
+        if (outerWrapperElement.scrollHeight >= outerWrapperElement.clientHeight)
         {
             outerWrapperElement.classList.add('overflowed');
         }
-        else if ((outerWrapperElement.scrollHeight > outerWrapperElement.clientHeight) && (outerWrapperElement.scrollHeight === outerWrapperElement.scrollTop + outerWrapperElement.clientHeight))
+        else if (outerWrapperElement.scrollHeight < outerWrapperElement.clientHeight)
         {
             outerWrapperElement.classList.remove('overflowed');
         }
