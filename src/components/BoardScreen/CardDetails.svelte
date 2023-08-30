@@ -428,6 +428,24 @@
                               on:focusout={() => typing = false}
                               use:clickOutside
                               on:click_outside={() => (window.getSelection().toString().length === 0) && (editingDescription = false)}
+                             on:keydown={e => {
+                                 if (e.key === "Tab")
+                                 {
+                                     e.preventDefault(); // Prevent the default Tab behavior of focussing on the next element in the DOM
+
+                                     // Insert a tab character at the current cursor position
+                                     const selection = window.getSelection();
+                                     const range = selection.getRangeAt(0);
+                                     const tabNode = document.createTextNode('\t');
+                                     range.insertNode(tabNode);
+
+                                     // Move the cursor to the end of the tab
+                                     range.setStartAfter(tabNode);
+                                     range.collapse(true);
+                                     selection.removeAllRanges();
+                                     selection.addRange(range);
+                                 }
+                             }}
                         >{cardDesc}</pre>
 <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the description. This would be considered as a click outside the description, therefore closing the description. With this check we only close the description if we aren't selecting anything-->
                     {:else}
