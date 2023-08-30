@@ -110,6 +110,11 @@
             }
         }
     });
+
+    // The code below makes it so when we lose focus by alt+tabbing, the last element gets refocused when we alt+tab/switch back to the Takma tab. Otherwise it gets annoying when trying to type something over and alt+tabbing in between, since you would have to first click on the element you were typing on so it would regain focus, before you would be able to continue typing
+    let lastFocusedElement = document.activeElement;
+    window.addEventListener("focus", () => lastFocusedElement = document.activeElement, true);
+    window.addEventListener("blur", () => lastFocusedElement?.focus());
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
