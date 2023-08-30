@@ -63,7 +63,7 @@ export let en: Translation = {
     returnToHomeScreen: "To return to the home screen, simply click on the Takma icon, or alternatively, use the keyboard shortcuts ESC or Ctrl+W.",
     renameBoardTitle: "Boards can be renamed by clicking on their title.",
     setNewBoardBackground: "A new background image for the board can be set by right clicking on the board's background or by dragging and dropping an image onto the existing background.",
-    copyBoardLink: "This button enables you to copy a link to this board, which can then be pasted into the description of any card, even those within other boards. Clicking on this link in a card's description will effectively open this particular board.",
+    copyBoardLink: "This button allows you to generate a link to this board, which can be inserted into the description of any card, including those within different boards. Clicking this link in a card's description will open this specific board. Moreover, the provided link functions beyond the confines of Takma. You can paste and click on the link within various applications such as your browser, messaging program, or text editor to open this particular board.",
     deleteCardShiftClick: "Cards can easily be deleted by pressing the Shift key and clicking on a card. This action removes the card, in contrast to the regular click action which would open the card.",
     rearrangeCardsDragDrop: "You can rearrange the order of cards within a list by simply dragging and dropping them. Furthermore, cards can also be moved from one list to another using the drag-and-drop action.",
     rearrangeListsDragDrop: "Similar to cards, you can also change the order of lists by dragging and dropping them.",
@@ -74,7 +74,7 @@ export let en: Translation = {
     viewCreationDateHover: "To view the card's creation date, simply hover your cursor over the separator located beneath the card's title.",
     markdownCardDescriptions: "Card descriptions are written in Markdown, giving you the ability to embed images, create tables, add headings, and utilize a variety of other formatting options. Takma fully supports all Markdown features.",
     addAttachmentsDragDrop: "You can add attachments to cards not only by clicking this button but also by dragging and dropping files directly onto the card.",
-    copyCardLink: "Much like the board's 'copy link' button, this button enables you to copy a link to this card. You can then paste this link into the description of any card, including those in different boards. Clicking on this link within another card's description will open this specific card.",
+    copyCardLink: "Similar to the 'copy link' button for boards, this button allows you to generate a link to this card. Subsequently, you can paste the link into the description of any card, even those within different boards. Clicking the link within the description of another card will open this particular card. It's worth noting that this link works beyond the Takma environment as well. You can paste and click the link in various applications like your browser, messaging program, or text editor to open this particular card.",
     loadSaveFile: "Loading savefile",
     orderBoards: "Order boards",
     beginOnboarding: "Begin onboarding",
@@ -194,6 +194,8 @@ export let en: Translation = {
     no: "No",
     yes: "Yes",
     ok: "OK",
+    boardIdNotFound: "Unable to open the Takma link: <i>$|00|$</i>. <br> The board ID within the Takma link is incorrect; there is no board associated with that ID.",
+    cardIdNotFound: "Unable to open the Takma link: <i>$|00|$</i>. <br> The card ID within the Takma link is incorrect; there is no card associated with that ID.",
 };
 
 export let ar: Translation = {
@@ -259,7 +261,7 @@ export let ar: Translation = {
     returnToHomeScreen: "للعودة إلى شاشة البداية، ما عليك سوى النقر فوق أيقونة تكما، أو ببساطة، استخدام اختصارات لوحة المفاتيح ESC أو Ctrl+W.",
     renameBoardTitle: "يمكن إعادة تسمية اللوحات عن طريق النقر على عنوانها.",
     setNewBoardBackground: "يمكن تعيين صورة خلفية جديدة للوحة عن طريق النقر بزر الماوس الأيمن على خلفية اللوحة أو عن طريق سحب وإسقاط صورة على الخلفية الحالية.",
-    copyBoardLink: "يمكنك نسخ رابط لهذه اللوحة باستخدام هذا الزر، ويمكن لصق هذا الرابط في وصف أي بطاقة، حتى تلك الموجودة في لوحات أخرى. النقر على هذا الرابط في وصف بطاقة سيفتح هذه اللوحة بشكل فعال.",
+    copyBoardLink: "يسمح لك هذا الزر بإنشاء رابط إلى هذا اللوح، والذي يمكن إدراجه في وصف أي بطاقة، بما في ذلك تلك الموجودة في لوحات مختلفة. بالنقر فوق هذا الرابط في وصف البطاقة سيتم فتح هذا اللوح المحدد. علاوة على ذلك، يعمل الرابط المقدم خارج إطار تطبيق تكما. يمكنك لصق والنقر فوق الرابط في تطبيقات متعددة مثل متصفح الويب، أو برنامج المراسلة، أو محرر النصوص لفتح هذا اللوح بشكل معين.",
     deleteCardShiftClick: "يمكن حذف البطاقات ببساطة عن طريق الضغط على مفتاح Shift والنقر على بطاقة. تُزيل هذه الإجراءات البطاقة، على عكس النقر العادي الذي يفتح البطاقة.",
     rearrangeCardsDragDrop: "يمكنك إعادة ترتيب ترتيب البطاقات داخل القائمة ببساطة من خلال سحبها وإسقاطها. علاوة على ذلك، يمكن نقل البطاقات أيضًا من قائمة إلى أخرى باستخدام إجراء السحب والإسقاط.",
     rearrangeListsDragDrop: "بالمثل للبطاقات، يمكنك أيضًا تغيير ترتيب القوائم من خلال سحبها وإسقاطها.",
@@ -270,7 +272,7 @@ export let ar: Translation = {
     viewCreationDateHover: "لعرض تاريخ إنشاء البطاقة، ما عليك سوى تمرير المؤشر فوق الفاصلة الموجودة تحت عنوان البطاقة.",
     markdownCardDescriptions: "تمت كتابة وصف البطاقة باستخدام Markdown، مما يمنحك القدرة على تضمين الصور، وإنشاء الجداول، وإضافة عناوين، واستخدام مجموعة متنوعة من خيارات التنسيق الأخرى. تدعم تكما جميع ميزات Markdown بالكامل.",
     addAttachmentsDragDrop: "يمكنك إضافة مرفقات إلى البطاقات ليس فقط عن طريق النقر فوق هذا الزر، ولكن أيضًا عن طريق سحب وإسقاط الملفات مباشرةً إلى البطاقة.",
-    copyCardLink: "بشكل مشابه لزر 'نسخ الرابط' للوحة، يمكنك من خلال هذا الزر نسخ رابط لهذه البطاقة. بإمكانك لاحقًا لصق هذا الرابط في وصف أي بطاقة، بما في ذلك تلك في لوحات مختلفة. النقر على هذا الرابط في وصف بطاقة أخرى سيفتح هذه البطاقة بشكل محدد.",
+    copyCardLink: "بالمثل لزر 'نسخ الرابط' للوحات، يسمح لك هذا الزر بإنشاء رابط إلى هذه البطاقة. بعد ذلك، يمكنك لصق الرابط في وصف أي بطاقة، حتى تلك الموجودة في لوحات مختلفة. بالنقر على الرابط في وصف بطاقة أخرى سيتم فتح هذه البطاقة بشكل معين. يجدر بالذكر أن هذا الرابط يعمل خارج بيئة تكما أيضًا. يمكنك لصق الرابط والنقر عليه في تطبيقات متعددة مثل متصفح الويب، أو برنامج المراسلة، أو محرر النصوص لفتح هذه البطاقة بشكل معين.",
     loadSaveFile: "تحميل ملف الحفظ",
     orderBoards: "ترتيب اللوحات",
     beginOnboarding: "بدء عملية التوجيه",
@@ -390,6 +392,8 @@ export let ar: Translation = {
     no: "لا",
     yes: "نعم",
     ok: "موافق",
+    boardIdNotFound: "غير قادر على فتح رابط تكما: <i>$|00|$</i>. <br> معرف اللوح داخل رابط تكما غير صحيح؛ لا يوجد لوح مرتبط بهذا المعرف.",
+    cardIdNotFound: "غير قادر على فتح رابط تكما: <i>$|00|$</i>. <br> معرف البطاقة داخل رابط تكما غير صحيح؛ لا يوجد بطاقة مرتبطة بهذا المعرف.",
 };
 
 export let de: Translation = {
@@ -455,7 +459,7 @@ export let de: Translation = {
     returnToHomeScreen: "Um zur Startseite zurückzukehren, klicke einfach auf das Takma-Symbol oder verwende die Tastenkombinationen ESC oder Ctrl+W.",
     renameBoardTitle: "Boards können durch Klicken auf ihren Titel umbenannt werden.",
     setNewBoardBackground: "Ein neues Hintergrundbild für das Board kannst du entweder per Rechtsklick auf den Hintergrund oder durch Ziehen und Ablegen eines Bildes auf den vorhandenen Hintergrund einstellen.",
-    copyBoardLink: "Mit diesem Button kannst du einen Link zu diesem Board kopieren, der dann in die Beschreibung einer Karte eingefügt werden kann, selbst wenn sie sich in anderen Boards befindet. Durch Klicken auf diesen Link in der Beschreibung einer Karte wird dieses bestimmte Board geöffnet.",
+    copyBoardLink: "Mit dieser Schaltfläche können Sie einen Link zu diesem Board generieren, der in die Beschreibung einer beliebigen Karte eingefügt werden kann, auch solcher in verschiedenen Boards. Wenn Sie auf diesen Link in der Beschreibung einer Karte klicken, wird dieses spezifische Board geöffnet. Darüber hinaus funktioniert der bereitgestellte Link über die Grenzen von Takma hinaus. Sie können den Link in verschiedenen Anwendungen wie Ihrem Browser, Ihrem Nachrichtenprogramm oder Ihrem Texteditor einfügen und darauf klicken, um dieses bestimmte Board zu öffnen.",
     deleteCardShiftClick: "Karten können leicht gelöscht werden, indem du die Shift-Taste gedrückt hältst und auf eine Karte klickst. Diese Aktion entfernt die Karte, im Gegensatz zur regulären Klick-Aktion, die die Karte öffnen würde.",
     rearrangeCardsDragDrop: "Du kannst die Reihenfolge der Karten in einer Liste einfach durch Ziehen und Ablegen ändern. Karten können außerdem von einer Liste in eine andere verschoben werden, indem du sie ziehst und ablegst.",
     rearrangeListsDragDrop: "Ähnlich wie bei Karten kannst du auch die Reihenfolge der Listen durch Ziehen und Ablegen ändern.",
@@ -466,7 +470,7 @@ export let de: Translation = {
     viewCreationDateHover: "Um das Erstellungsdatum einer Karte anzuzeigen, bewege einfach den Cursor über den Trennstrich unterhalb des Kartentitels.",
     markdownCardDescriptions: "Kartenbeschreibungen werden in Markdown geschrieben, was dir die Möglichkeit gibt, Bilder einzubetten, Tabellen zu erstellen, Überschriften hinzuzufügen und viele andere Formatierungsoptionen zu nutzen. Takma unterstützt alle Markdown-Funktionen vollständig.",
     addAttachmentsDragDrop: "Du kannst Anhänge zu Karten nicht nur durch Klicken auf diese Schaltfläche hinzufügen, sondern auch durch Ziehen und Ablegen von Dateien direkt auf die Karte.",
-    copyCardLink: "Ähnlich wie bei der Schaltfläche 'Link kopieren' für das Board kannst du mit dieser Schaltfläche einen Link zu dieser Karte kopieren. Du kannst diesen Link dann in die Beschreibung einer Karte einfügen, einschließlich solcher in verschiedenen Boards. Durch Klicken auf diesen Link in der Beschreibung einer anderen Karte wird diese spezifische Karte geöffnet.",
+    copyCardLink: "Ähnlich wie die Schaltfläche 'Link kopieren' für Boards können Sie mit dieser Schaltfläche einen Link zu dieser Karte generieren. Anschließend können Sie den Link in die Beschreibung einer beliebigen Karte einfügen, auch solcher in verschiedenen Boards. Wenn Sie auf den Link in der Beschreibung einer anderen Karte klicken, wird diese spezielle Karte geöffnet. Es ist erwähnenswert, dass dieser Link auch außerhalb der Takma-Umgebung funktioniert. Sie können den Link in verschiedenen Anwendungen wie Ihrem Browser, Ihrem Nachrichtenprogramm oder Ihrem Texteditor einfügen und darauf klicken, um diese bestimmte Karte zu öffnen.",
     loadSaveFile: "Speicherdatei laden",
     orderBoards: "Boards sortieren",
     beginOnboarding: "Onboarding starten",
@@ -586,6 +590,8 @@ export let de: Translation = {
     no: "Nein",
     yes: "Ja",
     ok: "OK",
+    boardIdNotFound: "Kann den Takma-Link nicht öffnen: <i>$|00|$</i>. <br> Die Board-ID im Takma-Link ist falsch; es gibt kein Board, das mit dieser ID verknüpft ist.",
+    cardIdNotFound: "Kann den Takma-Link nicht öffnen: <i>$|00|$</i>. <br> Die Karten-ID im Takma-Link ist falsch; es gibt keine Karte, die mit dieser ID verknüpft ist.",
 };
 
 export let es: Translation = {
@@ -651,7 +657,7 @@ export let es: Translation = {
     returnToHomeScreen: "Para volver a la pantalla de inicio, simplemente haga clic en el icono de Takma o, alternativamente, use los atajos de teclado ESC o Ctrl+W.",
     renameBoardTitle: "Los tableros se pueden renombrar haciendo clic en su título.",
     setNewBoardBackground: "Una nueva imagen de fondo para el tablero se puede establecer haciendo clic con el botón derecho en el fondo del tablero o arrastrando y soltando una imagen sobre el fondo existente.",
-    copyBoardLink: "Este botón le permite copiar un enlace a este tablero, que luego se puede pegar en la descripción de cualquier tarjeta, incluso aquellas en otros tableros. Al hacer clic en este enlace en la descripción de una tarjeta, se abrirá este tablero en particular.",
+    copyBoardLink: "Este botón te permite generar un enlace a este tablero, que se puede insertar en la descripción de cualquier tarjeta, incluso aquellas en tableros diferentes. Al hacer clic en este enlace en la descripción de una tarjeta, se abrirá este tablero específico. Además, el enlace proporcionado funciona más allá de los límites de Takma. Puedes pegar y hacer clic en el enlace en diversas aplicaciones como tu navegador, programa de mensajería o editor de texto para abrir este tablero en particular.",
     deleteCardShiftClick: "Las tarjetas se pueden eliminar fácilmente presionando la tecla Shift y haciendo clic en una tarjeta. Esta acción elimina la tarjeta, a diferencia de la acción de clic normal que abriría la tarjeta.",
     rearrangeCardsDragDrop: "Puede reorganizar el orden de las tarjetas dentro de una lista simplemente arrastrándolas y soltándolas. Además, las tarjetas también se pueden mover de una lista a otra mediante la acción de arrastrar y soltar.",
     rearrangeListsDragDrop: "De manera similar a las tarjetas, también puede cambiar el orden de las listas arrastrándolas y soltándolas.",
@@ -662,7 +668,7 @@ export let es: Translation = {
     viewCreationDateHover: "Para ver la fecha de creación de la tarjeta, simplemente coloque el cursor sobre el separador ubicado debajo del título de la tarjeta.",
     markdownCardDescriptions: "Las descripciones de las tarjetas están escritas en Markdown, lo que le brinda la capacidad de incrustar imágenes, crear tablas, agregar encabezados y utilizar una variedad de otras opciones de formato. Takma admite todas las funciones de Markdown.",
     addAttachmentsDragDrop: "Puede agregar archivos adjuntos a las tarjetas no solo haciendo clic en este botón, sino también arrastrando y soltando archivos directamente sobre la tarjeta.",
-    copyCardLink: "Al igual que el botón 'copiar enlace' del tablero, este botón le permite copiar un enlace a esta tarjeta. Luego puede pegar este enlace en la descripción de cualquier tarjeta, incluidas las de diferentes tableros. Al hacer clic en este enlace dentro de la descripción de otra tarjeta, se abrirá esta tarjeta específica.",
+    copyCardLink: "Similar al botón 'copiar enlace' para los tableros, este botón te permite generar un enlace a esta tarjeta. Posteriormente, puedes pegar el enlace en la descripción de cualquier tarjeta, incluso aquellas en tableros diferentes. Al hacer clic en el enlace dentro de la descripción de otra tarjeta, se abrirá esta tarjeta en particular. Cabe mencionar que este enlace funciona más allá del entorno de Takma. Puedes pegar y hacer clic en el enlace en diversas aplicaciones como tu navegador, programa de mensajería o editor de texto para abrir esta tarjeta en particular.",
     loadSaveFile: "Cargando archivo guardado",
     orderBoards: "Ordenar tableros",
     beginOnboarding: "Comenzar incorporación",
@@ -782,6 +788,8 @@ export let es: Translation = {
     no: "No",
     yes: "Sí",
     ok: "Aceptar",
+    boardIdNotFound: "No se puede abrir el enlace de Takma: <i>$|00|$</i>. <br> La ID del tablero en el enlace de Takma es incorrecta; no hay ningún tablero asociado con esa ID.",
+    cardIdNotFound: "No se puede abrir el enlace de Takma: <i>$|00|$</i>. <br> La ID de la tarjeta en el enlace de Takma es incorrecta; no hay ninguna tarjeta asociada con esa ID.",
 };
 
 export let et: Translation = {
@@ -847,7 +855,7 @@ export let et: Translation = {
     returnToHomeScreen: "Kodu ekraanile naasmiseks klõpsake lihtsalt Takma ikoonil või kasutage alternatiivina klaviatuuri otseteid ESC või Ctrl+W.",
     renameBoardTitle: "Tahvleid saab ümber nimetada, klõpsates nende pealkirjal.",
     setNewBoardBackground: "Uue taustapildi tahvlile saab seada, paremklõpsates tausta või lohistades ja laskes uue pildi olemasoleva tausta peale.",
-    copyBoardLink: "Selle nupu abil saate sellele tahvlile lingi kopeerida, mida saab seejärel kleepida mis tahes kaardi kirjeldusse, isegi nendes kaartides, mis asuvad teistes tahvlites. Selle lingi klõpsamine mõne kaardi kirjelduses avab selle konkreetse tahvli.",
+    copyBoardLink: "Selle nupu abil saate luua lingi sellele tahvlile, mida saab lisada mis tahes kaardi kirjeldusse, sealhulgas nendesse erinevates tahvlites. Kui klõpsate selle lingi kirjelduses olevat kaarti, avatakse see konkreetne tahvel. Lisaks toimib antud link ka Takma piiridest väljaspool. Lingi saate kleepida ja klõpsata erinevates rakendustes, nagu veebibrauseris, sõnumiprogrammis või tekstiredaktoris, selle konkreetse tahvli avamiseks.",
     deleteCardShiftClick: "Kaarte saab hõlpsalt kustutada, hoides all Shift-klahvi ja klõpsates kaardil. See toiming eemaldab kaardi, erinevalt tavalisest klõpsamistoimingust, mis avaks kaardi.",
     rearrangeCardsDragDrop: "Karte saate loendis lihtsalt lohistades ja laskudes järjekorda muuta. Lisaks saab kaarte loendist teise liigutada, lohistades ja laskudes.",
     rearrangeListsDragDrop: "Sarnaselt kaartidele saate loendi järjekorda lihtsalt lohistades ja laskudes muuta.",
@@ -858,7 +866,7 @@ export let et: Translation = {
     viewCreationDateHover: "Kaardi loomiskuupäeva vaatamiseks lihtsalt hoidke kursorit kaardi pealkirja all oleva eraldusjoone kohal.",
     markdownCardDescriptions: "Kaardi kirjeldused on kirjutatud Markdownis, mis annab teile võimaluse lisada pilte, luua tabeleid, lisada pealkirju ja kasutada mitmesuguseid muid vormindamisvõimalusi. Takma toetab kõiki Markdowni funktsioone täielikult.",
     addAttachmentsDragDrop: "Manuseid saate kaartidele lisada mitte ainult selle nupu klõpsamise teel, vaid ka failide otse kaardile lohistamise ja laskmisega.",
-    copyCardLink: "Sarnaselt tahvli 'kopeeri link' nupuga saate selle nupu abil kopeerida lingi sellele kaardile. Seejärel saate selle lingi kleepida mis tahes kaardi kirjeldusse, ka nendesse, mis kuuluvad erinevatesse tahvlitesse. Selle lingi klõpsamine mõne teise kaardi kirjelduses avab selle konkreetse kaardi.",
+    copyCardLink: "Sarnaselt tahvlitele mõeldud 'kopeeri link' nupuga saate selle nupu abil luua lingi sellele kaardile. Seejärel saate lingi kleepida mis tahes kaardi kirjeldusse, isegi nendesse erinevates tahvlites. Teise kaardi kirjelduses olevale lingile klõpsamisel avaneb see konkreetne kaart. Oluline on märkida, et see link toimib ka Takma keskkonnast väljaspool. Lingi saate kleepida ja klõpsata seda erinevates rakendustes, näiteks veebibrauseris, sõnumiprogrammis või tekstiredaktoris, selle konkreetse kaardi avamiseks.",
     loadSaveFile: "Laadi salvestusfail",
     orderBoards: "Sorteeri tahvlid",
     beginOnboarding: "Alusta onboardingut",
@@ -977,6 +985,8 @@ export let et: Translation = {
     no: "Ei",
     yes: "Jah",
     ok: "OK",
+    boardIdNotFound: "Ei saa avada Takma linki: <i>$|00|$</i>. <br> Tahvli ID Takma lingis on vale; selle ID-ga seotud tahvlit pole.",
+    cardIdNotFound: "Ei saa avada Takma linki: <i>$|00|$</i>. <br> Kaardi ID Takma lingis on vale; selle ID-ga seotud kaarti pole.",
 };
 
 export let fr: Translation = {
@@ -1042,7 +1052,7 @@ export let fr: Translation = {
     returnToHomeScreen: "Pour revenir à l'écran d'accueil, il vous suffit de cliquer sur l'icône Takma, ou, en alternative, d'utiliser les raccourcis clavier ESC ou Ctrl+W.",
     renameBoardTitle: "Les tableaux peuvent être renommés en cliquant sur leur titre.",
     setNewBoardBackground: "Une nouvelle image de fond pour le tableau peut être définie en faisant un clic droit sur le fond du tableau ou en faisant glisser et déposer une image par-dessus le fond existant.",
-    copyBoardLink: "Ce bouton vous permet de copier un lien vers ce tableau, que vous pouvez ensuite coller dans la description de n'importe quelle carte, y compris celles d'autres tableaux. En cliquant sur ce lien dans la description d'une carte, vous ouvrirez ainsi ce tableau particulier.",
+    copyBoardLink: "Ce bouton vous permet de générer un lien vers ce tableau, qui peut être inséré dans la description de n'importe quelle carte, y compris celles de différents tableaux. En cliquant sur ce lien dans la description d'une carte, ce tableau spécifique s'ouvrira. De plus, le lien fourni fonctionne au-delà des limites de Takma. Vous pouvez coller et cliquer sur le lien dans diverses applications telles que votre navigateur, votre programme de messagerie ou votre éditeur de texte pour ouvrir ce tableau en particulier.",
     deleteCardShiftClick: "Les cartes peuvent être facilement supprimées en maintenant la touche Shift enfoncée et en cliquant sur une carte. Cette action supprime la carte, contrairement à l'action de clic classique qui ouvrirait la carte.",
     rearrangeCardsDragDrop: "Vous pouvez réorganiser l'ordre des cartes au sein d'une liste en les faisant simplement glisser et déposer. De plus, les cartes peuvent également être déplacées d'une liste à une autre en utilisant l'action de glisser-déposer.",
     rearrangeListsDragDrop: "De manière similaire aux cartes, vous pouvez également changer l'ordre des listes en les faisant glisser et déposer.",
@@ -1053,7 +1063,7 @@ export let fr: Translation = {
     viewCreationDateHover: "Pour voir la date de création de la carte, il vous suffit de survoler le séparateur situé sous le titre de la carte.",
     markdownCardDescriptions: "Les descriptions de carte sont rédigées en Markdown, vous permettant d'intégrer des images, de créer des tableaux, d'ajouter des en-têtes et d'utiliser diverses autres options de formatage. Takma prend en charge toutes les fonctionnalités Markdown.",
     addAttachmentsDragDrop: "Vous pouvez ajouter des pièces jointes aux cartes non seulement en cliquant sur ce bouton, mais aussi en faisant glisser et déposer des fichiers directement sur la carte.",
-    copyCardLink: "Tout comme le bouton 'copier le lien' du tableau, ce bouton vous permet de copier un lien vers cette carte. Vous pouvez ensuite coller ce lien dans la description de n'importe quelle carte, y compris celles d'autres tableaux. En cliquant sur ce lien dans la description d'une autre carte, vous ouvrirez ainsi cette carte spécifique.",
+    copyCardLink: "Similaire au bouton 'copier le lien' pour les tableaux, ce bouton vous permet de générer un lien vers cette carte. Ensuite, vous pouvez coller le lien dans la description de n'importe quelle carte, même celles de différents tableaux. En cliquant sur le lien dans la description d'une autre carte, cette carte spécifique s'ouvrira. Il convient de noter que ce lien fonctionne également en dehors de l'environnement de Takma. Vous pouvez coller et cliquer sur le lien dans diverses applications telles que votre navigateur, votre programme de messagerie ou votre éditeur de texte pour ouvrir cette carte en particulier.",
     loadSaveFile: "Chargement du fichier de sauvegarde",
     orderBoards: "Trier les tableaux",
     beginOnboarding: "Commencer l'intégration",
@@ -1173,6 +1183,8 @@ export let fr: Translation = {
     no: "Non",
     yes: "Oui",
     ok: "OK",
+    boardIdNotFound: "Impossible d'ouvrir le lien Takma : <i>$|00|$</i>. <br> L'identifiant du tableau dans le lien Takma est incorrect ; il n'y a aucun tableau associé à cet identifiant.",
+    cardIdNotFound: "Impossible d'ouvrir le lien Takma : <i>$|00|$</i>. <br> L'identifiant de la carte dans le lien Takma est incorrect ; il n'y a aucune carte associée à cet identifiant.",
 };
 
 export let hi: Translation = {
@@ -1238,7 +1250,7 @@ export let hi: Translation = {
     returnToHomeScreen: "होम स्क्रीन पर वापस लौटने के लिए, तकमा आइकन पर क्लिक करें, या वैकल्पिक रूप से, ESC या Ctrl+W की कीबोर्ड शॉर्टकट का उपयोग करें।",
     renameBoardTitle: "बोर्ड के शीर्षक पर क्लिक करके आप उन्हें नाम बदल सकते हैं।",
     setNewBoardBackground: "बोर्ड के पृष्ठभूमि पर नई बैकग्राउंड छवि उसके बैकग्राउंड पर दायीं तरफ क्लिक करके या एक छवि को उसके मौजूदा बैकग्राउंड पर ड्रैग और ड्रॉप करके सेट की जा सकती है।",
-    copyBoardLink: "इस बटन की मदद से आप इस बोर्ड का एक लिंक कॉपी कर सकते हैं, जिसे फिर से किसी भी कार्ड के विवरण में पेस्ट किया जा सकता है, चाहे वो अन्य बोर्ड के भी कार्ड में हो। इस लिंक पर क्लिक करने से कार्ड के विवरण में यह बोर्ड खुलेगा।",
+    copyBoardLink: "इस बटन का उपयोग इस बोर्ड का एक लिंक बनाने के लिए किया जा सकता है, जिसे किसी भी कार्ड के विवरण में डाला जा सकता है, विभिन्न बोर्ड में शामिल उन कार्डों में से भी, जिन्हें विभिन्न बोर्डों में शामिल किया जा सकता है। किसी कार्ड के विवरण में इस लिंक पर क्लिक करने से यह विशिष्ट बोर्ड खुलेगा। इसके अतिरिक्त, प्रदान की गई लिंक टकमा की सीमाओं से परे भी काम करती है। आप इस विशिष्ट बोर्ड को खोलने के लिए इसे विभिन्न एप्लिकेशन्स में चिपका सकते हैं जैसे कि आपके ब्राउज़र, संदेश प्रोग्राम या टेक्स्ट संपादक में और इस पर क्लिक कर सकते हैं।",
     deleteCardShiftClick: "कार्ड को आसानी से शिफ्ट कुंजी दबाकर और कार्ड पर क्लिक करके हटा सकते हैं। यह क्रिया कार्ड को हटा देती है, यह विशिष्ट रूप से कार्ड खोलने की सामान्य क्रिया के विपरीत है।",
     rearrangeCardsDragDrop: "आप सूची में कार्डों के क्रम को आसानी से ड्रैग और ड्रॉप करके बदल सकते हैं। इसके अलावा, कार्डों को एक सूची से दूसरी सूची में भी ड्रैग और ड्रॉप करके ले जा सकते हैं।",
     rearrangeListsDragDrop: "कार्डों की तरह, आप सूचियों के क्रम को ड्रैग और ड्रॉप करके बदल सकते हैं।",
@@ -1249,7 +1261,7 @@ export let hi: Translation = {
     viewCreationDateHover: "कार्ड की सृजन तिथि देखने के लिए, केवल आपके कर्सर को कार्ड के शीर्षक के नीचे स्थित विभाजक पर होल्ड करें।",
     markdownCardDescriptions: "कार्ड विवरण मार्कडाउन में लिखे जाते हैं, जिससे आप छवियों को एम्बेड कर सकते हैं, तालिकाएँ बना सकते हैं, शीर्षक जोड़ सकते हैं, और विभिन्न स्वरूपण विकल्पों का उपयोग कर सकते हैं। तकमा मार्कडाउन के सभी सुविधाओं का पूरा समर्थन करता है।",
     addAttachmentsDragDrop: "आप इस बटन पर क्लिक करके ही नहीं, बल्कि किसी भी फ़ाइल को सीधे कार्ड पर ड्रैग और ड्रॉप करके भी कार्ड में अटैचमेंट जोड़ सकते हैं।",
-    copyCardLink: "बोर्ड के 'कॉपी लिंक' बटन की तरह, यह बटन आपको इस कार्ड का एक लिंक कॉपी करने की स्वतंत्रता देता है। आप इस लिंक को किसी भी कार्ड के विवरण में पेस्ट कर सकते हैं, यहां तक ​​कि उनमें से कुछ भी अन्य बोर्ड के भी कार्ड हों। एक और कार्ड के विवरण में इस लिंक पर क्लिक करने से यह विशिष्ट कार्ड खुलेगा।",
+    copyCardLink: "बोर्डों के लिए 'लिंक कॉपी करें' बटन की तरह, इस बटन का उपयोग इस कार्ड का एक लिंक बनाने के लिए किया जा सकता है। इसके बाद, आप इस लिंक को किसी भी कार्ड के विवरण में डाल सकते हैं, विभिन्न बोर्डों में शामिल उन कार्डों में से भी। किसी अन्य कार्ड के विवरण में लिंक पर क्लिक करने से यह विशिष्ट कार्ड खुलेगा। यह ध्यान देने योग्य है कि यह लिंक टकमा की परियावरण से बाहर भी काम करता है। आप इसे विभिन्न एप्लिकेशन्स में चिपका सकते हैं जैसे कि आपके ब्राउज़र, संदेश प्रोग्राम या टेक्स्ट संपादक में और इस पर क्लिक कर सकते हैं।",
     loadSaveFile: "सेवफ़ाइल लोड कर रहा है",
     orderBoards: "बोर्ड क्रम",
     beginOnboarding: "ऑनबोर्डिंग शुरू करें",
@@ -1369,6 +1381,8 @@ export let hi: Translation = {
     no: "नहीं",
     yes: "हाँ",
     ok: "ठीक",
+    boardIdNotFound: "टकमा लिंक खोलने में असमर्थ: <i>$|00|$</i>. <br> टकमा लिंक में बोर्ड ID गलत है; उस ID के साथ कोई बोर्ड जुड़ा नहीं है।",
+    cardIdNotFound: "टकमा लिंक खोलने में असमर्थ: <i>$|00|$</i>. <br> टकमा लिंक में कार्ड ID गलत है; उस ID के साथ कोई कार्ड जुड़ा नहीं है।",
 };
 
 export let id: Translation = {
@@ -1434,7 +1448,7 @@ export let id: Translation = {
     returnToHomeScreen: "Untuk kembali ke layar utama, cukup klik ikon Takma, atau alternatifnya, gunakan pintasan keyboard ESC atau Ctrl+W.",
     renameBoardTitle: "Papan dapat diubah namanya dengan mengklik judulnya.",
     setNewBoardBackground: "Gambar latar belakang baru untuk papan dapat diatur dengan mengklik kanan latar belakang papan atau dengan menyeret dan menjatuhkan gambar ke latar belakang yang ada.",
-    copyBoardLink: "Tombol ini memungkinkan Anda untuk menyalin tautan ke papan ini, yang kemudian dapat ditempelkan ke deskripsi kartu apa pun, bahkan yang ada di dalam papan lain. Klik tautan ini dalam deskripsi kartu akan membuka papan ini secara efektif.",
+    copyBoardLink: "Tombol ini memungkinkan Anda untuk menghasilkan tautan ke papan ini, yang dapat dimasukkan ke dalam deskripsi kartu apa pun, termasuk yang berada dalam papan yang berbeda. Dengan mengklik tautan ini dalam deskripsi kartu, papan khusus ini akan terbuka. Selain itu, tautan yang disediakan berfungsi di luar batasan Takma. Anda dapat menempelkan dan mengklik tautan dalam berbagai aplikasi seperti peramban, program pesan, atau editor teks untuk membuka papan khusus ini.",
     deleteCardShiftClick: "Kartu dapat dengan mudah dihapus dengan menekan tombol Shift dan mengklik kartu. Tindakan ini menghapus kartu, berbeda dengan tindakan klik biasa yang akan membuka kartu.",
     rearrangeCardsDragDrop: "Anda dapat mengatur ulang urutan kartu dalam daftar dengan cukup menyeret dan menjatuhkannya. Selain itu, kartu juga dapat dipindahkan dari satu daftar ke daftar lain menggunakan tindakan seret dan lepas.",
     rearrangeListsDragDrop: "Sama seperti kartu, Anda juga dapat mengubah urutan daftar dengan menyeret dan menjatuhkannya.",
@@ -1445,7 +1459,7 @@ export let id: Translation = {
     viewCreationDateHover: "Untuk melihat tanggal pembuatan kartu, cukup arahkan kursor Anda ke pemisah yang terletak di bawah judul kartu.",
     markdownCardDescriptions: "Deskripsi kartu ditulis dalam format Markdown, memberi Anda kemampuan untuk menyematkan gambar, membuat tabel, menambahkan judul, dan menggunakan berbagai opsi format lainnya. Takma sepenuhnya mendukung semua fitur Markdown.",
     addAttachmentsDragDrop: "Anda dapat menambahkan lampiran ke kartu tidak hanya dengan mengklik tombol ini tetapi juga dengan menyeret dan menjatuhkan file langsung ke kartu.",
-    copyCardLink: "Seperti tombol 'salin tautan' pada papan, tombol ini memungkinkan Anda untuk menyalin tautan ke kartu ini. Anda dapat menempelkan tautan ini ke deskripsi kartu apa pun, termasuk yang ada di papan lain. Mengklik tautan ini dalam deskripsi kartu lain akan membuka kartu ini secara khusus.",
+    copyCardLink: "Serupa dengan tombol 'salin tautan' untuk papan, tombol ini memungkinkan Anda untuk menghasilkan tautan ke kartu ini. Selanjutnya, Anda dapat menempelkan tautan tersebut ke dalam deskripsi kartu apa pun, bahkan yang berada dalam papan yang berbeda. Dengan mengklik tautan dalam deskripsi kartu lain, kartu khusus ini akan terbuka. Perlu diingat bahwa tautan ini juga berfungsi di luar lingkungan Takma. Anda dapat menempelkan dan mengklik tautan dalam berbagai aplikasi seperti peramban, program pesan, atau editor teks untuk membuka kartu khusus ini.",
     loadSaveFile: "Memuat berkas simpan",
     orderBoards: "Urutkan papan",
     beginOnboarding: "Mulai orientasi",
@@ -1565,6 +1579,8 @@ export let id: Translation = {
     no: "Tidak",
     yes: "Ya",
     ok: "Oke",
+    boardIdNotFound: "Tidak dapat membuka tautan Takma: <i>$|00|$</i>. <br> ID papan dalam tautan Takma salah; tidak ada papan yang terkait dengan ID tersebut.",
+    cardIdNotFound: "Tidak dapat membuka tautan Takma: <i>$|00|$</i>. <br> ID kartu dalam tautan Takma salah; tidak ada kartu yang terkait dengan ID tersebut.",
 };
 
 export let ja: Translation = {
@@ -1630,7 +1646,7 @@ export let ja: Translation = {
     returnToHomeScreen: "ホーム画面に戻るには、Takmaアイコンをクリックするか、またはキーボードショートカットESCまたはCtrl+Wを使用します。",
     renameBoardTitle: "ボードのタイトルをクリックすると、ボードの名前を変更できます。",
     setNewBoardBackground: "ボードの背景の右クリックまたは画像を既存の背景にドラッグ＆ドロップすることで、新しい背景画像を設定できます。",
-    copyBoardLink: "このボタンをクリックすると、このボードへのリンクをコピーできます。このリンクは他のボード内のカードの説明に貼り付けることができ、そのカードの説明内でこのリンクをクリックすると、この特定のボードが開かれます。",
+    copyBoardLink: "このボタンを使用すると、このボードへのリンクを生成できます。このリンクは任意のカードの説明に挿入することができ、異なるボード内のカードにも含まれます。カードの説明内のこのリンクをクリックすると、この特定のボードが開かれます。さらに、提供されたリンクはTakmaの制約を超えて機能します。このリンクをブラウザ、メッセージングプログラム、またはテキストエディタなどのさまざまなアプリケーションに貼り付けてクリックすると、この特定のボードを開くことができます。",
     deleteCardShiftClick: "カードはShiftキーを押しながらクリックすることで簡単に削除できます。この操作はカードを削除し、通常のクリック操作とは異なり、カードを開くものではありません。",
     rearrangeCardsDragDrop: "カードの順序は、単にドラッグ＆ドロップで変更できます。さらに、カードはドラッグ＆ドロップでリストから別のリストに移動できます。",
     rearrangeListsDragDrop: "カードと同様に、リストの順序もドラッグ＆ドロップで変更できます。",
@@ -1641,7 +1657,7 @@ export let ja: Translation = {
     viewCreationDateHover: "カードの作成日を表示するには、カードのタイトルの下にあるセパレーターの上にカーソルを合わせます。",
     markdownCardDescriptions: "カードの説明はMarkdown形式で記述されており、画像の埋め込み、テーブルの作成、見出しの追加などのさまざまな書式オプションを使用できます。TakmaはすべてのMarkdown機能を完全にサポートしています。",
     addAttachmentsDragDrop: "このボタンをクリックするだけでなく、ファイルをカードに直接ドラッグ＆ドロップすることで、カードに添付ファイルを追加できます。",
-    copyCardLink: "ボードの「リンクをコピー」ボタンと同様に、このボタンをクリックすると、このカードへのリンクをコピーできます。このリンクを他のカードの説明に貼り付けることができ、異なるボード内のカードの説明内でこのリンクをクリックすると、この特定のカードが開かれます。",
+    copyCardLink: "ボードの「リンクをコピー」ボタンに類似して、このボタンを使用してこのカードへのリンクを生成できます。その後、このリンクを任意のカードの説明に貼り付けることができ、異なるボード内のカードにも含まれます。別のカードの説明内のリンクをクリックすると、この特定のカードが開かれます。このリンクはTakmaの環境を超えても機能することに注意してください。このリンクをブラウザ、メッセージングプログラム、またはテキストエディタなどのさまざまなアプリケーションに貼り付けてクリックすると、この特定のカードを開くことができます。",
     loadSaveFile: "セーブファイルの読み込み",
     orderBoards: "ボードの並び順",
     beginOnboarding: "オンボーディングを開始",
@@ -1761,6 +1777,8 @@ export let ja: Translation = {
     no: "いいえ",
     yes: "はい",
     ok: "OK",
+    boardIdNotFound: "Takmaリンクを開けません：<i>$|00|$</i>。 <br> Takmaリンク内のボードIDが正しくありません。そのIDに関連するボードは存在しません。",
+    cardIdNotFound: "Takmaリンクを開けません：<i>$|00|$</i>。 <br> Takmaリンク内のカードIDが正しくありません。そのIDに関連するカードは存在しません。",
 };
 
 export let ko: Translation = {
@@ -1826,7 +1844,7 @@ export let ko: Translation = {
     returnToHomeScreen: "홈 화면으로 돌아가려면 Takma 아이콘을 클릭하거나 ESC 또는 Ctrl+W 키보드 단축키를 사용하세요.",
     renameBoardTitle: "보드의 제목을 클릭하여 보드 이름을 바꿀 수 있습니다.",
     setNewBoardBackground: "보드의 배경 이미지를 변경하려면 이미지를 여기에 우클릭하거나 드래그하여 놓으세요.",
-    copyBoardLink: "이 버튼을 클릭하면 이 보드에 대한 링크를 복사할 수 있습니다. 이 링크를 다른 보드의 카드 설명에 붙여넣을 수 있으며, 다른 보드 내의 카드 설명에서 이 링크를 클릭하면 이 특정 보드가 열립니다.",
+    copyBoardLink: "이 버튼을 사용하면 이 보드에 대한 링크를 생성할 수 있습니다. 이 링크는 어떤 카드의 설명에나 삽입할 수 있으며, 서로 다른 보드 내의 카드에도 삽입할 수 있습니다. 카드의 설명 안에 있는 이 링크를 클릭하면 특정 보드가 열립니다. 게다가, 제공된 링크는 Takma의 제약을 초과하여 작동합니다. 브라우저, 메시징 프로그램 또는 텍스트 편집기와 같은 다양한 애플리케이션에 이 링크를 붙여넣고 클릭하여 특정 보드를 열 수 있습니다.",
     deleteCardShiftClick: "카드를 삭제하려면 Shift 키를 누른 상태에서 카드를 클릭하세요. 이 작업은 카드를 삭제하며, 일반 클릭 작업은 카드를 엽니다.",
     rearrangeCardsDragDrop: "카드의 순서를 변경하려면 간단히 드래그하여 놓으세요. 또한 카드를 드래그하여 다른 리스트로 이동할 수도 있습니다.",
     rearrangeListsDragDrop: "카드와 마찬가지로 리스트의 순서도 드래그하여 변경할 수 있습니다.",
@@ -1837,7 +1855,7 @@ export let ko: Translation = {
     viewCreationDateHover: "카드의 작성일을 보려면 카드 제목 아래의 분리기 위로 커서를 올려놓으세요.",
     markdownCardDescriptions: "카드 설명은 Markdown 형식으로 작성되어 이미지를 삽입하고 테이블을 생성하며 제목을 추가하고 다양한 서식 옵션을 활용할 수 있습니다. Takma는 모든 Markdown 기능을 완벽하게 지원합니다.",
     addAttachmentsDragDrop: "이 버튼을 클릭하는 것뿐만 아니라 파일을 카드 위로 직접 드래그하여 놓음으로써 카드에 첨부 파일을 추가할 수 있습니다.",
-    copyCardLink: "보드의 '링크 복사' 버튼과 마찬가지로, 이 버튼을 클릭하면 이 카드에 대한 링크를 복사할 수 있습니다. 이 링크를 다른 카드의 설명에 붙여넣을 수 있으며, 다른 보드 내의 카드 설명에서 이 링크를 클릭하면 이 특정 카드가 열립니다.",
+    copyCardLink: "보드의 '링크 복사' 버튼과 유사하게, 이 버튼을 사용하여 이 카드에 대한 링크를 생성할 수 있습니다. 그런 다음 이 링크를 어떤 카드의 설명에도 붙여넣을 수 있으며, 다른 보드 내의 카드에도 붙여넣을 수 있습니다. 다른 카드의 설명 안에 있는 링크를 클릭하면 특정 카드가 열립니다. 이 링크는 Takma 환경을 초과하여 작동한다는 것을 주목하십시오. 브라우저, 메시징 프로그램 또는 텍스트 편집기와 같은 다양한 애플리케이션에 이 링크를 붙여넣고 클릭하여 특정 카드를 열 수 있습니다.",
     loadSaveFile: "저장 파일 불러오기",
     orderBoards: "보드 정렬",
     beginOnboarding: "온보딩 시작",
@@ -1957,6 +1975,8 @@ export let ko: Translation = {
     no: "아니오",
     yes: "예",
     ok: "확인",
+    boardIdNotFound: "Takma 링크를 열 수 없습니다: <i>$|00|$</i>. <br> Takma 링크 내의 보드 ID가 올바르지 않습니다. 해당 ID에 연결된 보드가 없습니다.",
+    cardIdNotFound: "Takma 링크를 열 수 없습니다: <i>$|00|$</i>. <br> Takma 링크 내의 카드 ID가 올바르지 않습니다. 해당 ID에 연결된 카드가 없습니다.",
 };
 
 export let nl: Translation = {
@@ -2022,7 +2042,7 @@ export let nl: Translation = {
     returnToHomeScreen: "Om terug te gaan naar het startscherm, klik gewoon op het Takma-pictogram, of gebruik alternatief de toetsenbordsnelkoppelingen ESC of Ctrl+W.",
     renameBoardTitle: "Borden kunnen worden hernoemd door op hun titel te klikken.",
     setNewBoardBackground: "Een nieuwe achtergrondafbeelding voor het bord kan worden ingesteld door met de rechtermuisknop op de achtergrond van het bord te klikken of door een afbeelding te slepen en neer te zetten op de bestaande achtergrond.",
-    copyBoardLink: "Met deze knop kun je een link naar dit bord kopiëren, die vervolgens in de beschrijving van een willekeurige kaart kan worden geplakt, zelfs kaarten in andere borden. Door op deze link in de beschrijving van een kaart te klikken, wordt dit specifieke bord geopend.",
+    copyBoardLink: "Met deze knop kunt u een link genereren naar dit bord, die kan worden ingevoegd in de beschrijving van een willekeurige kaart, zelfs die in verschillende borden. Door op deze link te klikken in de beschrijving van een kaart, wordt dit specifieke bord geopend. Bovendien werkt de verstrekte link buiten de grenzen van Takma. U kunt de link plakken en erop klikken in verschillende toepassingen zoals uw browser, berichtenprogramma of teksteditor om dit specifieke bord te openen.",
     deleteCardShiftClick: "Kaarten kunnen eenvoudig worden verwijderd door de Shift-toets in te drukken en op een kaart te klikken. Deze actie verwijdert de kaart, in tegenstelling tot de normale klikactie die de kaart zou openen.",
     rearrangeCardsDragDrop: "Je kunt de volgorde van kaarten in een lijst eenvoudig herschikken door ze te slepen en neer te zetten. Bovendien kunnen kaarten ook van de ene lijst naar de andere worden verplaatst met behulp van de sleep-en-neerzetactie.",
     rearrangeListsDragDrop: "Net als bij kaarten kun je ook de volgorde van lijsten wijzigen door ze te slepen en neer te zetten.",
@@ -2033,7 +2053,7 @@ export let nl: Translation = {
     viewCreationDateHover: "Om de creatiedatum van de kaart te bekijken, houd je de cursor gewoon boven de scheidingslijn onder de titel van de kaart.",
     markdownCardDescriptions: "Kaartbeschrijvingen zijn geschreven in Markdown, waardoor je afbeeldingen kunt insluiten, tabellen kunt maken, koppen kunt toevoegen en verschillende andere opmaakopties kunt gebruiken. Takma ondersteunt volledig alle Markdown-functies.",
     addAttachmentsDragDrop: "Je kunt bijlagen aan kaarten toevoegen door niet alleen op deze knop te klikken, maar ook door bestanden rechtstreeks op de kaart te slepen en neer te zetten.",
-    copyCardLink: "Net als de 'kopieer link'-knop van het bord, stelt deze knop je in staat om een link naar deze kaart te kopiëren. Je kunt deze link vervolgens plakken in de beschrijving van een willekeurige kaart, inclusief die in andere borden. Door op deze link te klikken in de beschrijving van een andere kaart, wordt deze specifieke kaart geopend.",
+    copyCardLink: "Vergelijkbaar met de 'kopieer link' knop voor borden, kunt u met deze knop een link genereren naar deze kaart. Vervolgens kunt u de link plakken in de beschrijving van een willekeurige kaart, zelfs die in verschillende borden. Door op de link te klikken in de beschrijving van een andere kaart, wordt deze specifieke kaart geopend. Het is vermeldenswaard dat deze link ook buiten de Takma-omgeving werkt. U kunt de link plakken en erop klikken in verschillende toepassingen zoals uw browser, berichtenprogramma of teksteditor om deze specifieke kaart te openen.",
     loadSaveFile: "Laad opslagbestand",
     orderBoards: "Borden ordenen",
     beginOnboarding: "Begin met onboarding",
@@ -2153,6 +2173,8 @@ export let nl: Translation = {
     no: "Nee",
     yes: "Ja",
     ok: "OK",
+    boardIdNotFound: "Kan de Takma-link niet openen: <i>$|00|$</i>. <br> Het bord-ID in de Takma-link is onjuist; er is geen bord geassocieerd met dat ID.",
+    cardIdNotFound: "Kan de Takma-link niet openen: <i>$|00|$</i>. <br> Het kaart-ID in de Takma-link is onjuist; er is geen kaart geassocieerd met dat ID.",
 };
 
 export let pt: Translation = {
@@ -2218,7 +2240,7 @@ export let pt: Translation = {
     returnToHomeScreen: "Para voltar à tela inicial, basta clicar no ícone do Takma ou, alternativamente, usar os atalhos de teclado ESC ou Ctrl+W.",
     renameBoardTitle: "Os quadros podem ser renomeados clicando em seus títulos.",
     setNewBoardBackground: "Uma nova imagem de fundo para o quadro pode ser definida clicando com o botão direito no plano de fundo do quadro ou arrastando e soltando uma imagem sobre o plano de fundo existente.",
-    copyBoardLink: "Este botão permite copiar um link para este quadro, que pode ser colado na descrição de qualquer cartão, inclusive aqueles de outros quadros. Clicar neste link na descrição de um cartão abrirá efetivamente este quadro específico.",
+    copyBoardLink: "Este botão permite que você gere um link para este quadro, que pode ser inserido na descrição de qualquer cartão, incluindo aqueles em diferentes quadros. Ao clicar neste link na descrição de um cartão, este quadro específico será aberto. Além disso, o link fornecido funciona para além dos limites do Takma. Você pode colar e clicar no link em várias aplicações, como seu navegador, programa de mensagens ou editor de texto, para abrir este quadro específico.",
     deleteCardShiftClick: "Os cartões podem ser facilmente excluídos pressionando a tecla Shift e clicando em um cartão. Esta ação remove o cartão, ao contrário do clique normal que abriria o cartão.",
     rearrangeCardsDragDrop: "Você pode rearranjar a ordem dos cartões dentro de uma lista simplesmente arrastando e soltando-os. Além disso, os cartões também podem ser movidos de uma lista para outra usando a ação de arrastar e soltar.",
     rearrangeListsDragDrop: "Assim como os cartões, você também pode alterar a ordem das listas arrastando e soltando-as.",
@@ -2229,7 +2251,7 @@ export let pt: Translation = {
     viewCreationDateHover: "Para ver a data de criação do cartão, basta passar o cursor sobre o separador localizado abaixo do título do cartão.",
     markdownCardDescriptions: "As descrições dos cartões são escritas em Markdown, o que permite incorporar imagens, criar tabelas, adicionar títulos e usar várias outras opções de formatação. O Takma oferece suporte total a todos os recursos do Markdown.",
     addAttachmentsDragDrop: "Você pode adicionar anexos aos cartões não apenas clicando neste botão, mas também arrastando e soltando arquivos diretamente sobre o cartão.",
-    copyCardLink: "Assim como o botão 'copiar link' do quadro, este botão permite copiar um link para este cartão. Você pode colar este link na descrição de qualquer cartão, incluindo aqueles em diferentes quadros. Clicar neste link na descrição de outro cartão abrirá este cartão específico.",
+    copyCardLink: "Similar ao botão 'copiar link' para quadros, este botão permite que você gere um link para este cartão. Posteriormente, você pode colar o link na descrição de qualquer cartão, inclusive aqueles em diferentes quadros. Clicar no link dentro da descrição de outro cartão abrirá este cartão específico. Vale ressaltar que este link funciona para além do ambiente do Takma. Você pode colar e clicar no link em várias aplicações, como seu navegador, programa de mensagens ou editor de texto, para abrir este cartão específico.",
     loadSaveFile: "Carregando arquivo de salvamento",
     orderBoards: "Ordem dos quadros",
     beginOnboarding: "Iniciar integração",
@@ -2349,6 +2371,8 @@ export let pt: Translation = {
     no: "Não",
     yes: "Sim",
     ok: "OK",
+    boardIdNotFound: "Não é possível abrir o link Takma: <i>$|00|$</i>. <br> O ID do quadro no link Takma está incorreto; não há nenhum quadro associado a esse ID.",
+    cardIdNotFound: "Não é possível abrir o link Takma: <i>$|00|$</i>. <br> O ID do cartão no link Takma está incorreto; não há nenhum cartão associado a esse ID.",
 };
 
 export let ru: Translation = {
@@ -2414,7 +2438,7 @@ export let ru: Translation = {
     returnToHomeScreen: "Чтобы вернуться на главный экран, просто нажмите на значок Takma или используйте клавиши ESC или Ctrl+W.",
     renameBoardTitle: "Доски можно переименовать, нажав на их заголовок.",
     setNewBoardBackground: "Новое фоновое изображение для доски можно установить, щелкнув правой кнопкой мыши на фоне доски или перетащив изображение на существующий фон.",
-    copyBoardLink: "Эта кнопка позволяет скопировать ссылку на эту доску, которую затем можно вставить в описание любой карточки, даже в другой доске. При клике на эту ссылку в описании карточки эта конкретная доска откроется.",
+    copyBoardLink: "Эта кнопка позволяет создать ссылку на эту доску, которую можно вставить в описание любой карточки, включая те, что находятся в разных досках. При нажатии на эту ссылку в описании карточки будет открыта данная конкретная доска. Кроме того, предоставленная ссылка работает вне ограничений Takma. Вы можете вставить и кликнуть по ссылке в различных приложениях, таких как браузер, программы для обмена сообщениями или текстовый редактор, чтобы открыть данную конкретную доску.",
     deleteCardShiftClick: "Карточки можно легко удалить, удерживая клавишу Shift и нажимая на карточку. Это действие удалит карточку, в отличие от обычного клика, который откроет карточку.",
     rearrangeCardsDragDrop: "Вы можете изменять порядок карточек внутри списка, просто перетаскивая их. Кроме того, карточки также можно перемещать из одного списка в другой с помощью действия перетаскивания.",
     rearrangeListsDragDrop: "Подобно карточкам, вы также можете изменять порядок списков, перетаскивая их.",
@@ -2425,7 +2449,7 @@ export let ru: Translation = {
     viewCreationDateHover: "Чтобы просмотреть дату создания карточки, просто наведите курсор на разделитель, расположенный под заголовком карточки.",
     markdownCardDescriptions: "Описания карточек написаны в формате Markdown, что позволяет вставлять изображения, создавать таблицы, добавлять заголовки и использовать другие возможности форматирования. Takma полностью поддерживает все функции Markdown.",
     addAttachmentsDragDrop: "Вы можете добавлять вложения к карточкам не только, нажимая на эту кнопку, но и перетаскивая файлы непосредственно на карточку.",
-    copyCardLink: "Подобно кнопке 'скопировать ссылку' для доски, эта кнопка позволяет скопировать ссылку на эту карточку. Вы можете вставить эту ссылку в описание любой карточки, включая те, которые находятся в других досках. При клике на эту ссылку в описании другой карточки откроется эта конкретная карточка.",
+    copyCardLink: "Аналогично кнопке 'копировать ссылку' для досок, эта кнопка позволяет создать ссылку на эту карточку. После этого вы можете вставить эту ссылку в описание любой карточки, даже в разных досках. При нажатии на ссылку в описании другой карточки будет открыта данная конкретная карточка. Следует отметить, что эта ссылка также работает вне среды Takma. Вы можете вставить и кликнуть по ссылке в различных приложениях, таких как браузер, программы для обмена сообщениями или текстовый редактор, чтобы открыть данную конкретную карточку.",
     loadSaveFile: "Загрузка файла сохранения",
     orderBoards: "Упорядочить доски",
     beginOnboarding: "Начать интеграцию",
@@ -2545,6 +2569,8 @@ export let ru: Translation = {
     no: "Нет",
     yes: "Да",
     ok: "ОК",
+    boardIdNotFound: "Не удается открыть ссылку Takma: <i>$|00|$</i>. <br> ID доски в ссылке Takma неверен; нет доски, связанной с этим ID.",
+    cardIdNotFound: "Не удается открыть ссылку Takma: <i>$|00|$</i>. <br> ID карточки в ссылке Takma неверен; нет карточки, связанной с этим ID.",
 };
 
 export let tr: Translation = {
@@ -2610,7 +2636,7 @@ export let tr: Translation = {
     returnToHomeScreen: "Ana ekrana dönmek için Takma simgesine tıklamanız yeterlidir, veya alternatif olarak ESC veya Ctrl+W klavye kısayollarını kullanabilirsiniz.",
     renameBoardTitle: "Panoların başlığını değiştirmek için başlıklarına tıklamanız yeterlidir.",
     setNewBoardBackground: "Pano için yeni bir arka plan resmi sağ tıklayarak veya varolan arka planın üzerine sürükleyip bırakarak ayarlanabilir.",
-    copyBoardLink: "Bu buton sayesinde bu panonun bir bağlantısını kopyalayabilir, daha sonra herhangi bir kartın açıklama bölümüne yapıştırabilirsiniz, hatta diğer panolarda olan kartların açıklamalarında bile. Bağlantıya tıklandığında ilgili panoyu açacaktır.",
+    copyBoardLink: "Bu düğme, bu panoya bir bağlantı oluşturmanıza olanak tanır; bu bağlantı herhangi bir kartın açıklamasına, farklı panolardaki kartlar dahil olmak üzere eklenir. Bir kartın açıklamasındaki bu bağlantıya tıklamak, bu belirli panoyu açar. Ayrıca, sağlanan bağlantı Takma'nın sınırlarının ötesinde de işlev görür. Bu bağlantıyı tarayıcınız, iletişim programınız veya metin düzenleyiciniz gibi çeşitli uygulamalara yapıştırabilir ve tıklayarak bu belirli panoyu açabilirsiniz.",
     deleteCardShiftClick: "Kartları Shift tuşuna basılı tutarak tıklayarak kolayca silebilirsiniz. Bu işlem kartı siler, normal tıklamada kartın içeriğini açar.",
     rearrangeCardsDragDrop: "Kartları sadece sürükleyip bırakarak sıralayabilirsiniz. Ayrıca sürükleyip bırakma hareketi ile kartları bir listeden diğerine taşıyabilirsiniz.",
     rearrangeListsDragDrop: "Kartlar gibi, listeleri de sürükleyip bırakarak sıralayabilirsiniz.",
@@ -2621,7 +2647,7 @@ export let tr: Translation = {
     viewCreationDateHover: "Kartın oluşturulma tarihini görmek için başlığının altındaki ayraçın üzerine imleci getirmeniz yeterlidir.",
     markdownCardDescriptions: "Kart açıklamaları Markdown formatında yazılır, bu sayede resimler ekleyebilir, tablolar oluşturabilir, başlıklar ekleyebilir ve diğer biçimlendirme seçeneklerini kullanabilirsiniz. Takma, tüm Markdown özelliklerini tam olarak destekler.",
     addAttachmentsDragDrop: "Kartlara eklerken sadece bu düğmeye tıklamakla kalmaz, aynı zamanda dosyaları kartın üzerine sürükleyip bırakarak da ekleyebilirsiniz.",
-    copyCardLink: "Panonun 'bağlantıyı kopyala' düğmesi gibi, bu düğme de bu kartın bir bağlantısını kopyalamanızı sağlar. Daha sonra bu bağlantıyı herhangi bir kartın açıklama bölümüne yapıştırabilirsiniz, hatta farklı panolardaki kartların açıklamalarında da. Bu bağlantıya diğer bir kartın açıklamasında tıklandığında bu özel kart açılır.",
+    copyCardLink: "Panolar için 'bağlantıyı kopyala' düğmesine benzer şekilde, bu düğme size bu kart için bir bağlantı oluşturmanızı sağlar. Daha sonra bu bağlantıyı herhangi bir kartın açıklamasına, hatta farklı panolardaki kartların açıklamalarına bile yapıştırabilirsiniz. Başka bir kartın açıklamasındaki bağlantıya tıklamak, bu belirli kartı açar. Bu bağlantının Takma ortamının dışında da işlev gördüğünü belirtmek önemlidir. Bu bağlantıyı tarayıcınız, iletişim programınız veya metin düzenleyiciniz gibi çeşitli uygulamalara yapıştırabilir ve tıklayarak bu belirli kartı açabilirsiniz.",
     loadSaveFile: "Kayıt dosyası yükleniyor",
     orderBoards: "Panoları sırala",
     beginOnboarding: "Onboarding'a başla",
@@ -2741,6 +2767,8 @@ export let tr: Translation = {
     no: "Hayır",
     yes: "Evet",
     ok: "Tamam",
+    boardIdNotFound: "Takma bağlantısı açılamıyor: <i>$|00|$</i>. <br> Takma bağlantısındaki pano kimliği yanlış; bu kimliğe sahip bir pano bulunmuyor.",
+    cardIdNotFound: "Takma bağlantısı açılamıyor: <i>$|00|$</i>. <br> Takma bağlantısındaki kart kimliği yanlış; bu kimliğe sahip bir kart bulunmuyor.",
 };
 
 export let zh: Translation = {
@@ -2806,7 +2834,7 @@ export let zh: Translation = {
     returnToHomeScreen: "要返回主屏幕，只需点击 Takma 图标，或者使用键盘快捷键 ESC 或 Ctrl+W。",
     renameBoardTitle: "通过点击标题即可将看板重命名。",
     setNewBoardBackground: "您可以通过右键单击或将新图像拖放到现有背景上来设置看板的新背景图像。",
-    copyBoardLink: "此按钮使您可以复制此看板的链接，然后可以粘贴到任何卡片的描述中，甚至包括其他看板中的卡片。在其他卡片的描述中点击此链接将打开此特定看板。",
+    copyBoardLink: "此按钮可生成一个链接，指向此面板，可将其插入到任何卡片的描述中，包括不同面板中的卡片。在卡片的描述中点击此链接将打开该特定面板。此外，提供的链接可在Takma的限制之外起作用。您可以将链接粘贴并在各种应用程序中点击，如浏览器、消息程序或文本编辑器，以打开这个特定面板。",
     deleteCardShiftClick: "按住 Shift 键并单击卡片即可轻松删除卡片。此操作将删除卡片，与正常点击操作不同，正常点击会打开卡片。",
     rearrangeCardsDragDrop: "您只需将卡片拖放到适当的位置即可重新排列列表内的卡片顺序。此外，您还可以使用拖放操作将卡片从一个列表移动到另一个列表。",
     rearrangeListsDragDrop: "与卡片类似，您还可以通过拖放操作更改列表的顺序。",
@@ -2817,7 +2845,7 @@ export let zh: Translation = {
     viewCreationDateHover: "要查看卡片的创建日期，只需将光标悬停在位于卡片标题下方的分隔符上。",
     markdownCardDescriptions: "卡片描述以 Markdown 格式编写，使您可以嵌入图像、创建表格、添加标题并使用其他各种格式选项。Takma 完全支持所有 Markdown 功能。",
     addAttachmentsDragDrop: "您不仅可以通过点击此按钮向卡片添加附件，还可以通过将文件直接拖放到卡片上来添加附件。",
-    copyCardLink: "与看板的“复制链接”按钮类似，此按钮使您可以复制此卡片的链接。然后，您可以将此链接粘贴到任何卡片的描述中，包括其他看板中的卡片。在其他卡片的描述中点击此链接将打开此特定卡片。",
+    copyCardLink: "类似于面板的“复制链接”按钮，此按钮可生成一个链接，指向此卡片。随后，您可以将链接粘贴到任何卡片的描述中，甚至是不同面板中的卡片。在另一张卡片的描述中点击链接将打开该特定卡片。值得注意的是，此链接也适用于Takma环境之外。您可以将链接粘贴并在各种应用程序中点击，如浏览器、消息程序或文本编辑器，以打开这个特定卡片。",
     loadSaveFile: "加载保存文件",
     orderBoards: "排序看板",
     beginOnboarding: "开始入门流程",
@@ -2937,4 +2965,6 @@ export let zh: Translation = {
     no: "不",
     yes: "是",
     ok: "确定",
+    boardIdNotFound: "无法打开Takma链接：<i>$|00|$</i>。 <br> Takma链接中的面板ID不正确；没有与该ID关联的面板。",
+    cardIdNotFound: "无法打开Takma链接：<i>$|00|$</i>。 <br> Takma链接中的卡片ID不正确；没有与该ID关联的卡片。",
 };

@@ -19,6 +19,7 @@
     import {open as openDialog} from "@tauri-apps/api/dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
+    import PopupWindow from "../PopupWindow.svelte";
 
     export let refreshListsFunction;
 
@@ -188,7 +189,14 @@
             }
             catch (e)
             {
-                console.log(`Couldn't get title from board and/ord card with takmaLink:${takmaLink}. Meaning the id of either the board/card is wrong.`)
+                if (boardTitle === undefined)
+                {
+                    new PopupWindow({props: {description: I18n.t("boardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
+                }
+                else if (boardTitle !== undefined && cardId !== undefined && cardTitle === undefined)
+                {
+                    new PopupWindow({props: {description: I18n.t("cardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
+                }
             }
             finally
             {

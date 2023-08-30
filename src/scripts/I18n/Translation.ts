@@ -150,4 +150,6 @@ export default interface Translation
     no: string;
     yes: string;
     ok: string;
+    boardIdNotFound: string;
+    cardIdNotFound: string;
 }

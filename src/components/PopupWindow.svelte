@@ -69,7 +69,7 @@
             </div>
             <hr/>
             <p>
-                {description}
+                {@html description}
             </p>
             <div class="buttonsHolder">
                 {#if buttonType === "yesno"}

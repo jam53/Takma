@@ -4,7 +4,7 @@
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
     import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
-    import {selectedBoardId} from "./scripts/stores";
+    import {selectedBoardId, selectedCardId} from "./scripts/stores";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
     import {getImageUrl} from "./scripts/GetImageUrl";
@@ -12,6 +12,8 @@
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
     import {I18n} from "./scripts/I18n/I18n";
+    import {listen} from "@tauri-apps/api/event";
+    import PopupWindow from "./components/PopupWindow.svelte";
 
     /**
      * Sets the background image of the body to the image of the selected board
@@ -61,6 +63,53 @@
             document.getElementById("main").classList.add("wrapperNotMaximized");
         }
     }
+
+    // listen to the 'deep-link-received' event
+    listen('deep-link-received', (event) => {
+        let takmaLink = event.payload; // event.payload is the request object AKA the takma link
+        const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
+        // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
+        // `([\w-]+)` - This is the first capturing group (`(...)`) and it matches one or more word characters `(\w)` or hyphens (`-`). The hyphen is included within the character set `[\w-]`. Word characters include uppercase and lowercase letters, digits, and underscores. This capturing group captures the board ID.
+        // `(?:\/([\w-]+))?` - This is a non-capturing group (`(?:...)`) followed by a question mark ?, which makes it optional. It matches a forward slash (`\/`) followed by one or more word characters or hyphens. The hyphen is included within the character set `[\w-]`. This capturing group captures the card ID, which is also allowed to contain hyphens. The non-capturing group is used because we're not interested in capturing the forward slash itself.
+        // `/i` - This is a flag indicating case-insensitive matching. It allows the pattern to match both uppercase and lowercase characters.
+
+        let match = takmaLink.match(takmaLinkPattern);
+        let boardId = match[1];
+        let cardId = match[2];
+
+        let boardTitle;
+        let cardTitle;
+
+        try
+        {
+            boardTitle = SaveLoadManager.getData().getBoard(boardId).title;
+            cardTitle = SaveLoadManager.getData().getCard(boardId, cardId).title;
+        }
+        catch (e)
+        {
+            if (boardTitle === undefined)
+            {
+                new PopupWindow({props: {description: I18n.t("boardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
+            }
+            else if (boardTitle !== undefined && cardId !== undefined && cardTitle === undefined)
+            {
+                new PopupWindow({props: {description: I18n.t("cardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
+            }
+        }
+        finally
+        {
+            if (boardTitle != undefined && cardTitle != undefined)
+            {
+                $selectedBoardId = boardId;
+                $selectedCardId = cardId;
+            }
+            else if (boardTitle != undefined)
+            {
+                $selectedBoardId = boardId;
+                $selectedCardId = "";
+            }
+        }
+    });
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
