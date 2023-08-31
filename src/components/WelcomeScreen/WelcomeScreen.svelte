@@ -24,6 +24,7 @@
     ]);
 
     let boards: Board[] = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
+    const updateWelcomeScreen = () => boards = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
 
     onMount(async () =>
     {
@@ -50,9 +51,31 @@
 </script>
 
 <div>
+<!--Favourited boards-->
+    {#each boards as board}
+        {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) && board.favourite}
+            <BoardButton
+                    on:clicked={() => {
+                    $selectedBoardId = board.id;
+                    SaveLoadManager.getData().setBoardLastOpenedTime($selectedBoardId);
+                }}
+                    image={board.backgroundImagePath}
+                    title={board.title}
+                    boardId={board.id}
+                    favourite={board.favourite}
+                    updateWelcomeScreenFunction={updateWelcomeScreen}
+            />
+        {/if}
+    {/each}
+</div>
+{#if boards.some(board => board.favourite)}
+    <hr>
+{/if}
+<div>
+<!--Non favourited boards-->
     <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
     {#each boards as board}
-        {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim())}
+        {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) && !board.favourite}
             <BoardButton
                 on:clicked={() => {
                     $selectedBoardId = board.id;
@@ -60,6 +83,9 @@
                 }}
                 image={board.backgroundImagePath}
                 title={board.title}
+                boardId={board.id}
+                favourite={board.favourite}
+                updateWelcomeScreenFunction={updateWelcomeScreen}
             />
         {/if}
     {/each}
@@ -101,5 +127,10 @@
     }
     :global(.boardButtons:hover) {
         scale: 105%;
+    }
+
+    hr {
+        border: 1px solid var(--border);
+        margin: 0 0.6em 0 1.25em;
     }
 </style>

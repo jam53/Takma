@@ -199,7 +199,8 @@ export class TakmaData
             backgroundImagePath: await saveFilePathToDisk(backgroundImagePath, boardId),
             title: title,
             labels: [],
-            lists: []
+            lists: [],
+            favourite: false
         };
 
         this._boards.push(board);
@@ -547,6 +548,17 @@ export class TakmaData
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].lastOpened = lastOpenedTime;
+
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Toggles whether or not this board is favourited
+     */
+    public toggleBoardFavourity(boardId: string)
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        this._boards[indexOfBoard].favourite = !this._boards[indexOfBoard].favourite;
 
         SaveLoadManager.saveToDisk();
     }

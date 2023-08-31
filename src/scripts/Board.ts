@@ -6,7 +6,8 @@ export interface Board
     title: string,
     backgroundImagePath: string, //path to the background image
     lists: List[], //The lists in this board,
-    labels: Label[] //The labels in this board, which can be assigned to/are visible on cards
+    labels: Label[], //The labels in this board, which can be assigned to/are visible on cards
+    favourite: boolean //True if this board has been favourited by the user, else false
 }
 
 export interface List
