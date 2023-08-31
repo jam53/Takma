@@ -127,7 +127,6 @@
 
     .favourite, .favouriteFilled {
         color: transparent;
-        z-index: 1;
         position: absolute;
         top: 0.5em;
         right: 0.5em;
