@@ -1,11 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::fs;
 use tauri::Manager;
 #[cfg(target_os = "linux")]
 use std::{fs::metadata, path::PathBuf};
-use std::path::PathBuf;
 use std::process::Command;
 #[cfg(target_os = "linux")]
 use fork::{daemon, Fork}; // dep: fork = "0.1"

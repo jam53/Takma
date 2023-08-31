@@ -146,7 +146,7 @@
 
     button:hover .favouriteFilled {
         fill: var(--warning);
-        filter: brightness(100%);
+        -webkit-filter: drop-shadow(0 0 3px rgba(0, 0, 0, .25)) brightness(100%);
     }
 
     button:hover .favourite:hover {
@@ -154,6 +154,6 @@
     }
 
     button:hover .favouriteFilled:hover {
-        filter: brightness(75%);
+        -webkit-filter: drop-shadow(0 0 3px rgba(0, 0, 0, .25)) brightness(75%);
     }
 </style>
