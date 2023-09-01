@@ -73,7 +73,6 @@
 {/if}
 <div>
 <!--Non favourited boards-->
-    <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
     {#each boards as board}
         {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) && !board.favourite}
             <BoardButton
@@ -89,6 +88,7 @@
             />
         {/if}
     {/each}
+    <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
 </div>
 
 <style>
