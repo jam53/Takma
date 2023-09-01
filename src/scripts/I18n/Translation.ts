@@ -138,6 +138,9 @@ export default interface Translation
     dueNextDay: string;
     dueNextWeek: string;
     dueNextMonth: string;
+    dueNextYear: string;
+    dueNextDecade: string;
+    dueNextCentury: string;
     enterACardTitle: string;
     addDetailedDescriptionMarkdown: string;
     easterEggBoard: Board;
@@ -146,6 +149,7 @@ export default interface Translation
     cardFullscreen: string;
     dueDatesOverviewExplanation: string;
     noCardsWithDueDates: string;
+    noCardsWithDueDatesOnThisBoard: string;
     confirmRestartOnboarding: string;
     no: string;
     yes: string;

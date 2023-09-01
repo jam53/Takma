@@ -64,6 +64,11 @@
             });
         });
 
+        if ($selectedBoardId !== "")
+        {//This will be true in the case that the DueDatesOverviewPopup is opened on the boardscreen. In that case we only want to show the due dates of that board
+            allDueDates = allDueDates.filter(dueDate => dueDate.boardId === $selectedBoardId);
+        }
+
         return allDueDates;
     }
 
@@ -85,6 +90,9 @@
             {value: 24 * 60 * 60 * 1000, title: I18n.t("dueNextDay"), color: "warning"},
             {value: 7 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextWeek"), color: "normal"},
             {value: 30 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextMonth"), color: "normal"},
+            {value: 365 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextYear"), color: "normal"},
+            {value: 10 * 365 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextDecade"), color: "normal"},
+            {value: 100 * 365 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextCentury"), color: "normal"},
         ].map(dueDateValue =>
         {
             let dueDates = [];
@@ -113,14 +121,20 @@
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
-                <h1>{I18n.t("dueDatesOverview")}</h1>
+                {#if $selectedBoardId === ""}
+                    <h1>{I18n.t("dueDatesOverview")}</h1>
+                {:else}
+                    <h1>{SaveLoadManager.getData().getBoard($selectedBoardId).title + " " + I18n.t("dueDatesOverview")}</h1>
+                {/if}
                 <svg on:click={() => showPopup = false} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
             <hr/>
-            {#if getAllCardsWithDueDates().length === 0}
+            {#if getAllCardsWithDueDates().length === 0 && $selectedBoardId === ""}
                 <span>{I18n.t("noCardsWithDueDates")}</span>
+            {:else if getAllCardsWithDueDates().length === 0 && $selectedBoardId !== ""}
+                <span>{I18n.t("noCardsWithDueDatesOnThisBoard")}</span>
             {/if}
             {#each calculateAllDueDates() as dueDateValue}
                 {#if dueDateValue.dueDates.length > 0}
