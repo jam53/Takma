@@ -20,11 +20,15 @@ fn main() {
              // If you need macOS support this must be called in .setup() !
              // Otherwise this could be called right after prepare() but then you don't have access to tauri APIs
              let handle = app.handle();
+             let main_window = app.get_window("main").unwrap();
+
              tauri_plugin_deep_link::register(
                  "takma",
                  move |request| {
                      dbg!(&request);
                      handle.emit_all("deep-link-received", request).unwrap();
+
+                     main_window.set_focus().unwrap();
                 },
              )
              .unwrap(/* If listening to the scheme is optional for your app, you don't want to unwrap here. */);
