@@ -59,7 +59,7 @@
             board.lists.forEach(list => {
                 list.cards.filter(card => card.dueDate !== null).forEach(card =>
                 {
-                    allDueDates.push({title: "<b>" + board.title + "</b> | " + card.title, dueDate: parseInt(card.dueDate), boardId: board.id, cardId: card.id})
+                    allDueDates.push({titleWithBoardName: "<b>" + board.title + "</b> | " + card.title, titleWithListName: "<b>" + list.title + "</b> | " + card.title, dueDate: parseInt(card.dueDate), boardId: board.id, cardId: card.id})
                 });
             });
         });
@@ -124,7 +124,7 @@
                 {#if $selectedBoardId === ""}
                     <h1>{I18n.t("dueDatesOverview")}</h1>
                 {:else}
-                    <h1>{SaveLoadManager.getData().getBoard($selectedBoardId).title + " " + I18n.t("dueDatesOverview")}</h1>
+                    <h1>{SaveLoadManager.getData().getBoard($selectedBoardId).title + " " + I18n.t("dueDatesOverview").toLowerCase()}</h1>
                 {/if}
                 <svg on:click={() => showPopup = false} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -149,7 +149,11 @@
                          }}
                     >
                         <h4>
-                            {@html dueDateItem.title}
+                            {#if $selectedBoardId === ""}
+                                {@html dueDateItem.titleWithBoardName}
+                            {:else}
+                                {@html dueDateItem.titleWithListName}
+                            {/if}
                         </h4>
                         <hr>
                         <span>
