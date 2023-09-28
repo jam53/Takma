@@ -37,17 +37,19 @@
     import {blur, slide} from "svelte/transition";
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {dueDatesOverviewPopupIsVisible, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    let showPopup = true;
+    let showPopup = true; $dueDatesOverviewPopupIsVisible = true;
 
     onMount(() =>
     {
         window.addEventListener("keydown", e => {
             if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
             {
-                showPopup = false;
+                e.stopPropagation();
+                e.preventDefault();
+                showPopup = false; $dueDatesOverviewPopupIsVisible = false;
             }
         });
     });

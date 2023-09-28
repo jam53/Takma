@@ -1,5 +1,10 @@
 <script lang="ts">
-    import {cardFilters, draggingCardOrList, selectedBoardId} from "../../scripts/stores";
+    import {
+        cardFilters,
+        draggingCardOrList,
+        dueDatesOverviewPopupIsVisible,
+        selectedBoardId
+    } from "../../scripts/stores";
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
@@ -20,7 +25,7 @@
 
         window.addEventListener("keydown", e =>
         {
-            if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted)
+            if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !$dueDatesOverviewPopupIsVisible)
             {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
                 $selectedBoardId = "";
                 $cardFilters = {labelIds: [], dueDates: []};

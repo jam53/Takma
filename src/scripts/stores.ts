@@ -5,3 +5,4 @@ export const selectedCardId = writable(""); //When a card is selected/being disp
 export const searchBarValue = writable(""); //This contains the value of the searchbar
 export const draggingCardOrList = writable(false); //If a card or list is being dragged, this is true, otherwise it is false.
 export const cardFilters: Writable<{labelIds: string[], dueDates: number[]}> = writable({labelIds: [], dueDates: []}) //The board screen will filter the cards based on these values.
+export const dueDatesOverviewPopupIsVisible = writable(false); //True if the DueDatesOverviewPopup is being shown else false.
