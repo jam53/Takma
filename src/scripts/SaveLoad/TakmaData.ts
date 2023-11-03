@@ -562,5 +562,23 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Adds a card to a list
+     * @param card the card object that will be added
+     * @param boardId id of the board that contains the list to which the card should be added
+     * @param listId id of the list to which the card should be added
+     * @param indexToInsert optional argument, will add the card at a certain index in the list, if not passed the card will be added to the end of the array of cards
+     */
+    public addCardToList(card: Card, boardId: string, listId: string, indexToInsert: number = -1): void
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
+
+        this._boards[indexOfBoard].lists[indexOfList].cards.splice(indexToInsert, 0, card);
+
+        this.incrementTotalCardsCreated();
+        SaveLoadManager.saveToDisk();
+    }
     //endregion
 }

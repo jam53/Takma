@@ -5,9 +5,11 @@
     import {draggingCardOrList, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {resizeImg} from "../../scripts/ResizeImg";
     import {exists} from "@tauri-apps/api/fs";
+    import CardOptionsMenu from "./CardOptionsMenu.svelte";
 
     export let card: Card;
     export let refreshListFunction;
+    export let listIdCardIsIn;
 
     function displayCardDetails()
     {
@@ -58,6 +60,9 @@
          {
              displayCardDetails();
          }
+     }}
+     on:contextmenu|preventDefault={e => {
+         new CardOptionsMenu({props: {mouseClickEvent: e, cardId: card.id, refreshListsFunction: refreshListFunction, listIdCardIsIn: listIdCardIsIn}, target: document.body, intro: true});
      }}
      class:deleteCard={hovering && shiftKeyPressed}
      on:keydown={e => e.key === "Enter" && displayCardDetails()}

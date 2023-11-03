@@ -156,4 +156,6 @@ export default interface Translation
     ok: string;
     boardIdNotFound: string;
     cardIdNotFound: string;
+    duplicateCard: string;
+    deleteCard: string;
 }

@@ -139,7 +139,7 @@
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#key $searchBarValue}
                         {#if !shouldCardBeHidden(card)}
-                            <Card card={card} refreshListFunction={() => cards = cards}/>
+                            <Card card={card} refreshListFunction={() => cards = cards} listIdCardIsIn={listId}/>
                         {/if}
                     {/key}
                 </div>
