@@ -1,3 +1,7 @@
+import {saveFilePathToDisk} from "./TakmaDataFolderIO";
+import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
+import {exists} from "@tauri-apps/api/fs";
+
 export interface Board
 {
     id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
@@ -52,3 +56,51 @@ export interface TodoItem
 }
 
 export type sortBoardsFunctionName = "sortByCreationDateAscending" | "sortByCreationDateDescending" | "sortByMostRecentlyOpened" | "sortByLeastRecentlyOpened" | "sortAlphabeticallyAscending" | "sortAlphabeticallyDescending" | "dontSort";
+
+/**
+ * Duplicates a card object
+ * @param card The card object that should be duplicated
+ * @param boardId The board the duplicated card will be placed in
+ * @returns The duplicated card
+ */
+export async function duplicateCard(card: Card, boardId: string): Promise<Card>
+{
+    card = structuredClone(card);
+
+    card.id = crypto.randomUUID();
+    card.creationDate = Date.now();
+
+    card.attachments = await Promise.all(card.attachments.map(async attachment => {
+
+        if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+        {
+            return await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment, boardId); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
+        }
+        else
+        {
+            return "";
+        }
+
+    }));
+    (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId));
+
+    return card;
+}
+
+/**
+ * Duplicates a list object
+ * @param list The list object that should be duplicated
+ * @param boardId The board the duplicated list will be placed in
+ * @returns The duplicated list
+ */
+export async function duplicateList(list: List, boardId: string): Promise<List>
+{
+    list = structuredClone(list);
+
+    list.id = crypto.randomUUID();
+    list.creationDate = Date.now();
+
+    list.cards = await Promise.all(list.cards.map(async card => await duplicateCard(card, boardId)));
+
+    return list;
+}

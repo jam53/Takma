@@ -17,6 +17,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {selectedBoardId} from "../../scripts/stores";
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
+    import {duplicateCard as duplicateCardObject} from "../../scripts/Board";
 
     export let mouseClickEvent;
     export let cardId;
@@ -81,12 +82,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         }
     }
 
-    function duplicateCard()
+    async function duplicateCard()
     {
-        let duplicatedCard = structuredClone(SaveLoadManager.getData().getCard($selectedBoardId, cardId));
         let thisCardIndex = SaveLoadManager.getData().getList($selectedBoardId, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
-
-        duplicatedCard.id = crypto.randomUUID();
+        let duplicatedCard = await duplicateCardObject(SaveLoadManager.getData().getCard($selectedBoardId, cardId), $selectedBoardId);
 
         SaveLoadManager.getData().addCardToList(duplicatedCard, $selectedBoardId, listIdCardIsIn, thisCardIndex);
 

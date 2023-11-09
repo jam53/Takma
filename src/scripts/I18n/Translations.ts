@@ -2103,7 +2103,7 @@ export let nl: Translation = {
     sortAlphabeticallyDescending: "Aflopend sorteren op alfabet",
     shuffle: "Schudden",
     confirmListRemoval: "Weet je zeker dat je deze lijst wilt verwijderen?",
-    duplicateList: "Dubbele lijst",
+    duplicateList: "Lijst dupliceren",
     sortList: "Lijst sorteren",
     deleteList: "Lijst verwijderen",
     copiedFilePathToClipboard: "Bestandspad naar klembord gekopieerd",

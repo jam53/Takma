@@ -18,6 +18,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
+    import {duplicateList as duplicateListObject} from "../../scripts/Board";
 
     export let listId;
     export let refreshListsFunction;
@@ -76,17 +77,12 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         }
     }
 
-    function duplicateList()
+    async function duplicateList()
     {
-        let thisList = structuredClone(SaveLoadManager.getData().getList($selectedBoardId, listId));
         let thisListIndex = SaveLoadManager.getData().getBoard($selectedBoardId).lists.findIndex(list => list.id === listId);
+        let duplicatedList = await duplicateListObject(SaveLoadManager.getData().getList($selectedBoardId, listId), $selectedBoardId);
 
-        SaveLoadManager.getData().createNewList($selectedBoardId, thisList.title, thisList.cards.map(card =>
-        {
-            card.id = crypto.randomUUID();
-            return card;
-        }), thisListIndex);
-
+        SaveLoadManager.getData().createNewList($selectedBoardId, duplicatedList.title, duplicatedList.cards, thisListIndex)
         refreshListsFunction();
     }
 
