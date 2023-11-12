@@ -1,6 +1,6 @@
-import {saveFilePathToDisk} from "./TakmaDataFolderIO";
+import {saveArrayBufferToDisk, saveFilePathToDisk} from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {exists} from "@tauri-apps/api/fs";
+import {exists, readBinaryFile} from "@tauri-apps/api/fs";
 
 export interface Board
 {
@@ -33,6 +33,28 @@ export interface Card
     checklists: Checklist[],
     labelIds: string[], //The label ids in this array refer to ids of the labels in the board to which this card belongs to
     dueDate: string | null //The due date of this card in unix milliseconds, null if there is no due date
+}
+
+/**
+ * We use this interface to implement the copy/paste card feature.
+ *
+ * We couldn't just duplicate the card we wanted to copy to then paste it later. This is because should the user copy the card but then never paste it, we would have created new files for the attachments/cover image on disk that are no longer being referenced by any card in the board.
+ * Neither could we just keep a reference (the card ID) to the card that we wanted to copy, to then duplicated that referenced card the moment we wanted to paste. Because what if the user copied the card, and then deleted it first before pasting it.
+ *
+ * So instead I opted for this approach using a new interface. First we strip the attachments and cover image from the card we want to copy, should it have any. Then we duplicate the card and store it in `cardWithoutAttachmentsAndCoverImage`. The attachments and cover image that we stripped away will be read from disk and stored as byte arrays (Uint8Array).
+ * The moment we wish to paste the copied card, we will first save the attachments and cover image that are byte arrays to disk using `TakmaDataFolderIO.saveArrayBufferToDisk()`. Then we can use together with `cardWithoutAttachmentsAndCoverImage` and paste the new card.
+ */
+export interface CopiedCard
+{
+    cardWithoutAttachmentsAndCoverImage: Card,
+    attachments: {fileName: string, byteArray: Uint8Array}[],
+    coverImage: {fileName: string, byteArray: Uint8Array} | null
+}
+
+export interface CopiedList
+{
+    listWithoutCards: List,
+    copiedCards: CopiedCard[]
 }
 
 export interface Label
@@ -103,4 +125,50 @@ export async function duplicateList(list: List, boardId: string): Promise<List>
     list.cards = await Promise.all(list.cards.map(async card => await duplicateCard(card, boardId)));
 
     return list;
+}
+
+/**
+ * Given a `Card`, duplicates it and returns it as a `CopiedCard`
+ * @param card The card you wish to duplicate
+ */
+export async function duplicateCardAsCopiedCard(card: Card): Promise<CopiedCard>
+{
+    card = structuredClone(card); //To make sure we no longer hold any references to `attachments` array of the original card we will delete here.
+
+    let attachments = await Promise.all(card!.attachments.map(async attachment => {
+        if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+        {
+            return {fileName: attachment.split('\\').pop().split('/').pop().substring(36) ?? "", byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)};
+        }
+        else
+        {
+            return null;
+        }
+    }).filter(async attachment => await attachment !== null));
+    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.split('\\').pop().split('/').pop().substring(36) ?? "", byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + card!.coverImage)} : null;
+
+    card!.attachments = [];
+    card!.coverImage = "";
+
+    return {
+        cardWithoutAttachmentsAndCoverImage: await duplicateCard(card!, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the attachments/coverImage it doesn't matter, since we duplicate those ourselves in this case.
+        attachments: attachments as {fileName: string, byteArray: Uint8Array}[],
+        coverImage: coverImage
+    }
+}
+
+/**
+ * Given a `CopiedCard`, duplicates it and returns it as a `Card`
+ * @param copiedCard The copiedCard you wish to duplicate
+ * @param boardId The id of the board the returned Card will be used in
+ */
+export async function duplicateCopiedCardAsCard(copiedCard: CopiedCard, boardId: string): Promise<Card>
+{
+    let card = await duplicateCard(copiedCard.cardWithoutAttachmentsAndCoverImage, boardId);
+
+    card.attachments = await Promise.all(copiedCard.attachments.map(attachment => saveArrayBufferToDisk(attachment.byteArray, crypto.randomUUID() + attachment.fileName, boardId)));
+
+    card.coverImage = copiedCard.coverImage !== null ? await saveArrayBufferToDisk(copiedCard.coverImage.byteArray, crypto.randomUUID() + copiedCard.coverImage.fileName, boardId) : "";
+
+    return card;
 }

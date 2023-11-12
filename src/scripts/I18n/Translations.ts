@@ -197,6 +197,10 @@ export let en: Translation = {
     cardIdNotFound: "Unable to open the Takma link: <i>$|00|$</i>. <br> The card ID within the Takma link is incorrect; there is no card associated with that ID.",
     duplicateCard: "Duplicate card",
     deleteCard: "Delete card",
+    copyCard: "Copy card",
+    pasteCard: "Paste copied card",
+    copyList: "Copy list",
+    pasteList: "Paste copied list",
 };
 
 export let ar: Translation = {
@@ -396,6 +400,10 @@ export let ar: Translation = {
     cardIdNotFound: "غير قادر على فتح رابط تكما: <i>$|00|$</i>. <br> معرف البطاقة داخل رابط تكما غير صحيح؛ لا يوجد بطاقة مرتبطة بهذا المعرف.",
     duplicateCard: "نسخ البطاقة",
     deleteCard: "حذف البطاقة",
+    copyCard: "نسخ البطاقة",
+    pasteCard: "لصق البطاقة المنسوخة",
+    copyList: "نسخ القائمة",
+    pasteList: "لصق القائمة المنسوخة",
 };
 
 export let de: Translation = {
@@ -595,6 +603,10 @@ export let de: Translation = {
     cardIdNotFound: "Kann den Takma-Link nicht öffnen: <i>$|00|$</i>. <br> Die Karten-ID im Takma-Link ist falsch; es gibt keine Karte, die mit dieser ID verknüpft ist.",
     duplicateCard: "Karte duplizieren",
     deleteCard: "Karte löschen",
+    copyCard: "Karte kopieren",
+    pasteCard: "Eingefügte Karte",
+    copyList: "Liste kopieren",
+    pasteList: "Eingefügte Liste",
 };
 
 export let es: Translation = {
@@ -794,6 +806,10 @@ export let es: Translation = {
     cardIdNotFound: "No se puede abrir el enlace de Takma: <i>$|00|$</i>. <br> La ID de la tarjeta en el enlace de Takma es incorrecta; no hay ninguna tarjeta asociada con esa ID.",
     duplicateCard: "Duplicar tarjeta",
     deleteCard: "Eliminar tarjeta",
+    copyCard: "Copiar tarjeta",
+    pasteCard: "Pegar tarjeta copiada",
+    copyList: "Copiar lista",
+    pasteList: "Pegar lista copiada",
 };
 
 export let et: Translation = {
@@ -993,6 +1009,10 @@ export let et: Translation = {
     cardIdNotFound: "Ei saa avada Takma linki: <i>$|00|$</i>. <br> Kaardi ID Takma lingis on vale; selle ID-ga seotud kaarti pole.",
     duplicateCard: "Kopeeri kaart",
     deleteCard: "Kustuta kaart",
+    copyCard: "Kopeeri kaart",
+    pasteCard: "Kleepige kopeeritud kaart",
+    copyList: "Kopeeri nimekiri",
+    pasteList: "Kleepige kopeeritud nimekiri",
 };
 
 export let fr: Translation = {
@@ -1192,6 +1212,10 @@ export let fr: Translation = {
     cardIdNotFound: "Impossible d'ouvrir le lien Takma : <i>$|00|$</i>. <br> L'identifiant de la carte dans le lien Takma est incorrect ; il n'y a aucune carte associée à cet identifiant.",
     duplicateCard: "Dupliquer la carte",
     deleteCard: "Supprimer la carte",
+    copyCard: "Copier la carte",
+    pasteCard: "Coller la carte copiée",
+    copyList: "Copier la liste",
+    pasteList: "Coller la liste copiée",
 };
 
 export let hi: Translation = {
@@ -1391,6 +1415,10 @@ export let hi: Translation = {
     cardIdNotFound: "टकमा लिंक खोलने में असमर्थ: <i>$|00|$</i>. <br> टकमा लिंक में कार्ड ID गलत है; उस ID के साथ कोई कार्ड जुड़ा नहीं है।",
     duplicateCard: "कार्ड की प्रतिलिपि बनाएँ",
     deleteCard: "कार्ड हटाएँ",
+    copyCard: "कार्ड कॉपी करें",
+    pasteCard: "कॉपी किए गए कार्ड को पेस्ट करें",
+    copyList: "सूची कॉपी करें",
+    pasteList: "कॉपी किए गए सूची को पेस्ट करें",
 };
 
 export let id: Translation = {
@@ -1590,6 +1618,10 @@ export let id: Translation = {
     cardIdNotFound: "Tidak dapat membuka tautan Takma: <i>$|00|$</i>. <br> ID kartu dalam tautan Takma salah; tidak ada kartu yang terkait dengan ID tersebut.",
     duplicateCard: "Duplikat Kartu",
     deleteCard: "Hapus Kartu",
+    copyCard: "Salin kartu",
+    pasteCard: "Tempel kartu yang disalin",
+    copyList: "Salin daftar",
+    pasteList: "Tempel daftar yang disalin",
 };
 
 export let ja: Translation = {
@@ -1789,6 +1821,10 @@ export let ja: Translation = {
     cardIdNotFound: "Takmaリンクを開けません：<i>$|00|$</i>。 <br> Takmaリンク内のカードIDが正しくありません。そのIDに関連するカードは存在しません。",
     duplicateCard: "カードの複製",
     deleteCard: "カードの削除",
+    copyCard: "カードをコピー",
+    pasteCard: "コピーしたカードを貼り付ける",
+    copyList: "リストをコピー",
+    pasteList: "コピーしたリストを貼り付ける",
 };
 
 export let ko: Translation = {
@@ -1988,6 +2024,10 @@ export let ko: Translation = {
     cardIdNotFound: "Takma 링크를 열 수 없습니다: <i>$|00|$</i>. <br> Takma 링크 내의 카드 ID가 올바르지 않습니다. 해당 ID에 연결된 카드가 없습니다.",
     duplicateCard: "카드 복제",
     deleteCard: "카드 삭제",
+    copyCard: "카드 복사",
+    pasteCard: "복사한 카드 붙여넣기",
+    copyList: "리스트 복사",
+    pasteList: "복사한 리스트 붙여넣기",
 };
 
 export let nl: Translation = {
@@ -2187,6 +2227,10 @@ export let nl: Translation = {
     cardIdNotFound: "Kan de Takma-link niet openen: <i>$|00|$</i>. <br> Het kaart-ID in de Takma-link is onjuist; er is geen kaart geassocieerd met dat ID.",
     duplicateCard: "Kaart dupliceren",
     deleteCard: "Kaart verwijderen",
+    copyCard: "Kaart kopiëren",
+    pasteCard: "Gekopieerde kaart plakken",
+    copyList: "Lijst kopiëren",
+    pasteList: "Gekopieerde lijst plakken",
 };
 
 export let pt: Translation = {
@@ -2386,6 +2430,10 @@ export let pt: Translation = {
     cardIdNotFound: "Não é possível abrir o link Takma: <i>$|00|$</i>. <br> O ID do cartão no link Takma está incorreto; não há nenhum cartão associado a esse ID.",
     duplicateCard: "Duplicar cartão",
     deleteCard: "Excluir cartão",
+    copyCard: "Copiar cartão",
+    pasteCard: "Colar cartão copiado",
+    copyList: "Copiar lista",
+    pasteList: "Colar lista copiada",
 };
 
 export let ru: Translation = {
@@ -2585,6 +2633,10 @@ export let ru: Translation = {
     cardIdNotFound: "Не удается открыть ссылку Takma: <i>$|00|$</i>. <br> ID карточки в ссылке Takma неверен; нет карточки, связанной с этим ID.",
     duplicateCard: "Дублировать карточку",
     deleteCard: "Удалить карточку",
+    copyCard: "Копировать карточку",
+    pasteCard: "Вставить скопированную карточку",
+    copyList: "Копировать список",
+    pasteList: "Вставить скопированный список",
 };
 
 export let tr: Translation = {
@@ -2700,7 +2752,7 @@ export let tr: Translation = {
     sortAlphabeticallyDescending: "Alfabetik Sırala (Azalan)",
     shuffle: "Karıştır",
     confirmListRemoval: "Bu listeyi silmek istediğinizden emin misiniz?",
-    duplicateList: "Listeyi Kopyala",
+    duplicateList: "Listeyi Çoğalt",
     sortList: "Listeyi Sırala",
     deleteList: "Listeyi Sil",
     copiedFilePathToClipboard: "Dosya yolu panoya kopyalandı",
@@ -2784,6 +2836,10 @@ export let tr: Translation = {
     cardIdNotFound: "Takma bağlantısı açılamıyor: <i>$|00|$</i>. <br> Takma bağlantısındaki kart kimliği yanlış; bu kimliğe sahip bir kart bulunmuyor.",
     duplicateCard: "Kartı Kopyala",
     deleteCard: "Kartı Sil",
+    copyCard: "Kartı kopyala",
+    pasteCard: "Kopyalanmış kartı yapıştır",
+    copyList: "Listeyi kopyala",
+    pasteList: "Kopyalanmış listeyi yapıştır",
 };
 
 export let zh: Translation = {
@@ -2983,4 +3039,8 @@ export let zh: Translation = {
     cardIdNotFound: "无法打开Takma链接：<i>$|00|$</i>。 <br> Takma链接中的卡片ID不正确；没有与该ID关联的卡片。",
     duplicateCard: "复制卡片",
     deleteCard: "删除卡片",
+    copyCard: "复制卡片",
+    pasteCard: "粘贴复制的卡片",
+    copyList: "复制列表",
+    pasteList: "粘贴复制的列表",
 };

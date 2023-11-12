@@ -14,10 +14,13 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {copiedCard, selectedBoardId} from "../../scripts/stores";
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
-    import {duplicateCard as duplicateCardObject} from "../../scripts/Board";
+    import {
+        duplicateCard as duplicateCardObject,
+        duplicateCardAsCopiedCard, duplicateCopiedCardAsCard
+    } from "../../scripts/Board";
 
     export let mouseClickEvent;
     export let cardId;
@@ -100,12 +103,45 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         closeContextMenu();
     }
 
+    async function copyCard()
+    {
+        $copiedCard = await duplicateCardAsCopiedCard(SaveLoadManager.getData().getCard($selectedBoardId, cardId)!);
+        closeContextMenu();
+    }
+
+    async function pasteCard()
+    {
+        let thisCardIndex = SaveLoadManager.getData().getList($selectedBoardId, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
+
+        let cardToPaste = await duplicateCopiedCardAsCard($copiedCard!, $selectedBoardId); //Since this function was called, it means the `$copiedCard` variable can't be null. Hadn't there been a card copied i.e. should `$copiedCard` have been null, then the button on which this function gets called wouldn't have been visible
+
+        SaveLoadManager.getData().addCardToList(cardToPaste, $selectedBoardId, listIdCardIsIn, thisCardIndex);
+
+        refreshListsFunction();
+        closeContextMenu();
+    }
+
     let menuItems = [
         {
             'name': 'duplicateCard',
             'onClick': duplicateCard,
             'displayText': I18n.t("duplicateCard"),
             'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"> <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6" /></svg>'
+        },
+        {
+            'name': 'hr',
+        },
+        {
+            'name': 'copyCard',
+            'onClick': copyCard,
+            'displayText': I18n.t("copyCard"),
+            'svg': '<svg class="listOptionsMenuIcons" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path><path d="M16 4h2a2 2 0 0 1 2 2v4"></path><path d="M21 14H11"></path><path d="m15 10-4 4 4 4"></path></svg>'
+        },
+        {
+            'name': 'pasteCard',
+            'onClick': pasteCard,
+            'displayText': I18n.t("pasteCard"),
+            'svg': '<svg class="listOptionsMenuIcons" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z"></path><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10"></path><path d="m17 10 4 4-4 4"></path></svg>'
         },
         {
             'name': 'hr',
@@ -140,7 +176,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
-                    {:else}
+                    {:else if item.name !== "pasteCard" || (item.name === "pasteCard" && $copiedCard !== null)}
                         <li>
                             <button on:click={item.onClick}>
                                 {@html item.svg}

@@ -158,4 +158,8 @@ export default interface Translation
     cardIdNotFound: string;
     duplicateCard: string;
     deleteCard: string;
+    copyCard: string;
+    pasteCard: string;
+    copyList: string;
+    pasteList: string;
 }

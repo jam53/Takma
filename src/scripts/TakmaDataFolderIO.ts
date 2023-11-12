@@ -30,7 +30,7 @@ export async function saveFileToDisk(file: File, boardID: string): Promise<strin
 /**
  * This function saves an ArrayBuffer to Takma's "Files" data folder in a file with the name `filename`, and returns the path to the location of the saved file.
  */
-async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
+export async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
 {
     let savePath = `./Takma/Files/${boardID}/`;
 

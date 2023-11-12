@@ -14,11 +14,15 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {copiedList, selectedBoardId} from "../../scripts/stores";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
-    import {duplicateList as duplicateListObject} from "../../scripts/Board";
+    import {
+        duplicateCardAsCopiedCard,
+        duplicateCopiedCardAsCard,
+        duplicateList as duplicateListObject
+    } from "../../scripts/Board";
 
     export let listId;
     export let refreshListsFunction;
@@ -101,6 +105,34 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             SaveLoadManager.getData().deleteList($selectedBoardId, listId);
             refreshListsFunction();
         }
+    }
+
+    async function copyList()
+    {
+        let list = structuredClone(SaveLoadManager.getData().getList($selectedBoardId, listId)); //To make sure we no longer hold any references to `cards` array of the original list we will delete here.
+
+        let copiedCards = await Promise.all(list.cards.map(card => duplicateCardAsCopiedCard(card)));
+
+        list.cards = [];
+
+        $copiedList = {
+            listWithoutCards: await duplicateListObject(list, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the cards it doesn't matter, since we duplicate those ourselves in this case.
+            copiedCards: copiedCards
+        };
+        closeContextMenu();
+    }
+
+    async function pasteList()
+    {
+        let thisListIndex = SaveLoadManager.getData().getBoard($selectedBoardId).lists.findIndex(list => list.id === listId);
+
+        let listToPaste = await duplicateListObject($copiedList!.listWithoutCards, $selectedBoardId); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `$copiedList` have been null, then the button on which this function gets called wouldn't have been visible
+
+        listToPaste.cards = await Promise.all($copiedList!.copiedCards.map(copiedCard => duplicateCopiedCardAsCard(copiedCard, $selectedBoardId)));
+
+
+        SaveLoadManager.getData().createNewList($selectedBoardId, listToPaste.title, listToPaste.cards, thisListIndex)
+        refreshListsFunction();
     }
 
     function sortByCreationDateAscending()
@@ -190,6 +222,21 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             'name': 'hr',
         },
         {
+            'name': 'copyList',
+            'onClick': copyList,
+            'displayText': I18n.t("copyList"),
+            'svg': '<svg class="listOptionsMenuIcons" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path><path d="M16 4h2a2 2 0 0 1 2 2v4"></path><path d="M21 14H11"></path><path d="m15 10-4 4 4 4"></path></svg>'
+        },
+        {
+            'name': 'pasteList',
+            'onClick': pasteList,
+            'displayText': I18n.t("pasteList"),
+            'svg': '<svg class="listOptionsMenuIcons" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z"></path><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10"></path><path d="m17 10 4 4-4 4"></path></svg>'
+        },
+        {
+            'name': 'hr',
+        },
+        {
             'name': 'deleteList',
             'onClick': deleteList,
             'displayText': I18n.t("deleteList"),
@@ -273,7 +320,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
-                    {:else}
+                    {:else if item.name !== "pasteList" || (item.name === "pasteList" && $copiedList !== null)}
                         <li>
                             <button on:click={item.onClick}>
                                 {@html item.svg}
