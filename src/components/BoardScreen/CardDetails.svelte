@@ -15,7 +15,12 @@
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
     import Attachments from "./Attachments.svelte";
-    import {imageExtensions, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {
+        imageExtensions,
+        removeFileFromTakmaDataFolder,
+        saveFilePathToDisk,
+        saveFileToDisk
+    } from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
@@ -313,6 +318,7 @@
     {
         if (cardToSave.coverImage !== "")
         {
+            await removeFileFromTakmaDataFolder(cardToSave.coverImage);
             cardToSave.coverImage = "";
             toast(I18n.t("removeCardCoverImage"));
         }
