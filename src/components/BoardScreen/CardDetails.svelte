@@ -612,7 +612,8 @@
     }
 
     :is(.popupCardFullscreen) {
-        max-height: 100vh;
+        top: 52%;
+        padding-top: 0;
         min-height: calc(100vh - 4em);
         min-width: calc(100vw - 2.5em);
         background-color: transparent;
