@@ -401,7 +401,11 @@
             </div>
             <div class="separator"
             >
-                {I18n.t("createdOn") + (new Date(cardToSave.creationDate)).toDateString()}
+                {I18n.t("createdOn") + (new Date(cardToSave.creationDate)).toLocaleDateString(SaveLoadManager.getData().displayLanguage, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                })}
             </div>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
