@@ -2,7 +2,7 @@
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card as CardInterface, List} from "../../scripts/Board";
-    import {draggingCardOrList, searchBarValue, selectedBoardId} from "../../scripts/stores";
+    import {cardFilters, draggingCardOrList, searchBarValue, selectedBoardId} from "../../scripts/stores";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
@@ -132,6 +132,11 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
     </div>
+    {#if $searchBarValue !== "" || $cardFilters.labelIds.length > 0 || $cardFilters.dueDates.length > 0}
+        <span class="amountOfCardsMatchedFilter">
+            {cards.filter(card => !shouldCardBeHidden(card)).length + " " + (cards.filter(card => !shouldCardBeHidden(card)).length === 1 ? I18n.t("cardMatchedFilters") : I18n.t("cardsMatchedFilters"))}
+        </span>
+    {/if}
     <div class="outerWrapper" bind:this={outerWrapperElement} on:scroll={applyOverFlowedStyleClasses}>
 <!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the -webkit-box-shadow doesn't appear cut off when hovering over a card-->
         <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
@@ -250,5 +255,12 @@
     .titleHolder svg:hover {
         background-color: rgba(var(--main-text-rgb-values), 0.3);
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+    }
+
+    .amountOfCardsMatchedFilter {
+        margin: 0 1em 0 0.75em;
+        font-weight: 200;
+        color: rgba(var(--main-text-rgb-values), 0.75);
+        display: block;
     }
 </style>

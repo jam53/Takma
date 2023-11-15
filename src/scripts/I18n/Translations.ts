@@ -201,6 +201,8 @@ export let en: Translation = {
     pasteCard: "Paste copied card",
     copyList: "Copy list",
     pasteList: "Paste copied list",
+    cardMatchedFilters: "card matched filters",
+    cardsMatchedFilters: "cards matched filters",
 };
 
 export let ar: Translation = {
@@ -404,6 +406,8 @@ export let ar: Translation = {
     pasteCard: "لصق البطاقة المنسوخة",
     copyList: "نسخ القائمة",
     pasteList: "لصق القائمة المنسوخة",
+    cardMatchedFilters: "بطاقة تطابقت مع الفلاتر",
+    cardsMatchedFilters: "بطاقات تطابقت مع الفلاتر",
 };
 
 export let de: Translation = {
@@ -607,6 +611,8 @@ export let de: Translation = {
     pasteCard: "Eingefügte Karte",
     copyList: "Liste kopieren",
     pasteList: "Eingefügte Liste",
+    cardMatchedFilters: "Karte entspricht den Filtern",
+    cardsMatchedFilters: "Karten entsprechen den Filtern",
 };
 
 export let es: Translation = {
@@ -810,6 +816,8 @@ export let es: Translation = {
     pasteCard: "Pegar tarjeta copiada",
     copyList: "Copiar lista",
     pasteList: "Pegar lista copiada",
+    cardMatchedFilters: "tarjeta coincide con los filtros",
+    cardsMatchedFilters: "tarjetas coinciden con los filtros",
 };
 
 export let et: Translation = {
@@ -1013,6 +1021,8 @@ export let et: Translation = {
     pasteCard: "Kleepige kopeeritud kaart",
     copyList: "Kopeeri nimekiri",
     pasteList: "Kleepige kopeeritud nimekiri",
+    cardMatchedFilters: "kaart vastab filtritele",
+    cardsMatchedFilters: "kaardid vastavad filtritele",
 };
 
 export let fr: Translation = {
@@ -1216,6 +1226,8 @@ export let fr: Translation = {
     pasteCard: "Coller la carte copiée",
     copyList: "Copier la liste",
     pasteList: "Coller la liste copiée",
+    cardMatchedFilters: "carte correspondant aux filtres",
+    cardsMatchedFilters: "cartes correspondant aux filtres",
 };
 
 export let hi: Translation = {
@@ -1419,6 +1431,8 @@ export let hi: Translation = {
     pasteCard: "कॉपी किए गए कार्ड को पेस्ट करें",
     copyList: "सूची कॉपी करें",
     pasteList: "कॉपी किए गए सूची को पेस्ट करें",
+    cardMatchedFilters: "कार्ड फ़िल्टर के साथ मेल खाता है",
+    cardsMatchedFilters: "कार्ड फ़िल्टर के साथ मेल खाते हैं",
 };
 
 export let id: Translation = {
@@ -1622,6 +1636,8 @@ export let id: Translation = {
     pasteCard: "Tempel kartu yang disalin",
     copyList: "Salin daftar",
     pasteList: "Tempel daftar yang disalin",
+    cardMatchedFilters: "kartu sesuai dengan filter",
+    cardsMatchedFilters: "kartu sesuai dengan filter",
 };
 
 export let ja: Translation = {
@@ -1825,6 +1841,8 @@ export let ja: Translation = {
     pasteCard: "コピーしたカードを貼り付ける",
     copyList: "リストをコピー",
     pasteList: "コピーしたリストを貼り付ける",
+    cardMatchedFilters: "カードがフィルターに一致しました",
+    cardsMatchedFilters: "カードがフィルターに一致しました",
 };
 
 export let ko: Translation = {
@@ -2028,6 +2046,8 @@ export let ko: Translation = {
     pasteCard: "복사한 카드 붙여넣기",
     copyList: "리스트 복사",
     pasteList: "복사한 리스트 붙여넣기",
+    cardMatchedFilters: "카드가 필터와 일치합니다",
+    cardsMatchedFilters: "카드가 필터와 일치합니다",
 };
 
 export let nl: Translation = {
@@ -2231,6 +2251,8 @@ export let nl: Translation = {
     pasteCard: "Gekopieerde kaart plakken",
     copyList: "Lijst kopiëren",
     pasteList: "Gekopieerde lijst plakken",
+    cardMatchedFilters: "kaart komt overeen met de gekozen filters",
+    cardsMatchedFilters: "kaarten komen overeen met de gekozen filters",
 };
 
 export let pt: Translation = {
@@ -2434,6 +2456,8 @@ export let pt: Translation = {
     pasteCard: "Colar cartão copiado",
     copyList: "Copiar lista",
     pasteList: "Colar lista copiada",
+    cardMatchedFilters: "cartão corresponde aos filtros",
+    cardsMatchedFilters: "cartões correspondem aos filtros",
 };
 
 export let ru: Translation = {
@@ -2637,6 +2661,8 @@ export let ru: Translation = {
     pasteCard: "Вставить скопированную карточку",
     copyList: "Копировать список",
     pasteList: "Вставить скопированный список",
+    cardMatchedFilters: "карта соответствует фильтрам",
+    cardsMatchedFilters: "карты соответствуют фильтрам",
 };
 
 export let tr: Translation = {
@@ -2840,6 +2866,8 @@ export let tr: Translation = {
     pasteCard: "Kopyalanmış kartı yapıştır",
     copyList: "Listeyi kopyala",
     pasteList: "Kopyalanmış listeyi yapıştır",
+    cardMatchedFilters: "tane kart filtrelerle eşleşiyor",
+    cardsMatchedFilters: "tane kart filtrelerle eşleşiyor",
 };
 
 export let zh: Translation = {
@@ -3043,4 +3071,6 @@ export let zh: Translation = {
     pasteCard: "粘贴复制的卡片",
     copyList: "复制列表",
     pasteList: "粘贴复制的列表",
+    cardMatchedFilters: "卡片匹配筛选条件",
+    cardsMatchedFilters: "卡片匹配筛选条件",
 };
