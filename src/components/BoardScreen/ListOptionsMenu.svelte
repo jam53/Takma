@@ -111,7 +111,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         let list = structuredClone(SaveLoadManager.getData().getList($selectedBoardId, listId)); //To make sure we no longer hold any references to `cards` array of the original list we will delete here.
 
-        let copiedCards = await Promise.all(list.cards.map(card => duplicateCardAsCopiedCard(card)));
+        let copiedCards = await Promise.all(list.cards.map(card => duplicateCardAsCopiedCard(card, $selectedBoardId)));
 
         list.cards = [];
 

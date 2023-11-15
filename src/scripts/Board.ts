@@ -44,11 +44,12 @@ export interface Card
  * So instead I opted for this approach using a new interface. First we strip the attachments and cover image from the card we want to copy, should it have any. Then we duplicate the card and store it in `cardWithoutAttachmentsAndCoverImage`. The attachments and cover image that we stripped away will be read from disk and stored as byte arrays (Uint8Array).
  * The moment we wish to paste the copied card, we will first save the attachments and cover image that are byte arrays to disk using `TakmaDataFolderIO.saveArrayBufferToDisk()`. Then we can use together with `cardWithoutAttachmentsAndCoverImage` and paste the new card.
  */
-export interface CopiedCard
+export interface CopiedCard //A CopiedCard can be seen as a Card that doesn't reference any values, but is self-contained
 {
     cardWithoutAttachmentsAndCoverImage: Card,
     attachments: {fileName: string, byteArray: Uint8Array}[],
-    coverImage: {fileName: string, byteArray: Uint8Array} | null
+    coverImage: {fileName: string, byteArray: Uint8Array} | null,
+    labelsCardRefersTo: Label[] //A card references the ids of labels in its board, should we however paste this copied card in another board we will no longer be able to resolve those references. Therefore, we should keep the referenced labels by this card in this CopiedCard
 }
 
 export interface CopiedList
@@ -130,15 +131,19 @@ export async function duplicateList(list: List, boardId: string): Promise<List>
 /**
  * Given a `Card`, duplicates it and returns it as a `CopiedCard`
  * @param card The card you wish to duplicate
+ * @param boardId The id of the board the Card that is going to be duplicated is in
  */
-export async function duplicateCardAsCopiedCard(card: Card): Promise<CopiedCard>
+export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Promise<CopiedCard>
 {
     card = structuredClone(card); //To make sure we no longer hold any references to `attachments` array of the original card we will delete here.
 
     let attachments = await Promise.all(card!.attachments.map(async attachment => {
         if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
         {
-            return {fileName: attachment.split('\\').pop().split('/').pop().substring(36) ?? "", byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)};
+            return {
+                fileName: attachment.split('\\').pop().split('/').pop().substring(36) ?? "",
+                byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)
+            };
         }
         else
         {
@@ -153,7 +158,8 @@ export async function duplicateCardAsCopiedCard(card: Card): Promise<CopiedCard>
     return {
         cardWithoutAttachmentsAndCoverImage: await duplicateCard(card!, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the attachments/coverImage it doesn't matter, since we duplicate those ourselves in this case.
         attachments: attachments as {fileName: string, byteArray: Uint8Array}[],
-        coverImage: coverImage
+        coverImage: coverImage,
+        labelsCardRefersTo: card.labelIds.map(labelId => ({id: labelId, color: SaveLoadManager.getData().getLabelColor(boardId, labelId)}))
     }
 }
 
@@ -169,6 +175,13 @@ export async function duplicateCopiedCardAsCard(copiedCard: CopiedCard, boardId:
     card.attachments = await Promise.all(copiedCard.attachments.map(attachment => saveArrayBufferToDisk(attachment.byteArray, crypto.randomUUID() + attachment.fileName, boardId)));
 
     card.coverImage = copiedCard.coverImage !== null ? await saveArrayBufferToDisk(copiedCard.coverImage.byteArray, crypto.randomUUID() + copiedCard.coverImage.fileName, boardId) : "";
+
+    copiedCard.labelsCardRefersTo.forEach(label => {
+        if (!SaveLoadManager.getData().getBoard(boardId).labels.some(labelInBoard => labelInBoard.id === label.id))
+        {
+            SaveLoadManager.getData().addLabelToBoard(boardId, label);
+        }
+    });
 
     return card;
 }

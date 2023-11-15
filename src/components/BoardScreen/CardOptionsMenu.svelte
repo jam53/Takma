@@ -105,7 +105,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function copyCard()
     {
-        $copiedCard = await duplicateCardAsCopiedCard(SaveLoadManager.getData().getCard($selectedBoardId, cardId)!);
+        $copiedCard = await duplicateCardAsCopiedCard(SaveLoadManager.getData().getCard($selectedBoardId, cardId)!, $selectedBoardId);
         closeContextMenu();
     }
 
