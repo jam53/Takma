@@ -10,5 +10,5 @@
 - Edit `package.json` and `Cargo.toml` to update the version number
 - Run `npm i`
 - Run `npm run tauri build`
-- The executable will be placed in: `src-tauri/target/release/Takma.exe`
+- The executable together with the `resources` folder will be placed in: `src-tauri/target/release/`
   - An msi installer can be found in: `src-tauri/target/release/bundle/msi/Takma_0.0.0_x64_en-US.msi`
