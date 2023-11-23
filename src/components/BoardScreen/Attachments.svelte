@@ -1,14 +1,14 @@
 <script lang="ts">
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
-    import {getImageUrl} from "../../scripts/GetImageUrl";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {resizeImg} from "../../scripts/ResizeImg";
     import {exists, removeFile} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/shell"
     import {tauri} from "@tauri-apps/api";
     import {readText, writeText} from "@tauri-apps/api/clipboard";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {scaleDownImage} from "../../scripts/ScaleDownImage";
+    import {convertFileSrc} from "@tauri-apps/api/tauri";
 
     export let cardToSave;
     export let addAttachmentFunction;
@@ -104,12 +104,12 @@
                      on:click={() => openWithDefaultApp(attachment)}
                 >
                     {#if imageExtensions.includes(getFileExtension(attachment).toLowerCase())}
-                        {#await getImageUrl(attachment, SaveLoadManager.getSaveDirectory())}
+                        {#await (async () => await scaleDownImage(convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment), 224))()}
                             <button class="boardButtons">
                                 <span class="loader"></span>
                             </button>
                         {:then imgSrc}
-                            <img src={imgSrc} use:resizeImg/>
+                            <img src={imgSrc} />
                         {/await}
                     {:else}
                         {getFileExtension(attachment)}

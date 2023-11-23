@@ -1,9 +1,9 @@
 <script lang="ts">
-    import {getImageUrl} from "../../scripts/GetImageUrl";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {createEventDispatcher} from "svelte";
     import {scale} from "svelte/transition";
-    import {resizeImg} from "../../scripts/ResizeImg";
+    import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {scaleDownImage} from "../../scripts/ScaleDownImage";
 
     export let image: string;
     export let title: string;
@@ -32,13 +32,13 @@
     }
 </script>
 
-{#await getImageUrl(image, SaveLoadManager.getSaveDirectory())}
+{#await (async () => await scaleDownImage(convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + image), 600))()}
     <button class="boardButtons">
         <span class="loader"></span>
     </button>
 {:then imgSrc}
     <button in:scale|global on:click={passClickEventToParent} class="boardButtons">
-        <img src={imgSrc} use:resizeImg/>
+        <img src={imgSrc} />
         <div class="bottomBar">
             <h2>
                 {title}

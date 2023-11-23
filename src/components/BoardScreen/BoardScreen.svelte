@@ -8,7 +8,6 @@
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
-    import {getImageUrl} from "../../scripts/GetImageUrl";
     import {imageExtensions, removeFileFromTakmaDataFolder, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
     import CreateNewList from "./CreateNewList.svelte";
     import List from "./List.svelte";
@@ -17,6 +16,7 @@
     import {onMount} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {convertFileSrc} from "@tauri-apps/api/tauri";
 
     onMount(() =>
     {
@@ -76,8 +76,8 @@
 
             SaveLoadManager.getData().setBoardBackgroundImage($selectedBoardId, pathToImage);
 
-            const imgUrl: string = await getImageUrl(pathToImage, SaveLoadManager.getSaveDirectory());
-            document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the getImageUrl function returns an url that we can then use here to display the image.
+            const imgUrl: string = convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + pathToImage);
+            document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
 

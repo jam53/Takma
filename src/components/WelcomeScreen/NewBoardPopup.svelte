@@ -6,12 +6,12 @@
     import {selectedBoardId} from "../../scripts/stores";
     import {readDir} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/dialog"
-    import {getImageUrl} from "../../scripts/GetImageUrl";
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {resolveResource} from "@tauri-apps/api/path";
-    import {resizeImg} from "../../scripts/ResizeImg";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {scaleDownImage} from "../../scripts/ScaleDownImage";
+    import {convertFileSrc} from "@tauri-apps/api/tauri";
 
     let showPopup = true;
     let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -82,7 +82,7 @@
         if (selected !== null && typeof(selected) === "string")
         {
             selectedImg = selected;
-            selectedImgObject.setAttribute('src', await getImageUrl(selectedImg));
+            selectedImgObject.setAttribute('src', await scaleDownImage(convertFileSrc(selectedImg), 720));
         }
     }
 </script>
@@ -102,7 +102,7 @@
                 <span class="loader"></span>
             {:then includedImagesInTakma}
                 <div class="selectedImgHolder" >
-                    {#await getImageUrl(includedImagesInTakma[0])}
+                    {#await scaleDownImage(convertFileSrc(includedImagesInTakma[0]), 720)}
                     {:then defaultImage}
                     <img bind:this={selectedImgObject} use:lazyload src={defaultImage} style="object-fit: cover"/>
                     <img src={boardPreview} alt="Board preview"/>
@@ -115,9 +115,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         {#each includedImagesInTakma as imgPath}
-                            {#await getImageUrl(imgPath)}
+                            {#await scaleDownImage(convertFileSrc(imgPath), 192)}
                             {:then imgUrl}
-                            <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getImageUrl(imgPath));}} src={imgUrl} style="object-fit: cover" tabindex="0" use:resizeImg/>
+                            <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await scaleDownImage(convertFileSrc(imgPath), 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                             <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                             {/await}
                         {/each}

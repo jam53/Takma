@@ -1,11 +1,11 @@
 <script lang="ts">
-    import type {Card, Checklist, TodoItem} from "../../scripts/Board";
-    import {getImageUrl} from "../../scripts/GetImageUrl";
+    import type {Card, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {draggingCardOrList, selectedBoardId, selectedCardId} from "../../scripts/stores";
-    import {resizeImg} from "../../scripts/ResizeImg";
     import {exists} from "@tauri-apps/api/fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
+    import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {scaleDownImage} from "../../scripts/ScaleDownImage";
 
     export let card: Card;
     export let refreshListFunction;
@@ -71,10 +71,10 @@
 >
     {#if card.coverImage !== "" && $draggingCardOrList === false}
         <!--We only display/update the cover image of this card when we are not dragging any cards/lists. This is because as soon as we start dragging cards/lists we refresh the board/lists which causes all of the cover images to be rerendered. This makes it very laggy to drag/drop cards/lists if there are any cards with cover images. That is why we only display/update the cover image if we aren't dragging any cards/lists.-->
-        {#await getImageUrl(card.coverImage, SaveLoadManager.getSaveDirectory())}
+        {#await (async () => await scaleDownImage(convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage), 600))()}
             <span class="loader"></span>
         {:then coverImage}
-            <img class="coverImage" src={coverImage} use:resizeImg/>
+            <img class="coverImage" src={coverImage} />
         {/await}
     {/if}
     <div class="nonCoverImageContainer">
