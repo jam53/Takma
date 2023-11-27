@@ -650,7 +650,7 @@
         overflow: hidden;
         min-height: 1em;
         min-width: min(28em, 70vw);
-        max-width: min(28em, 70vw);
+        word-break: break-word;
     }
 
     .titleDiv span[contenteditable]:empty::before {
