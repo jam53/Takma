@@ -19,7 +19,7 @@ export function scaleDownImage(srcUrl, maxPixelSize)
         const img = new Image();
         img.onerror = reject
         img.onload = function() {
-            const scaleRatio = maxPixelSize / Math.max(img.width, img.height)
+            const scaleRatio = maxPixelSize / Math.min(img.width, img.height)
             const w = img.width * scaleRatio
             const h = img.height * scaleRatio
             canvas.width = w
