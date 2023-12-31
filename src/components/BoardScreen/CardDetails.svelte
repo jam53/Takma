@@ -233,9 +233,6 @@
         }
     }
 
-    let descriptionPreElement;
-    $: editingDescription && descriptionPreElement?.focus();
-
     function refreshCardFunction()
     {
         cardToSave = cardToSave;
@@ -432,7 +429,6 @@
                     </div>
                     {#if editingDescription}
                         <pre role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("addDetailedDescriptionMarkdown")}
-                             bind:this={descriptionPreElement}
                               on:input={(e) => cardToSave.description = e.target.innerText.trim()}
                               on:focus={() => typing = true}
                               on:focusout={() => typing = false}
