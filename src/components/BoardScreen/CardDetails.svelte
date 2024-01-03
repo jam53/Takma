@@ -765,6 +765,9 @@
         display: flex;
         flex-direction: column;
         gap: 0.5em;
+        position: sticky;
+        top: 0;
+        height: fit-content;
     }
 
     .cardActionsHolder button {
