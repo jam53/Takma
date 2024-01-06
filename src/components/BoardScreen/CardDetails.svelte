@@ -291,12 +291,13 @@
         attachmentsComponent.refreshComponent();
     }
 
-    const unlisten = listen('tauri://file-drop', async event => {
+    let unlisten;
+    (async () => {unlisten = await listen('tauri://file-drop', async event => {
         if ($selectedCardId != "") //We only want to react to this filedrop event if there is a card selected. Otherwise it would mean the drop event was meant to change the background image of the board. Rather than to drop attachements onto a card.
         {
             await fileDropAttachments(event.payload);
         }
-    })
+    })})();
     onDestroy(() => {
         unlisten();
     })

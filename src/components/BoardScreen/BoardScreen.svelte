@@ -53,12 +53,13 @@
         }
     }
 
-    const unlisten = listen('tauri://file-drop', async event => {
+    let unlisten;
+    (async () => {unlisten = await listen('tauri://file-drop', async event => {
         if ($selectedCardId == "") //We only want to react to this filedrop event if there isn't a card selected. Otherwise it would mean the drop event was meant to drop attachements onto a card. Rather than to change the background image of the board.
         {
             await handleContainerFileDrop(event.payload[0]);
         }
-    })
+    })})();
     onDestroy(() => {
         unlisten();
     })
