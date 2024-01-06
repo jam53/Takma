@@ -1,6 +1,6 @@
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
-    import {afterUpdate, onMount} from "svelte";
+    import {afterUpdate, onDestroy, onMount} from "svelte";
     import {selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card, Checklist} from "../../scripts/Board";
@@ -18,13 +18,13 @@
     import {
         imageExtensions,
         removeFileFromTakmaDataFolder,
-        saveFilePathToDisk,
-        saveFileToDisk
+        saveFilePathToDisk
     } from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
+    import {listen} from "@tauri-apps/api/event";
 
     export let refreshListsFunction;
 
@@ -291,16 +291,24 @@
         attachmentsComponent.refreshComponent();
     }
 
+    const unlisten = listen('tauri://file-drop', async event => {
+        if ($selectedCardId != "") //We only want to react to this filedrop event if there is a card selected. Otherwise it would mean the drop event was meant to change the background image of the board. Rather than to drop attachements onto a card.
+        {
+            await fileDropAttachments(event.payload);
+        }
+    })
+    onDestroy(() => {
+        unlisten();
+    })
+
     /**
      * If the user drops one or more files onto the card, this function will add the files as attachments to the card
      */
-    async function fileDropAttachments(e)
+    async function fileDropAttachments(droppedFiles: String[])
     {
-        const droppedFiles: File[] = e.dataTransfer.files;
-
         for (let droppedFile of droppedFiles)
         {
-            let savedPath = await saveFileToDisk(droppedFile, $selectedBoardId);
+            let savedPath = await saveFilePathToDisk(droppedFile, $selectedBoardId);
             cardToSave.attachments.push(savedPath);
         }
 
@@ -374,7 +382,7 @@
 
 {#if showPopup}
     <div transition:blur|global bind:this={overlayElement} class="overlay" on:click={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" on:keydown|stopPropagation={handleKeyDown}
-         on:drop|preventDefault={fileDropAttachments} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault
+         on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault
 
     >
         <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->

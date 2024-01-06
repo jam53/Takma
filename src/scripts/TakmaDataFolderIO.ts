@@ -1,4 +1,4 @@
-import {createDir, readBinaryFile, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
+import {copyFile, createDir, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 
 /**
@@ -7,11 +7,18 @@ import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
  */
 export async function saveFilePathToDisk(pathToFile: string, boardID: string): Promise<string>
 {
-    const fileData = await readBinaryFile(pathToFile);
 
     const filename = crypto.randomUUID() + pathToFile.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
 
-    return await saveArrayBufferToDisk(fileData, filename, boardID);
+    let savePath = `./Takma/Files/${boardID}/`;
+
+    await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
+
+    savePath += filename;
+
+    await copyFile(pathToFile, savePath, {dir: SaveLoadManager.getSaveDirectory()});
+
+    return savePath
 }
 
 /**
@@ -28,6 +35,10 @@ export async function saveFileToDisk(file: File, boardID: string): Promise<strin
 }
 
 /**
+ * !! We should try to avoid using this function. As using the `writeBinaryFile()` and `readBinaryFile()` functions cause a lot of overhead.
+ * Rather than just passing the provided byte array to and from the back/front-end. The binary data gets converted to a JSON string because of the IPC Tauri uses, and then back from a JSON string to a byte array. This causes massive overhead, both in memory usage and in performance.
+ * Instead, we should use the `convertFileSrc()` method that Tauri provides, to directly get a link to an image from a filepath for example. Rather than reading the image file's bytes. And we should use `copyFile()` to copy one filepath to another location for example. Rather than reading the bytes from a file manually and writing the file manually using `readBinaryFile()` and `writeBinaryFile()` respectively.
+ *
  * This function saves an ArrayBuffer to Takma's "Files" data folder in a file with the name `filename`, and returns the path to the location of the saved file.
  */
 export async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>

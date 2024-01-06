@@ -79,12 +79,12 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.4.6 (395)",
+                "title": "Takma 1.4.6 (408)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,
                 "transparent": true,
-                "fileDropEnabled": false
+                "fileDropEnabled": true
             }
         ]
     }

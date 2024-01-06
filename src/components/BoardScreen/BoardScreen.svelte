@@ -3,7 +3,7 @@
         cardFilters,
         draggingCardOrList,
         dueDatesOverviewPopupIsVisible,
-        selectedBoardId
+        selectedBoardId, selectedCardId
     } from "../../scripts/stores";
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
@@ -13,10 +13,11 @@
     import List from "./List.svelte";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
-    import {onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {listen} from "@tauri-apps/api/event";
 
     onMount(() =>
     {
@@ -52,18 +53,32 @@
         }
     }
 
+    const unlisten = listen('tauri://file-drop', async event => {
+        if ($selectedCardId == "") //We only want to react to this filedrop event if there isn't a card selected. Otherwise it would mean the drop event was meant to drop attachements onto a card. Rather than to change the background image of the board.
+        {
+            await handleContainerFileDrop(event.payload[0]);
+        }
+    })
+    onDestroy(() => {
+        unlisten();
+    })
+
     /**
      * If the user drops a file on the container div, i.e. the background image, this function gets called to replace the background image.
      */
-    async function handleContainerFileDrop(e)
+    async function handleContainerFileDrop(droppedFile: String)
     {
-        const droppedFile: File = e.dataTransfer.files[0];
 
-        if (droppedFile.type.includes("image"))
+        if (imageExtensions.includes(getFileExtension(droppedFile).toLowerCase()))
         {
-            let savedPath = await saveFileToDisk(droppedFile, $selectedBoardId);
+            let savedPath = await saveFilePathToDisk(droppedFile, $selectedBoardId);
             await setBoardBackgroundImage(savedPath);
         }
+    }
+
+    function getFileExtension(pathToFile: string): string
+    {
+        return pathToFile.split(".").pop();
     }
 
     async function setBoardBackgroundImage(pathToImage: string)
@@ -134,7 +149,7 @@
         return cardsToFilter;
     }
 </script>
-<div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:drop|preventDefault={handleContainerFileDrop} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
+<div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>
