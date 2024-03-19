@@ -105,7 +105,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         }
         else //The clicked label wasn't assigned to the card yet, so we add it here
         {
-            $cardFilters.dueDates.push(dueDateValue);
+            $cardFilters.dueDates = [dueDateValue];
         }
 
         $cardFilters = $cardFilters; //We do this so that when we select/unselect a due date by clicking on the div, rather than the checkbox. That the checkbox would also update to reflect the new state and so that the boarscreen rerenders the list with the filtered cards.
