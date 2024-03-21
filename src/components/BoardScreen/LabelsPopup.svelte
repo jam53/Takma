@@ -262,7 +262,7 @@
                     <div id={`labelOptionDiv${label.id}`} class="labelOption">
                         <input type="checkbox" checked={cardToSave.labelIds.includes(label.id)}
                              on:click={() => handleLabelClick(label.id)}/>
-                        <input id={`colorInput${label.id}`} style="color: {label.titleColor}; background-color: {label.color}" class="label" placeholder="%%Type here to enter a title..."
+                        <input id={`colorInput${label.id}`} style="color: {label.titleColor}; background-color: {label.color}" class="label" placeholder={I18n.t("enterTitle")}
                             bind:value={label.title} on:change={() => refreshCardFunction()}/>
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"
                              on:click={() => document.getElementById(label.id).click()}

@@ -164,4 +164,5 @@ export default interface Translation
     pasteList: string;
     cardMatchedFilters: string;
     cardsMatchedFilters: string;
+    enterTitle: string;
 }

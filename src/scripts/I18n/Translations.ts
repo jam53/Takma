@@ -203,6 +203,7 @@ export let en: Translation = {
     pasteList: "Paste copied list",
     cardMatchedFilters: "card matched filters",
     cardsMatchedFilters: "cards matched filters",
+    enterTitle: "Type here to enter a title...",
 };
 
 export let ar: Translation = {
@@ -408,6 +409,7 @@ export let ar: Translation = {
     pasteList: "لصق القائمة المنسوخة",
     cardMatchedFilters: "بطاقة تطابقت مع الفلاتر",
     cardsMatchedFilters: "بطاقات تطابقت مع الفلاتر",
+    enterTitle: "اكتب هنا لإدخال عنوان...",
 };
 
 export let de: Translation = {
@@ -613,6 +615,7 @@ export let de: Translation = {
     pasteList: "Eingefügte Liste",
     cardMatchedFilters: "Karte entspricht den Filtern",
     cardsMatchedFilters: "Karten entsprechen den Filtern",
+    enterTitle: "Geben Sie hier einen Titel ein...",
 };
 
 export let es: Translation = {
@@ -818,6 +821,7 @@ export let es: Translation = {
     pasteList: "Pegar lista copiada",
     cardMatchedFilters: "tarjeta coincide con los filtros",
     cardsMatchedFilters: "tarjetas coinciden con los filtros",
+    enterTitle: "Escribe aquí para introducir un título...",
 };
 
 export let et: Translation = {
@@ -1023,6 +1027,7 @@ export let et: Translation = {
     pasteList: "Kleepige kopeeritud nimekiri",
     cardMatchedFilters: "kaart vastab filtritele",
     cardsMatchedFilters: "kaardid vastavad filtritele",
+    enterTitle: "Sisestage siia pealkiri...",
 };
 
 export let fr: Translation = {
@@ -1228,6 +1233,7 @@ export let fr: Translation = {
     pasteList: "Coller la liste copiée",
     cardMatchedFilters: "carte correspondant aux filtres",
     cardsMatchedFilters: "cartes correspondant aux filtres",
+    enterTitle: "Tapez ici pour entrer un titre...",
 };
 
 export let hi: Translation = {
@@ -1433,6 +1439,7 @@ export let hi: Translation = {
     pasteList: "कॉपी किए गए सूची को पेस्ट करें",
     cardMatchedFilters: "कार्ड फ़िल्टर के साथ मेल खाता है",
     cardsMatchedFilters: "कार्ड फ़िल्टर के साथ मेल खाते हैं",
+    enterTitle: "यहाँ टाइप करें एक शीर्षक दर्ज करने के लिए...",
 };
 
 export let id: Translation = {
@@ -1638,6 +1645,7 @@ export let id: Translation = {
     pasteList: "Tempel daftar yang disalin",
     cardMatchedFilters: "kartu sesuai dengan filter",
     cardsMatchedFilters: "kartu sesuai dengan filter",
+    enterTitle: "Ketik di sini untuk memasukkan judul...",
 };
 
 export let ja: Translation = {
@@ -1843,6 +1851,7 @@ export let ja: Translation = {
     pasteList: "コピーしたリストを貼り付ける",
     cardMatchedFilters: "カードがフィルターに一致しました",
     cardsMatchedFilters: "カードがフィルターに一致しました",
+    enterTitle: "ここにタイトルを入力してください...",
 };
 
 export let ko: Translation = {
@@ -2048,6 +2057,7 @@ export let ko: Translation = {
     pasteList: "복사한 리스트 붙여넣기",
     cardMatchedFilters: "카드가 필터와 일치합니다",
     cardsMatchedFilters: "카드가 필터와 일치합니다",
+    enterTitle: "여기에 제목을 입력하세요...",
 };
 
 export let nl: Translation = {
@@ -2253,6 +2263,7 @@ export let nl: Translation = {
     pasteList: "Gekopieerde lijst plakken",
     cardMatchedFilters: "kaart komt overeen met de gekozen filters",
     cardsMatchedFilters: "kaarten komen overeen met de gekozen filters",
+    enterTitle: "Typ hier om een titel in te voeren...",
 };
 
 export let pt: Translation = {
@@ -2458,6 +2469,7 @@ export let pt: Translation = {
     pasteList: "Colar lista copiada",
     cardMatchedFilters: "cartão corresponde aos filtros",
     cardsMatchedFilters: "cartões correspondem aos filtros",
+    enterTitle: "Digite aqui para inserir um título...",
 };
 
 export let ru: Translation = {
@@ -2663,6 +2675,7 @@ export let ru: Translation = {
     pasteList: "Вставить скопированный список",
     cardMatchedFilters: "карта соответствует фильтрам",
     cardsMatchedFilters: "карты соответствуют фильтрам",
+    enterTitle: "Введите здесь заголовок...",
 };
 
 export let tr: Translation = {
@@ -2868,6 +2881,7 @@ export let tr: Translation = {
     pasteList: "Kopyalanmış listeyi yapıştır",
     cardMatchedFilters: "tane kart filtrelerle eşleşiyor",
     cardsMatchedFilters: "tane kart filtrelerle eşleşiyor",
+    enterTitle: "Başlık girmek için buraya yazın...",
 };
 
 export let zh: Translation = {
@@ -3073,4 +3087,5 @@ export let zh: Translation = {
     pasteList: "粘贴复制的列表",
     cardMatchedFilters: "卡片匹配筛选条件",
     cardsMatchedFilters: "卡片匹配筛选条件",
+    enterTitle: "在此输入标题...",
 };
