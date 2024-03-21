@@ -19,6 +19,7 @@ export class TakmaData
     private _displayLanguage: string = navigator.language.substring(0,2); //The language Takma should be displayed in
     private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
     private _easterEggBoardAdded: boolean = false; //Whether or not the easteregg board has been added to the user's savefile yet
+    private _showLabelsText: boolean = true; //Whether or not the labels of cards on the boardscreen should display their text. When false only the color will be shown
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -155,6 +156,23 @@ export class TakmaData
     {
         this._easterEggBoardAdded = value;
         SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Returns whether or not the labels on the boardscreen should display their title if they have one, or only the color
+     */
+    get showLabelsText(): boolean
+    {
+        return this._showLabelsText;
+    }
+
+    /**
+     * Sets whether or not the labels on the boardscreen should display their title if they have one, or only the color
+     */
+    set showLabelsText(value: boolean)
+    {
+        this._showLabelsText = value;
+        SaveLoadManager.saveToDisk()
     }
 
     /**

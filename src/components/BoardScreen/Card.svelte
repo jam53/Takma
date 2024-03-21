@@ -8,7 +8,8 @@
     import {scaleDownImage} from "../../scripts/ScaleDownImage";
 
     export let card: Card;
-    export let refreshListFunction;
+    export let refreshListFunction; //Used to visually refresh the list this card is in
+    export let refreshListsFunction; //Used to visually refresh all the lists on this board
     export let listIdCardIsIn;
 
     function displayCardDetails()
@@ -79,9 +80,22 @@
     {/if}
     <div class="nonCoverImageContainer">
         <div class="labels">
-            {#each card.labelIds as labelId}
-                <div style="background-color: {SaveLoadManager.getData().getLabelColor($selectedBoardId, labelId)}">
-                </div>
+            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
+                {#key card}
+                    <!--This #key will be triggerd when we call the `refreshListsFunction()` after clicking on a label. If we don't do this #key, the labels won't change their appearance until the next time we open this board/refresh the cards in the lists by dragging a card/list e.g.-->
+                    {#if !SaveLoadManager.getData().showLabelsText}
+                        <div style="background-color: {label.color}"
+                             on:click|stopPropagation={() => {SaveLoadManager.getData().showLabelsText = true; refreshListsFunction()}}
+                        >
+                        </div>
+                    {:else}
+                        <span style="color: {label.titleColor}; background-color: {label.color}"
+                              on:click|stopPropagation={() => {SaveLoadManager.getData().showLabelsText = false; refreshListsFunction()}}
+                        >
+                            {label.title}
+                        </span>
+                    {/if}
+                {/key}
             {/each}
         </div>
         <span class="cardTitle">
@@ -172,6 +186,23 @@
         height: 0.5em;
         width: 2.4em;
         border-radius: 100px;
+        transition: 0.2s;
+    }
+
+    .labels span {
+        min-width: 2.4em;
+        height: 1.2em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        border-radius: 0.25em;
+        padding: 0 0.25em;
+        white-space: nowrap;
+        text-align: center;
+        transition: 0.2s;
+    }
+
+    .labels div:hover, .labels span:hover {
+        filter: brightness(70%);
     }
 
     .icons {

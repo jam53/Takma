@@ -879,6 +879,10 @@
 
     .labels div span {
         padding: 0 0.5em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 30em;
     }
 
     .dueDate {
