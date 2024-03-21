@@ -125,7 +125,9 @@
         //region add label to board
         const newLabel: Label = {
             id: newLabelId,
-            color: lastPickedColor
+            color: lastPickedColor,
+            title: "",
+            titleColor: calculateLabelTitleColor(lastPickedColor)
         };
         SaveLoadManager.getData().addLabelToBoard($selectedBoardId, newLabel);
         //endregion
@@ -139,10 +141,85 @@
 
     function editLabelColor(labelId: string)
     {
-        SaveLoadManager.getData().editLabelColor($selectedBoardId, labelId, lastPickedColor);
+        SaveLoadManager.getData().editLabelColor($selectedBoardId, labelId, lastPickedColor, calculateLabelTitleColor(lastPickedColor));
 
-        document.getElementById(`colorDiv${labelId}`).style.backgroundColor = lastPickedColor; //Sets the updated color in the labelsPopup UI
+        document.getElementById(`colorInput${labelId}`).style.backgroundColor = lastPickedColor; //Sets the updated color in the labelsPopup UI
         refreshCardFunction(); //Refresh the card's UI, so that the color change appears in the card
+    }
+
+    /**
+     * Given the color of a label, this function returns a new color that can be used for the title of that label.
+     * This color is chosen in such a way that it readable when put over the label color. But the color of the label is still retained, just lighter/darker. It doesn't just return black or white e.g.
+     */
+    function calculateLabelTitleColor(labelColor: string): string
+    {
+        const hslColor = htmlColorToHsl(labelColor);
+        const lightnessDifference = 40; //The amount that will be used to increase/decrease the lightness by
+
+        if (hslColor.lightness > lightnessDifference)
+        {
+            hslColor.lightness -= lightnessDifference;
+        }
+        else
+        {
+            hslColor.lightness += lightnessDifference;
+        }
+
+        return "hsl(" + hslColor.hue + "," + hslColor.saturation + "%," + hslColor.lightness + "%)";
+    }
+
+    /**
+     * This function converts any "html color" i.e. "red", "#ff0000", rgb(255,0,0), hsl(0, 100%, 50%), etc.
+     * to HSL. Technically it would be better to write separate functions for rgb->hsl, hex->hsl and so on. But by using the approach below where we create an element and get the color from that element, we just need a single functions.
+     *
+     * https://css-tricks.com/converting-color-spaces-in-javascript/#aa-built-in-names
+     *
+     * @param color any html color (rgb, rgba, hex, hsl, hsla or a build in html color name)
+     * @returns an object with 3 properties; hue, saturation and lightness
+     */
+    function htmlColorToHsl(color)
+    {
+        let fakeDiv = document.createElement("div");
+        fakeDiv.style.color = color;
+        document.body.appendChild(fakeDiv);
+
+        let cs = window.getComputedStyle(fakeDiv),
+            pv = cs.getPropertyValue("color");
+
+        document.body.removeChild(fakeDiv);
+
+        // Code ripped from RGBToHSL() (except pv is substringed)
+        let rgb = pv.substr(4).split(")")[0].split(","),
+            r = rgb[0] / 255,
+            g = rgb[1] / 255,
+            b = rgb[2] / 255,
+            cmin = Math.min(r,g,b),
+            cmax = Math.max(r,g,b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
+
+        if (delta == 0)
+            h = 0;
+        else if (cmax == r)
+            h = ((g - b) / delta) % 6;
+        else if (cmax == g)
+            h = (b - r) / delta + 2;
+        else
+            h = (r - g) / delta + 4;
+
+        h = Math.round(h * 60);
+
+        if (h < 0)
+            h += 360;
+
+        l = (cmax + cmin) / 2;
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
+
+        return {hue: h, saturation: s, lightness: l};
     }
 
     /**
@@ -185,8 +262,8 @@
                     <div id={`labelOptionDiv${label.id}`} class="labelOption">
                         <input type="checkbox" checked={cardToSave.labelIds.includes(label.id)}
                              on:click={() => handleLabelClick(label.id)}/>
-                        <div id={`colorDiv${label.id}`} style="background-color: {label.color}"
-                             on:click={() => handleLabelClick(label.id)}></div>
+                        <input id={`colorInput${label.id}`} style="color: {label.titleColor}; background-color: {label.color}" class="label" placeholder="%%Type here to enter a title..."
+                            bind:value={label.title} on:change={() => refreshCardFunction()}/>
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"
                              on:click={() => document.getElementById(label.id).click()}
                         ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -226,7 +303,6 @@
         flex-direction: column;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
-        width: 18em;
         padding: 1em 0.5em 0.5em 0.5em;
     }
 
@@ -240,7 +316,7 @@
         gap: 0.5em;
         max-height: 30vh;
         overflow-y: auto;
-        padding: 0 0.5em;
+        padding: 0.5em;
     }
 
     .labelOption {
@@ -249,15 +325,17 @@
         gap: 1em;
     }
 
-    .labelOption div {
+    .label {
         width: 100%;
         height: 2em;
         border-radius: 5px;
-        cursor: pointer;
-        transition: 0.1s;
+        cursor: text;
+        transition: 0.2s;
+        padding: 0 0.5em;
+        border: none;
     }
 
-    .labelOption div:hover {
+    .label:hover {
         filter: brightness(70%);
     }
 
@@ -296,7 +374,7 @@
         outline: 0;
         flex-grow: 0;
         border-radius: 0.25em;
-        transition: background 300ms;
+        transition: 0.2s;
         cursor: pointer;
     }
 
@@ -316,6 +394,10 @@
 
     [type=checkbox]:hover::before {
         box-shadow: inset 0 0 0 2px var(--selected-button);
+    }
+
+    [type=checkbox]:checked:hover {
+        filter: brightness(70%);
     }
 
     [type=checkbox]:checked {

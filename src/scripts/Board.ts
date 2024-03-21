@@ -61,7 +61,9 @@ export interface CopiedList
 export interface Label
 {
     id: string,
-    color: string //Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
+    color: string, //Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
+    title: string,
+    titleColor: string //This color is calculated and set through code based on the color of this label. The user themselves can't set this value
 }
 
 export interface Checklist
@@ -159,7 +161,7 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
         cardWithoutAttachmentsAndCoverImage: await duplicateCard(card!, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the attachments/coverImage it doesn't matter, since we duplicate those ourselves in this case.
         attachments: attachments as {fileName: string, byteArray: Uint8Array}[],
         coverImage: coverImage,
-        labelsCardRefersTo: card.labelIds.map(labelId => ({id: labelId, color: SaveLoadManager.getData().getLabelColor(boardId, labelId)}))
+        labelsCardRefersTo: card.labelIds.map(labelId => ({id: labelId, color: SaveLoadManager.getData().getLabelColor(boardId, labelId), title: SaveLoadManager.getData().getLabelTitle(boardId, labelId), titleColor: SaveLoadManager.getData().getLabelTitleColor(boardId, labelId)}))
     }
 }
 

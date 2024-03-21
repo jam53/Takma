@@ -429,10 +429,13 @@
                         </button>
                     {/if}
                     <div class="labels">
-                        {#each cardToSave.labelIds as labelId}
-                            <div style="background-color: {SaveLoadManager.getData().getLabelColor($selectedBoardId, labelId)}"
+                        {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
+                            <div style="background-color: {label.color}"
                                  on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                             >
+                                <span style="color: {label.titleColor}">
+                                    {label.title}
+                                </span>
                             </div>
                         {/each}
                     </div>
@@ -861,14 +864,21 @@
 
     .labels div {
         height: 1.5em;
-        width: 2.5em;
+        min-width: 2.5em;
         border-radius: 4px;
         cursor: pointer;
-        transition: 0.1s;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .labels div:hover {
         filter: brightness(70%);
+    }
+
+    .labels div span {
+        padding: 0 0.5em;
     }
 
     .dueDate {

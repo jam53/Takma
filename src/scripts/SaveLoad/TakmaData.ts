@@ -470,6 +470,16 @@ export class TakmaData
     }
 
     /**
+     * Given a labelId, returns the label with that labelId
+     */
+    public getLabel(boardId: string, labelId: string): Label
+    {
+        let board: Board = this._boards.find(board => board.id === boardId);
+
+        return board.labels.find(label => label.id === labelId);
+    }
+
+    /**
      * Given a labelId, returns the color matching that labelId
      * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
      */
@@ -478,6 +488,27 @@ export class TakmaData
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId).color;
+    }
+
+    /**
+     * Given a labelId, returns the color that should be used for the title of that label
+     * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
+     */
+    public getLabelTitleColor(boardId: string, labelId: string): string
+    {
+        let board: Board = this._boards.find(board => board.id === boardId);
+
+        return board.labels.find(label => label.id === labelId).titleColor;
+    }
+
+    /**
+     * Given a labelId, returns the title of that labelId
+     */
+    public getLabelTitle(boardId: string, labelId: string): string
+    {
+        let board: Board = this._boards.find(board => board.id === boardId);
+
+        return board.labels.find(label => label.id === labelId).title;
     }
 
     /**
@@ -493,14 +524,15 @@ export class TakmaData
     }
 
     /**
-     * Changes the color of a label in a board
+     * Changes the color of a label and the color of the label's title in a board
      */
-    public editLabelColor(boardId: string, labelId: string, labelColor: string)
+    public editLabelColor(boardId: string, labelId: string, labelColor: string, labelTitleColor: string)
     {
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
         this._boards[indexOfBoard].labels[indexOfLabel].color = labelColor;
+        this._boards[indexOfBoard].labels[indexOfLabel].titleColor = labelTitleColor;
 
         SaveLoadManager.saveToDisk();
     }
