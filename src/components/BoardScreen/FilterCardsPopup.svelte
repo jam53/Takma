@@ -168,7 +168,11 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                              on:click={() => handleLabelClick(label.id)}
                         >
                             <input type="checkbox" checked={$cardFilters.labelIds.includes(label.id)}/>
-                            <div id={`colorDiv${label.id}`} style="background-color: {label.color}"></div>
+                            <div id={`colorDiv${label.id}`} style="background-color: {label.color}">
+                                <span style="color: {label.titleColor}">
+                                    {label.title}
+                                </span>
+                            </div>
                         </div>
                     {/each}
                     {/if}
@@ -222,10 +226,22 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         height: 2em;
         border-radius: 5px;
         transition: 0.1s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .labelOption div:hover {
         filter: brightness(70%);
+    }
+
+    .labelOption div span {
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 0 0.5em;
+        width: 13em;
     }
 
     .labelOption svg {
