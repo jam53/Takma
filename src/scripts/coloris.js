@@ -368,8 +368,13 @@
 
         if (!settings.inline) {
             const coords = currentEl.getBoundingClientRect();
+
+            //getBoundingClientRect() gets the dimensions and position of the element relative to the viewport, including any scroll offsets.
+            //When we have a ton of labels in the `LabelsPopup`, and we scroll all the way down to the ones at the bottom. This scrolling position will be included in coords.y. We don't want this since it causes the color picker to be rendered off screen
+            const scrollAmount = currentEl.parentElement.parentElement.scrollTop;
+
             let left = coords.x;
-            let top = scrollY + coords.y + coords.height + settings.margin;
+            let top = scrollY + coords.y + coords.height + settings.margin - scrollAmount;
 
             // If the color picker is inside a custom container
             // set the position relative to it
@@ -400,7 +405,7 @@
 
                 if (top + pickerHeight - scrollY > document.documentElement.clientHeight) {
                     if (pickerHeight + settings.margin <= coords.top) {
-                        top = scrollY + coords.y - pickerHeight - settings.margin;
+                        top = scrollY + coords.y + coords.height - pickerHeight - settings.margin - scrollAmount;
                         reposition.top = true;
                     }
                 }

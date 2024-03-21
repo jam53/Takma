@@ -295,6 +295,7 @@
     }
 
     .navbar {
+        min-width: 18em;
         display: inline-flex;
         background-color: var(--background-color);
         backdrop-filter: blur(10px);
