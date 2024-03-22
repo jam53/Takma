@@ -82,6 +82,15 @@ export interface TodoItem
 
 export type sortBoardsFunctionName = "sortByCreationDateAscending" | "sortByCreationDateDescending" | "sortByMostRecentlyOpened" | "sortByLeastRecentlyOpened" | "sortAlphabeticallyAscending" | "sortAlphabeticallyDescending" | "dontSort";
 
+export interface windowState
+{
+    width: number,
+    height: number,
+    fullscreen: boolean,
+    x: number, //The X-coordinate of the left upper corner of the Takma window
+    y: number, //The Y-coordinate of the left upper corner of the Takma window
+}
+
 /**
  * Duplicates a card object
  * @param card The card object that should be duplicated

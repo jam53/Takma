@@ -7,7 +7,14 @@
     import {selectedBoardId, selectedCardId} from "./scripts/stores";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
-    import {appWindow} from "@tauri-apps/api/window";
+    import {
+        appWindow,
+        currentMonitor,
+        LogicalPosition,
+        LogicalSize,
+        PhysicalPosition,
+        PhysicalSize
+    } from "@tauri-apps/api/window";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
     import {I18n} from "./scripts/I18n/I18n";
@@ -115,13 +122,75 @@
     let lastFocusedElement = document.activeElement;
     window.addEventListener("focus", () => lastFocusedElement = document.activeElement, true);
     window.addEventListener("blur", () => lastFocusedElement?.focus());
+
+    /**
+     * This function will be called when this component enters the DOM, AKA for this component in particular when the app is launched. It then restores the window state Takma was in the last time it was open.
+     * This function also does some checks to make sure the window can fit on the screen. In the event that the window wouldn't fit on screen, it gets repositioned and made smaller.
+     */
+    async function restoreWindowState()
+    {
+        let windowState = SaveLoadManager.getData().windowState;
+
+        if (windowState.fullscreen)
+        {
+            await appWindow.maximize();
+        }
+        else
+        {
+            const monitorSize = (await currentMonitor()).size;
+
+            windowState.x = Math.max(0, windowState.x); //If a part of the window is outside of the screen, towards the left or the top, we set the position back to within the bounds of the screen.
+            windowState.y = Math.max(0, windowState.y);
+
+            if (windowState.x + windowState.width > monitorSize.width && windowState.width < monitorSize.width)
+            {//If the window will be off-screen, but less wide than the screen, reposition it so it fits within the bounds of the screen
+                windowState.x = 0;
+            }
+            else if (windowState.x + windowState.width > monitorSize.width && windowState.width > monitorSize.width)
+            {//If the window is wider than the screen, make it smaller and reposition it to fit within the bounds of the screen
+                windowState.x = 0;
+                windowState.width = Math.round(monitorSize.width * (2 / 3));
+            }
+
+            if (windowState.y + windowState.height > monitorSize.height - 100 && windowState.height < monitorSize.height)
+            {//-100 is to account for the height of the windows taskbar
+                windowState.y = 0;
+            }
+            else if (windowState.y + windowState.height > monitorSize.height - 100 && windowState.height > monitorSize.height)
+            {//-100 is to account for the height of the windows taskbar
+                windowState.y = 0;
+                windowState.height = Math.round(monitorSize.height * (2 / 3));
+            }
+
+            await appWindow.setPosition(new PhysicalPosition(windowState.x, windowState.y));
+            await appWindow.unmaximize();
+            await appWindow.setSize(new PhysicalSize(windowState.width, windowState.height));
+        }
+
+        //Add listeners to get notified about future changes concerning the window state
+        appWindow.onMoved(({ payload: position }) => {
+            SaveLoadManager.getData().setWindowStatePosition(position.x, position.y)
+        });
+
+        appWindow.onResized(async ({payload: size}) =>
+        {
+            if (!(await appWindow.isMinimized()))
+            {//We don't want to save the size of the window when it is minimized. That would cause the Takma window to be very small the next time it is opened.
+                SaveLoadManager.getData().setWindowStateSize(size.width, size.height, await appWindow.isMaximized())
+            }
+        });
+    }
+
+    //We may only call the appWindow methods we use in `restoreWindowState()` once this component/the app has loaded, otherwise it crashes
+    let navBarElement;
+    $: navBarElement !== null && restoreWindowState();
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
 {#await SaveLoadManager.loadSaveFileFromDisk()}
     <h1>{I18n.t("loadSaveFile")}</h1>
 {:then _}
-    <NavBar/>
+    <NavBar bind:this={navBarElement}/>
         {#if localStorage.getItem("saveLocation") === null}
           <ChooseSaveLocationScreen/>
         {:else if $selectedBoardId === ""}

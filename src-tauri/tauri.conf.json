@@ -39,7 +39,9 @@
                 "minimize": true,
                 "unmaximize": true,
                 "unminimize": true,
-                "startDragging": true
+                "startDragging": true,
+                "setSize": true,
+                "setPosition": true
             },
             "notification": {
                 "all": true
@@ -79,7 +81,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.4.8 (427)",
+                "title": "Takma 1.4.8 (441)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,

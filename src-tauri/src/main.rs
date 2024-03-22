@@ -44,7 +44,6 @@ fn main() {
         })
         // .plugin(tauri_plugin_deep_link::init()) // consider adding a js api later
         .invoke_handler(tauri::generate_handler![show_in_folder])
-        .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

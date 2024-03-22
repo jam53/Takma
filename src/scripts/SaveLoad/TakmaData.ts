@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, Label, List, sortBoardsFunctionName} from "../Board";
+import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
 import {removeDir, removeFile} from "@tauri-apps/api/fs";
 import {saveFilePathToDisk} from "../TakmaDataFolderIO";
 
@@ -20,6 +20,13 @@ export class TakmaData
     private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
     private _easterEggBoardAdded: boolean = false; //Whether or not the easteregg board has been added to the user's savefile yet
     private _showLabelsText: boolean = true; //Whether or not the labels of cards on the boardscreen should display their text. When false only the color will be shown
+    private _windowState: windowState = {
+        width: 1200,
+        height: 700,
+        fullscreen: true,
+        x: 200,
+        y: 200,
+    }; //Used to save and restore the state of the Takma window. E.g. whether or not it was full screen, the window size and so on
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -172,7 +179,15 @@ export class TakmaData
     set showLabelsText(value: boolean)
     {
         this._showLabelsText = value;
-        SaveLoadManager.saveToDisk()
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Returns the last saved window state
+     */
+    get windowState(): windowState
+    {
+        return this._windowState ;
     }
 
     /**
@@ -629,6 +644,29 @@ export class TakmaData
 
         this.incrementTotalCardsCreated();
         SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Sets the x and y coordinates of the window state
+     */
+    public setWindowStatePosition(x: number, y:number)
+    {
+        this._windowState.x = x;
+        this._windowState.y = y;
+
+        // SaveLoadManager.saveToDisk(); //We aren't saving on purpose, otherwise it becomes really laggy when resizing/dragging the window. These changes will be saved to disk, the next time another function changes some state and calls `SaveLoadManager.saveToDisk()`
+    }
+
+    /**
+     * Sets the size and fullscreen variables of the window state
+     */
+    public setWindowStateSize(width: number, height:number, fullscreen: boolean)
+    {
+        this._windowState.width = width;
+        this._windowState.height = height;
+        this._windowState.fullscreen = fullscreen;
+
+        // SaveLoadManager.saveToDisk(); //We aren't saving on purpose, otherwise it becomes really laggy when resizing/dragging the window. These changes will be saved to disk, the next time another function changes some state and calls `SaveLoadManager.saveToDisk()`
     }
     //endregion
 }
