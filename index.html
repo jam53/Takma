@@ -12,7 +12,7 @@
     <div data-tauri-drag-region class="titlebar" id="titlebar">
 <!--    `data-tauri-drag-region` allows us to drag the window    -->
         <div class="titlebar-icon">
-            <img src="./src/images/Takma.svg" alt="Takma icon">
+            <img id="titlebar-icon" src="./src/images/Takma.svg" alt="Takma icon">
         </div>
         <div data-tauri-drag-region class="titlebar-title" id="titlebar-title">Window title</div>
 <!--    `Window title` gets replaced with "Takma x.y.z (build)" in the script tag of this index.html document    -->
@@ -174,8 +174,11 @@
 <script type="module">
     import { appWindow } from '@tauri-apps/api/window'
     import tauriConf from "./src-tauri/tauri.conf.json"
+    import takmaLogoUrl from "./src/images/Takma.svg"
 
     document.getElementById("titlebar-title").textContent = tauriConf.tauri.windows[0].title;
+
+    document.getElementById("titlebar-icon").src = takmaLogoUrl; //If we don't set it through code, and just leave the source of the image "./src/images/Takma.svg" as set in the HTML. It will only work in debug builds but not in release builds. We need to import the image using Vite, and use that image url.
 
     document.getElementById('titlebar-minimize').addEventListener('click', () => appWindow.minimize());
     document.getElementById('titlebar-maximize').addEventListener('click', () => appWindow.toggleMaximize());
