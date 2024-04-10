@@ -14,26 +14,19 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {shuffle} from "../../scripts/KnuthShuffle";
-    import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
 
     // pos is cursor position when right click occur
-    let pos = {x: -1000000, y: 0}
+    let pos = {x: 0, y: 0}
     // menu is dimension (height and width) of context menu
     let menu = {h: 0, w: 0}
     // browser/window dimension (height and width)
     let browser = {w: 0, h: 0}
     // showMenu is state of context-menu visibility
-    let showMenu = true;
+    let showMenu = false;
     // to display some text
     let content;
-
-    onMount(() =>
-    {
-        closeContextMenu(); //A couple things to note here, we start with `showMenu` set to `true` and the xPos of the popup menu set to -1000000. We do this because when we open the popup menu for the first time, the width is very small. When we open it for a second time the width is correct. This is why we start with `showMenu` set to `true`. Now in this case the popup menu wont have the correct with and it will be visible even though the user hasn't opened it. We avoid the user from seeing this by positioning it somewhere off screen by setting the xPos to -1000000. Once the UI is loaded (i.e. when this onMount function gets called) we close the popup menu. This is because if we would leave it open, the popup menu would get shown at the correct location when the user chooses to open it. But the intro transition won't be played since it would already be open, that's why we close it. Now when the user chooses to open the popup menu, the intro transition will be played and the popup menu will have the correct width.
-    });
 
     export function openContextMenu(e)
     {
@@ -65,6 +58,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         showMenu = false;
     }
 
+    /**
+     * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
+     */
     function getContextMenuDimension(node)
     {
         // This function will get context menu dimension
@@ -189,8 +185,27 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
 </script>
 
+<nav use:getContextMenuDimension style="visibility: hidden; position: absolute;"
+>
+    <div class="navbar">
+        <ul>
+            {#each menuItems as item}
+                {#if item.name === "hr"}
+                    <hr>
+                {:else}
+                    <li>
+                        <button on:click={item.onClick}>
+                            {@html item.svg}
+                            {item.displayText}
+                        </button>
+                    </li>
+                {/if}
+            {/each}
+        </ul>
+    </div>
+</nav>
 {#if showMenu}
-    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
+    <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
          on:click_outside={closeContextMenu}
          bind:this={navElement}

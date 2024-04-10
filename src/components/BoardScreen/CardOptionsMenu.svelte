@@ -22,13 +22,11 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         duplicateCardAsCopiedCard, duplicateCopiedCardAsCard
     } from "../../scripts/Board";
 
-    export let mouseClickEvent;
     export let cardId;
     export let refreshListsFunction;
     export let listIdCardIsIn;
 
     let navElement;
-    $: (mouseClickEvent && navElement) && openContextMenu(mouseClickEvent); //Runs the `openContextMenu()` function to show the context menu, once the `mouseClickEvent` and `navElement` variables are set i.e. no longer undefined
 
     // pos is cursor position when right click occur
     let pos = {x: 0, y: 0}
@@ -43,8 +41,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     export function openContextMenu(e)
     {
-        getContextMenuDimension(navElement);
-
         showMenu = true;
         browser = {
             w: window.innerWidth,
@@ -73,6 +69,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         showMenu = false;
     }
 
+    /**
+     * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
+     */
     function getContextMenuDimension(node)
     {
         // This function will get context menu dimension
@@ -164,8 +163,29 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
 </script>
 
+<!--This hidden navElement looks exactly the same as `navElement` but is hidden and has no animations. This way it can be used to gt the correct dimensions of the `navElement`, without having to wait for it's intro animation to finish-->
+<nav style="visibility: hidden; position: absolute;"
+     use:getContextMenuDimension
+>
+    <div class="navbar" >
+        <ul>
+            {#each menuItems as item}
+                {#if item.name === "hr"}
+                    <hr>
+                {:else if item.name !== "pasteCard" || (item.name === "pasteCard" && $copiedCard !== null)}
+                    <li>
+                        <button on:click={item.onClick}>
+                            {@html item.svg}
+                            {item.displayText}
+                        </button>
+                    </li>
+                {/if}
+            {/each}
+        </ul>
+    </div>
+</nav>
 {#if showMenu}
-    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
+    <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
          on:click_outside={closeContextMenu}
          bind:this={navElement}

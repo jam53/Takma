@@ -63,7 +63,7 @@
          }
      }}
      on:contextmenu|preventDefault={e => {
-         new CardOptionsMenu({props: {mouseClickEvent: e, cardId: card.id, refreshListsFunction: refreshListFunction, listIdCardIsIn: listIdCardIsIn}, target: document.body, intro: true});
+         (new CardOptionsMenu({props: {cardId: card.id, refreshListsFunction: refreshListFunction, listIdCardIsIn: listIdCardIsIn}, target: document.body, intro: true})).openContextMenu(e);
      }}
      class:deleteCard={hovering && shiftKeyPressed}
      on:keydown={e => e.key === "Enter" && displayCardDetails()}

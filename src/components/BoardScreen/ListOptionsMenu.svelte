@@ -69,6 +69,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         menuItems = menuItemsDefault;
     }
 
+    /**
+     * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
+     */
     function getContextMenuDimension(node)
     {
         // This function will get context menu dimension
@@ -310,8 +313,29 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     }
 </script>
 
+<!--This hidden navElement looks exactly the same as `navElement` but is hidden and has no animations. This way it can be used to gt the correct dimensions of the `navElement`, without having to wait for it's intro animation to finish-->
+<nav style="visibility: hidden; position: absolute;"
+     use:getContextMenuDimension
+>
+    <div class="navbar" >
+        <ul>
+            {#each menuItems as item}
+                {#if item.name === "hr"}
+                    <hr>
+                {:else if item.name !== "pasteList" || (item.name === "pasteList" && $copiedList !== null)}
+                    <li>
+                        <button on:click={item.onClick}>
+                            {@html item.svg}
+                            {item.displayText}
+                        </button>
+                    </li>
+                {/if}
+            {/each}
+        </ul>
+    </div>
+</nav>
 {#if showMenu}
-    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
+    <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          bind:this={navElement}
          on:keydown|stopPropagation={handleKeyDown} tabindex="1"
     >

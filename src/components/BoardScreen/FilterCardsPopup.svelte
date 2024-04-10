@@ -15,25 +15,19 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {cardFilters, selectedBoardId} from "../../scripts/stores";
-    import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
 
     // pos is cursor position when right click occur
-    let pos = {x: -1000000, y: 0}
+    let pos = {x: 0, y: 0}
     // menu is dimension (height and width) of context menu
     let menu = {h: 0, w: 0}
     // browser/window dimension (height and width)
     let browser = {w: 0, h: 0}
     // showMenu is state of context-menu visibility
-    let showMenu = true;
+    let showMenu = false;
     // to display some text
     let content;
-
-    onMount(() =>
-    {
-        closeContextMenu(); //A couple things to note here, we start with `showMenu` set to `true` and the xPos of the popup menu set to -1000000. We do this because when we open the popup menu for the first time, the width is very small. When we open it for a second time the width is correct. This is why we start with `showMenu` set to `true`. Now in this case the popup menu wont have the correct with and it will be visible even though the user hasn't opened it. We avoid the user from seeing this by positioning it somewhere off screen by setting the xPos to -1000000. Once the UI is loaded (i.e. when this onMount function gets called) we close the popup menu. This is because if we would leave it open, the popup menu would get shown at the correct location when the user chooses to open it. But the intro transition won't be played since it would already be open, that's why we close it. Now when the user chooses to open the popup menu, the intro transition will be played and the popup menu will have the correct width.
-    });
 
     export function openContextMenu(e)
     {
@@ -65,6 +59,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         showMenu = false;
     }
 
+    /**
+     * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
+     */
     function getContextMenuDimension(node)
     {
         // This function will get context menu dimension
@@ -132,8 +129,51 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     ];
 </script>
 
+<nav use:getContextMenuDimension style="visibility: hidden; position: absolute;"
+>
+    <div class="navbar">
+        <h3 class="title">
+            {I18n.t("filterCards")}
+        </h3>
+        <br>
+        <h4>{I18n.t("dueDate")}</h4>
+        <div class="dueDatesHolder">
+            {#each dueDateValues as dueDate}
+                <div class="dueDate"
+                     on:click={() => handleDueDateClick(dueDate.value)}
+                >
+                    <input type="checkbox" checked={$cardFilters.dueDates.includes(dueDate.value)}>
+                    <svg stroke="currentColor" class:danger={dueDate.value === 0} class:warning={dueDate.value === 24 * 60 * 60 * 1000} stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
+                    <span>
+                            {dueDate.title}
+                        </span>
+                </div>
+            {/each}
+        </div>
+        {#if SaveLoadManager.getData().getBoard($selectedBoardId)?.labels.length > 0}
+            <hr>
+            <h4>{I18n.t("labels")}</h4>
+            <div class="labelsHolder">
+                {#if $selectedBoardId !== ""}
+                    {#each SaveLoadManager.getData().getBoard($selectedBoardId).labels as label}
+                        <div class="labelOption"
+                             on:click={() => handleLabelClick(label.id)}
+                        >
+                            <input type="checkbox" checked={$cardFilters.labelIds.includes(label.id)}/>
+                            <div style="background-color: {label.color}">
+                                <span style="color: {label.titleColor}">
+                                    {label.title}
+                                </span>
+                            </div>
+                        </div>
+                    {/each}
+                {/if}
+            </div>
+        {/if}
+    </div>
+</nav>
 {#if showMenu}
-    <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
+    <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
          on:click_outside={closeContextMenu}
          bind:this={navElement}
