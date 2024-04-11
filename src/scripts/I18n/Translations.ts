@@ -204,6 +204,9 @@ export let en: Translation = {
     cardMatchedFilters: "card matched filters",
     cardsMatchedFilters: "cards matched filters",
     enterTitle: "Type here to enter a title...",
+    duplicateBoard: "Duplicate board",
+    copyBoard: "Copy board",
+    pasteBoard: "Paste board",
 };
 
 export let ar: Translation = {
@@ -410,6 +413,9 @@ export let ar: Translation = {
     cardMatchedFilters: "بطاقة تطابقت مع الفلاتر",
     cardsMatchedFilters: "بطاقات تطابقت مع الفلاتر",
     enterTitle: "اكتب هنا لإدخال عنوان...",
+    duplicateBoard: "تكرار اللوحة",
+    copyBoard: "نسخ اللوحة",
+    pasteBoard: "لصق اللوحة",
 };
 
 export let de: Translation = {
@@ -616,6 +622,9 @@ export let de: Translation = {
     cardMatchedFilters: "Karte entspricht den Filtern",
     cardsMatchedFilters: "Karten entsprechen den Filtern",
     enterTitle: "Geben Sie hier einen Titel ein...",
+    duplicateBoard: "Board duplizieren",
+    copyBoard: "Board kopieren",
+    pasteBoard: "Board einfügen",
 };
 
 export let es: Translation = {
@@ -822,6 +831,9 @@ export let es: Translation = {
     cardMatchedFilters: "tarjeta coincide con los filtros",
     cardsMatchedFilters: "tarjetas coinciden con los filtros",
     enterTitle: "Escribe aquí para introducir un título...",
+    duplicateBoard: "Duplicar tablero",
+    copyBoard: "Copiar tablero",
+    pasteBoard: "Pegar tablero",
 };
 
 export let et: Translation = {
@@ -1028,6 +1040,9 @@ export let et: Translation = {
     cardMatchedFilters: "kaart vastab filtritele",
     cardsMatchedFilters: "kaardid vastavad filtritele",
     enterTitle: "Sisestage siia pealkiri...",
+    duplicateBoard: "Kopeeri tahvel",
+    copyBoard: "Kopeeri tahvel",
+    pasteBoard: "Kleebi tahvel",
 };
 
 export let fr: Translation = {
@@ -1234,6 +1249,9 @@ export let fr: Translation = {
     cardMatchedFilters: "carte correspondant aux filtres",
     cardsMatchedFilters: "cartes correspondant aux filtres",
     enterTitle: "Tapez ici pour entrer un titre...",
+    duplicateBoard: "Dupliquer le tableau",
+    copyBoard: "Copier le tableau",
+    pasteBoard: "Coller le tableau",
 };
 
 export let hi: Translation = {
@@ -1440,6 +1458,9 @@ export let hi: Translation = {
     cardMatchedFilters: "कार्ड फ़िल्टर के साथ मेल खाता है",
     cardsMatchedFilters: "कार्ड फ़िल्टर के साथ मेल खाते हैं",
     enterTitle: "यहाँ टाइप करें एक शीर्षक दर्ज करने के लिए...",
+    duplicateBoard: "बोर्ड की प्रतिलिपि बनाएं",
+    copyBoard: "बोर्ड कॉपी करें",
+    pasteBoard: "बोर्ड पेस्ट करें",
 };
 
 export let id: Translation = {
@@ -1646,6 +1667,9 @@ export let id: Translation = {
     cardMatchedFilters: "kartu sesuai dengan filter",
     cardsMatchedFilters: "kartu sesuai dengan filter",
     enterTitle: "Ketik di sini untuk memasukkan judul...",
+    duplicateBoard: "Duplikat papan",
+    copyBoard: "Salin papan",
+    pasteBoard: "Tempel papan",
 };
 
 export let ja: Translation = {
@@ -1852,6 +1876,9 @@ export let ja: Translation = {
     cardMatchedFilters: "カードがフィルターに一致しました",
     cardsMatchedFilters: "カードがフィルターに一致しました",
     enterTitle: "ここにタイトルを入力してください...",
+    duplicateBoard: "ボードを複製する",
+    copyBoard: "ボードをコピーする",
+    pasteBoard: "ボードを貼り付ける",
 };
 
 export let ko: Translation = {
@@ -2058,6 +2085,9 @@ export let ko: Translation = {
     cardMatchedFilters: "카드가 필터와 일치합니다",
     cardsMatchedFilters: "카드가 필터와 일치합니다",
     enterTitle: "여기에 제목을 입력하세요...",
+    duplicateBoard: "보드 복제",
+    copyBoard: "보드 복사",
+    pasteBoard: "보드 붙여넣기",
 };
 
 export let nl: Translation = {
@@ -2264,6 +2294,9 @@ export let nl: Translation = {
     cardMatchedFilters: "kaart komt overeen met de gekozen filters",
     cardsMatchedFilters: "kaarten komen overeen met de gekozen filters",
     enterTitle: "Typ hier om een titel in te voeren...",
+    duplicateBoard: "Bord dupliceren",
+    copyBoard: "Bord kopiëren",
+    pasteBoard: "Bord plakken",
 };
 
 export let pt: Translation = {
@@ -2470,6 +2503,9 @@ export let pt: Translation = {
     cardMatchedFilters: "cartão corresponde aos filtros",
     cardsMatchedFilters: "cartões correspondem aos filtros",
     enterTitle: "Digite aqui para inserir um título...",
+    duplicateBoard: "Duplicar quadro",
+    copyBoard: "Copiar quadro",
+    pasteBoard: "Colar quadro",
 };
 
 export let ru: Translation = {
@@ -2676,6 +2712,9 @@ export let ru: Translation = {
     cardMatchedFilters: "карта соответствует фильтрам",
     cardsMatchedFilters: "карты соответствуют фильтрам",
     enterTitle: "Введите здесь заголовок...",
+    duplicateBoard: "Дублировать доску",
+    copyBoard: "Копировать доску",
+    pasteBoard: "Вставить доску",
 };
 
 export let tr: Translation = {
@@ -2882,6 +2921,9 @@ export let tr: Translation = {
     cardMatchedFilters: "tane kart filtrelerle eşleşiyor",
     cardsMatchedFilters: "tane kart filtrelerle eşleşiyor",
     enterTitle: "Başlık girmek için buraya yazın...",
+    duplicateBoard: "Pano kopyala",
+    copyBoard: "Pano kopyala",
+    pasteBoard: "Pano yapıştır",
 };
 
 export let zh: Translation = {
@@ -3088,4 +3130,7 @@ export let zh: Translation = {
     cardMatchedFilters: "卡片匹配筛选条件",
     cardsMatchedFilters: "卡片匹配筛选条件",
     enterTitle: "在此输入标题...",
+    duplicateBoard: "复制看板",
+    copyBoard: "复制看板",
+    pasteBoard: "粘贴看板",
 };

@@ -4,6 +4,7 @@
     import {scale} from "svelte/transition";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
     import {scaleDownImage} from "../../scripts/ScaleDownImage";
+    import BoardOptionsMenu from "../BoardScreen/BoardOptionsMenu.svelte";
 
     export let image: string;
     export let title: string;
@@ -37,7 +38,13 @@
         <span class="loader"></span>
     </button>
 {:then imgSrc}
-    <button in:scale|global on:click={passClickEventToParent} class="boardButtons">
+    <button
+            in:scale|global
+            on:click={passClickEventToParent}
+            on:contextmenu|preventDefault={e => {
+         (new BoardOptionsMenu({props: {boardId: boardId, refreshWelcomeScreen: updateWelcomeScreenFunction}, target: document.body, intro: true})).openContextMenu(e);
+     }}
+            class="boardButtons">
         <img src={imgSrc} />
         <div class="bottomBar">
             <h2>

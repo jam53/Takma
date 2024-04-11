@@ -8,7 +8,7 @@
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
-    import {imageExtensions, removeFileFromTakmaDataFolder, saveFilePathToDisk, saveFileToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {imageExtensions, removeFileFromTakmaDataFolder, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
     import CreateNewList from "./CreateNewList.svelte";
     import List from "./List.svelte";
     import {dndzone} from "svelte-dnd-action";

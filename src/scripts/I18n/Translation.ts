@@ -165,4 +165,7 @@ export default interface Translation
     cardMatchedFilters: string;
     cardsMatchedFilters: string;
     enterTitle: string;
+    duplicateBoard: string;
+    copyBoard: string;
+    pasteBoard: string;
 }

@@ -58,6 +58,13 @@ export interface CopiedList
     copiedCards: CopiedCard[]
 }
 
+export interface CopiedBoard
+{
+    boardWithoutBackgroundImagePathAndLists: Board,
+    backgroundImage: {fileName: string, byteArray: Uint8Array},
+    copiedLists: CopiedList[]
+}
+
 export interface Label
 {
     id: string,
@@ -140,6 +147,26 @@ export async function duplicateList(list: List, boardId: string): Promise<List>
 }
 
 /**
+ * Duplicates a board object
+ * @param board The board object that should be duplicated
+ * @returns The duplicated board
+ */
+export async function duplicateBoard(board: Board): Promise<Board>
+{
+    board = structuredClone(board);
+
+    board.id = crypto.randomUUID();
+    board.creationDate = Date.now();
+    board.lastOpened = Date.now();
+    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath, board.id));
+
+
+    board.lists = await Promise.all(board.lists.map(async list => await duplicateList(list, board.id)));
+
+    return board;
+}
+
+/**
  * Given a `Card`, duplicates it and returns it as a `CopiedCard`
  * @param card The card you wish to duplicate
  * @param boardId The id of the board the Card that is going to be duplicated is in
@@ -188,11 +215,82 @@ export async function duplicateCopiedCardAsCard(copiedCard: CopiedCard, boardId:
     card.coverImage = copiedCard.coverImage !== null ? await saveArrayBufferToDisk(copiedCard.coverImage.byteArray, crypto.randomUUID() + copiedCard.coverImage.fileName, boardId) : "";
 
     copiedCard.labelsCardRefersTo.forEach(label => {
-        if (!SaveLoadManager.getData().getBoard(boardId).labels.some(labelInBoard => labelInBoard.id === label.id))
+        if (SaveLoadManager.getData().getBoard(boardId) !== undefined && !SaveLoadManager.getData().getBoard(boardId).labels.some(labelInBoard => labelInBoard.id === label.id))
         {
             SaveLoadManager.getData().addLabelToBoard(boardId, label);
         }
     });
 
     return card;
+}
+
+/**
+ * Given a `List`, duplicates it and returns it as a `CopiedList`
+ * @param list The list you wish to duplicate
+ * @param boardId The id of the board the List that is going to be duplicated is in
+ */
+export async function duplicateListAsCopiedList(list: List, boardId: string): Promise<CopiedList>
+{
+    list = structuredClone(SaveLoadManager.getData().getList(boardId, list.id)); //To make sure we no longer hold any references to `cards` array of the original list we will delete here.
+
+    let copiedCards = await Promise.all(list.cards.map(card => duplicateCardAsCopiedCard(card, boardId)));
+
+    list.cards = [];
+
+    return  {
+        listWithoutCards: await duplicateList(list, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the cards it doesn't matter, since we duplicate those ourselves in this case.
+        copiedCards: copiedCards
+    };
+}
+
+/**
+ * Given a `CopiedList`, duplicates it and returns it as a `List`
+ * @param copiedList The copiedList you wish to duplicate
+ * @param boardId The id of the board the returned List will be used in
+ */
+export async function duplicateCopiedListAsList(copiedList: CopiedList, boardId: string): Promise<List>
+{
+    let list = await duplicateList(copiedList.listWithoutCards, boardId);
+
+    list.cards = await Promise.all(copiedList.copiedCards.map(copiedCard => duplicateCopiedCardAsCard(copiedCard, boardId)));
+
+    return list;
+}
+
+/**
+ * Given a `Board`, duplicates it and returns it as a `CopiedBoard`
+ * @param board The board you wish to duplicate
+ */
+export async function duplicateBoardAsCopiedBoard(board: Board): Promise<CopiedBoard>
+{
+    board = structuredClone(SaveLoadManager.getData().getBoard(board.id)); //To make sure we no longer hold any references to `lists` array of the original board we will delete here.
+
+    let copiedLists = await Promise.all(board.lists.map(list => duplicateListAsCopiedList(list, board.id)));
+    let copiedBackgroundImage = {
+        fileName: board.backgroundImagePath.split('\\').pop().split('/').pop().substring(36) ?? "",
+        byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath)
+    }
+
+    board.lists = [];
+    board.backgroundImagePath = "";
+
+    return {
+        boardWithoutBackgroundImagePathAndLists: await duplicateBoard(board),
+        backgroundImage: copiedBackgroundImage,
+        copiedLists: copiedLists,
+    };
+}
+
+/**
+ * Given a `CopiedBoard`, duplicates it and returns it as a `Board`
+ * @param copiedBoard The copiedBoard you wish to duplicate
+ */
+export async function duplicateCopiedBoardAsBoard(copiedBoard: CopiedBoard): Promise<Board>
+{
+    let board = await duplicateBoard(copiedBoard.boardWithoutBackgroundImagePathAndLists);
+
+    board.lists = await Promise.all(copiedBoard.copiedLists.map(copiedList => duplicateCopiedListAsList(copiedList, board.id)));
+    board.backgroundImagePath = copiedBoard.backgroundImage !== null ? await saveArrayBufferToDisk(copiedBoard.backgroundImage.byteArray, crypto.randomUUID() + copiedBoard.backgroundImage.fileName, board.id) : "";
+
+    return board;
 }

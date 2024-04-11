@@ -20,8 +20,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import PopupWindow from "../PopupWindow.svelte";
     import {
         duplicateCardAsCopiedCard,
-        duplicateCopiedCardAsCard,
-        duplicateList as duplicateListObject
+        duplicateCopiedCardAsCard, duplicateCopiedListAsList,
+        duplicateList as duplicateListObject, duplicateListAsCopiedList
     } from "../../scripts/Board";
 
     export let listId;
@@ -112,16 +112,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function copyList()
     {
-        let list = structuredClone(SaveLoadManager.getData().getList($selectedBoardId, listId)); //To make sure we no longer hold any references to `cards` array of the original list we will delete here.
-
-        let copiedCards = await Promise.all(list.cards.map(card => duplicateCardAsCopiedCard(card, $selectedBoardId)));
-
-        list.cards = [];
-
-        $copiedList = {
-            listWithoutCards: await duplicateListObject(list, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the cards it doesn't matter, since we duplicate those ourselves in this case.
-            copiedCards: copiedCards
-        };
+        $copiedList = await duplicateListAsCopiedList(SaveLoadManager.getData().getList($selectedBoardId, listId), $selectedBoardId);
         closeContextMenu();
     }
 
@@ -129,9 +120,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         let thisListIndex = SaveLoadManager.getData().getBoard($selectedBoardId).lists.findIndex(list => list.id === listId);
 
-        let listToPaste = await duplicateListObject($copiedList!.listWithoutCards, $selectedBoardId); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `$copiedList` have been null, then the button on which this function gets called wouldn't have been visible
-
-        listToPaste.cards = await Promise.all($copiedList!.copiedCards.map(copiedCard => duplicateCopiedCardAsCard(copiedCard, $selectedBoardId)));
+        let listToPaste = await duplicateCopiedListAsList($copiedList!, $selectedBoardId); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `$copiedList` have been null, then the button on which this function gets called wouldn't have been visible
 
 
         SaveLoadManager.getData().createNewList($selectedBoardId, listToPaste.title, listToPaste.cards, thisListIndex)

@@ -219,24 +219,38 @@ export class TakmaData
      * Creates a new Board
      * @param title title of the board
      * @param backgroundImagePath path to the background image of the board. This should be the path the user picked, not the path obtained after saving the file to Takma's "Files" data folder. We save to the "Files" data folder in this function
+     * @param saveBackgroundImageToDisk optional argument, whether or not the path to the background image should be saved to disk or not, true by default
+     * @param id optional argument, creates a new board with the specified id, if not passed a random id is created
+     * @param labels optional argument, if not passed a board with an empty label array will be created
+     * @param lists optional argument, if not passed a board with an empty list array will be created
+     * @param favourite optiona argument, whether or not this board should be marked as a favourite board, false by default
+     * @param indexToInsert optional argument, will create a board at a certain index, if not passed the board will be added to the end of the array of boards
      * @returns id of the created board
      */
-    public async createNewBoard(title: string, backgroundImagePath: string): Promise<string>
+    public async createNewBoard(title: string, backgroundImagePath: string, saveBackgroundImageToDisk?: boolean, id?: string, labels?: Label[], lists?: List[], favourite?: boolean, indexToInsert?: number): Promise<string>
     {
-        let boardId = crypto.randomUUID();
+        let boardId = id ?? crypto.randomUUID();
 
         let board: Board = {
             id: boardId,
             creationDate: Date.now(),
             lastOpened: Date.now(),
-            backgroundImagePath: await saveFilePathToDisk(backgroundImagePath, boardId),
+            backgroundImagePath: saveBackgroundImageToDisk === undefined || saveBackgroundImageToDisk  ? await saveFilePathToDisk(backgroundImagePath, boardId) : backgroundImagePath,
             title: title,
-            labels: [],
-            lists: [],
-            favourite: false
+            labels: labels ?? [],
+            lists: lists ?? [],
+            favourite: favourite ?? false
         };
 
-        this._boards.push(board);
+        if (indexToInsert != undefined)
+        {
+            this._boards.splice(indexToInsert, 0, board);
+        }
+        else
+        {
+            this._boards.push(board);
+        }
+
         this.incrementTotalBoardsCreated();
         await SaveLoadManager.saveToDisk();
 
