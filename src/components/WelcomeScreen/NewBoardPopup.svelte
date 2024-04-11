@@ -23,19 +23,33 @@
 
     onMount(() =>
     {
-        window.addEventListener("keydown", e => {
-            if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
-            {
-                showPopup = false;
-            }
-            else if (e.key === "Enter")
-            {
-                createNewBoard();
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
+        window.addEventListener("keydown", listenToKeyDown);
     });
+
+    function listenToKeyDown(e)
+    {
+        if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
+        {
+            closePopup();
+        }
+        else if (e.key === "Enter")
+        {
+            createNewBoard();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+
+    function closePopup()
+    {
+        showPopup = false;
+        removeKeyDownListeners();
+    }
+
+    function removeKeyDownListeners()
+    {
+        window.removeEventListener("keydown", listenToKeyDown);
+    }
 
     //Deze lazyLoaded variabele en lazyLoad variabele worden gebruikt om ervoor te zorgen dat de intro animaite van het NewBoardPopup scherm deftig getoond wordt. Anders freezt de app vanaf dat het wordt aangemaakt, omdat de high rest includedInTakma foto's gerenderd moeten worden. Nu wordt eerst de popup getoond, en pas een seconde later de src van de foto's gezet.
     //Na een seconde zit het dus wel weer frozen, maar op die manier werd de intro animatie + het NewBoardPopup scherm toch direct getoond
@@ -67,7 +81,7 @@
         let idCreatedBoard = await SaveLoadManager.getData().createNewBoard(boardTitle, selectedImg);
 
         $selectedBoardId = idCreatedBoard;
-        showPopup = false;
+        closePopup();
     }
 
     async function handleFileSelection()
@@ -88,12 +102,12 @@
 </script>
 
 {#if showPopup}
-    <div transition:blur|global class="overlay" on:click={() => showPopup = false}>
+    <div transition:blur|global class="overlay" on:click={closePopup}>
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
         <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <h1>{I18n.t("createNewBoard")}</h1>
-                <svg on:click={() => showPopup = false} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
+                <svg on:click={closePopup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>

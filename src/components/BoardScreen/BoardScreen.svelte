@@ -19,19 +19,32 @@
     import {convertFileSrc} from "@tauri-apps/api/tauri";
     import {listen} from "@tauri-apps/api/event";
 
+    let createNewCardElements;
+    let createNewListElement
     onMount(() =>
     {
-        const createNewCardElements = Array.from(document.querySelectorAll('.newCard'));
-        const createNewListElement = document.getElementById('createNewListDiv');
+        createNewCardElements = Array.from(document.querySelectorAll('.newCard'));
+        createNewListElement = document.getElementById('createNewListDiv');
 
-        window.addEventListener("keydown", e =>
-        {
-            if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !$dueDatesOverviewPopupIsVisible)
-            {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
-                $selectedBoardId = "";
-                $cardFilters = {labelIds: [], dueDates: []};
-            }
-        });
+        window.addEventListener("keydown", listenToKeyDown);
+    });
+
+    function listenToKeyDown(e)
+    {
+        if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !$dueDatesOverviewPopupIsVisible)
+        {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
+            $selectedBoardId = "";
+            $cardFilters = {labelIds: [], dueDates: []};
+        }
+    }
+
+    function removeKeyDownListeners()
+    {
+        window.removeEventListener("keydown", listenToKeyDown);
+    }
+
+    onDestroy(() => {
+        removeKeyDownListeners();
     });
 
     /**

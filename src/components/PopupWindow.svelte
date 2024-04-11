@@ -28,20 +28,34 @@
     {
         title = title ?? "Takma";
 
-        window.addEventListener("keydown", e => {
-            if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
-            {
-                showPopup = false;
-            }
-            else if (e.key === "Enter")
-            {
-                answer = true;
-                showPopup = false;
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
+        window.addEventListener("keydown", listenToKeyDown);
     });
+
+    function listenToKeyDown(e)
+    {
+        if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
+        {
+            showPopup = false;
+        }
+        else if (e.key === "Enter")
+        {
+            answer = true;
+            closePopup();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+
+    function removeKeyDownListeners()
+    {
+        window.removeEventListener("keydown", listenToKeyDown);
+    }
+
+    function closePopup()
+    {
+        removeKeyDownListeners();
+        showPopup = false;
+    }
 
     /**
      * Returns the user's answer to the popup
@@ -58,12 +72,12 @@
 </script>
 
 {#if showPopup}
-    <div transition:blur|global class="overlay" on:click={() => showPopup = false}>
+    <div transition:blur|global class="overlay" on:click={closePopup}>
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <h1>{title}</h1>
-                <svg on:click={() => showPopup = false} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
+                <svg on:click={closePopup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
@@ -76,7 +90,7 @@
                     <button class="cancelButton"
                             on:click={() => {
                                 answer = false;
-                                showPopup = false;
+                                closePopup();
                             }}
                     >
                         {I18n.t("no")}
@@ -84,7 +98,7 @@
                     <button class="okButton"
                             on:click={() => {
                             answer = true;
-                            showPopup = false;
+                            closePopup();
                         }}
                     >
                         {I18n.t("yes")}
@@ -93,7 +107,7 @@
                     <button class="okButton"
                             on:click={() => {
                             answer = true;
-                            showPopup = false;
+                            closePopup();
                         }}
                     >
                         {I18n.t("ok")}
