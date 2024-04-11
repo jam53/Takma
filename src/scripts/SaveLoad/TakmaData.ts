@@ -416,7 +416,7 @@ export class TakmaData
      */
     private deleteAllFilesTiedToCard(card: Card)
     {
-        card.attachments.forEach(async attachment =>
+        card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment =>
         {
             await removeFile(attachment, {dir: SaveLoadManager.getSaveDirectory()})
         });

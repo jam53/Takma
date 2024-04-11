@@ -19,8 +19,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {
-        duplicateCardAsCopiedCard,
-        duplicateCopiedCardAsCard, duplicateCopiedListAsList,
+        duplicateCopiedListAsList,
         duplicateList as duplicateListObject, duplicateListAsCopiedList
     } from "../../scripts/Board";
 

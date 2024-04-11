@@ -1,16 +1,18 @@
-import {copyFile, createDir, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
+import {BaseDirectory, copyFile, createDir, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
+import {tempdir} from "@tauri-apps/api/os";
 
 /**
  * This function takes the path to a file the user selected and the board the file belongs to.
  * The function then saves the file to Takma's "Files" data folder, and returns the path to the location of the saved file.
+ * @param pathToFile path to the file that will be copied and saved to disk by disk function
+ * @param boardID the id of the board this file belongs to
+ * @param filename optional parameter, if passed this string will be used as the filename. By default the filename of the `pathToFile` parameter gets used. Do note that the provided `filename` string will be preceeded with an id. So the actual file on disk will have the filename: <random id>+`filename`
  */
-export async function saveFilePathToDisk(pathToFile: string, boardID: string): Promise<string>
+export async function saveFilePathToDisk(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
-
-    let filename = crypto.randomUUID() + pathToFile.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
-
-    filename = trimLongFilename(filename);
+    filename = filename ?? pathToFile.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
+    filename = trimLongFilename(crypto.randomUUID() + filename);
 
     let savePath = `./Takma/Files/${boardID}/`;
 
@@ -24,8 +26,32 @@ export async function saveFilePathToDisk(pathToFile: string, boardID: string): P
 }
 
 /**
+ * This function takes the path to a file the user selected and the board the file belongs to.
+ * The function then saves the file to the system's temp folder, and returns the path to the location of the saved file.
+ */
+export async function saveFilePathToTempfile(pathToFile: string): Promise<string>
+{
+
+    let filename = pathToFile.split('/').pop().split("\\").pop()!; //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
+
+    filename = trimLongFilename(filename);
+
+    let savePath = await tempdir() + crypto.randomUUID() + "/";
+
+    await createDir(savePath, {dir: BaseDirectory.Temp, recursive: true});
+
+    savePath += filename;
+
+    await copyFile(pathToFile, savePath, {dir: SaveLoadManager.getSaveDirectory()});
+
+    return savePath
+}
+
+/**
  * This function takes a File object that the user selected and the board the file belongs to.
  * The function then saves the file to Takma's "Files" data folder, and returns the path to the location of the saved file.
+ *
+ * @deprecated This function reads/writes bytes to memory. In Tauri this causes a major memory overhead because all the bytes need be encoded/decoded to/from json to be sent between the back/front-end
  */
 export async function saveFileToDisk(file: File, boardID: string): Promise<string>
 {
@@ -37,11 +63,11 @@ export async function saveFileToDisk(file: File, boardID: string): Promise<strin
 }
 
 /**
- * !! We should try to avoid using this function. As using the `writeBinaryFile()` and `readBinaryFile()` functions cause a lot of overhead.
+ * This function saves an ArrayBuffer to Takma's "Files" data folder in a file with the name `filename`, and returns the path to the location of the saved file.
+ *
+ * @deprecated We should try to avoid using this function. As using the `writeBinaryFile()` and `readBinaryFile()` functions cause a lot of overhead.
  * Rather than just passing the provided byte array to and from the back/front-end. The binary data gets converted to a JSON string because of the IPC Tauri uses, and then back from a JSON string to a byte array. This causes massive overhead, both in memory usage and in performance.
  * Instead, we should use the `convertFileSrc()` method that Tauri provides, to directly get a link to an image from a filepath for example. Rather than reading the image file's bytes. And we should use `copyFile()` to copy one filepath to another location for example. Rather than reading the bytes from a file manually and writing the file manually using `readBinaryFile()` and `writeBinaryFile()` respectively.
- *
- * This function saves an ArrayBuffer to Takma's "Files" data folder in a file with the name `filename`, and returns the path to the location of the saved file.
  */
 export async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
 {

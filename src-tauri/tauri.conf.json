@@ -54,6 +54,9 @@
                 "assetScope": [
                     "**"
                 ]
+            },
+            "os": {
+                "all": true
             }
         },
         "bundle": {
@@ -81,7 +84,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.4.9 (455)",
+                "title": "Takma 1.4.9 (456)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,

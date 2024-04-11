@@ -3,7 +3,7 @@ import {BaseDirectory, readBinaryFile} from '@tauri-apps/api/fs';
 /**
  * Given a path to an image file, this function returns an url to the image.
  *
- * Note: This method was initially created as a workaround for displaying images in Tauri's webview
+ * @deprecated Note: This method was initially created as a workaround for displaying images in Tauri's webview
  * by manually converting the image file data to a Blob and creating a data URL from that Blob.
  *
  * Recommendation: As of Tauri version 1.0.0, consider using the `convertFileSrc` method from

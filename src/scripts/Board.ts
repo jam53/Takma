@@ -1,6 +1,6 @@
-import {saveArrayBufferToDisk, saveFilePathToDisk} from "./TakmaDataFolderIO";
+import {saveFilePathToDisk, saveFilePathToTempfile} from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {exists, readBinaryFile} from "@tauri-apps/api/fs";
+import {exists} from "@tauri-apps/api/fs";
 
 export interface Board
 {
@@ -47,8 +47,8 @@ export interface Card
 export interface CopiedCard //A CopiedCard can be seen as a Card that doesn't reference any values, but is self-contained
 {
     cardWithoutAttachmentsAndCoverImage: Card,
-    attachments: {fileName: string, byteArray: Uint8Array}[],
-    coverImage: {fileName: string, byteArray: Uint8Array} | null,
+    attachments: {fileName: string, pathToTempfile: string}[],
+    coverImage: {fileName: string, pathToTempfile: string} | null,
     labelsCardRefersTo: Label[] //A card references the ids of labels in its board, should we however paste this copied card in another board we will no longer be able to resolve those references. Therefore, we should keep the referenced labels by this card in this CopiedCard
 }
 
@@ -61,7 +61,7 @@ export interface CopiedList
 export interface CopiedBoard
 {
     boardWithoutBackgroundImagePathAndLists: Board,
-    backgroundImage: {fileName: string, byteArray: Uint8Array},
+    backgroundImage: {fileName: string, pathToTempfile: string},
     copiedLists: CopiedList[]
 }
 
@@ -115,7 +115,7 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
 
         if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
         {
-            return await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment, boardId); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
+            return await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment, boardId, attachment.split('\\').pop()!.split('/').pop()!.substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
         }
         else
         {
@@ -123,7 +123,7 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
         }
 
     }));
-    (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId));
+    (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId, card.coverImage.split('\\').pop()!.split('/').pop()!.substring(36)));
 
     return card;
 }
@@ -158,7 +158,7 @@ export async function duplicateBoard(board: Board): Promise<Board>
     board.id = crypto.randomUUID();
     board.creationDate = Date.now();
     board.lastOpened = Date.now();
-    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath, board.id));
+    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath, board.id, board.backgroundImagePath.split('\\').pop()!.split('/').pop()!.substring(36)));
 
 
     board.lists = await Promise.all(board.lists.map(async list => await duplicateList(list, board.id)));
@@ -180,7 +180,7 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
         {
             return {
                 fileName: attachment.split('\\').pop().split('/').pop().substring(36) ?? "",
-                byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)
+                pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)
             };
         }
         else
@@ -188,14 +188,14 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
             return null;
         }
     }).filter(async attachment => await attachment !== null));
-    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.split('\\').pop().split('/').pop().substring(36) ?? "", byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + card!.coverImage)} : null;
+    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.split('\\').pop().split('/').pop().substring(36) ?? "", pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + card!.coverImage)} : null;
 
     card!.attachments = [];
     card!.coverImage = "";
 
     return {
         cardWithoutAttachmentsAndCoverImage: await duplicateCard(card!, ""), //You could argue that we pass an incorrect value to the boardId parameter. However, since the boardId parameter in this function is only used when duplicating the attachments/coverImage it doesn't matter, since we duplicate those ourselves in this case.
-        attachments: attachments as {fileName: string, byteArray: Uint8Array}[],
+        attachments: attachments as {fileName: string, pathToTempfile: string}[],
         coverImage: coverImage,
         labelsCardRefersTo: card.labelIds.map(labelId => ({id: labelId, color: SaveLoadManager.getData().getLabelColor(boardId, labelId), title: SaveLoadManager.getData().getLabelTitle(boardId, labelId), titleColor: SaveLoadManager.getData().getLabelTitleColor(boardId, labelId)}))
     }
@@ -210,9 +210,9 @@ export async function duplicateCopiedCardAsCard(copiedCard: CopiedCard, boardId:
 {
     let card = await duplicateCard(copiedCard.cardWithoutAttachmentsAndCoverImage, boardId);
 
-    card.attachments = await Promise.all(copiedCard.attachments.map(attachment => saveArrayBufferToDisk(attachment.byteArray, crypto.randomUUID() + attachment.fileName, boardId)));
+    card.attachments = await Promise.all(copiedCard.attachments.filter(attachment => attachment !== "" && attachment !== null).map(attachment => saveFilePathToDisk(attachment.pathToTempfile, boardId, attachment.fileName)));
 
-    card.coverImage = copiedCard.coverImage !== null ? await saveArrayBufferToDisk(copiedCard.coverImage.byteArray, crypto.randomUUID() + copiedCard.coverImage.fileName, boardId) : "";
+    card.coverImage = copiedCard.coverImage !== null ? await saveFilePathToDisk(copiedCard.coverImage.pathToTempfile, boardId, copiedCard.coverImage.fileName) : "";
 
     copiedCard.labelsCardRefersTo.forEach(label => {
         if (SaveLoadManager.getData().getBoard(boardId) !== undefined && !SaveLoadManager.getData().getBoard(boardId).labels.some(labelInBoard => labelInBoard.id === label.id))
@@ -268,7 +268,7 @@ export async function duplicateBoardAsCopiedBoard(board: Board): Promise<CopiedB
     let copiedLists = await Promise.all(board.lists.map(list => duplicateListAsCopiedList(list, board.id)));
     let copiedBackgroundImage = {
         fileName: board.backgroundImagePath.split('\\').pop().split('/').pop().substring(36) ?? "",
-        byteArray: await readBinaryFile(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath)
+        pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath)
     }
 
     board.lists = [];
@@ -290,7 +290,7 @@ export async function duplicateCopiedBoardAsBoard(copiedBoard: CopiedBoard): Pro
     let board = await duplicateBoard(copiedBoard.boardWithoutBackgroundImagePathAndLists);
 
     board.lists = await Promise.all(copiedBoard.copiedLists.map(copiedList => duplicateCopiedListAsList(copiedList, board.id)));
-    board.backgroundImagePath = copiedBoard.backgroundImage !== null ? await saveArrayBufferToDisk(copiedBoard.backgroundImage.byteArray, crypto.randomUUID() + copiedBoard.backgroundImage.fileName, board.id) : "";
+    board.backgroundImagePath = copiedBoard.backgroundImage !== null ? await saveFilePathToDisk(copiedBoard.backgroundImage.pathToTempfile, board.id, copiedBoard.backgroundImage.fileName) : "";
 
     return board;
 }

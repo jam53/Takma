@@ -4,7 +4,7 @@
     import {scale} from "svelte/transition";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
     import {scaleDownImage} from "../../scripts/ScaleDownImage";
-    import BoardOptionsMenu from "../BoardScreen/BoardOptionsMenu.svelte";
+    import BoardOptionsMenu from "./BoardOptionsMenu.svelte";
 
     export let image: string;
     export let title: string;
