@@ -8,7 +8,9 @@ import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 export async function saveFilePathToDisk(pathToFile: string, boardID: string): Promise<string>
 {
 
-    const filename = crypto.randomUUID() + pathToFile.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
+    let filename = crypto.randomUUID() + pathToFile.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
+
+    filename = trimLongFilename(filename);
 
     let savePath = `./Takma/Files/${boardID}/`;
 
@@ -29,7 +31,7 @@ export async function saveFileToDisk(file: File, boardID: string): Promise<strin
 {
     const fileData = await file.arrayBuffer();
 
-    const filename = crypto.randomUUID() + file.name;
+    const filename = trimLongFilename(crypto.randomUUID() + file.name);
 
     return await saveArrayBufferToDisk(fileData, filename, boardID);
 }
@@ -43,6 +45,8 @@ export async function saveFileToDisk(file: File, boardID: string): Promise<strin
  */
 export async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
 {
+    filename = trimLongFilename(filename);
+
     let savePath = `./Takma/Files/${boardID}/`;
 
     await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
@@ -61,6 +65,29 @@ export async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: 
 export async function removeFileFromTakmaDataFolder(pathToFile: string)
 {
     await removeFile(pathToFile, {dir: SaveLoadManager.getSaveDirectory()});
+}
+
+/**
+ * Windows limits the length of a filename to 255 characters. Given a filename, this functions returns the same filename if it's shorter than or equal to 255 characters. Otherwise it returns the substring of the first 255 - (length file extension) characters of the filename + the file extension
+ */
+function trimLongFilename(filename: string): string
+{
+    const maxFilenameLength = 255;
+
+    if (filename.length >= maxFilenameLength && filename.indexOf('.') !== -1)
+    {
+        let fileExtension = "." + filename.split(".").pop()!;
+
+        return filename.substring(0, maxFilenameLength - fileExtension.length) + fileExtension;
+    }
+    else if (filename.length >= maxFilenameLength && filename.indexOf('.') === -1)
+    {
+        return filename.substring(0, maxFilenameLength);
+    }
+    else
+    {
+        return filename;
+    }
 }
 
 /**
