@@ -57,6 +57,9 @@
             },
             "os": {
                 "all": true
+            },
+            "process": {
+                "relaunch": true
             }
         },
         "bundle": {
@@ -84,7 +87,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.4.9 (456)",
+                "title": "Takma 1.4.9 (462)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,

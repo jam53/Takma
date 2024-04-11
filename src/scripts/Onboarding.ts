@@ -7,6 +7,7 @@ import {shuffle} from "./KnuthShuffle";
 import CardCreationDateVideo from "../videos/OnboardingCardCreationDate.mp4";
 import ShiftClickDeleteCardVideo from "../videos/OnboardingShiftClickDeleteCard.mp4";
 import {I18n} from "./I18n/I18n";
+import {relaunch} from "@tauri-apps/api/process";
 
 /**
  * This function starts the onboarding for the welcome screen. Once the onboarding for the welcome screen is finished, it calls the function that handles the onboarding for the board screen
@@ -119,7 +120,8 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
         SaveLoadManager.getData().onboardingCompleted = true;
         await SaveLoadManager.getData().deleteBoard(currentBoardId); //Delete the board that was used for the onboarding
         canExit = true;
-        location.reload(); //Reload Takma
+
+        await relaunch(); //Relaunch Takma. We could in theory also just refresh the front-end AKA webview using `location.reload()`. However, if we do that the title bar and navbar get rendered on top of each other for some reason
     }).start();
 }
 
