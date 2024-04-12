@@ -168,4 +168,5 @@ export default interface Translation
     duplicateBoard: string;
     copyBoard: string;
     pasteBoard: string;
+    saveBackgroundImage: string;
 }
