@@ -68,12 +68,26 @@
         createNewDivInitialHeight = createNewCardDiv.clientHeight;
     });
 
+    function waitForLoadingSpinnersToComplete(callback)
+    {
+        const loaderElements = document.querySelectorAll(".loader");
+
+        if (loaderElements.length === 0)
+        {
+            if (createNewCardDiv.classList.contains("newCardCreating") && newCardTitleValue == "")
+            {//The second check makes sure we don't scroll down at every keystroke while the user is typing the new cards title.
+                callback();
+            }
+        }
+        else
+        {
+            setTimeout(() => waitForLoadingSpinnersToComplete(callback), 100);
+        }
+    }
+
     afterUpdate(() =>
     {
-        if (createNewCardDiv.classList.contains("newCardCreating"))
-        {
-            scrollToBottomOfCardsList();
-        }
+        waitForLoadingSpinnersToComplete(scrollToBottomOfCardsList); //There is no point in scrolling to the bottom of the list after we added a card after update. This is because if the list contains cards with cover images, these will only load in a bit after `afterUpdate()` was called. And ones those cover images do load in, they will cause the cards with cover images to take up more spaces. Which would cause our newly added card to not be visible anymore
     });
 
     /**
