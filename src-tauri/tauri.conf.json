@@ -9,7 +9,7 @@
     },
     "package": {
         "productName": "Takma",
-        "version": "1.4.9"
+        "version": "1.4.10"
     },
     "tauri": {
         "allowlist": {
@@ -87,7 +87,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.4.9 (469)",
+                "title": "Takma 1.4.10 (470)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,
