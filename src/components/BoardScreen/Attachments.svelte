@@ -12,6 +12,7 @@
 
     export let cardToSave;
     export let addAttachmentFunction;
+    export let saveCardFunction;
 
     /**
      * Given a path to a file, this function returns the filename. I.e. it removes the uuid in front of the filename (36 characters) and the path to the file
@@ -63,6 +64,7 @@
     async function deleteAttachment(pathToFile: string)
     {
         await removeFile(pathToFile, {dir: SaveLoadManager.getSaveDirectory()});
+        saveCardFunction();
 
         refreshComponent();
     }

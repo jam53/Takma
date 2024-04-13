@@ -8,6 +8,7 @@
     export let cardToSave;
     export let refreshCardFunction;
     export let focusOnCardDetailsFunction;
+    export let saveCardFunction;
 
     const initialDueDate = cardToSave.dueDate;
 
@@ -58,6 +59,7 @@
             // mouse is clicked outside context menu
             showMenu = false;
             focusOnCardDetailsFunction(); //If we don't do this after closing the LabelsPopup, the CardDetails element wouldn't be selected (as it lost focus as soon as the LabelsPopup element was displayed). Therefore CardDetails wouldn't register the on:keydown event. Instead the Board would register that. If we would then press Escape or Ctrl+W. The board would close, whereas it should be the CardDetails element that is open that should be the one to actually close
+            saveCardFunction();
         }
     }
 

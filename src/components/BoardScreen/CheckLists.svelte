@@ -7,11 +7,13 @@
     import {dndzone} from "svelte-dnd-action";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
+    import {onDestroy} from "svelte";
 
     export let cardToSave;
     export let setTypingFunction;
 
     export let amountOfTodosInChecklistFunction;
+    export let saveCardFunction;
 
     /**
      * This function is used in the value={} field of the <progress> element for the checklists. We pass the id of the checklist and the new value of this progressbar. This function will then tween from the old value in the progressbar to the new value of the progressbar
@@ -54,8 +56,22 @@
         idAddTodoItemButtonToScrollTo = `addTodoButton-${checklist.id}`; //The refresh of the UI at the end of this function, will trigger the intro animation of the todoitems. And when that intro animation ends (on:introend) AKA once the todoitem is visible in the UI, the value of this variable will be used to scroll to the "add new todo item" button of the checklist
         idTodoItemToFocus = `todo-${newTodoId}`; //In the same way as above, this will be used to select the newly added todo item so it can be edited without having to click on it; once the todoitem's intro animation ends (=by using the introanimation to do this action we know that the elment exist in the DOM. Else we wouldn't be playing/finishing an intro animation. And we need to make sure the element exists in the DOM or else writing element.focus() in this function here would throw an error since the element of this todo isn't present in the DOM yet.
 
+        saveCardFunction();
         cardToSave = cardToSave; //Refresh UI
     }
+
+    let typingTimer;                //timer identifier
+    let doneTypingInterval = 5000;  //time in ms
+    //This function should be added as a "keyup" event listener to whatever element that should be used to check whether or not the user stopped typing
+    function waitUntilUserStoppedTyping(callback)
+    {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(callback, doneTypingInterval);
+    }
+
+    onDestroy(() => {
+        clearTimeout(typingTimer);
+    })
 </script>
 
 {#if cardToSave.checklists.length > 0}
@@ -77,8 +93,8 @@
                           {//We pressed enter and are not hovering over the element
                               e.target.blur(); //Unfocus the span so that it makes it seem like when pressing enter we stop editing the span
                           }
-
                       }}
+                      on:keyup={() => waitUntilUserStoppedTyping(saveCardFunction)}
                 >
                     {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].title}
                 </span>
@@ -91,6 +107,7 @@
                     if (await popup.getAnswer() === true)
                     {
                         cardToSave.checklists = cardToSave.checklists.filter(checklistt => checklistt.id !== checklist.id)
+                        saveCardFunction();
                     }
                 }}>
                     {I18n.t("delete")}
@@ -124,7 +141,10 @@
                     <input
                             type="checkbox"
                             checked={todo.completed}
-                            on:input={e => todo.completed = e.target.checked}
+                            on:input={e => {
+                                todo.completed = e.target.checked;
+                                saveCardFunction();
+                            }}
                     />
                     <span role="textbox" contenteditable="plaintext-only"
                           id={`todo-${todo.id}`}
@@ -144,13 +164,17 @@
                                   e.target.blur();
                               }
                           }}
+                          on:keyup={() => waitUntilUserStoppedTyping(saveCardFunction)}
                     >
     <!--This checks if the enter keys was pressed and if it was, it unfocuses the span, so we no longer edit the content of it-->
                         {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].todos[j].content}
                     </span>
                     <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 4.625C6.12132 4.625 6.625 4.12132 6.625 3.5C6.625 2.87868 6.12132 2.375 5.5 2.375C4.87868 2.375 4.375 2.87868 4.375 3.5C4.375 4.12132 4.87868 4.625 5.5 4.625ZM9.5 4.625C10.1213 4.625 10.625 4.12132 10.625 3.5C10.625 2.87868 10.1213 2.375 9.5 2.375C8.87868 2.375 8.375 2.87868 8.375 3.5C8.375 4.12132 8.87868 4.625 9.5 4.625ZM10.625 7.5C10.625 8.12132 10.1213 8.625 9.5 8.625C8.87868 8.625 8.375 8.12132 8.375 7.5C8.375 6.87868 8.87868 6.375 9.5 6.375C10.1213 6.375 10.625 6.87868 10.625 7.5ZM5.5 8.625C6.12132 8.625 6.625 8.12132 6.625 7.5C6.625 6.87868 6.12132 6.375 5.5 6.375C4.87868 6.375 4.375 6.87868 4.375 7.5C4.375 8.12132 4.87868 8.625 5.5 8.625ZM10.625 11.5C10.625 12.1213 10.1213 12.625 9.5 12.625C8.87868 12.625 8.375 12.1213 8.375 11.5C8.375 10.8787 8.87868 10.375 9.5 10.375C10.1213 10.375 10.625 10.8787 10.625 11.5ZM5.5 12.625C6.12132 12.625 6.625 12.1213 6.625 11.5C6.625 10.8787 6.12132 10.375 5.5 10.375C4.87868 10.375 4.375 10.8787 4.375 11.5C4.375 12.1213 4.87868 12.625 5.5 12.625Z" fill="currentColor"></path></svg>
                     <svg class="deleteTodoButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                         on:click={() => checklist.todos = checklist.todos.filter(todoo => todoo.id !== todo.id)}
+                         on:click={() => {
+                             checklist.todos = checklist.todos.filter(todoo => todoo.id !== todo.id);
+                             saveCardFunction();
+                         }}
                     >
                         <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
                     </svg>

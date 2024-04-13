@@ -78,11 +78,16 @@
 
     function closeCard()
     {
-        SaveLoadManager.getData().updateCard(cardToSave, $selectedBoardId, $selectedCardId);
-        cardToSave = null;
+        saveCard();
         refreshListsFunction();
         $selectedCardId = "";
         document.activeElement.blur(); //This should or could help preventing the issue where cards can't be dragged at times.
+        clearTimeout(typingTimer);
+    }
+
+    function saveCard()
+    {
+        SaveLoadManager.getData().updateCard(cardToSave, $selectedBoardId, $selectedCardId);
     }
 
     let showPopup = false;
@@ -288,6 +293,7 @@
         }
 
         cardToSave = cardToSave; //If we don't do this, the function below `attachmentsComponent.refreshComponent()` will cause the component to refresh but it will still use the "old" values of the cardToSave variable because it would think it hasn't changed. So the component would refresh but nothing would visibly change because the old value of cardToSave would still be used
+        saveCard();
         attachmentsComponent.refreshComponent();
     }
 
@@ -314,6 +320,7 @@
         }
 
         cardToSave = cardToSave; //If we don't do this, the function below `attachmentsComponent.refreshComponent()` will cause the component to refresh but it will still use the "old" values of the cardToSave variable because it would think it hasn't changed. So the component would refresh but nothing would visibly change because the old value of cardToSave would still be used
+        saveCard();
         attachmentsComponent.refreshComponent()
     }
 
@@ -345,6 +352,7 @@
                 toast(I18n.t("addCardCoverImage"))
             }
         }
+        saveCard();
     }
 
     function deleteCard()
@@ -379,6 +387,15 @@
     }
     $: overlayElement && toggleFullscreen(); //When we open the card, we wait until the overlayElement AKA the UI is loaded. Then we proceed to call the toggleFullscreen() function twice. This way the necessary styleclasses get applied/removed. Should we call it just once, then we would toggle the fullscreen state. Which is not what we want, we just want to apply/remove the necessary styleclasses. So we call the function a second time to toggle back the original fullscreen state of the card.
     $: overlayElement && toggleFullscreen();
+
+    let typingTimer;                //timer identifier
+    let doneTypingInterval = 5000;  //time in ms
+    //This function should be added as a "keyup" event listener to whatever element that should be used to check whether or not the user stopped typing
+    function waitUntilUserStoppedTyping(callback)
+    {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(callback, doneTypingInterval);
+    }
 </script>
 
 {#if showPopup}
@@ -396,6 +413,7 @@
                       on:focus={() => typing = true}
                       on:focusout={() => typing = false}
                       on:keydown={e => (e.keyCode === 13) && e.preventDefault()}
+                      on:keyup={() => waitUntilUserStoppedTyping(saveCard)}
                 >
 <!--This keycode 13 check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the span. But once we close the editing of the span and reopen it, the newline will be gone-->
                     {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).title}
@@ -420,7 +438,7 @@
                                 title={I18n.t("dueDate")}
                                 class:dueDateOrange={parseInt(cardToSave.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(cardToSave.dueDate)}
                                 class:dueDateRed={Date.now() > parseInt(cardToSave.dueDate)}
-                                on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
+                                on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
                         >
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                             <span>
@@ -431,7 +449,7 @@
                     <div class="labels">
                         {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
                             <div style="background-color: {label.color}"
-                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
+                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
                             >
                                 <span style="color: {label.titleColor}">
                                     {label.title}
@@ -446,6 +464,7 @@
                               on:focusout={() => typing = false}
                               use:clickOutside
                               on:click_outside={() => (window.getSelection().toString().length === 0) && (editingDescription = false)}
+                              on:keyup={() => waitUntilUserStoppedTyping(saveCard)}
                              on:keydown={e => {
                                  if (e.key === "Tab")
                                  {
@@ -472,16 +491,18 @@
                         >
                             {@html parseMarkdown(cardToSave.description)}
                         </div>
+                        {void saveCard() ?? ""}
+                        <!-- The void operator evaluates the given expression and then returns undefined. Then with the nullish operator we return an empty string when it's undefined, which will always be the case. This way we can execute some code in our html, without displaying anything in the UI-->
                     {/if}
-                    <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist}/>
-                    <Attachments bind:this={attachmentsComponent} cardToSave={cardToSave} addAttachmentFunction={addAttachment}/>
+                    <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist} saveCardFunction={saveCard}/>
+                    <Attachments bind:this={attachmentsComponent} cardToSave={cardToSave} addAttachmentFunction={addAttachment} saveCardFunction={saveCard}/>
                 </div>
                 <div class="cardActionsHolder">
                     <span>
                         {I18n.t("addToCard")}
                     </span>
                     <button title={I18n.t("labels")}
-                            on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
+                            on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         <span>
@@ -504,7 +525,7 @@
                         </span>
                     </button>
                     <button title={I18n.t("dueDate")}
-                            on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
+                            on:click={e => new DueDatePopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                         <span>
