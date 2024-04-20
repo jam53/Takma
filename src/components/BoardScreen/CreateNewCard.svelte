@@ -33,7 +33,7 @@
         newCardTitleValue = ""; //When we just created a card, the createNewCard "screen" will still be open in case the user wants to create another card. But we don't want the title of the card we just created to still be present in the input component, hence why we set the value of the input component to ""
 
         resizeCardsHolderIfNeeded();
-        //outerWrapperElement.scrollTo(0, parseInt(getComputedStyle(outerWrapperElement).maxHeight));
+        executeCallbackOnElementSizeChange(outerWrapperElement.children[0], scrollToBottomOfCardsList); //The first child of this `outerWrapperElement` is supposed to be the container that holds all of the cards. I.e. the container that will change in height once a new card has been added
     }
 
     /**
@@ -57,7 +57,6 @@
         if (createNewCardDiv.classList.contains("newCardCreating") && outerWrapperElement.scrollHeight + createNewCardDiv.clientHeight - createNewDivInitialHeight > parseInt(getComputedStyle(outerWrapperElement).maxHeight)) //If there is a scrollbar already or if the extra height added by clicking on the createNewCard button makes it so the createNewCard thingy goes off-screen, make the outerWrapperElements that contains the cards less high, that way the createNewCard thingy won't go off the screen
             //or in other words: if (we are creating a new card && height of the div that holds the cards + the height of our createNewCardDiv (the createNewCardDiv when entering a new card title) - height of the createNewCardDiv (the createNewCardDiv that's visible by default, if we click on it we apply different styleclasses and get the createNewCardDiv where we enter the card title. The height of this default createNewCardDiv is included in the height of the div that holds the cards though, hence why we substract it) > maximum height of the div that holds the cards
         {
-            scrollToBottomOfCardsList();
             outerWrapperElement.style.height = `calc(${parseInt(getComputedStyle(outerWrapperElement).maxHeight)}px - 3.5em)`;
         }
     }
@@ -68,27 +67,22 @@
         createNewDivInitialHeight = createNewCardDiv.clientHeight;
     });
 
-    function waitForLoadingSpinnersToComplete(callback)
+    /**
+     * This function executes the callback everytime a card has been fully loaded by checking the size of the elementToObserve. Which in this case will always be the container element that holds all of the cards. So this container element's size will change once a card has been fully loaded, since a fully loaded card with a cover image/amount of attachments is larger than a card that is still loading
+     */
+    function executeCallbackOnElementSizeChange(elementToObserve, callback)
     {
-        const loaderElements = document.querySelectorAll(".loader");
+        let resizeObserver = new ResizeObserver(entries => {//Gets called when the element(s) we observed with `resizeObserver.observe()` change(s) in size. Since we are observering the element that holds all of the card elements, its size will change (the height will increase) everytime a card is loaded. When we say "a card loaded" we mean its cover image/amount of attachments loaded
 
-        if (loaderElements.length === 0)
-        {
             if (createNewCardDiv.classList.contains("newCardCreating") && newCardTitleValue == "")
             {//The second check makes sure we don't scroll down at every keystroke while the user is typing the new cards title.
                 callback();
+                setTimeout(() => resizeObserver.disconnect(), 10000); //Since we add a new "listener" everytime this function is called (read: everytime we create a card) we do want to "unlisten" at some point. However, we can't unlisten immediately after calling the callback since there could be more cards that haven't loaded in yet that would require us to scroll down again. After 10 seconds however all the cards should have loaded in, therefore we can unlisten
             }
-        }
-        else
-        {
-            setTimeout(() => waitForLoadingSpinnersToComplete(callback), 100);
-        }
-    }
+        });
 
-    afterUpdate(() =>
-    {
-        waitForLoadingSpinnersToComplete(scrollToBottomOfCardsList); //There is no point in scrolling to the bottom of the list after we added a card after update. This is because if the list contains cards with cover images, these will only load in a bit after `afterUpdate()` was called. And ones those cover images do load in, they will cause the cards with cover images to take up more spaces. Which would cause our newly added card to not be visible anymore
-    });
+        resizeObserver.observe(elementToObserve);
+    }
 
     /**
      * This does the opposite of openCreateNewCard() and hides the input field + add/close buttons and reveals the "+ Add a card" text again
