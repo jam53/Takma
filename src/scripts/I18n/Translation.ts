@@ -169,4 +169,7 @@ export default interface Translation
     copyBoard: string;
     pasteBoard: string;
     saveBackgroundImage: string;
+    cancel: string;
+    confirm: string;
+    chooseBoardTitle: string;
 }

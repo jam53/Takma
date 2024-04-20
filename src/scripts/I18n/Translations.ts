@@ -208,6 +208,9 @@ export let en: Translation = {
     copyBoard: "Copy board",
     pasteBoard: "Paste board",
     saveBackgroundImage: "Save this background image for future boards",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    chooseBoardTitle: "Choose a title for the new board.",
 };
 
 export let ar: Translation = {
@@ -418,6 +421,9 @@ export let ar: Translation = {
     copyBoard: "نسخ اللوحة",
     pasteBoard: "لصق اللوحة",
     saveBackgroundImage: "احفظ هذه الصورة الخلفية للوحات المستقبلية",
+    cancel: "إلغاء",
+    confirm: "تأكيد",
+    chooseBoardTitle: "اختر عنوانًا للوحة الجديدة.",
 };
 
 export let de: Translation = {
@@ -628,6 +634,9 @@ export let de: Translation = {
     copyBoard: "Board kopieren",
     pasteBoard: "Board einfügen",
     saveBackgroundImage: "Speichern Sie dieses Hintergrundbild für zukünftige Boards",
+    cancel: "Abbrechen",
+    confirm: "Bestätigen",
+    chooseBoardTitle: "Wählen Sie einen Titel für das neue Board.",
 };
 
 export let es: Translation = {
@@ -838,6 +847,9 @@ export let es: Translation = {
     copyBoard: "Copiar tablero",
     pasteBoard: "Pegar tablero",
     saveBackgroundImage: "Guardar esta imagen de fondo para futuros tableros",
+    cancel: "Cancelar",
+    confirm: "Confirmar",
+    chooseBoardTitle: "Elige un título para el nuevo tablero.",
 };
 
 export let et: Translation = {
@@ -1048,6 +1060,9 @@ export let et: Translation = {
     copyBoard: "Kopeeri tahvel",
     pasteBoard: "Kleebi tahvel",
     saveBackgroundImage: "Salvesta see taustapilt tulevastele tahvlitele",
+    cancel: "Tühista",
+    confirm: "Kinnita",
+    chooseBoardTitle: "Vali uue tahvli pealkiri.",
 };
 
 export let fr: Translation = {
@@ -1258,6 +1273,9 @@ export let fr: Translation = {
     copyBoard: "Copier le tableau",
     pasteBoard: "Coller le tableau",
     saveBackgroundImage: "Enregistrer cette image de fond pour les futurs tableaux",
+    cancel: "Annuler",
+    confirm: "Confirmer",
+    chooseBoardTitle: "Choisissez un titre pour le nouveau tableau.",
 };
 
 export let hi: Translation = {
@@ -1468,6 +1486,9 @@ export let hi: Translation = {
     copyBoard: "बोर्ड कॉपी करें",
     pasteBoard: "बोर्ड पेस्ट करें",
     saveBackgroundImage: "इस पृष्ठभूमि छवि को भविष्य के बोर्ड के लिए सहेजें।",
+    cancel: "रद्द करें",
+    confirm: "पुष्टि करें",
+    chooseBoardTitle: "नए बोर्ड के लिए शीर्षक चुनें।",
 };
 
 export let id: Translation = {
@@ -1678,6 +1699,9 @@ export let id: Translation = {
     copyBoard: "Salin papan",
     pasteBoard: "Tempel papan",
     saveBackgroundImage: "Simpan gambar latar ini untuk papan yang akan datang",
+    cancel: "Batal",
+    confirm: "Konfirmasi",
+    chooseBoardTitle: "Pilih judul untuk papan baru.",
 };
 
 export let ja: Translation = {
@@ -1888,6 +1912,9 @@ export let ja: Translation = {
     copyBoard: "ボードをコピーする",
     pasteBoard: "ボードを貼り付ける",
     saveBackgroundImage: "将来のボードにこの背景画像を保存します",
+    cancel: "キャンセル",
+    confirm: "確認",
+    chooseBoardTitle: "新しいボードのタイトルを選択してください。",
 };
 
 export let ko: Translation = {
@@ -2098,6 +2125,9 @@ export let ko: Translation = {
     copyBoard: "보드 복사",
     pasteBoard: "보드 붙여넣기",
     saveBackgroundImage: "향후 보드를 위해이 배경 이미지를 저장하시겠습니까",
+    cancel: "취소",
+    confirm: "확인",
+    chooseBoardTitle: "새 보드의 제목을 선택하세요.",
 };
 
 export let nl: Translation = {
@@ -2308,6 +2338,9 @@ export let nl: Translation = {
     copyBoard: "Bord kopiëren",
     pasteBoard: "Bord plakken",
     saveBackgroundImage: "Sla deze achtergrondafbeelding op voor toekomstige borden",
+    cancel: "Annuleren",
+    confirm: "Bevestigen",
+    chooseBoardTitle: "Kies een titel voor het nieuwe bord.",
 };
 
 export let pt: Translation = {
@@ -2518,6 +2551,9 @@ export let pt: Translation = {
     copyBoard: "Copiar quadro",
     pasteBoard: "Colar quadro",
     saveBackgroundImage: "Salvar esta imagem de fundo para futuros quadros",
+    cancel: "Cancelar",
+    confirm: "Confirmar",
+    chooseBoardTitle: "Escolha um título para o novo quadro.",
 };
 
 export let ru: Translation = {
@@ -2728,6 +2764,9 @@ export let ru: Translation = {
     copyBoard: "Копировать доску",
     pasteBoard: "Вставить доску",
     saveBackgroundImage: "Сохранить это изображение фона для будущих досок.",
+    cancel: "Отмена",
+    confirm: "Подтвердить",
+    chooseBoardTitle: "Выберите название для новой доски.",
 };
 
 export let tr: Translation = {
@@ -2938,6 +2977,9 @@ export let tr: Translation = {
     copyBoard: "Pano kopyala",
     pasteBoard: "Pano yapıştır",
     saveBackgroundImage: "Bu arka plan görüntüsünü gelecekteki panolar için kaydet",
+    cancel: "İptal",
+    confirm: "Onayla",
+    chooseBoardTitle: "Yeni panoya bir başlık seçin.",
 };
 
 export let zh: Translation = {
@@ -3148,4 +3190,7 @@ export let zh: Translation = {
     copyBoard: "复制看板",
     pasteBoard: "粘贴看板",
     saveBackgroundImage: "保存此背景图像以供将来使用",
+    cancel: "取消",
+    confirm: "确认",
+    chooseBoardTitle: "选择新看板的标题。",
 };

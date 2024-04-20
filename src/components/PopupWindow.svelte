@@ -10,7 +10,7 @@
      *
      * const popup = new PopupWindow({props: {title: "Popup title", description: "Popup description", buttonType: "yesno"}, target: document.body, intro: true});
      * new PopupWindow({props: {description: "Popup description", buttonType: "ok"}, target: document.body, intro: true});
-     *
+     * new PopupWindow({props: {description: "Popup description", inputValue: "Lorem ipsum", buttonType: "input"}, target: document.body, intro: true});
      *
      *
      * await popup.getAnswer();
@@ -19,7 +19,8 @@
 
     export let title: string | null;
     export let description: string;
-    export let buttonType: "yesno" | "ok";
+    export let inputValue: string | null;
+    export let buttonType: "yesno" | "ok" | "input";
 
     let showPopup = true;
     let answer: boolean | null = null;
@@ -69,6 +70,19 @@
 
         return answer;
     }
+
+    /**
+     * Returns the user's answer to the popup's input field
+     */
+    export async function getInputFieldAnswer(): Promise<string>
+    {
+        while (answer === null)
+        {
+            await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 100ms
+        }
+
+        return inputValue ?? "";
+    }
 </script>
 
 {#if showPopup}
@@ -85,6 +99,11 @@
             <p>
                 {@html description}
             </p>
+            {#if buttonType === "input"}
+                <div class="inputHolderDiv">
+                    <input class="titleInput" bind:value={inputValue}>
+                </div>
+            {/if}
             <div class="buttonsHolder">
                 {#if buttonType === "yesno"}
                     <button class="cancelButton"
@@ -103,7 +122,7 @@
                     >
                         {I18n.t("yes")}
                     </button>
-                {:else if buttonType === "ok" }
+                {:else if buttonType === "ok"}
                     <button class="okButton"
                             on:click={() => {
                             answer = true;
@@ -111,6 +130,23 @@
                         }}
                     >
                         {I18n.t("ok")}
+                    </button>
+                {:else if buttonType === "input"}
+                    <button class="cancelButton"
+                            on:click={() => {
+                                answer = false;
+                                closePopup();
+                            }}
+                    >
+                        {I18n.t("cancel")}
+                    </button>
+                    <button class="okButton"
+                            on:click={() => {
+                            answer = true;
+                            closePopup();
+                        }}
+                    >
+                        {I18n.t("confirm")}
                     </button>
                 {/if}
             </div>
@@ -205,5 +241,24 @@
 
     .okButton:hover {
         background: var(--accent-button-hover);
+    }
+
+    .inputHolderDiv {
+        display: flex;
+        margin-bottom: 1em;
+    }
+
+    .titleInput {
+        padding: 1em;
+        border-radius: 0.5em;
+        border: 2px solid var(--border);
+        background: none;
+        transition: 0.3s;
+        flex-grow: 1;
+    }
+
+    .titleInput:focus, .titleInput:hover {
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 0 0;
     }
 </style>

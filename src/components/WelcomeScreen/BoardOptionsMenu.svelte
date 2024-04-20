@@ -88,8 +88,15 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         let thisBoardIndex = SaveLoadManager.getData().boards.findIndex(board => board.id === boardId);
         let duplicatedBoard = await duplicateBoardObject(SaveLoadManager.getData().getBoard(boardId));
 
-        await SaveLoadManager.getData().createNewBoard(duplicatedBoard.title, duplicatedBoard.backgroundImagePath, false, duplicatedBoard.id, duplicatedBoard.labels, duplicatedBoard.lists, duplicatedBoard.favourite, thisBoardIndex);
-        refreshWelcomeScreen();
+        const popupWindow = new PopupWindow({props: {title: I18n.t("createNewBoard"), description: I18n.t("chooseBoardTitle"), inputValue: duplicatedBoard.title, buttonType: "input"}, target: document.body, intro: true});
+
+        if (await popupWindow.getAnswer() === true)
+        {
+            duplicatedBoard.title = await popupWindow.getInputFieldAnswer();
+
+            await SaveLoadManager.getData().createNewBoard(duplicatedBoard.title, duplicatedBoard.backgroundImagePath, false, duplicatedBoard.id, duplicatedBoard.labels, duplicatedBoard.lists, duplicatedBoard.favourite, thisBoardIndex);
+            refreshWelcomeScreen();
+        }
     }
 
     async function deleteBoard()
@@ -118,10 +125,16 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         let boardToPaste = await duplicateCopiedBoardAsBoard($copiedBoard!); //Since this function was called, it means the `copiedBoard` variable can't be null. Hadn't there been a board copied i.e. should `copiedBoard` have been null, then the button on which this function gets called wouldn't have been visible
 
+        const popupWindow = new PopupWindow({props: {title: I18n.t("createNewBoard"), description: I18n.t("chooseBoardTitle"), inputValue: boardToPaste.title, buttonType: "input"}, target: document.body, intro: true});
 
-        await SaveLoadManager.getData().createNewBoard(boardToPaste.title, boardToPaste.backgroundImagePath, false, boardToPaste.id, boardToPaste.labels, boardToPaste.lists, boardToPaste.favourite, thisBoardIndex)
+        if (await popupWindow.getAnswer() === true)
+        {
+            boardToPaste.title = await popupWindow.getInputFieldAnswer();
 
-        refreshWelcomeScreen();
+            await SaveLoadManager.getData().createNewBoard(boardToPaste.title, boardToPaste.backgroundImagePath, false, boardToPaste.id, boardToPaste.labels, boardToPaste.lists, boardToPaste.favourite, thisBoardIndex)
+
+            refreshWelcomeScreen();
+        }
     }
 
     let menuItems = [
