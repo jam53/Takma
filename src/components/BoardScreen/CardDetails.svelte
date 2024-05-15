@@ -408,7 +408,7 @@
         <div bind:this={popupElement} transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
-                <span role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("enterACardTitle")}
+                <span role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("enterACardTitle")} spellcheck="false"
                       on:input={(e) => cardToSave.title = e.target.textContent}
                       on:focus={() => typing = true}
                       on:focusout={() => typing = false}
@@ -458,7 +458,7 @@
                         {/each}
                     </div>
                     {#if editingDescription}
-                        <pre role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("addDetailedDescriptionMarkdown")}
+                        <pre role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("addDetailedDescriptionMarkdown")} spellcheck="false"
                               on:input={(e) => cardToSave.description = e.target.innerText.trim()}
                               on:focus={() => typing = true}
                               on:focusout={() => typing = false}
