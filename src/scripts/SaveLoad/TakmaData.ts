@@ -682,5 +682,36 @@ export class TakmaData
 
         // SaveLoadManager.saveToDisk(); //We aren't saving on purpose, otherwise it becomes really laggy when resizing/dragging the window. These changes will be saved to disk, the next time another function changes some state and calls `SaveLoadManager.saveToDisk()`
     }
+
+    /**
+     * Returns a list of filenames of all the files related to this board. These could be attachments of cards, cover images of cards or the board's background image
+     */
+    public getAllFilesRelatedToBoard(boardId: string): string[]
+    {
+        /**
+         * Given a path to a file, this function returns the filename
+         */
+        function getFilename(pathToFile: string): string
+        {
+            return pathToFile.split('\\').pop()?.split('/').pop();
+        }
+
+
+        let files: string[] = [];
+
+        const board = this.getBoard(boardId);
+        files.push(getFilename(board.backgroundImagePath));
+
+        for (let list of board.lists)
+        {
+            for (let card of list.cards)
+            {
+                files.push(...card.attachments.map(getFilename));
+                files.push(getFilename(card.coverImage));
+            }
+        }
+
+        return files;
+    }
     //endregion
 }

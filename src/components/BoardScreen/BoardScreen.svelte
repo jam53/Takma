@@ -18,6 +18,7 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
     import {listen} from "@tauri-apps/api/event";
+    import {readDir, removeFile} from "@tauri-apps/api/fs";
 
     let createNewCardElements;
     let createNewListElement
@@ -162,6 +163,25 @@
 
         return cardsToFilter;
     }
+
+    /**
+     * Sometimes attachments/the cover image of cards or the background image of the board don't get removed when they are no longer needed.
+     * This function loops through all of the files in the directory of the board, and removes all the files which aren't referenced by either the attachments/the cover image of cards in this board, or the background image of this board.
+     */
+    async function removeDanglingAttachments()
+    {
+        const filesOnDisk = await readDir(`Takma/Files/${$selectedBoardId}`, {dir: SaveLoadManager.getSaveDirectory(), recursive: false}) //All of the files in the directory associated with this board
+        const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard($selectedBoardId);
+
+        for (const fileOnDisk of filesOnDisk.map(file => file.name))
+        {
+            if (!boardFiles.includes(fileOnDisk))
+            {
+                await removeFile(`Takma/Files/${$selectedBoardId}/${fileOnDisk}`, {dir: SaveLoadManager.getSaveDirectory()});
+            }
+        }
+    }
+    removeDanglingAttachments();
 </script>
 <div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
