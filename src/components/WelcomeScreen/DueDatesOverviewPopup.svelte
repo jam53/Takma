@@ -173,7 +173,7 @@
                         </h4>
                         <hr>
                         <span>
-                            {(new Date(parseInt(dueDateItem.dueDate))).toLocaleString("default", {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}
+                            {(new Date(parseInt(dueDateItem.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}
                         </span>
                     </div>
                 {/each}
