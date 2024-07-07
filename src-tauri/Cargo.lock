@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "Takma"
-version = "1.4.12"
+version = "1.4.13"
 dependencies = [
  "serde",
  "serde_json",
