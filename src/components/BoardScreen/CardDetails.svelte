@@ -105,9 +105,9 @@
     const markedCustomRenderer = new marked.Renderer();
 
     // Override the link rendering function
-    markedCustomRenderer.link = function(href, title, text) {
+    markedCustomRenderer.link = function(token) {
         // Check if the link matches your custom pattern
-        const match = href.match(takmaLinkPattern);
+        const match = token.href.match(takmaLinkPattern);
 
         if (match)
         {
@@ -134,9 +134,9 @@
             finally
             {
                 styledLink = `
-                <span data-takmalink="${href}" class="takma-link">
-                    <span data-takmalink="${href}" class="takma-linkBoardTitle">${boardTitle}</span>
-                    <span data-takmalink="${href}" class="takma-linkCardTitle">${cardTitle}</span>
+                <span data-takmalink="${token.href}" class="takma-link">
+                    <span data-takmalink="${token.href}" class="takma-linkBoardTitle">${boardTitle}</span>
+                    <span data-takmalink="${token.href}" class="takma-linkCardTitle">${cardTitle}</span>
                 </span>`;
             }
 
@@ -144,7 +144,7 @@
         } else
         {
             // Use the default link rendering for other links
-            return marked.Renderer.prototype.link.call(this, href, title, text);
+            return marked.Renderer.prototype.link.call(this, token);
         }
     };
     //endregion
