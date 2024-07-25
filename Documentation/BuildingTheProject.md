@@ -11,4 +11,4 @@
 - Run `npm i`
 - Run `npm run tauri build`
 - The executable together with the `resources` folder will be placed in: `src-tauri/target/release/`
-  - An msi installer can be found in: `src-tauri/target/release/bundle/msi/Takma_0.0.0_x64_en-US.msi`
+  - An msi installer can be found at: `src-tauri/target/release/bundle/msi/Takma_0.0.0_x64_en-US.msi`
