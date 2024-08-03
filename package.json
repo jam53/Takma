@@ -27,7 +27,6 @@
         "@tauri-apps/cli": "^1.6.0",
         "@tsconfig/svelte": "^5.0.4",
         "@types/dompurify": "^3.0.5",
-        "@types/marked": "^5.0.2",
         "@types/node": "^20.14.10",
         "fs-extra": "^11.2.0",
         "svelte": "^4.2.18",
