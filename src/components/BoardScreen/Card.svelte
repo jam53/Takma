@@ -194,7 +194,7 @@
 
     .labels span {
         min-width: 2.4em;
-        height: 1.2em;
+        height: 1.35em;
         text-overflow: ellipsis;
         overflow: hidden;
         border-radius: 0.25em;
