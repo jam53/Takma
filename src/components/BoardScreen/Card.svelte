@@ -210,7 +210,9 @@
 
     .icons {
         display: flex;
-        gap: 1em;
+        flex-flow: row wrap;
+        column-gap: 1em;
+        row-gap: 0.25em;
         align-items: center;
         padding-top: 0.5em;
     }
