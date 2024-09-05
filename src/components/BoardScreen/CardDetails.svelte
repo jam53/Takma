@@ -152,6 +152,7 @@
     const markedJsOptions = {
         mangle: false,
         headerIds: false,
+        breaks: true,
         renderer: markedCustomRenderer
     };
 
