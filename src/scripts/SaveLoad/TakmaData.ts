@@ -708,6 +708,9 @@ export class TakmaData
             {
                 files.push(...card.attachments.map(getFilename));
                 files.push(getFilename(card.coverImage));
+
+                const markdownImageLinkRegex = /!\[[^\]]*\]\(([^"\)]+)(?=\"|\))/; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
+                card.description.match(markdownImageLinkRegex)?.map(getFilename).forEach(file => files.push(file))
             }
         }
 

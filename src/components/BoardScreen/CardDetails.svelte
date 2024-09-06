@@ -18,13 +18,14 @@
     import {
         imageExtensions,
         removeFileFromTakmaDataFolder,
-        saveFilePathToDisk
+        saveFilePathToDisk, saveFileToDisk
     } from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {listen} from "@tauri-apps/api/event";
+    import {convertFileSrc} from "@tauri-apps/api/tauri";
 
     export let refreshListsFunction;
 
@@ -148,6 +149,28 @@
             return marked.Renderer.prototype.link.call(this, token);
         }
     };
+
+    // This function modifies the behavior of how images are rendered by the marked library:
+    // - If the image source (href) is an HTTP or HTTPS URL, it remains unchanged.
+    // - If the image source is a local file path, it is converted to a URL using the `getImageUrl()` function.
+    markedCustomRenderer.image = function(token) {
+        token.href = getImageUrl(token.href);
+        return marked.Renderer.prototype.image.call(this, token);
+    };
+
+    /**
+     * Returns an URL for an image.
+     *
+     * If the `imageSrc` is already an HTTP or HTTPS URL, it's returned directly.
+     * If `imageSrc` is a path to a local file, a URL is generated for it using the `convertFileSrc` function.
+     *
+     * @param {string} imageSrc - The URL or file path of the image.
+     * @returns {string} The URL of the image.
+     */
+    function getImageUrl(imageSrc: string)
+    {
+        return imageSrc.match(/^(http|https)/) ? imageSrc : convertFileSrc(imageSrc);
+    }
     //endregion
 
     const markedJsOptions = {
@@ -407,8 +430,10 @@
             element: markdownTextArea,
             autoDownloadFontAwesome: false,
             autofocus: true,
+            uploadImage: true,
             promptURLs: true,
-            showIcons: ["code", "table", "image", "horizontal-rule", "heading-smaller", "heading-bigger", "strikethrough"],
+            previewImagesInEditor: true,
+            showIcons: ["code", "table", "image", "upload-image", "horizontal-rule", "heading-smaller", "heading-bigger", "strikethrough"],
             hideIcons: ["fullscreen", "side-by-side", "preview"],
             indentWithTabs: false,
             spellChecker: false,
@@ -419,6 +444,24 @@
             insertTexts: {
                 horizontalRule: ["", "\n\n---\n\n"],
                 table: ["", "\n\n| 1 | 2 | 3 |\n|:-:|:-:|:-:|\n| A | B | C |\n\n"],
+            },
+            imageAccept: "image/png, image/jpeg", //Overwritten by imageUploadFunction
+            imageMaxSize: 1024 * 1024 * 2, //Overwritten by imageUploadFunction
+            imageTexts: {sbInit: "Attach image files by pasting from clipboard.", sbOnDrop: "Processing image #images_names#", sbOnUploaded: "Processed image #image_name#"},
+            promptTexts: {image: "URL of the image:", link: "URL of the link:"},
+            imagesPreviewHandler: getImageUrl,
+            imageUploadFunction: async (file: File, onSuccess, onError) =>
+            {
+                const fileMime = file.type.split("/"); //file.type is a mime-type, eg. "image/png"
+                if (fileMime[0] !== "image" || !imageExtensions.includes(fileMime[1].toLowerCase()))
+                {
+                    onError(`Only image files are supported. The supported file formats are: ${imageExtensions.sort().join(", ")}.`);
+                }
+                else
+                {
+                    let path = await SaveLoadManager.getAbsoluteSaveDirectory() + await saveFileToDisk(file, $selectedBoardId);
+                    onSuccess(path);
+                }
             },
             toolbar: [
                 "bold",
