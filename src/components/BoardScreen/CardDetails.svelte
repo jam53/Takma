@@ -45,6 +45,7 @@
                 cardToSave = SaveLoadManager.getData().getCard($selectedBoardId, value);
                 cardDesc = cardToSave.description;
                 editingDescription = cardDesc === ""; //If the card has no description yet, we enter the description editing "mode" by default. Instead of having requiring the user to click on it.
+                typing = true;
             }
             else
             {
@@ -397,6 +398,76 @@
         clearTimeout(typingTimer);
         typingTimer = setTimeout(callback, doneTypingInterval);
     }
+
+    let markdownTextArea;
+    $: markdownTextArea && initializeEasyMDE();
+    function initializeEasyMDE()
+    {
+        let easyMDE = new EasyMDE({
+            element: markdownTextArea,
+            autoDownloadFontAwesome: false,
+            autofocus: true,
+            promptURLs: true,
+            showIcons: ["code", "table", "image", "horizontal-rule", "heading-smaller", "heading-bigger", "strikethrough"],
+            hideIcons: ["fullscreen", "side-by-side", "preview"],
+            indentWithTabs: false,
+            spellChecker: false,
+            nativeSpellcheck: false,
+            placeholder: I18n.t("addDetailedDescriptionMarkdown"),
+            unorderedListStyle: "-",
+            minHeight: "10em",
+            insertTexts: {
+                horizontalRule: ["", "\n\n---\n\n"],
+                table: ["", "\n\n| 1 | 2 | 3 |\n|:-:|:-:|:-:|\n| A | B | C |\n\n"],
+            },
+            toolbar: [
+                "bold",
+                "italic",
+                {
+                    name: "underline",
+                    action: EasyMDE.toggleUnderline,
+                    className: "fa fa-underline",
+                    title: "Underline",
+                },
+                "strikethrough",
+                "heading",
+                "heading-smaller",
+                "heading-bigger",
+                "|",
+                "code",
+                "quote",
+                "unordered-list",
+                "ordered-list",
+                "|",
+                "link",
+                "image",
+                "upload-image",
+                "table",
+                "horizontal-rule",
+                "|",
+                "guide"
+            ],
+        });
+
+        easyMDE.codemirror.on("change", () => cardToSave.description = easyMDE.value().trim());
+        easyMDE.codemirror.on("focus", () => typing = true);
+        easyMDE.codemirror.on("blur", () => typing = false);
+        easyMDE.codemirror.on("keyup", () => waitUntilUserStoppedTyping(saveCard));
+
+        //Remove the EasyMDE element from the DOM once we show the rendered markdown AKA click outside the EasyMDEContainer
+        let easyMDEContainer = document.getElementsByClassName("EasyMDEContainer")[0];
+        const clickOutsideAction =  clickOutside(easyMDEContainer);
+        easyMDEContainer.addEventListener('click_outside', () => {
+            //The `(window.getSelection().toString().length === 0)` check ensures that selecting text won't fire a `click_outside` event. If we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the element. This would be considered as a click outside the element, therefore removing this element. With this check we only remove the element if we aren't selecting anything
+            if (window.getSelection().toString().length === 0)
+            {
+                editingDescription = false;
+                easyMDEContainer.remove();
+                clickOutsideAction.destroy();
+            }
+        });
+    }
+
 </script>
 
 {#if showPopup}
@@ -459,33 +530,7 @@
                         {/each}
                     </div>
                     {#if editingDescription}
-                        <pre role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("addDetailedDescriptionMarkdown")} spellcheck="false"
-                              on:input={(e) => cardToSave.description = e.target.innerText.trim()}
-                              on:focus={() => typing = true}
-                              on:focusout={() => typing = false}
-                              use:clickOutside
-                              on:click_outside={() => (window.getSelection().toString().length === 0) && (editingDescription = false)}
-                              on:keyup={() => waitUntilUserStoppedTyping(saveCard)}
-                             on:keydown={e => {
-                                 if (e.key === "Tab")
-                                 {
-                                     e.preventDefault(); // Prevent the default Tab behavior of focussing on the next element in the DOM
-
-                                     // Insert a tab character at the current cursor position
-                                     const selection = window.getSelection();
-                                     const range = selection.getRangeAt(0);
-                                     const tabNode = document.createTextNode('\t');
-                                     range.insertNode(tabNode);
-
-                                     // Move the cursor to the end of the tab
-                                     range.setStartAfter(tabNode);
-                                     range.collapse(true);
-                                     selection.removeAllRanges();
-                                     selection.addRange(range);
-                                 }
-                             }}
-                        >{cardDesc}</pre>
-<!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the description. This would be considered as a click outside the description, therefore closing the description. With this check we only close the description if we aren't selecting anything-->
+                        <textarea bind:this={markdownTextArea}>{cardDesc}</textarea>
                     {:else}
                         <div class="renderedDescriptionHolder markdown-body"
                              on:click={handleDescriptionHolderClick}
@@ -743,33 +788,6 @@
 
     .cardMainAreaHolder {
         width: 100%;
-    }
-
-    .cardMainAreaHolder pre {
-        padding: 0.5em 0.25em;
-        border-radius: 0.5em;
-        border: 2px solid transparent;
-        background: var(--border);
-        transition: 0.3s;
-        font-size: medium;
-        resize: none;
-        cursor: text;
-        display: block;
-        overflow: hidden;
-        min-height: 3em;
-        margin: 0;
-        word-break: break-word;
-        white-space: break-spaces;
-    }
-
-    .cardMainAreaHolder pre[contenteditable]:empty::before {
-        content: attr(data-txt-content);
-        color: grey;
-    }
-
-    .cardMainAreaHolder pre:focus, .cardMainAreaHolder pre:hover {
-        border: 2px solid var(--accent);
-        box-shadow: 0 0 0 0;
     }
 
     .renderedDescriptionHolder {
