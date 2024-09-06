@@ -447,15 +447,15 @@
             },
             imageAccept: "image/png, image/jpeg", //Overwritten by imageUploadFunction
             imageMaxSize: 1024 * 1024 * 2, //Overwritten by imageUploadFunction
-            imageTexts: {sbInit: "Attach image files by pasting from clipboard.", sbOnDrop: "Processing image #images_names#", sbOnUploaded: "Processed image #image_name#"},
-            promptTexts: {image: "URL of the image:", link: "URL of the link:"},
+            imageTexts: {sbInit: I18n.t("attachImagesClipboard"), sbOnDrop: I18n.t("processingImage"), sbOnUploaded: I18n.t("processedImage")},
+            promptTexts: {image: I18n.t("urlOfImage"), link: I18n.t("urlOfLink")},
             imagesPreviewHandler: getImageUrl,
             imageUploadFunction: async (file: File, onSuccess, onError) =>
             {
                 const fileMime = file.type.split("/"); //file.type is a mime-type, eg. "image/png"
                 if (fileMime[0] !== "image" || !imageExtensions.includes(fileMime[1].toLowerCase()))
                 {
-                    onError(`Only image files are supported. The supported file formats are: ${imageExtensions.sort().join(", ")}.`);
+                    onError(I18n.t("onlyImageFilesSupported", imageExtensions.sort().join(", ")));
                 }
                 else
                 {
@@ -464,31 +464,121 @@
                 }
             },
             toolbar: [
-                "bold",
-                "italic",
+                {
+                    name: 'bold',
+                    action: EasyMDE.toggleBold,
+                    className: "fa fa-bold",
+                    title: I18n.t("bold"),
+                    default: true,
+                },
+                {
+                    name: 'italic',
+                    action: EasyMDE.toggleItalic,
+                    className: "fa fa-italic",
+                    title: I18n.t("italic"),
+                    default: true,
+                },
                 {
                     name: "underline",
                     action: EasyMDE.toggleUnderline,
                     className: "fa fa-underline",
-                    title: "Underline",
+                    title: I18n.t("underline"),
                 },
-                "strikethrough",
-                "heading",
-                "heading-smaller",
-                "heading-bigger",
+                {
+                    name: 'strikethrough',
+                    action: EasyMDE.toggleStrikethrough,
+                    className: "fa fa-strikethrough",
+                    title: I18n.t("strikethrough"),
+                },
+                {
+                    name: 'heading',
+                    action: EasyMDE.toggleHeadingSmaller,
+                    className: "fa fa-header fa-heading",
+                    title: I18n.t("heading"),
+                    default: true,
+                },
+                {
+                    name: 'heading-smaller',
+                    action: EasyMDE.toggleHeadingSmaller,
+                    className: "fa fa-header fa-heading header-smaller",
+                    title: I18n.t("smallerHeading"),
+                },
+                {
+                    name: 'heading-bigger',
+                    action: EasyMDE.toggleHeadingBigger,
+                    className: "fa fa-header fa-heading header-bigger",
+                    title: I18n.t("biggerHeading"),
+                },
                 "|",
-                "code",
-                "quote",
-                "unordered-list",
-                "ordered-list",
+                {
+                    name: 'code',
+                    action: EasyMDE.toggleCodeBlock,
+                    className: "fa fa-code",
+                    title: I18n.t("code"),
+                },
+                {
+                    name: 'quote',
+                    action: EasyMDE.toggleBlockquote,
+                    className: "fa fa-quote-left",
+                    title: I18n.t("quote"),
+                    default: true,
+                },
+                {
+                    name: 'unordered-list',
+                    action: EasyMDE.toggleUnorderedList,
+                    className: "fa fa-list-ul",
+                    title: I18n.t("genericList"),
+                    default: true,
+                },
+                {
+                    name: 'ordered-list',
+                    action: EasyMDE.toggleOrderedList,
+                    className: "fa fa-list-ol",
+                    title: I18n.t("numberedList"),
+                    default: true,
+                },
                 "|",
-                "link",
-                "image",
-                "upload-image",
-                "table",
-                "horizontal-rule",
+                {
+                    name: 'link',
+                    action: EasyMDE.drawLink,
+                    className: "fa fa-link",
+                    title: I18n.t("createLink"),
+                    default: true,
+                },
+                {
+                    name: 'image',
+                    action: EasyMDE.drawImage,
+                    className: "fa fa-image",
+                    title: I18n.t("insertImage"),
+                    default: true,
+                },
+                {
+                    name: 'upload-image',
+                    action: EasyMDE.drawUploadedImage,
+                    className: "fa fa-image",
+                    title: I18n.t("importImage"),
+                },
+                {
+                    name: 'table',
+                    action: EasyMDE.drawTable,
+                    className: "fa fa-table",
+                    title: I18n.t("insertTable"),
+                },
+                {
+                    name: 'horizontal-rule',
+                    action: EasyMDE.drawHorizontalRule,
+                    className: "fa fa-minus",
+                    title: I18n.t("insertHorizontalLine"),
+                },
                 "|",
-                "guide"
+                {
+                    name: 'guide',
+                    action: 'https://www.markdownguide.org/basic-syntax/',
+                    className: "fa fa-question-circle",
+                    noDisable: true,
+                    title: I18n.t("markdownGuide"),
+                    default: true,
+                }
             ],
         });
 

@@ -172,4 +172,27 @@ export default interface Translation
     cancel: string;
     confirm: string;
     chooseBoardTitle: string;
+    attachImagesClipboard: string;
+    processingImage: string;
+    processedImage: string;
+    urlOfImage: string;
+    urlOfLink: string;
+    onlyImageFilesSupported: string;
+    bold: string;
+    italic: string;
+    underline: string;
+    strikethrough: string;
+    heading: string;
+    smallerHeading: string;
+    biggerHeading: string;
+    code: string;
+    quote: string;
+    genericList: string;
+    numberedList: string;
+    createLink: string;
+    insertImage: string;
+    importImage: string;
+    insertTable: string;
+    insertHorizontalLine: string;
+    markdownGuide: string;
 }
