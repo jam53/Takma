@@ -976,4 +976,72 @@
     .fullScreenButton:hover {
         color: grey;
     }
+
+    /*region Used for styling the EasyMDE window*/
+    :global(.CodeMirror) {
+        background: transparent !important;
+        transition: 0.3s !important;
+        border-radius: 0 0 0.5em 0.5em !important;
+        border: var(--border) 2px solid !important;
+    }
+
+    :global(.EasyMDEContainer .CodeMirror .CodeMirror-line) {
+        color: var(--main-text);
+        word-break: break-word !important;
+        white-space: break-spaces !important;
+    }
+
+    :global(.EasyMDEContainer .CodeMirror .CodeMirror-line span) {
+        color: var(--main-text);
+        word-break: break-word !important;
+        white-space: break-spaces !important;
+    }
+
+    :global(.EasyMDEContainer .CodeMirror .CodeMirror-line .CodeMirror-selectedtext) {
+        background: Highlight !important;
+        color: HighlightText !important;
+    }
+
+    :global(.CodeMirror-selected) {
+        background: transparent !important;
+    }
+
+    /*Styles code blocks*/
+    :global(.cm-s-easymde .cm-comment) {
+        background: rgba(var(--main-text-rgb-values), 0.1) !important;
+    }
+
+    /*Styles images inside the markdown preview of EasyMDE*/
+    :global(span::after) {
+        max-width: 30vw !important;
+    }
+
+    :global(.CodeMirror-cursor) {
+        border-color: var(--main-text) !important;
+    }
+
+    :global(.CodeMirror-placeholder) {
+        color: var(--main-text) !important;
+    }
+
+    :global(.editor-toolbar) {
+        border-radius: 0.5em 0.5em 0 0 !important;
+        background: var(--border);
+        border: var(--border) 2px solid !important;
+    }
+
+    :global(.editor-toolbar .separator) {
+        border: var(--unselected-button) 1px solid !important;
+    }
+
+    :global(.editor-toolbar button) {
+        transition: 0.3s;
+        color: var(--main-text) !important;
+        border: none !important;
+    }
+
+    :global(.editor-toolbar button:hover, .editor-toolbar button.active) {
+        background-color: var(--unselected-button) !important;
+    }
+    /*endregion*/
 </style>
