@@ -123,7 +123,15 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
         }
 
     }));
+
     (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId, card.coverImage.split('\\').pop()!.split('/').pop()!.substring(36)));
+
+    const imagesInCardDescription: string[] = SaveLoadManager.getData().getAllLocalMarkdownImagesInCardDescription(card);
+    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + imgSrc, boardId, imgSrc.split('\\').pop()!.split('/').pop()!.substring(36))));
+
+    imagesInCardDescription.forEach((imgSrc, i) => {
+        card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i]);
+    })
 
     return card;
 }

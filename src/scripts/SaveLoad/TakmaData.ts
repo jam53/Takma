@@ -276,7 +276,7 @@ export class TakmaData
         this._boards = this.boards.filter(board => board.id != id);
         await SaveLoadManager.saveToDisk();
 
-        await removeDir(`./Takma/Files/${id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
+        await removeDir(`${SaveLoadManager.getBoardFilesPath() + id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
     }
 
     /**
@@ -416,15 +416,18 @@ export class TakmaData
      */
     private deleteAllFilesTiedToCard(card: Card)
     {
-        card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment =>
-        {
-            await removeFile(attachment, {dir: SaveLoadManager.getSaveDirectory()})
+        card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
+            await removeFile(attachment, {dir: SaveLoadManager.getSaveDirectory()});
         });
 
         if (card.coverImage !== "")
         {
             removeFile(card.coverImage, {dir: SaveLoadManager.getSaveDirectory()});
         }
+
+        this.getAllLocalMarkdownImagesInCardDescription(card).forEach(imgSrc => {
+            removeFile(imgSrc, {dir: SaveLoadManager.getSaveDirectory()});
+        })
     }
 
     /**
@@ -708,13 +711,29 @@ export class TakmaData
             {
                 files.push(...card.attachments.map(getFilename));
                 files.push(getFilename(card.coverImage));
-
-                const markdownImageLinkRegex = /!\[[^\]]*\]\(([^"\)]+)(?=\"|\))/; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
-                card.description.match(markdownImageLinkRegex)?.map(getFilename).forEach(file => files.push(file))
+                files.push(...this.getAllLocalMarkdownImagesInCardDescription(card).map(getFilename));
             }
         }
 
         return files;
+    }
+
+    /**
+     * Extracts all local image file paths referenced in the description of a given card.
+     * The function searches for Markdown image links (e.g., ![alt text](path/to/image)) within the card's description
+     * and returns an array of distinct paths to the images.
+     *
+     * @param card - The Card object containing the description with potential Markdown image links.
+     * @returns A unique array of strings, where each string is a path to a local image file referenced in the card's description.
+     */
+    public getAllLocalMarkdownImagesInCardDescription(card: Card): string[]
+    {
+        const markdownImageLinkRegex = /!\[[^\]]*\]\((?<imgSrc>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
+
+        return [... new Set( //This ensures that if multiple ![]() markdown images refer to the same URL/file, each URL appears only once in the array
+            [...card.description.matchAll(markdownImageLinkRegex)]
+                .map(match => match.groups?.imgSrc).filter(imgSrc => imgSrc !== undefined)
+        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesPath())); //We only want to retain images that are stored in Takma's save directory, not paths to image files somewhere else on disk nor http/https urls to images
     }
     //endregion
 }

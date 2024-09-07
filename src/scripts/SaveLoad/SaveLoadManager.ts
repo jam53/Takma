@@ -10,12 +10,14 @@ import {I18n} from "../I18n/I18n";
 export class SaveLoadManager
 {
     private static saveFilename: string;
+    private static boardFilesPath: string;
     private static saveDirectory: BaseDirectory;
     private static data: TakmaData;
 
     static
     {
         this.saveFilename = "./Takma/Takma.json";
+        this.boardFilesPath = "./Takma/Files/";
         this.saveDirectory = parseInt(localStorage.getItem("saveLocation") ?? BaseDirectory.AppLocalData.toString());
         /* Rather than using one of the predefined paths under `BaseDirectory`, we could also just save our data in an arbitrary location.
          * However, this would require us to call a function from Rust who would then write/read to/from the disk.
@@ -116,5 +118,16 @@ export class SaveLoadManager
     public static async getAbsoluteSaveDirectory(): Promise<string>
     {
         return this.getSaveDirectory() === BaseDirectory.AppLocalData ? await appLocalDataDir() : await documentDir();
+    }
+
+    /**
+     * Returns the relative path to the subfolder within the save directory where files related to boards are stored.
+     *
+     * Within this subfolder, a separate subfolder should be present for each board. Each board's subfolder is named using the ID of the board.
+     * For example, if the base path is `./Takma/Files`, and a board has the ID `12345`, the path for that board's files would be `./Takma/Files/12345`.
+     */
+    public static getBoardFilesPath(): string
+    {
+        return this.boardFilesPath;
     }
 }

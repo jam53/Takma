@@ -78,9 +78,9 @@
 
     async function loadCustomBoardBackgrounds()
     {
-        if (await exists("Takma/Files/CustomBoardBackgrounds/", {dir: SaveLoadManager.getSaveDirectory()}))
+        if (await exists(SaveLoadManager.getBoardFilesPath() + "CustomBoardBackgrounds/", {dir: SaveLoadManager.getSaveDirectory()}))
         {
-            let customImagesPaths = (await readDir(await SaveLoadManager.getAbsoluteSaveDirectory() + "Takma/Files/CustomBoardBackgrounds/")).map(fileEntry => fileEntry.path);
+            let customImagesPaths = (await readDir(await SaveLoadManager.getAbsoluteSaveDirectory() + SaveLoadManager.getBoardFilesPath() + "CustomBoardBackgrounds/")).map(fileEntry => fileEntry.path);
             shuffle(customImagesPaths);
 
             return customImagesPaths;

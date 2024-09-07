@@ -170,14 +170,14 @@
      */
     async function removeDanglingAttachments()
     {
-        const filesOnDisk = await readDir(`Takma/Files/${$selectedBoardId}`, {dir: SaveLoadManager.getSaveDirectory(), recursive: false}) //All of the files in the directory associated with this board
+        const filesOnDisk = await readDir(SaveLoadManager.getBoardFilesPath() + $selectedBoardId, {dir: SaveLoadManager.getSaveDirectory(), recursive: false}) //All of the files in the directory associated with this board
         const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard($selectedBoardId);
 
         for (const fileOnDisk of filesOnDisk.map(file => file.name))
         {
             if (!boardFiles.includes(fileOnDisk))
             {
-                await removeFile(`Takma/Files/${$selectedBoardId}/${fileOnDisk}`, {dir: SaveLoadManager.getSaveDirectory()});
+                await removeFile(`${SaveLoadManager.getBoardFilesPath() + $selectedBoardId}/${fileOnDisk}`, {dir: SaveLoadManager.getSaveDirectory()});
             }
         }
     }

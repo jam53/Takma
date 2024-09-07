@@ -163,18 +163,35 @@
         return marked.Renderer.prototype.image.call(this, token);
     };
 
+    let absoluteSaveDirectory: string;
+    (async () => absoluteSaveDirectory = await SaveLoadManager.getAbsoluteSaveDirectory())(); //We use this `absoluteSaveDirectory` value in the `getImageUrl()` function which is used by the `markedCustomRenderer.image`. Since marked.js whose `markedCustomRenderer.image` function we override doesn't accept async functions, we can't await the value of `SaveLoadManager.getAbsoluteSaveDirectory()`. Therefore we query the value right when this component is added to the DOM, so that it's ready to be used by the `getImageUrl()` function whenever it needs it.
+
     /**
      * Returns an URL for an image.
      *
      * If the `imageSrc` is already an HTTP or HTTPS URL, it's returned directly.
      * If `imageSrc` is a path to a local file, a URL is generated for it using the `convertFileSrc` function.
      *
-     * @param {string} imageSrc - The URL or file path of the image.
-     * @returns {string} The URL of the image.
+     * @param imageSrc - The URL or file path of the image.
+     * @returns The URL of the image.
      */
-    function getImageUrl(imageSrc: string)
+    function getImageUrl(imageSrc: string): string
     {
-        return imageSrc.match(/^(http|https)/) ? imageSrc : convertFileSrc(imageSrc);
+        // If the image is a http or https url
+        if (imageSrc.match(/^(http|https)/))
+        {
+            return imageSrc;
+        }
+        // If the image is saved in Takma's data folder
+        else if (imageSrc.startsWith(SaveLoadManager.getBoardFilesPath()))
+        {
+            return convertFileSrc(absoluteSaveDirectory + imageSrc);
+        }
+        // If the image is stored somewhere locally on disk
+        else
+        {
+            return convertFileSrc(imageSrc);
+        }
     }
     //endregion
 
@@ -464,7 +481,7 @@
                 }
                 else
                 {
-                    let path = await SaveLoadManager.getAbsoluteSaveDirectory() + await saveFileToDisk(file, $selectedBoardId);
+                    let path = await saveFileToDisk(file, $selectedBoardId);
                     onSuccess(path);
                 }
             },
