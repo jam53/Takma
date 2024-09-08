@@ -1,0 +1,5 @@
+{
+    "build": {
+        "beforeBundleCommand": ".\\Dependencies\\upx.exe --ultra-brute .\\src-tauri\\target\\release\\Takma.exe"
+    }
+}

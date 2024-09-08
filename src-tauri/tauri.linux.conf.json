@@ -1,0 +1,5 @@
+{
+    "build": {
+        "beforeBundleCommand": "chmod +x ./Dependencies/upx && ./Dependencies/upx --ultra-brute ./src-tauri/target/release/takma"
+    }
+}
