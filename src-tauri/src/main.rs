@@ -6,7 +6,7 @@ use tauri::Manager;
 use std::{fs::metadata, path::PathBuf};
 use std::process::Command;
 #[cfg(target_os = "linux")]
-use fork::{daemon, Fork}; // dep: fork = "0.1"
+use fork::{daemon, Fork};
 
 fn main() {
     // prepare() checks if it's a single instance and tries to send the args otherwise.
