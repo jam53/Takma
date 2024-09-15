@@ -30,11 +30,12 @@
     export let refreshListsFunction;
 
     let typing: boolean; //If we are currently typing, we make sure we don't focus in `afterUpdate` on the containing div. Otherwise we would lose focus of whatever element we are typing in, after every keystroke. As for why we focus one the containing div (overlayElement), this is because otherwise we wouldn't be able to detect keyDown events; these are used to check for Esc / Ctrl+W events to close the CardDetails window
+    let editingDescription: boolean = false; //We use this to know whether or not we should display the rendered html of the description, or display the <pre> so that the user can edit the description
+    //Note: The variables `typing` and `editingDescription` don't necessarily mean the same and should be kept as separate variables. As it is possible that user is typing somewhere on the Card Details screen that isn't the description of the card. For example when editing a checklist.
+
     let cardToSave: Card; //Rather than saving every single time for every change, we will keep track of the current card in this variable, and once we close the CardDetails window, only then will we save the card to disk.
 
     let cardDesc; // We use a separate variable, and not `cardToSave.description`. This because in the <pre> where we use this `cardDesc`, if we would use `cardToSave.description`. The content of the <pre> would be updated as we typed, causing weird behaviour like the stuff we typed appearing twice and so on. Doing it this way with a separate variable circumvents that issue
-
-    let editingDescription: boolean = false; //We use this to know whether or not we should display the rendered html of the description, or display the <pre> so that the user can edit the description
 
     onMount(() =>
     {
@@ -65,10 +66,7 @@
         if (!typing && showPopup)
         {
             overlayElement?.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
-        }
 
-        if (!typing)
-        {
             hljs.highlightAll(); //Applies syntax highlighting to codeblocks. We don't need to do this after every update when we are editing the description, only when we are viewing the "rendered" Markdown version of the description. Hence the if.
             //The IDE throws an error for `highlightAll()`, saying it isn't defined. This is fine because we import hljs as so: `import hljs from "highlight.js";`. Which does include the function `highlightAll()`
         }
@@ -282,6 +280,7 @@
         {
             cardDesc = cardToSave.description;
             editingDescription = true;
+            typing = true;
         }
     }
 
@@ -617,12 +616,12 @@
             if (window.getSelection().toString().length === 0)
             {
                 editingDescription = false;
+                typing = false;
                 easyMDEContainer.remove();
                 clickOutsideAction.destroy();
             }
         });
     }
-
 </script>
 
 {#if showPopup}
