@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "1.5.3",
-    "build": 534,
+    "build": 553,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -13,27 +13,27 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^1.6.0",
-        "dompurify": "^3.1.6",
+        "dompurify": "^3.1.7",
         "highlight.js": "^11.10.0",
         "intro.js": "^7.2.0",
-        "marked": "^14.1.1",
-        "svelte-dnd-action": "^0.9.50",
-        "svelte-sonner": "^0.3.27",
+        "marked": "^14.1.2",
+        "svelte-dnd-action": "^0.9.51",
+        "svelte-sonner": "^0.3.28",
         "svelty-picker": "^5.2.9",
         "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^3.1.2",
-        "@tauri-apps/cli": "^1.6.1",
+        "@tauri-apps/cli": "^1.6.2",
         "@tsconfig/svelte": "^5.0.4",
         "@types/dompurify": "^3.0.5",
-        "@types/node": "^22.5.4",
+        "@types/node": "^22.7.4",
         "fs-extra": "^11.2.0",
         "svelte": "^4.2.19",
-        "svelte-check": "^4.0.1",
-        "svelte-preprocess": "^6.0.2",
+        "svelte-check": "^4.0.4",
+        "svelte-preprocess": "^6.0.3",
         "tslib": "^2.7.0",
-        "typescript": "^5.5.4",
-        "vite": "^5.4.3"
+        "typescript": "^5.6.2",
+        "vite": "^5.4.8"
     }
 }
