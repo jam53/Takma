@@ -691,27 +691,18 @@ export class TakmaData
      */
     public getAllFilesRelatedToBoard(boardId: string): string[]
     {
-        /**
-         * Given a path to a file, this function returns the filename
-         */
-        function getFilename(pathToFile: string): string
-        {
-            return pathToFile.split('\\').pop()?.split('/').pop();
-        }
-
-
         let files: string[] = [];
 
         const board = this.getBoard(boardId);
-        files.push(getFilename(board.backgroundImagePath));
+        files.push(board.backgroundImagePath.getFilename());
 
         for (let list of board.lists)
         {
             for (let card of list.cards)
             {
-                files.push(...card.attachments.map(getFilename));
-                files.push(getFilename(card.coverImage));
-                files.push(...this.getAllLocalMarkdownImagesInCardDescription(card).map(getFilename));
+                files.push(...card.attachments.map(attachment => attachment.getFilename()));
+                files.push(card.coverImage.getFilename());
+                files.push(...this.getAllLocalMarkdownImagesInCardDescription(card).map(img => img.getFilename()));
             }
         }
 

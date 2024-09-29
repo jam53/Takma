@@ -115,7 +115,7 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
 
         if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
         {
-            return await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment, boardId, attachment.split('\\').pop()!.split('/').pop()!.substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
+            return await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
         }
         else
         {
@@ -124,10 +124,10 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
 
     }));
 
-    (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId, card.coverImage.split('\\').pop()!.split('/').pop()!.substring(36)));
+    (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId, card.coverImage.getFilename().substring(36)));
 
     const imagesInCardDescription: string[] = SaveLoadManager.getData().getAllLocalMarkdownImagesInCardDescription(card);
-    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + imgSrc, boardId, imgSrc.split('\\').pop()!.split('/').pop()!.substring(36))));
+    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + imgSrc, boardId, imgSrc.getFilename().substring(36))));
 
     imagesInCardDescription.forEach((imgSrc, i) => {
         card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i]);
@@ -166,7 +166,7 @@ export async function duplicateBoard(board: Board): Promise<Board>
     board.id = crypto.randomUUID();
     board.creationDate = Date.now();
     board.lastOpened = Date.now();
-    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath, board.id, board.backgroundImagePath.split('\\').pop()!.split('/').pop()!.substring(36)));
+    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath, board.id, board.backgroundImagePath.getFilename().substring(36)));
 
 
     board.lists = await Promise.all(board.lists.map(async list => await duplicateList(list, board.id)));
@@ -187,7 +187,7 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
         if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
         {
             return {
-                fileName: attachment.split('\\').pop().split('/').pop().substring(36) ?? "",
+                fileName: attachment.getFilename().substring(36) ?? "",
                 pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)
             };
         }
@@ -196,7 +196,7 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
             return null;
         }
     }).filter(async attachment => await attachment !== null));
-    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.split('\\').pop().split('/').pop().substring(36) ?? "", pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + card!.coverImage)} : null;
+    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.getFilename().substring(36) ?? "", pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + card!.coverImage)} : null;
 
     card!.attachments = [];
     card!.coverImage = "";
@@ -275,7 +275,7 @@ export async function duplicateBoardAsCopiedBoard(board: Board): Promise<CopiedB
 
     let copiedLists = await Promise.all(board.lists.map(list => duplicateListAsCopiedList(list, board.id)));
     let copiedBackgroundImage = {
-        fileName: board.backgroundImagePath.split('\\').pop().split('/').pop().substring(36) ?? "",
+        fileName: board.backgroundImagePath.getFilename().substring(36) ?? "",
         pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath)
     }
 

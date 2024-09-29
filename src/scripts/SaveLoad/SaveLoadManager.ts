@@ -3,6 +3,7 @@ import {TakmaData} from "./TakmaData";
 import {message} from "@tauri-apps/api/dialog";
 import {appLocalDataDir, documentDir} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
+import "../StringExtensions.ts";
 
 /**
  * This class is used to save/load data within Takma
@@ -43,7 +44,7 @@ export class SaveLoadManager
      */
     public static async loadSaveFileFromDisk(): Promise<void>
     {
-        const folderToSave = this.saveFilename.substring(0, this.saveFilename.lastIndexOf("/")); //Extracts the path to the folder where the saveFile is located by removing the saveFile name from the given path.
+        const folderToSave = this.saveFilename.getDirectoryPath(); //Extracts the path to the folder where the saveFile is located by removing the saveFile name from the given path.
         await createDir(folderToSave, {dir: SaveLoadManager.getSaveDirectory(), recursive: true}); //Should the folder not exist and we don't create it here, the next if will throw an error.
 
         if (await exists(this.saveFilename, {dir: this.saveDirectory})) //Check if the save file exists, before trying to use it to overwrite the default values

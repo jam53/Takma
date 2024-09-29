@@ -11,8 +11,8 @@ import {tempdir} from "@tauri-apps/api/os";
  */
 export async function saveFilePathToDisk(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
-    filename = filename ?? pathToFile.split('/').pop().split("\\").pop(); //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
-    filename = trimLongFilename(crypto.randomUUID() + filename);
+    filename = filename ?? pathToFile.getFilename();
+    filename = trimLongFilename(crypto.randomUUID() + filename); //We add a random UUID, to avoid overwriting files with the same name
 
     let savePath = `${SaveLoadManager.getBoardFilesPath() + boardID}/`;
 
@@ -32,7 +32,7 @@ export async function saveFilePathToDisk(pathToFile: string, boardID: string, fi
 export async function saveFilePathToTempfile(pathToFile: string): Promise<string>
 {
 
-    let filename = pathToFile.split('/').pop().split("\\").pop()!; //Dit extraheert de filename. Zou zowel op window/unix moeten werken omdat we en / en \ doen. We pakken dus alles na de laatste slash met pop. of dus naam.extentie. We voegen er ook nog een random uuid aan toe, om te voorkomen dat we foto's met dezelfde naam overschrijven
+    let filename = pathToFile.getFilename();
 
     filename = trimLongFilename(filename);
 
@@ -102,7 +102,7 @@ function trimLongFilename(filename: string): string
 
     if (filename.length >= maxFilenameLength && filename.indexOf('.') !== -1)
     {
-        let fileExtension = "." + filename.split(".").pop()!;
+        let fileExtension = "." + filename.getFileExtension();
 
         return filename.substring(0, maxFilenameLength - fileExtension.length) + fileExtension;
     }

@@ -21,7 +21,7 @@
      */
     function getFilename(pathToFile: string)
     {
-        const filename = pathToFile.split('\\').pop().split('/').pop();
+        const filename = pathToFile.getFilename();
         const uuidRemoved = filename.substring(36);
 
         return uuidRemoved;
