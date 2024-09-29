@@ -9,6 +9,7 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {scaleDownImage} from "../../scripts/ScaleDownImage";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {resolve} from "@tauri-apps/api/path";
 
     export let cardToSave;
     export let addAttachmentFunction;
@@ -38,15 +39,14 @@
 
     async function showInFolder(pathToFile: string)
     {
-        const path = await SaveLoadManager.getAbsoluteSaveDirectory() + pathToFile.replace(/\//g, "\\").substring(2); //The `pathToFile` starts with ./ (or .\ after replacing). We remove this using .substring(2)
-
+        const path = await resolve(await SaveLoadManager.getAbsoluteSaveDirectory(), pathToFile);
 
         await tauri.invoke('show_in_folder', {path});
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
     {
-        const path = await SaveLoadManager.getAbsoluteSaveDirectory() + pathToFile.replace(/\//g, "\\").substring(2); //The `pathToFile` starts with ./ (or .\ after replacing). We remove this using .substring(2)
+        const path = await resolve(await SaveLoadManager.getAbsoluteSaveDirectory(), pathToFile);
 
         await writeText(path); //Copy to clipboard
 
