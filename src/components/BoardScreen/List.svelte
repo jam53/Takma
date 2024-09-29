@@ -1,8 +1,8 @@
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Card as CardInterface, List} from "../../scripts/Board";
-    import {cardFilters, draggingCardOrList, searchBarValue, selectedBoardId} from "../../scripts/stores";
+    import type {Card as CardInterface} from "../../scripts/Board";
+    import {cardFilters, draggingCard, searchBarValue, selectedBoardId} from "../../scripts/stores";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
@@ -50,14 +50,17 @@
 
     function handleDndConsiderCards(e)
     {
-        $draggingCardOrList = true;
         cards = e.detail.items;
     }
 
     function handleDndFinalizeCards(e)
     {
-        $draggingCardOrList = false;
         onDrop(e.detail.items);
+        $draggingCard = false;
+    }
+
+    function handleDraggedElement(draggedElement, data, index) {
+        $draggingCard = true;
     }
 
     let editingTitle; //We use a span to display the list title when we are not editing it, and an input element when we are. We do this since we can't drag the list by the input element.
@@ -142,7 +145,7 @@
     {/key}
     <div class="outerWrapper" bind:this={outerWrapperElement} on:scroll={applyOverFlowedStyleClasses}>
 <!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the -webkit-box-shadow doesn't appear cut off when hovering over a card-->
-        <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
+        <div class="cardsHolder" bind:this={cardsHolderElement} use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1, transformDraggedElement: handleDraggedElement}} on:consider={handleDndConsiderCards} on:finalize={handleDndFinalizeCards} on:scroll={() => setDragDisabled(true)}>
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#key $searchBarValue}

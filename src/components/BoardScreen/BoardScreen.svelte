@@ -1,7 +1,6 @@
 <script lang="ts">
     import {
         cardFilters,
-        draggingCardOrList,
         dueDatesOverviewPopupIsVisible,
         selectedBoardId, selectedCardId
     } from "../../scripts/stores";
@@ -128,13 +127,11 @@
 
     function handleDndConsiderLists(e)
     {
-        $draggingCardOrList = true;
         lists = e.detail.items;
     }
 
     function handleDndFinalizeLists(e)
     {
-        $draggingCardOrList = false;
         onFinalDragUpdate(e.detail.items);
     }
 

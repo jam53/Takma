@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Card, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {draggingCardOrList, selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId, draggingCard} from "../../scripts/stores";
     import {exists} from "@tauri-apps/api/fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -47,6 +47,29 @@
     let shiftKeyPressed = false;
     window.addEventListener("keydown", e => e.key === "Shift" && (shiftKeyPressed = true));
     window.addEventListener("keyup", e => e.key === "Shift" && (shiftKeyPressed = false));
+
+    let preProcessedCoverImgSrc = "";
+    $: card.coverImage !== "" && (async () => preProcessedCoverImgSrc = await getThumbnail(card.coverImage, 600))();
+    // This reactive statement ensures that whenever the card's cover image is not an empty string (i.e. if the card has a cover image),
+    // we asynchronously fetch and store a pre-processed version of the cover image.
+    // This pre-processed thumbnail is saved in the `preProcessedCoverImgSrc` variable and is used for smoother drag-and-drop behavior.
+    // The asynchronous function runs immediately and updates the value of `preProcessedCoverImgSrc` once the thumbnail is fetched.
+    /*
+     Explanation:
+     - The goal is to improve the drag-and-drop experience by addressing layout shifts caused by image loading.
+     - When the card component is dragged, the UI often refreshes, and this frequent redraw causes the cover image
+       to be fetched repeatedly in the normal flow. Each time the image is fetched asynchronously, a loading spinner is
+       displayed temporarily before the image is ready. This loader is often a different size than the final image,
+       causing a layout shift, where the height of the card changes unpredictably. This affects the drag-and-drop
+       experience because other cards in the list will shift as their height is adjusted to fit the loaded image.
+     - To avoid this issue, we pre-fetch and store the cover image before the drag starts.
+       This allows the card to display an immediate image without showing the loader and prevents the height from changing.
+     - While dragging:
+         - The pre-processed thumbnail (low-res image) is shown instead of the loading indicator,
+           maintaining a consistent height for the card.
+     - Once dragging finishes, the full-resolution image is fetched again and displayed, replacing the pre-processed version.
+       This switch happens seamlessly, avoiding any significant layout shifts during the drag action.
+     */
 </script>
 
 <div class="cardContainer" tabindex="0"
@@ -69,13 +92,17 @@
      on:mouseenter={() => hovering = true}
      on:mouseleave={() => hovering = false}
 >
-    {#if card.coverImage !== "" && $draggingCardOrList === false}
-        <!--We only display/update the cover image of this card when we are not dragging any cards/lists. This is because as soon as we start dragging cards/lists we refresh the board/lists which causes all of the cover images to be rerendered. This makes it very laggy to drag/drop cards/lists if there are any cards with cover images. That is why we only display/update the cover image if we aren't dragging any cards/lists.-->
-        {#await (async () => await getThumbnail(card.coverImage, 600))()}
-            <span class="loader"></span>
-        {:then coverImage}
-            <img class="coverImage" src={coverImage} />
-        {/await}
+    {#if card.coverImage !== ""}
+        {#if !$draggingCard}
+            {#await (async () => await getThumbnail(card.coverImage, 600))()}
+                <span class="loader"></span>
+            {:then coverImage}
+                <img class="coverImage" src={coverImage} />
+            {/await}
+        {:else}
+            <!-- While dragging the card, display the pre-processed image to prevent layout shifts -->
+            <img class="coverImage" src="{preProcessedCoverImgSrc}"/>
+        {/if}
     {/if}
     <div class="nonCoverImageContainer">
         <div class="labels">
@@ -228,7 +255,8 @@
 
     .coverImage {
         width: 100%;
-        max-height: 15em;
+        max-height: 13em;
+        min-height: 5em;
         object-fit: contain;
         border-radius: 4px 4px 0 0;
     }
