@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "1.5.3",
-    "build": 553,
+    "build": 570,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^1.6.0",
+        "@types/xxhashjs": "^0.2.4",
         "dompurify": "^3.1.7",
         "highlight.js": "^11.10.0",
         "intro.js": "^7.2.0",
@@ -20,7 +21,8 @@
         "svelte-dnd-action": "^0.9.51",
         "svelte-sonner": "^0.3.28",
         "svelty-picker": "^5.2.9",
-        "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1"
+        "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1",
+        "xxhashjs": "^0.2.2"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^3.1.2",

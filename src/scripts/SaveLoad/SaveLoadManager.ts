@@ -1,8 +1,9 @@
 import {BaseDirectory, createDir, exists, readTextFile, writeTextFile} from "@tauri-apps/api/fs";
 import {TakmaData} from "./TakmaData";
 import {message} from "@tauri-apps/api/dialog";
-import {appLocalDataDir, documentDir} from "@tauri-apps/api/path";
+import {appLocalDataDir, documentDir, resolve} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
+import {tempdir} from "@tauri-apps/api/os";
 import "../StringExtensions.ts";
 
 /**
@@ -130,5 +131,13 @@ export class SaveLoadManager
     public static getBoardFilesPath(): string
     {
         return this.boardFilesPath;
+    }
+
+    /**
+     * Returns the absolute path to the directory used for temporary files.
+     */
+    public static async getTempDirectory(): Promise<string>
+    {
+        return await resolve(await tempdir(), "Takma");
     }
 }

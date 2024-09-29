@@ -7,7 +7,7 @@
     import {readText, writeText} from "@tauri-apps/api/clipboard";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {scaleDownImage} from "../../scripts/ScaleDownImage";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
     import {resolve} from "@tauri-apps/api/path";
 
@@ -106,7 +106,7 @@
                      on:click={() => openWithDefaultApp(attachment)}
                 >
                     {#if imageExtensions.includes(getFileExtension(attachment).toLowerCase())}
-                        {#await (async () => await scaleDownImage(convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment), 224))()}
+                        {#await (async () => await getThumbnail(attachment, 224))()}
                             <button class="boardButtons">
                                 <span class="loader"></span>
                             </button>

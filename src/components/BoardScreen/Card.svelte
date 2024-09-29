@@ -4,8 +4,7 @@
     import {draggingCardOrList, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {exists} from "@tauri-apps/api/fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
-    import {scaleDownImage} from "../../scripts/ScaleDownImage";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     export let card: Card;
     export let refreshListFunction; //Used to visually refresh the list this card is in
@@ -72,7 +71,7 @@
 >
     {#if card.coverImage !== "" && $draggingCardOrList === false}
         <!--We only display/update the cover image of this card when we are not dragging any cards/lists. This is because as soon as we start dragging cards/lists we refresh the board/lists which causes all of the cover images to be rerendered. This makes it very laggy to drag/drop cards/lists if there are any cards with cover images. That is why we only display/update the cover image if we aren't dragging any cards/lists.-->
-        {#await (async () => await scaleDownImage(convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage), 600))()}
+        {#await (async () => await getThumbnail(card.coverImage, 600))()}
             <span class="loader"></span>
         {:then coverImage}
             <img class="coverImage" src={coverImage} />

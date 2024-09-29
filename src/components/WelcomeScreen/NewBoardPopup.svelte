@@ -10,8 +10,7 @@
     import {resolveResource} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {scaleDownImage} from "../../scripts/ScaleDownImage";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     let showPopup = true;
     let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -116,7 +115,7 @@
         if (selected !== null && typeof(selected) === "string")
         {
             selectedImg = selected;
-            selectedImgObject.setAttribute('src', await scaleDownImage(convertFileSrc(selectedImg), 720));
+            selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720));
             document.activeElement.blur(); //When the user clicks on one of the available pictures before selecting one from disk, that picture element would still appear to be "selected" AKA focused. That's why we remove the focus of the active element when picking a new image
         }
     }
@@ -142,7 +141,7 @@
                     <span class="loader"></span>
                 {:then customBoardBackgrounds}
                     <div class="selectedImgHolder" >
-                        {#await scaleDownImage(convertFileSrc(includedImagesInTakma[0]), 720)}
+                        {#await getThumbnail(includedImagesInTakma[0], 720)}
                         {:then defaultImage}
                         <img bind:this={selectedImgObject} use:lazyload src={defaultImage} style="object-fit: cover"/>
                         <img src={boardPreview} alt="Board preview"/>
@@ -173,7 +172,7 @@
                             </svg>
                             {#if customBoardBackgrounds.length > 0}
                             {#each customBoardBackgrounds as imgPath}
-                                {#await scaleDownImage(convertFileSrc(imgPath), 192)}
+                                {#await getThumbnail(imgPath, 192)}
                                 {:then imgUrl}
                                     <div class="customBackgroundImageAndDeleteButtonContainer">
                                         <svg class="deleteCustomBackgroundButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -183,7 +182,7 @@
                                                  if (!includedImagesInTakma.includes(selectedImg))
                                                  {
                                                      selectedImg = includedImagesInTakma[0];
-                                                     selectedImgObject.setAttribute('src', await scaleDownImage(convertFileSrc(selectedImg), 720));
+                                                     selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720));
                                                  }
 
                                                  e.target.tagName === "svg" ? e.target.parentNode.remove() : e.target.parentNode.parentNode.remove();
@@ -193,7 +192,7 @@
                                         >
                                             <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
                                         </svg>
-                                        <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await scaleDownImage(convertFileSrc(imgPath), 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
+                                        <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                                         <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                                     </div>
                                 {/await}
@@ -201,9 +200,9 @@
                                 <hr class="verticalImagesSeparator">
                             {/if}
                             {#each includedImagesInTakma as imgPath}
-                                {#await scaleDownImage(convertFileSrc(imgPath), 192)}
+                                {#await getThumbnail(imgPath, 192)}
                                 {:then imgUrl}
-                                <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await scaleDownImage(convertFileSrc(imgPath), 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
+                                <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                                 <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                                 {/await}
                             {/each}

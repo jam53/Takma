@@ -2,8 +2,7 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {createEventDispatcher} from "svelte";
     import {scale} from "svelte/transition";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
-    import {scaleDownImage} from "../../scripts/ScaleDownImage";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import BoardOptionsMenu from "./BoardOptionsMenu.svelte";
 
     export let image: string;
@@ -33,7 +32,7 @@
     }
 </script>
 
-{#await (async () => await scaleDownImage(convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + image), 600))()}
+{#await (async () => await getThumbnail(image, 600))()}
     <button class="boardButtons">
         <span class="loader"></span>
     </button>
