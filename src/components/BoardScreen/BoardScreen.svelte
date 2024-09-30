@@ -7,7 +7,12 @@
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/api/dialog";
-    import {imageExtensions, removeFileFromTakmaDataFolder, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
+    import {
+        imageExtensions,
+        removeFileFromSaveDirectory,
+        saveAbsoluteFilePathToSaveDirectory,
+        saveFilePathToSaveDirectory
+    } from "../../scripts/TakmaDataFolderIO";
     import CreateNewList from "./CreateNewList.svelte";
     import List from "./List.svelte";
     import {dndzone} from "svelte-dnd-action";
@@ -17,6 +22,7 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
     import {listen} from "@tauri-apps/api/event";
+    import {normalize} from "@tauri-apps/api/path";
     import {readDir, removeFile} from "@tauri-apps/api/fs";
 
     let createNewCardElements;
@@ -61,7 +67,7 @@
         });
         if (selectedFile !== null && typeof(selectedFile) === "string")
         {
-            let savedFilePath = await saveFilePathToDisk(selectedFile, $selectedBoardId); //We save the selected image by the user to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+            let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(selectedFile, $selectedBoardId); //We save the selected image by the user to Takma's data folder, this way we can still access it even if the original file is deleted/moved
             await setBoardBackgroundImage(savedFilePath);
         }
     }
@@ -85,7 +91,7 @@
 
         if (imageExtensions.includes(getFileExtension(droppedFile).toLowerCase()))
         {
-            let savedPath = await saveFilePathToDisk(droppedFile, $selectedBoardId);
+            let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, $selectedBoardId);
             await setBoardBackgroundImage(savedPath);
         }
     }
@@ -101,11 +107,11 @@
         {
             let backgroundImagePath: string = SaveLoadManager.getData().getBoard($selectedBoardId).backgroundImagePath;
 
-            removeFileFromTakmaDataFolder(backgroundImagePath); //We don't await the deletion of the previous board image. If the previous board image was one of the images included in Takma, it will throw an error when we try to delete the file. Which makes sense since we don't store the included images with Takma on disk, but reference them from within the Takma binary. If we don't await this function however, execution will continue even if the function throws an error.
+            await removeFileFromSaveDirectory(backgroundImagePath);
 
             SaveLoadManager.getData().setBoardBackgroundImage($selectedBoardId, pathToImage);
 
-            const imgUrl: string = convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + pathToImage);
+            const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToImage));
             document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
@@ -167,14 +173,14 @@
      */
     async function removeDanglingAttachments()
     {
-        const filesOnDisk = await readDir(SaveLoadManager.getBoardFilesPath() + $selectedBoardId, {dir: SaveLoadManager.getSaveDirectory(), recursive: false}) //All of the files in the directory associated with this board
+        const filesOnDisk = await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/`), {recursive: false}) //All of the files in the directory associated with this board
         const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard($selectedBoardId);
 
         for (const fileOnDisk of filesOnDisk.map(file => file.name))
         {
-            if (!boardFiles.includes(fileOnDisk))
+            if (fileOnDisk && !boardFiles.includes(fileOnDisk))
             {
-                await removeFile(`${SaveLoadManager.getBoardFilesPath() + $selectedBoardId}/${fileOnDisk}`, {dir: SaveLoadManager.getSaveDirectory()});
+                await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/` + fileOnDisk));
             }
         }
     }

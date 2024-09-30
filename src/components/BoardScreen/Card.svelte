@@ -5,6 +5,7 @@
     import {exists} from "@tauri-apps/api/fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
+    import {normalize} from "@tauri-apps/api/path";
 
     export let card: Card;
     export let refreshListFunction; //Used to visually refresh the list this card is in
@@ -34,7 +35,7 @@
 
         for (let attachment of attachments)
         {
-            if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+            if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
             {
                 amount++;
             }

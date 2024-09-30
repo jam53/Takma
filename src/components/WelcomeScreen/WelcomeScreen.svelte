@@ -5,11 +5,10 @@
     import type {Board} from "../../scripts/Board";
     import {searchBarValue, selectedBoardId, selectedCardId} from "../../scripts/stores";
     import {I18n} from "../../scripts/I18n/I18n";
-    import startOnboarding from "../../scripts/Onboarding";
     import {onMount} from "svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
-    import {saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
-    import {resolveResource} from "@tauri-apps/api/path";
+    import {saveAbsoluteFilePathToSaveDirectory} from "../../scripts/TakmaDataFolderIO";
+    import {normalize, resolveResource} from "@tauri-apps/api/path";
 
     let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -38,8 +37,8 @@
             const boards = SaveLoadManager.getData().boards;
 
             const easterEggBoard = I18n.t("easterEggBoard");
-            easterEggBoard.backgroundImagePath = await saveFilePathToDisk((await resolveResource("resources/EasterEggBoardBg.webp")).substring(4), easterEggBoard.id);
-            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|00|$", await SaveLoadManager.getAbsoluteSaveDirectory());
+            easterEggBoard.backgroundImagePath = await saveAbsoluteFilePathToSaveDirectory((await resolveResource("resources/EasterEggBoardBg.webp")).substring(4), easterEggBoard.id);
+            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|00|$", await normalize(SaveLoadManager.getSaveDirectoryPath() + "/"));
             easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|01|$", (await resolveResource("resources/backgrounds")).substring(4));
 
 

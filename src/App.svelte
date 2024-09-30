@@ -10,8 +10,6 @@
     import {
         appWindow,
         currentMonitor,
-        LogicalPosition,
-        LogicalSize,
         PhysicalPosition,
         PhysicalSize
     } from "@tauri-apps/api/window";
@@ -21,12 +19,13 @@
     import {listen} from "@tauri-apps/api/event";
     import PopupWindow from "./components/PopupWindow.svelte";
     import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {normalize} from "@tauri-apps/api/path";
 
     /**
      * Sets the background image of the body to the image of the selected board
      */
     selectedBoardId.subscribe(async boardId => {
-        if (localStorage.getItem("saveLocation") === null)
+        if (localStorage.getItem("saveDirectoryPath") === null)
         {
             document.body.style.backgroundImage = `url('${paintDrops}')`;
             document.body.style.backgroundColor = `transparent`;
@@ -34,7 +33,7 @@
         else if (boardId != "")
         {
             const board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
-            const imgUrl: string = convertFileSrc(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath);
+            const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + board.backgroundImagePath));
 
             // Set the background image only if the current boardId hasn't changed during the image loading process.
             //Otherwise it's possible that the user opened a board and quickly went back to the welcome screen. In that case we would set the backgroundImage to "" in the `else` below. And then once the backgroundImage of the previous subscribe event loaded in, we would set the background image. Causing us to see the backgroundImage of the board on the welcomescreen. We avoid this by checking whether or not the board is still selected once the image has actually been loaded.
@@ -187,21 +186,24 @@
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
-{#await SaveLoadManager.loadSaveFileFromDisk()}
-    <h1>{I18n.t("loadSaveFile")}</h1>
-{:then _}
-    <NavBar bind:this={navBarElement}/>
-        {#if localStorage.getItem("saveLocation") === null}
-          <ChooseSaveLocationScreen/>
-        {:else if $selectedBoardId === ""}
-            <div class="scroll-container">
-            <!--Indien we op het boardscreen ook willen kunnen scrollen, dan zetten we die best ook in deze div. Maar dat willen we niet, we willen alleen kunnen scrollen in de lijsten. Niet het volledige boardscreen zelf-->
-                <WelcomeScreen/>
-            </div>
-        {:else}
-            <BoardScreen/>
-        {/if}
-{/await}
+{#if localStorage.getItem("saveDirectoryPath") === null}
+    <NavBar bind:this={navBarElement} saveLocationSet={false}/>
+    <ChooseSaveLocationScreen/>
+{:else}
+    {#await SaveLoadManager.loadSaveFileFromDisk()}
+        <h1>{I18n.t("loadSaveFile")}</h1>
+    {:then _}
+        <NavBar bind:this={navBarElement} saveLocationSet={true}/>
+            {#if $selectedBoardId === ""}
+                <div class="scroll-container">
+                <!--If we also want to be able to scroll on the board screen, we should ideally place it in this div. But we don't want that; we only want to be able to scroll in the lists, not the entire board screen itself.-->
+                    <WelcomeScreen/>
+                </div>
+            {:else}
+                <BoardScreen/>
+            {/if}
+    {/await}
+{/if}
 </main>
 
 <style>

@@ -1,15 +1,26 @@
 <script lang="ts">
-    import {BaseDirectory} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/shell";
-    import {resolveResource} from "@tauri-apps/api/path";
+    import {open as openDialog} from "@tauri-apps/api/dialog"
+    import {appLocalDataDir, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    function setSaveLocation(saveLocation: BaseDirectory)
+    function setSaveLocation(saveDirectoryPath: string)
     {
-        localStorage.setItem("saveLocation", saveLocation.toString());
-        location.reload(); //Zorgt dat onze app/website refreshed. Anders zouden we op het ChooseSaveLocationScreen.svelte blijven staan omdat svelte niet zal zien dat `{#if localstorage.getItem(“saveLocation”) === null}` werd aangepast in App.svelte
+        localStorage.setItem("saveDirectoryPath", saveDirectoryPath);
+        location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
     }
 
+    async function handleDirectorySelection()
+    {
+        const selectedDirectory = await openDialog({
+            directory: true,
+            multiple: false,
+        });
+        if (selectedDirectory !== null && typeof(selectedDirectory) === "string")
+        {
+            setSaveLocation(selectedDirectory);
+        }
+    }
 </script>
 
 <h1 class="title">
@@ -20,7 +31,7 @@
         <span class="defaultTag">
             {I18n.t("default")}
         </span>
-        <div class="option" on:click={() => setSaveLocation(BaseDirectory.AppLocalData)}>
+        <div class="option" on:click={async () => setSaveLocation(await appLocalDataDir())}>
             <h1>
                 {I18n.t("localAppData")}
             </h1>
@@ -36,15 +47,15 @@
         <span class="defaultTag" style="visibility: hidden">
             {I18n.t("default")}
         </span>
-        <div class="option" on:click={() => setSaveLocation(BaseDirectory.Document)}>
+        <div class="option" on:click={async () => await handleDirectorySelection()}>
             <h1>
-                {I18n.t("myDocumentsDirectory")}
+                {I18n.t("customSaveLocation")}
             </h1>
             <p>
-                {I18n.t("storeDataMyDocuments")}
+                {I18n.t("storeDataCustomSaveLocation")}
             </p>
             <p>
-                {I18n.t("recommendedChoiceOneDrive")}
+                {I18n.t("storeDataCustomSaveLocationDescription")}
             </p>
         </div>
     </div>
@@ -147,5 +158,9 @@
 
     .licenseAgreement span a:hover {
         color: #3B81F4FF;
+    }
+
+    p {
+        font-size: large;
     }
 </style>

@@ -1,7 +1,7 @@
 import {createDir, exists, writeBinaryFile} from "@tauri-apps/api/fs";
 import {convertFileSrc} from "@tauri-apps/api/tauri";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {resolve} from "@tauri-apps/api/path";
+import {normalize} from "@tauri-apps/api/path";
 import {imageExtensions} from "./TakmaDataFolderIO";
 import XXH from "xxhashjs";
 
@@ -13,14 +13,15 @@ import XXH from "xxhashjs";
  *
  * @param {string} imgPath - The path to the original high-resolution image.
  * @param {number} maxPixelSize - The maximum pixel size for the longest side of the thumbnail (either width or height), to which the image will be scaled down to while maintaining its aspect ratio.
+ * @param {boolean} imgPathIsAbsolute - Indicates whether the provided `imgPath` is an absolute path. If false, the path will be resolved relative to Takma's save directory.
  * @returns {Promise<string>} - A promise that resolves to the URL of the thumbnail or the full-resolution image if not cached.
  */
-export async function getThumbnail(imgPath: string, maxPixelSize: number): Promise<string>
+export async function getThumbnail(imgPath: string, maxPixelSize: number, imgPathIsAbsolute: boolean = false): Promise<string>
 {
     const hashedImgName: string = XXH.h64(imgPath + maxPixelSize, 0).toString(16) + `.${imgPath.getFileExtension()}`; // We include both the `imgPath` and `maxPixelSize` in the hash to handle cases where the same `imgPath` is used in multiple places in the UI with different resolutions. If we only hashed the `imgPath`, we could risk overwriting cached images that were previously generated at different resolutions. By hashing both the image URL and the target size, we ensure that each unique image/size combination has its own cached thumbnail, avoiding conflicts between different resolution variants.
 
-    let absoluteImgPath = await resolve(await SaveLoadManager.getAbsoluteSaveDirectory(), imgPath); // Image paths in Takma are stored relative to the save directory. This resolves the relative path to an absolute one.
-    let absoluteThumbnailPath = await resolve(await SaveLoadManager.getTempDirectory(), hashedImgName);
+    let absoluteImgPath = imgPathIsAbsolute ? imgPath : await normalize(SaveLoadManager.getSaveDirectoryPath() + imgPath); // Image paths in Takma are stored relative to the save directory. This resolves the relative path to an absolute one.
+    let absoluteThumbnailPath = await normalize(await SaveLoadManager.getTempDirectoryPath() + hashedImgName);
 
     if (await exists(absoluteThumbnailPath))
     {

@@ -1,6 +1,11 @@
-import {saveFilePathToDisk, saveFilePathToTempfile} from "./TakmaDataFolderIO";
+import {
+    saveAbsoluteFilePathToSaveDirectory,
+    saveFilePathToSaveDirectory,
+    saveFilePathToTempFile
+} from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {exists} from "@tauri-apps/api/fs";
+import {normalize} from "@tauri-apps/api/path";
 
 export interface Board
 {
@@ -113,9 +118,9 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
 
     card.attachments = await Promise.all(card.attachments.map(async attachment => {
 
-        if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
         {
-            return await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
+            return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
         }
         else
         {
@@ -124,13 +129,13 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
 
     }));
 
-    (card.coverImage !== "") && (card.coverImage = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + card.coverImage, boardId, card.coverImage.getFilename().substring(36)));
+    (card.coverImage !== "") && (card.coverImage = await saveFilePathToSaveDirectory(card.coverImage, boardId, card.coverImage.getFilename().substring(36)));
 
     const imagesInCardDescription: string[] = SaveLoadManager.getData().getAllLocalMarkdownImagesInCardDescription(card);
-    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + imgSrc, boardId, imgSrc.getFilename().substring(36))));
+    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36))));
 
     imagesInCardDescription.forEach((imgSrc, i) => {
-        card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i]);
+        card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i].replace(/\\/g, '/')); //Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths.
     })
 
     return card;
@@ -166,7 +171,7 @@ export async function duplicateBoard(board: Board): Promise<Board>
     board.id = crypto.randomUUID();
     board.creationDate = Date.now();
     board.lastOpened = Date.now();
-    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToDisk(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath, board.id, board.backgroundImagePath.getFilename().substring(36)));
+    (board.backgroundImagePath !== "") && (board.backgroundImagePath = await saveFilePathToSaveDirectory(board.backgroundImagePath, board.id, board.backgroundImagePath.getFilename().substring(36)));
 
 
     board.lists = await Promise.all(board.lists.map(async list => await duplicateList(list, board.id)));
@@ -184,11 +189,11 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
     card = structuredClone(card); //To make sure we no longer hold any references to `attachments` array of the original card we will delete here.
 
     let attachments = await Promise.all(card!.attachments.map(async attachment => {
-        if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
         {
             return {
                 fileName: attachment.getFilename().substring(36) ?? "",
-                pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + attachment)
+                pathToTempfile: await saveFilePathToTempFile(attachment)
             };
         }
         else
@@ -196,7 +201,7 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
             return null;
         }
     }).filter(async attachment => await attachment !== null));
-    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.getFilename().substring(36) ?? "", pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + card!.coverImage)} : null;
+    let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.getFilename().substring(36) ?? "", pathToTempfile: await saveFilePathToTempFile(card!.coverImage)} : null;
 
     card!.attachments = [];
     card!.coverImage = "";
@@ -218,9 +223,9 @@ export async function duplicateCopiedCardAsCard(copiedCard: CopiedCard, boardId:
 {
     let card = await duplicateCard(copiedCard.cardWithoutAttachmentsAndCoverImage, boardId);
 
-    card.attachments = await Promise.all(copiedCard.attachments.filter(attachment => attachment !== "" && attachment !== null).map(attachment => saveFilePathToDisk(attachment.pathToTempfile, boardId, attachment.fileName)));
+    card.attachments = await Promise.all(copiedCard.attachments.filter(attachment => attachment !== "" && attachment !== null).map(attachment => saveAbsoluteFilePathToSaveDirectory(attachment.pathToTempfile, boardId, attachment.fileName)));
 
-    card.coverImage = copiedCard.coverImage !== null ? await saveFilePathToDisk(copiedCard.coverImage.pathToTempfile, boardId, copiedCard.coverImage.fileName) : "";
+    card.coverImage = copiedCard.coverImage !== null ? await saveAbsoluteFilePathToSaveDirectory(copiedCard.coverImage.pathToTempfile, boardId, copiedCard.coverImage.fileName) : "";
 
     copiedCard.labelsCardRefersTo.forEach(label => {
         if (SaveLoadManager.getData().getBoard(boardId) !== undefined && !SaveLoadManager.getData().getBoard(boardId).labels.some(labelInBoard => labelInBoard.id === label.id))
@@ -276,7 +281,7 @@ export async function duplicateBoardAsCopiedBoard(board: Board): Promise<CopiedB
     let copiedLists = await Promise.all(board.lists.map(list => duplicateListAsCopiedList(list, board.id)));
     let copiedBackgroundImage = {
         fileName: board.backgroundImagePath.getFilename().substring(36) ?? "",
-        pathToTempfile: await saveFilePathToTempfile(await SaveLoadManager.getAbsoluteSaveDirectory() + board.backgroundImagePath)
+        pathToTempfile: await saveFilePathToTempFile(board.backgroundImagePath)
     }
 
     board.lists = [];
@@ -298,7 +303,7 @@ export async function duplicateCopiedBoardAsBoard(copiedBoard: CopiedBoard): Pro
     let board = await duplicateBoard(copiedBoard.boardWithoutBackgroundImagePathAndLists);
 
     board.lists = await Promise.all(copiedBoard.copiedLists.map(copiedList => duplicateCopiedListAsList(copiedList, board.id)));
-    board.backgroundImagePath = copiedBoard.backgroundImage !== null ? await saveFilePathToDisk(copiedBoard.backgroundImage.pathToTempfile, board.id, copiedBoard.backgroundImage.fileName) : "";
+    board.backgroundImagePath = copiedBoard.backgroundImage !== null ? await saveAbsoluteFilePathToSaveDirectory(copiedBoard.backgroundImage.pathToTempfile, board.id, copiedBoard.backgroundImage.fileName) : "";
 
     return board;
 }

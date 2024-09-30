@@ -8,8 +8,7 @@
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
-    import {resolve} from "@tauri-apps/api/path";
+    import {normalize} from "@tauri-apps/api/path";
 
     export let cardToSave;
     export let addAttachmentFunction;
@@ -34,19 +33,19 @@
 
     async function openWithDefaultApp(pathToFile: string)
     {
-        await open(await SaveLoadManager.getAbsoluteSaveDirectory() + pathToFile);
+        await open(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
     }
 
     async function showInFolder(pathToFile: string)
     {
-        const path = await resolve(await SaveLoadManager.getAbsoluteSaveDirectory(), pathToFile);
+        const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
 
         await tauri.invoke('show_in_folder', {path});
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
     {
-        const path = await resolve(await SaveLoadManager.getAbsoluteSaveDirectory(), pathToFile);
+        const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
 
         await writeText(path); //Copy to clipboard
 
@@ -63,7 +62,7 @@
 
     async function deleteAttachment(pathToFile: string)
     {
-        await removeFile(pathToFile, {dir: SaveLoadManager.getSaveDirectory()});
+        await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
         saveCardFunction();
 
         refreshComponent();
@@ -75,7 +74,7 @@
 
         for (let attachment of cardToSave.attachments)
         {
-            if (await exists(attachment, {dir: SaveLoadManager.getSaveDirectory()}) && attachment !== "")
+            if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
             {
                 existingAttachments.push(attachment);
             }

@@ -16,6 +16,8 @@
     import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
     import PopupWindow from "../PopupWindow.svelte";
 
+    export let saveLocationSet: boolean;
+
     let orderBoardsMenuElement;
     let filterCardsPopupElement;
     let changeDisplayLanguageMenuElement;
@@ -23,7 +25,7 @@
 
 <div class="containingDiv">
     <div class="leftSideContainer">
-        {#if localStorage.getItem("saveLocation") === null}
+        {#if !saveLocationSet}
             <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em"/>
         {:else}
             <img on:click={() => {
@@ -33,7 +35,7 @@
                  src={takmaIcon} alt="Takma logo" class="takmaLogo"/>
             <!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
         {/if}
-        {#if localStorage.getItem("saveLocation") === null}
+        {#if !saveLocationSet}
             <h1 style="color: white; font-family: Inter">Jam54</h1>
         {:else if $selectedBoardId === ""}
             <h1>Takma</h1>
@@ -42,7 +44,7 @@
         {/if}
     </div>
     <div class="rightSideContainer">
-        {#if localStorage.getItem("saveLocation") !== null}
+        {#if saveLocationSet}
             <SearchBar/>
             <button class="dueDatesOverviewButton" title={I18n.t("dueDatesOverview")}
                     on:click={() => new DueDatesOverviewPopup({target: document.body, intro: true})}
@@ -102,7 +104,7 @@
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M478.33 433.6l-90-218a22 22 0 00-40.67 0l-90 218a22 22 0 1040.67 16.79L316.66 406h102.67l18.33 44.39A22 22 0 00458 464a22 22 0 0020.32-30.4zM334.83 362L368 281.65 401.17 362zm-66.99-19.08a22 22 0 00-4.89-30.7c-.2-.15-15-11.13-36.49-34.73 39.65-53.68 62.11-114.75 71.27-143.49H330a22 22 0 000-44H214V70a22 22 0 00-44 0v20H54a22 22 0 000 44h197.25c-9.52 26.95-27.05 69.5-53.79 108.36-31.41-41.68-43.08-68.65-43.17-68.87a22 22 0 00-40.58 17c.58 1.38 14.55 34.23 52.86 83.93.92 1.19 1.83 2.35 2.74 3.51-39.24 44.35-77.74 71.86-93.85 80.74a22 22 0 1021.07 38.63c2.16-1.18 48.6-26.89 101.63-85.59 22.52 24.08 38 35.44 38.93 36.1a22 22 0 0030.75-4.9z"></path></svg>
             </button>
         {/if}
-        <ThemeToggleButton/>
+        <ThemeToggleButton saveLocationSet={saveLocationSet}/>
     </div>
 </div>
 {#key [$selectedBoardId, $selectedCardId]}

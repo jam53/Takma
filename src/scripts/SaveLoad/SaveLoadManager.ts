@@ -1,7 +1,7 @@
-import {BaseDirectory, createDir, exists, readTextFile, writeTextFile} from "@tauri-apps/api/fs";
+import {createDir, exists, readTextFile, writeTextFile} from "@tauri-apps/api/fs";
 import {TakmaData} from "./TakmaData";
 import {message} from "@tauri-apps/api/dialog";
-import {appLocalDataDir, documentDir, resolve} from "@tauri-apps/api/path";
+import {normalize} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
 import {tempdir} from "@tauri-apps/api/os";
 import "../StringExtensions.ts";
@@ -12,26 +12,16 @@ import "../StringExtensions.ts";
 export class SaveLoadManager
 {
     private static saveFilename: string;
-    private static boardFilesPath: string;
-    private static saveDirectory: BaseDirectory;
+    private static boardFilesDirectory: string;
+    private static saveDirectoryPath: string;
     private static data: TakmaData;
 
     static
     {
-        this.saveFilename = "./Takma/Takma.json";
-        this.boardFilesPath = "./Takma/Files/";
-        this.saveDirectory = parseInt(localStorage.getItem("saveLocation") ?? BaseDirectory.AppLocalData.toString());
-        /* Rather than using one of the predefined paths under `BaseDirectory`, we could also just save our data in an arbitrary location.
-         * However, this would require us to call a function from Rust who would then write/read to/from the disk.
-         * Since we are happy with AppData/Local/com.jam54.Takma, we didn't bother to write to a specific location using a function in the Rust backend.
-         * And instead opted to use one of the predefined location to save/load from. Thus allowing us to do the IO entirely in TS, without having to call a Rust function.
-         */
-        /* The `saveDirectory` variable of type `BaseDirectory` is basically an enum. Where Document = 7 and AppLocalData = 23.
-         * So depending on the value of `localStorage.getItem("saveLocation")`, either 7 or 23 we set the `saveDirectory` value.
-         * The value of "saveLocation" gets selected by the user in the ChooseSaveLocationScreen.svelte screen.
-         * This screen gets show when the value of "saveLocation" === null. But here we also fallback to AppLocalData in case the value of
-         * "saveLocation" should be null with the ?? operator
-         */
+        this.saveFilename = "/Takma/Takma.json";
+        this.boardFilesDirectory = "/Takma/Files/";
+        this.saveDirectoryPath = localStorage.getItem("saveDirectoryPath")!; // In App.svelte (i.e. Takma's entry point) we only create an SaveLoadManager instance once the `localStorage.getItem("saveDirectoryPath")` has been set. If not and it's null, we show a screen to the user where they can set their save location. Therefore we can be sure that this will never be null
+
         this.data = new TakmaData();
         /* Our TakmaData object holds all the variables + instantiated with their default values.
          * Later we will overwrite this data object with the user's save file.
@@ -45,12 +35,12 @@ export class SaveLoadManager
      */
     public static async loadSaveFileFromDisk(): Promise<void>
     {
-        const folderToSave = this.saveFilename.getDirectoryPath(); //Extracts the path to the folder where the saveFile is located by removing the saveFile name from the given path.
-        await createDir(folderToSave, {dir: SaveLoadManager.getSaveDirectory(), recursive: true}); //Should the folder not exist and we don't create it here, the next if will throw an error.
+        const pathToSavefile = await normalize(this.getSaveDirectoryPath() + this.saveFilename);
+        await createDir(pathToSavefile.getDirectoryPath(), {recursive: true}); //Should the folder not exist and we don't create it here, the next if where we check if the savefile exists with `exists(...)` will throw an error.
 
-        if (await exists(this.saveFilename, {dir: this.saveDirectory})) //Check if the save file exists, before trying to use it to overwrite the default values
+        if (await exists(pathToSavefile)) //Check if the save file exists, before trying to use it to overwrite the default values
         {
-            let fileContents: string = await readTextFile(this.saveFilename, {dir: this.saveDirectory});
+            let fileContents: string = await readTextFile(pathToSavefile);
             try 
             {
                 Object.assign(this.data, JSON.parse(fileContents));
@@ -69,9 +59,8 @@ export class SaveLoadManager
             }
             catch (error)
             {
-                await writeTextFile(this.saveFilename + "_Corrupted", fileContents, {dir: this.saveDirectory});
-                const saveDir: string = await this.getAbsoluteSaveDirectory();
-                const savePath: string = saveDir + this.saveFilename + "_Corrupted";
+                const savePath: string = await normalize(this.getSaveDirectoryPath() + this.saveFilename + "_Corrupted");
+                await writeTextFile(savePath, fileContents);
                 await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", type: "error" });
             }
         }
@@ -85,7 +74,7 @@ export class SaveLoadManager
      */
     public static async saveToDisk(): Promise<void>
     {
-        await writeTextFile(this.saveFilename, JSON.stringify(this.data, null, 0), {dir: this.saveDirectory});
+        await writeTextFile(await normalize(this.getSaveDirectoryPath() + this.saveFilename), JSON.stringify(this.data, null, 0));
     }
 
     /**
@@ -107,37 +96,29 @@ export class SaveLoadManager
     }
 
     /**
-     * This function returns the directory in which we save data
+     * This function returns the directory used for saving the user's data as an absolute path
      */
-    public static getSaveDirectory(): BaseDirectory
+    public static getSaveDirectoryPath(): string
     {
-        return this.saveDirectory;
-    }
-
-    /**
-     * This function returns the directory in which we save data as an absolute path
-     */
-    public static async getAbsoluteSaveDirectory(): Promise<string>
-    {
-        return this.getSaveDirectory() === BaseDirectory.AppLocalData ? await appLocalDataDir() : await documentDir();
+        return this.saveDirectoryPath;
     }
 
     /**
      * Returns the relative path to the subfolder within the save directory where files related to boards are stored.
      *
      * Within this subfolder, a separate subfolder should be present for each board. Each board's subfolder is named using the ID of the board.
-     * For example, if the base path is `./Takma/Files`, and a board has the ID `12345`, the path for that board's files would be `./Takma/Files/12345`.
+     * For example, if the base path is `/Takma/Files/`, and a board has the ID `12345`, the path for that board's files would be `/Takma/Files/12345/`.
      */
-    public static getBoardFilesPath(): string
+    public static getBoardFilesDirectory(): string
     {
-        return this.boardFilesPath;
+        return this.boardFilesDirectory;
     }
 
     /**
      * Returns the absolute path to the directory used for temporary files.
      */
-    public static async getTempDirectory(): Promise<string>
+    public static async getTempDirectoryPath(): Promise<string>
     {
-        return await resolve(await tempdir(), "Takma");
+        return await normalize(await tempdir() + "/Takma/");
     }
 }

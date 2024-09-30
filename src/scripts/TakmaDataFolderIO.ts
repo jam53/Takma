@@ -1,96 +1,130 @@
-import {BaseDirectory, copyFile, createDir, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
+import {copyFile, createDir, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {tempdir} from "@tauri-apps/api/os";
+import {normalize} from "@tauri-apps/api/path";
 
 /**
- * This function takes the path to a file the user selected and the board the file belongs to.
- * The function then saves the file to Takma's "Files" data folder, and returns the path to the location of the saved file.
- * @param pathToFile path to the file that will be copied and saved to disk by disk function
- * @param boardID the id of the board this file belongs to
- * @param filename optional parameter, if passed this string will be used as the filename. By default the filename of the `pathToFile` parameter gets used. Do note that the provided `filename` string will be preceeded with an id. So the actual file on disk will have the filename: <random id>+`filename`
- */
-export async function saveFilePathToDisk(pathToFile: string, boardID: string, filename?: string): Promise<string>
-{
-    filename = filename ?? pathToFile.getFilename();
-    filename = trimLongFilename(crypto.randomUUID() + filename); //We add a random UUID, to avoid overwriting files with the same name
-
-    let savePath = `${SaveLoadManager.getBoardFilesPath() + boardID}/`;
-
-    await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
-
-    savePath += filename;
-
-    await copyFile(pathToFile, savePath, {dir: SaveLoadManager.getSaveDirectory()});
-
-    return savePath
-}
-
-/**
- * This function takes the path to a file the user selected and the board the file belongs to.
- * The function then saves the file to the system's temp folder, and returns the path to the location of the saved file.
- */
-export async function saveFilePathToTempfile(pathToFile: string): Promise<string>
-{
-
-    let filename = pathToFile.getFilename();
-
-    filename = trimLongFilename(filename);
-
-    let savePath = await tempdir() + crypto.randomUUID() + "/";
-
-    await createDir(savePath, {dir: BaseDirectory.Temp, recursive: true});
-
-    savePath += filename;
-
-    await copyFile(pathToFile, savePath, {dir: SaveLoadManager.getSaveDirectory()});
-
-    return savePath
-}
-
-/**
- * This function takes a File object that the user selected and the board the file belongs to.
- * The function then saves the file to Takma's "Files" data folder, and returns the path to the location of the saved file.
+ * Copies a file from the provided relative path (starting in Takma's save directory) to a new file in a subfolder named after the board ID within Takma's save directory.
+ * Returns the new file's relative path.
  *
- * @deprecated This function reads/writes bytes to memory. In Tauri this causes a major memory overhead because all the bytes need be encoded/decoded to/from json to be sent between the back/front-end
+ * @param pathToFile - The relative path (from Takma's save directory) of the file to save.
+ * @param boardID - The unique ID of the board the file is associated with.
+ * @param filename - (Optional) The desired filename. If not provided, the original filename from `pathToFile` is used.
+ *                   A random UUID will be prepended to the filename to ensure uniqueness.
+ * @returns A promise that resolves to the relative path of the saved file.
  */
-export async function saveFileToDisk(file: File, boardID: string): Promise<string>
+export async function saveFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
+{
+    return await saveAbsoluteFilePathToSaveDirectory(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile), boardID, filename);
+}
+
+/**
+ * Saves a file from an absolute path into Takma's save directory for a specific board.
+ * Generates a unique filename by prepending a random UUID to the original filename to avoid conflicts.
+ * Returns the relative path to the saved file.
+ *
+ * @param pathToFile - The absolute path of the file to be saved.
+ * @param boardID - The unique ID of the board the file is associated with.
+ * @param filename - (Optional) Desired filename. If not provided, the original filename from `pathToFile` is used.
+ *                   A random UUID is prepended to ensure uniqueness.
+ * @returns A promise that resolves to the relative path of the saved file.
+ */
+export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
+{
+    filename = crypto.randomUUID() + (filename ?? pathToFile.getFilename()); //We add a random UUID, to avoid overwriting files with the same name
+    const relativeSavePath = await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
+
+    await saveAbsoluteFilePathToDisk(
+        pathToFile,
+        relativeSavePath.getFilename(),
+        await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath.getDirectoryPath())
+    );
+
+    return relativeSavePath;
+}
+
+/**
+ * Copies a file from a relative path (within Takma's save directory) to the temporary folder.
+ * Returns the absolute path to the file in the temporary folder.
+ *
+ * @param pathToFile - The relative path (from Takma's save directory) of the file to save temporarily.
+ * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
+ */
+export async function saveFilePathToTempFile(pathToFile: string): Promise<string>
+{
+    return await saveAbsoluteFilePathToDisk(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile), crypto.randomUUID(), await SaveLoadManager.getTempDirectoryPath());
+}
+
+/**
+ * Copies a file from an absolute path to the specified save directory.
+ * Returns the absolute path to the saved file.
+ *
+ * @param pathToFile - The absolute path of the file to be saved.
+ * @param filename - The name of the file to save.
+ * @param savePath - The absolute path of the destination directory where the file will be saved.
+ * @returns A promise that resolves to the absolute path of the saved file.
+ */
+async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, savePath: string): Promise<string>
+{
+    savePath = await normalize(savePath + trimLongFilename(filename));
+
+    await createDir(savePath.getDirectoryPath(), {recursive: true});
+
+    await copyFile(pathToFile, savePath);
+
+    return savePath
+}
+
+/**
+ * Saves a File object to Takma's save directory for a specific board.
+ * The file's data is read and stored, and a random UUID is prepended to the filename to avoid conflicts.
+ * Returns the relative path to the saved file.
+ *
+ * @param file - The File object to save.
+ * @param boardID - The unique ID of the board the file is associated with.
+ * @returns A promise that resolves to the relative path of the saved file.
+ */
+export async function saveFileToSaveDirectory(file: File, boardID: string): Promise<string>
 {
     const fileData = await file.arrayBuffer();
 
-    const filename = trimLongFilename(crypto.randomUUID() + file.name);
+    const filename = crypto.randomUUID() + file.name;
 
-    return await saveArrayBufferToDisk(fileData, filename, boardID);
+    return await saveArrayBufferToSaveDirectory(fileData, filename, boardID);
 }
 
 /**
- * This function saves an ArrayBuffer to Takma's "Files" data folder in a file with the name `filename`, and returns the path to the location of the saved file.
+ * Saves a binary array buffer to Takma's save directory for a specific board.
+ * A file with the specified filename is created, and the binary data is written to disk.
+ * Returns the relative path to the saved file.
  *
- * @deprecated We should try to avoid using this function. As using the `writeBinaryFile()` and `readBinaryFile()` functions cause a lot of overhead.
- * Rather than just passing the provided byte array to and from the back/front-end. The binary data gets converted to a JSON string because of the IPC Tauri uses, and then back from a JSON string to a byte array. This causes massive overhead, both in memory usage and in performance.
- * Instead, we should use the `convertFileSrc()` method that Tauri provides, to directly get a link to an image from a filepath for example. Rather than reading the image file's bytes. And we should use `copyFile()` to copy one filepath to another location for example. Rather than reading the bytes from a file manually and writing the file manually using `readBinaryFile()` and `writeBinaryFile()` respectively.
+ * @param arrayBuffer - The ArrayBuffer containing the binary file data.
+ * @param filename - The desired name for the file to be saved.
+ * @param boardID - The unique ID of the board the file is associated with.
+ * @returns A promise that resolves to the relative path of the saved file.
  */
-export async function saveArrayBufferToDisk(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
+async function saveArrayBufferToSaveDirectory(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
 {
     filename = trimLongFilename(filename);
 
-    let savePath = `${SaveLoadManager.getBoardFilesPath() + boardID}/`;
+    const relativeSavePath = await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
+    const absoluteSavePath = await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath);
 
-    await createDir(savePath, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
+    await createDir(absoluteSavePath.getDirectoryPath(), {recursive: true});
 
-    savePath += filename;
+    await writeBinaryFile(absoluteSavePath, arrayBuffer);
 
-    await writeBinaryFile(savePath, arrayBuffer, {dir: SaveLoadManager.getSaveDirectory()});
-
-    return savePath
+    return relativeSavePath;
 }
 
 /**
- * This function removes a file saved in Takma's "Files" data folder
- * @param pathToFile a relative file path, starting in the "Files" data folder of Takma
+ * Removes a file from Takma's save directory.
+ *
+ * @param pathToFile - The relative path (within Takma's save directory) of the file to be removed.
+ * @returns A promise that resolves when the file is successfully deleted.
  */
-export async function removeFileFromTakmaDataFolder(pathToFile: string)
+export async function removeFileFromSaveDirectory(pathToFile: string)
 {
-    await removeFile(pathToFile, {dir: SaveLoadManager.getSaveDirectory()});
+    await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
 }
 
 /**

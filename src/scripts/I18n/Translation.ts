@@ -76,9 +76,9 @@ export default interface Translation
     localAppData: string;
     storeDataLocalAppData: string;
     recommendedChoice: string;
-    myDocumentsDirectory: string;
-    storeDataMyDocuments: string;
-    recommendedChoiceOneDrive: string;
+    customSaveLocation: string;
+    storeDataCustomSaveLocation: string;
+    storeDataCustomSaveLocationDescription: string;
     acceptTermsAndConditions: string;
     licenseAgreement: string;
     toggleColorTheme: string;

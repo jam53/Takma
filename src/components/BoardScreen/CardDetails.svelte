@@ -17,8 +17,8 @@
     import Attachments from "./Attachments.svelte";
     import {
         imageExtensions,
-        removeFileFromTakmaDataFolder,
-        saveFilePathToDisk, saveFileToDisk
+        removeFileFromSaveDirectory, saveAbsoluteFilePathToSaveDirectory,
+        saveFilePathToSaveDirectory, saveFileToSaveDirectory
     } from "../../scripts/TakmaDataFolderIO";
     import {open as openDialog} from "@tauri-apps/api/dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
@@ -161,9 +161,6 @@
         return marked.Renderer.prototype.image.call(this, token);
     };
 
-    let absoluteSaveDirectory: string;
-    (async () => absoluteSaveDirectory = await SaveLoadManager.getAbsoluteSaveDirectory())(); //We use this `absoluteSaveDirectory` value in the `getImageUrl()` function which is used by the `markedCustomRenderer.image`. Since marked.js whose `markedCustomRenderer.image` function we override doesn't accept async functions, we can't await the value of `SaveLoadManager.getAbsoluteSaveDirectory()`. Therefore we query the value right when this component is added to the DOM, so that it's ready to be used by the `getImageUrl()` function whenever it needs it.
-
     /**
      * Returns an URL for an image.
      *
@@ -181,9 +178,9 @@
             return imageSrc;
         }
         // If the image is saved in Takma's data folder
-        else if (imageSrc.startsWith(SaveLoadManager.getBoardFilesPath()))
+        else if (imageSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()))
         {
-            return convertFileSrc(absoluteSaveDirectory + imageSrc);
+            return convertFileSrc(SaveLoadManager.getSaveDirectoryPath() + imageSrc);
         }
         // If the image is stored somewhere locally on disk
         else
@@ -328,13 +325,13 @@
         {//User selected multiple files
             for (let file of selectedFile)
             {
-                let savedFilePath = await saveFilePathToDisk(file, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+                let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(file, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
                 cardToSave.attachments.push(savedFilePath);
             }
         }
         else if (selectedFile !== null)
         {//User selected a single file
-            let savedFilePath = await saveFilePathToDisk(selectedFile, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+            let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(selectedFile, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
             cardToSave.attachments.push(savedFilePath);
         }
 
@@ -361,7 +358,7 @@
     {
         for (let droppedFile of droppedFiles)
         {
-            let savedPath = await saveFilePathToDisk(droppedFile, $selectedBoardId);
+            let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, $selectedBoardId);
             cardToSave.attachments.push(savedPath);
         }
 
@@ -377,7 +374,7 @@
     {
         if (cardToSave.coverImage !== "")
         {
-            await removeFileFromTakmaDataFolder(cardToSave.coverImage);
+            await removeFileFromSaveDirectory(cardToSave.coverImage);
             cardToSave.coverImage = "";
             toast(I18n.t("removeCardCoverImage"));
         }
@@ -393,7 +390,7 @@
 
             if (selected !== null && typeof(selected) === "string")
             {
-                cardToSave.coverImage = await saveFilePathToDisk(selected, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+                cardToSave.coverImage = await saveAbsoluteFilePathToSaveDirectory(selected, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
 
                 toast(I18n.t("addCardCoverImage"))
             }
@@ -480,7 +477,7 @@
                 }
                 else
                 {
-                    let path = await saveFileToDisk(file, $selectedBoardId);
+                    let path = (await saveFileToSaveDirectory(file, $selectedBoardId)).replace(/\\/g, '/'); //Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths.
                     onSuccess(path);
                 }
             },

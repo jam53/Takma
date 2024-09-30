@@ -6,8 +6,13 @@
     import {selectedBoardId} from "../../scripts/stores";
     import {exists, readDir} from "@tauri-apps/api/fs";
     import {open} from "@tauri-apps/api/dialog"
-    import {imageExtensions, removeFileFromTakmaDataFolder, saveFilePathToDisk} from "../../scripts/TakmaDataFolderIO";
-    import {resolveResource} from "@tauri-apps/api/path";
+    import {
+        imageExtensions,
+        removeFileFromSaveDirectory,
+        saveAbsoluteFilePathToSaveDirectory,
+        saveFilePathToSaveDirectory
+    } from "../../scripts/TakmaDataFolderIO";
+    import {normalize, resolveResource} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -77,9 +82,9 @@
 
     async function loadCustomBoardBackgrounds()
     {
-        if (await exists(SaveLoadManager.getBoardFilesPath() + "CustomBoardBackgrounds/", {dir: SaveLoadManager.getSaveDirectory()}))
+        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/")))
         {
-            let customImagesPaths = (await readDir(await SaveLoadManager.getAbsoluteSaveDirectory() + SaveLoadManager.getBoardFilesPath() + "CustomBoardBackgrounds/")).map(fileEntry => fileEntry.path);
+            let customImagesPaths = (await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/"))).map(fileEntry => fileEntry.path);
             shuffle(customImagesPaths);
 
             return customImagesPaths;
@@ -96,7 +101,7 @@
 
         if (saveBoardBackgroundForFuture)
         {
-            await saveFilePathToDisk(selectedImg, "CustomBoardBackgrounds"); //The second parameter of this function is supposed to be a board id, which "CustomBoardBackgrounds" clearly is not. However, the way `saveFilePathToDisk()` uses that boardId is to decide in which subfolder to save/write the file to. So in this case we want that to be a folder called "CustomBoardBackgrounds" hence why we pass that as the `boardId`
+            await saveAbsoluteFilePathToSaveDirectory(selectedImg, "CustomBoardBackgrounds"); //The second parameter of this function is supposed to be a board id, which "CustomBoardBackgrounds" clearly is not. However, the way `saveFilePathToSaveDirectory()` uses that boardId is to decide in which subfolder to save/write the file to. So in this case we want that to be a folder called "CustomBoardBackgrounds" hence why we pass that as the `boardId`
         }
 
         $selectedBoardId = idCreatedBoard;
@@ -115,7 +120,7 @@
         if (selected !== null && typeof(selected) === "string")
         {
             selectedImg = selected;
-            selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720));
+            selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720, true));
             document.activeElement.blur(); //When the user clicks on one of the available pictures before selecting one from disk, that picture element would still appear to be "selected" AKA focused. That's why we remove the focus of the active element when picking a new image
         }
     }
@@ -141,7 +146,7 @@
                     <span class="loader"></span>
                 {:then customBoardBackgrounds}
                     <div class="selectedImgHolder" >
-                        {#await getThumbnail(includedImagesInTakma[0], 720)}
+                        {#await getThumbnail(includedImagesInTakma[0], 720, true)}
                         {:then defaultImage}
                         <img bind:this={selectedImgObject} use:lazyload src={defaultImage} style="object-fit: cover"/>
                         <img src={boardPreview} alt="Board preview"/>
@@ -172,17 +177,17 @@
                             </svg>
                             {#if customBoardBackgrounds.length > 0}
                             {#each customBoardBackgrounds as imgPath}
-                                {#await getThumbnail(imgPath, 192)}
+                                {#await getThumbnail(imgPath, 192, true)}
                                 {:then imgUrl}
                                     <div class="customBackgroundImageAndDeleteButtonContainer">
                                         <svg class="deleteCustomBackgroundButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                              on:click={async e => {
-                                                 await removeFileFromTakmaDataFolder(imgPath);
+                                                 await removeFileFromSaveDirectory(await normalize(SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + imgPath.getFilename()));
 
                                                  if (!includedImagesInTakma.includes(selectedImg))
                                                  {
                                                      selectedImg = includedImagesInTakma[0];
-                                                     selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720));
+                                                     selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720, true));
                                                  }
 
                                                  e.target.tagName === "svg" ? e.target.parentNode.remove() : e.target.parentNode.parentNode.remove();
@@ -192,7 +197,7 @@
                                         >
                                             <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
                                         </svg>
-                                        <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
+                                        <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720, true));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                                         <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                                     </div>
                                 {/await}
@@ -200,9 +205,9 @@
                                 <hr class="verticalImagesSeparator">
                             {/if}
                             {#each includedImagesInTakma as imgPath}
-                                {#await getThumbnail(imgPath, 192)}
+                                {#await getThumbnail(imgPath, 192, true)}
                                 {:then imgUrl}
-                                <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
+                                <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720, true));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                                 <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                                 {/await}
                             {/each}

@@ -1,7 +1,8 @@
 import {SaveLoadManager} from "./SaveLoadManager";
 import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
 import {removeDir, removeFile} from "@tauri-apps/api/fs";
-import {saveFilePathToDisk} from "../TakmaDataFolderIO";
+import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
+import {normalize} from "@tauri-apps/api/path";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -16,7 +17,7 @@ export class TakmaData
     private _totalListsCreated: number = 0; //The total amount of lists the user has created
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
     private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
-    private _displayLanguage: string = navigator.language.substring(0,2); //The language Takma should be displayed in
+    private _displayLanguage: string = localStorage.getItem("displayLanguage") ?? navigator.language.substring(0,2); //The language Takma should be displayed in
     private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
     private _easterEggBoardAdded: boolean = false; //Whether or not the easteregg board has been added to the user's savefile yet
     private _showLabelsText: boolean = true; //Whether or not the labels of cards on the boardscreen should display their text. When false only the color will be shown
@@ -128,6 +129,7 @@ export class TakmaData
     set displayLanguage(value: string)
     {
         this._displayLanguage = value;
+        localStorage.setItem("displayLanguage", value);
         SaveLoadManager.saveToDisk();
     }
 
@@ -235,7 +237,7 @@ export class TakmaData
             id: boardId,
             creationDate: Date.now(),
             lastOpened: Date.now(),
-            backgroundImagePath: saveBackgroundImageToDisk === undefined || saveBackgroundImageToDisk  ? await saveFilePathToDisk(backgroundImagePath, boardId) : backgroundImagePath,
+            backgroundImagePath: saveBackgroundImageToDisk === undefined || saveBackgroundImageToDisk ? await saveAbsoluteFilePathToSaveDirectory(backgroundImagePath, boardId) : backgroundImagePath,
             title: title,
             labels: labels ?? [],
             lists: lists ?? [],
@@ -276,7 +278,7 @@ export class TakmaData
         this._boards = this.boards.filter(board => board.id != id);
         await SaveLoadManager.saveToDisk();
 
-        await removeDir(`${SaveLoadManager.getBoardFilesPath() + id}/`, {dir: SaveLoadManager.getSaveDirectory(), recursive: true});
+        await removeDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${id}/`), {recursive: true});
     }
 
     /**
@@ -417,16 +419,16 @@ export class TakmaData
     private deleteAllFilesTiedToCard(card: Card)
     {
         card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
-            await removeFile(attachment, {dir: SaveLoadManager.getSaveDirectory()});
+            await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment));
         });
 
         if (card.coverImage !== "")
         {
-            removeFile(card.coverImage, {dir: SaveLoadManager.getSaveDirectory()});
+            (async () => await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + card.coverImage)))();
         }
 
-        this.getAllLocalMarkdownImagesInCardDescription(card).forEach(imgSrc => {
-            removeFile(imgSrc, {dir: SaveLoadManager.getSaveDirectory()});
+        this.getAllLocalMarkdownImagesInCardDescription(card).forEach(async imgSrc => {
+            await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + imgSrc));
         })
     }
 
@@ -720,11 +722,12 @@ export class TakmaData
     public getAllLocalMarkdownImagesInCardDescription(card: Card): string[]
     {
         const markdownImageLinkRegex = /!\[[^\]]*\]\((?<imgSrc>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
+        //This regex only matches image links with forward slashes, so we have to make sure that all image links in a card's description use forward slashes.
 
         return [... new Set( //This ensures that if multiple ![]() markdown images refer to the same URL/file, each URL appears only once in the array
             [...card.description.matchAll(markdownImageLinkRegex)]
                 .map(match => match.groups?.imgSrc).filter(imgSrc => imgSrc !== undefined)
-        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesPath())); //We only want to retain images that are stored in Takma's save directory, not paths to image files somewhere else on disk nor http/https urls to images
+        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory())); //We only want to retain images that are stored in Takma's save directory, not paths to image files somewhere else on disk nor http/https urls to images
     }
     //endregion
 }
