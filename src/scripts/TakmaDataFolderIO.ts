@@ -31,7 +31,7 @@ export async function saveFilePathToSaveDirectory(pathToFile: string, boardID: s
 export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
     filename = crypto.randomUUID() + (filename ?? pathToFile.getFilename()); //We add a random UUID, to avoid overwriting files with the same name
-    const relativeSavePath = await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
+    const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
 
     await saveAbsoluteFilePathToDisk(
         pathToFile,
@@ -106,7 +106,7 @@ async function saveArrayBufferToSaveDirectory(arrayBuffer: ArrayBuffer, filename
 {
     filename = trimLongFilename(filename);
 
-    const relativeSavePath = await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
+    const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
     const absoluteSavePath = await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath);
 
     await createDir(absoluteSavePath.getDirectoryPath(), {recursive: true});

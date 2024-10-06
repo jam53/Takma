@@ -18,8 +18,8 @@ export class SaveLoadManager
 
     static
     {
-        this.saveFilename = "/Takma/Takma.json";
-        this.boardFilesDirectory = "/Takma/Files/";
+        this.saveFilename = "./Takma/Takma.json";
+        this.boardFilesDirectory = "./Takma/Files/";
         this.saveDirectoryPath = localStorage.getItem("saveDirectoryPath")!; // In App.svelte (i.e. Takma's entry point) we only create an SaveLoadManager instance once the `localStorage.getItem("saveDirectoryPath")` has been set. If not and it's null, we show a screen to the user where they can set their save location. Therefore we can be sure that this will never be null
 
         this.data = new TakmaData();

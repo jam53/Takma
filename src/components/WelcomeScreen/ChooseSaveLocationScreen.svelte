@@ -1,7 +1,7 @@
 <script lang="ts">
     import {open} from "@tauri-apps/api/shell";
     import {open as openDialog} from "@tauri-apps/api/dialog"
-    import {appLocalDataDir, resolveResource} from "@tauri-apps/api/path";
+    import {appLocalDataDir, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
 
     function setSaveLocation(saveDirectoryPath: string)
@@ -18,7 +18,7 @@
         });
         if (selectedDirectory !== null && typeof(selectedDirectory) === "string")
         {
-            setSaveLocation(selectedDirectory);
+            setSaveLocation(await normalize(selectedDirectory + "/"));
         }
     }
 </script>
