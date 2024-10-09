@@ -624,7 +624,6 @@
 {#if showPopup}
     <div transition:blur|global bind:this={overlayElement} class="overlay" on:click={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" on:keydown|stopPropagation={handleKeyDown}
          on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault
-
     >
         <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->
 
@@ -831,6 +830,7 @@
 
         max-height: 80vh;
         overflow: auto;
+        scroll-padding: 3.5em; /* Makes it so that EasyMDE (which uses CodeMirror) scrolls the line the cursor is on fully into view, when the user types at the bottom of the card's description. Previously CodeMirror didn't scroll far enough causing only the top half of the line to be visible. */
 
         transition: all 0.3s;
         min-width: 1em;
@@ -1134,6 +1134,7 @@
         transition: 0.3s !important;
         border-radius: 0 0 0.5em 0.5em !important;
         border: var(--border) 2px solid !important;
+        margin-top: -5em;
     }
 
     :global(.EasyMDEContainer .CodeMirror .CodeMirror-line) {
@@ -1179,6 +1180,15 @@
         border-radius: 0.5em 0.5em 0 0 !important;
         background: var(--border);
         border: var(--border) 2px solid !important;
+        top: -1.25em;
+        position: sticky !important;
+        z-index: 2;
+        margin-bottom: 5em;
+    }
+
+    :global(.overlayCardFullscreen .editor-toolbar) {
+        /* Applies this style only when the card is fullscreen. If the card isn't fullscreen, the `overlayCardFullscreen` class won't be present, so the original `editor-toolbar` styles won't be overwritten by the ones here. */
+        top: -0.25em;
     }
 
     :global(.editor-toolbar .separator) {
