@@ -691,7 +691,7 @@
                         {void saveCard() ?? ""}
                         <!-- The void operator evaluates the given expression and then returns undefined. Then with the nullish operator we return an empty string when it's undefined, which will always be the case. This way we can execute some code in our html, without displaying anything in the UI-->
                     {/if}
-                    <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist} saveCardFunction={saveCard}/>
+                    <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} setTypingFunction={bool => typing = bool} amountOfTodosInChecklistFunction={amountOfTodosInChecklist} saveCardFunction={saveCard} focusOnCardDetailsFunction={focusOnCardDetailsFunction}/>
                     <Attachments bind:this={attachmentsComponent} cardToSave={cardToSave} addAttachmentFunction={addAttachment} saveCardFunction={saveCard}/>
                 </div>
                 <div class="cardActionsHolder">

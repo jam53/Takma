@@ -234,6 +234,8 @@ export let en: Translation = {
     insertTable: "Insert Table",
     insertHorizontalLine: "Insert Horizontal Line",
     markdownGuide: "Markdown Guide",
+    moveChecklistUp: "Move checklist up",
+    moveChecklistDown: "Move checklist down",
 };
 
 export let ar: Translation = {
@@ -470,6 +472,8 @@ export let ar: Translation = {
     insertTable: "إدراج جدول",
     insertHorizontalLine: "إدراج خط أفقي",
     markdownGuide: "دليل ماركداون",
+    moveChecklistUp: "نقل القائمة لأعلى",
+    moveChecklistDown: "نقل القائمة لأسفل",
 };
 
 export let de: Translation = {
@@ -706,6 +710,8 @@ export let de: Translation = {
     insertTable: "Tabelle einfügen",
     insertHorizontalLine: "Horizontale Linie einfügen",
     markdownGuide: "Markdown-Anleitung",
+    moveChecklistUp: "Checkliste nach oben verschieben",
+    moveChecklistDown: "Checkliste nach unten verschieben",
 };
 
 export let es: Translation = {
@@ -942,6 +948,8 @@ export let es: Translation = {
     insertTable: "Insertar tabla",
     insertHorizontalLine: "Insertar línea horizontal",
     markdownGuide: "Guía de Markdown",
+    moveChecklistUp: "Mover lista de verificación hacia arriba",
+    moveChecklistDown: "Mover lista de verificación hacia abajo",
 };
 
 export let et: Translation = {
@@ -1178,6 +1186,8 @@ export let et: Translation = {
     insertTable: "Lisa tabel",
     insertHorizontalLine: "Lisa horisontaalne joon",
     markdownGuide: "Markdowni juhend",
+    moveChecklistUp: "Liiguta kontrollnimekiri üles",
+    moveChecklistDown: "Liiguta kontrollnimekiri alla",
 };
 
 export let fr: Translation = {
@@ -1414,6 +1424,8 @@ export let fr: Translation = {
     insertTable: "Insérer un tableau",
     insertHorizontalLine: "Insérer une ligne horizontale",
     markdownGuide: "Guide Markdown",
+    moveChecklistUp: "Déplacer la liste de contrôle vers le haut",
+    moveChecklistDown: "Déplacer la liste de contrôle vers le bas",
 };
 
 export let hi: Translation = {
@@ -1650,6 +1662,8 @@ export let hi: Translation = {
     insertTable: "तालिका डालें",
     insertHorizontalLine: "क्षैतिज रेखा डालें",
     markdownGuide: "मार्कडाउन गाइड",
+    moveChecklistUp: "चेकलिस्ट को ऊपर ले जाएं",
+    moveChecklistDown: "चेकलिस्ट को नीचे ले जाएं",
 };
 
 export let id: Translation = {
@@ -1886,6 +1900,8 @@ export let id: Translation = {
     insertTable: "Sisipkan tabel",
     insertHorizontalLine: "Sisipkan garis horizontal",
     markdownGuide: "Panduan Markdown",
+    moveChecklistUp: "Pindahkan checklist ke atas",
+    moveChecklistDown: "Pindahkan checklist ke bawah",
 };
 
 export let ja: Translation = {
@@ -2122,6 +2138,8 @@ export let ja: Translation = {
     insertTable: "表を挿入",
     insertHorizontalLine: "水平線を挿入",
     markdownGuide: "Markdown ガイド",
+    moveChecklistUp: "チェックリストを上に移動",
+    moveChecklistDown: "チェックリストを下に移動",
 };
 
 export let ko: Translation = {
@@ -2358,6 +2376,8 @@ export let ko: Translation = {
     insertTable: "표 삽입",
     insertHorizontalLine: "수평선 삽입",
     markdownGuide: "Markdown 가이드",
+    moveChecklistUp: "체크리스트 위로 이동",
+    moveChecklistDown: "체크리스트 아래로 이동",
 };
 
 export let nl: Translation = {
@@ -2594,6 +2614,8 @@ export let nl: Translation = {
     insertTable: "Tabel invoegen",
     insertHorizontalLine: "Horizontale lijn invoegen",
     markdownGuide: "Markdown-gids",
+    moveChecklistUp: "Checklist omhoog verplaatsen",
+    moveChecklistDown: "Checklist omlaag verplaatsen",
 };
 
 export let pt: Translation = {
@@ -2830,6 +2852,8 @@ export let pt: Translation = {
     insertTable: "Inserir tabela",
     insertHorizontalLine: "Inserir linha horizontal",
     markdownGuide: "Guia Markdown",
+    moveChecklistUp: "Mover checklist para cima",
+    moveChecklistDown: "Mover checklist para baixo",
 };
 
 export let ru: Translation = {
@@ -3066,6 +3090,8 @@ export let ru: Translation = {
     insertTable: "Вставить таблицу",
     insertHorizontalLine: "Вставить горизонтальную линию",
     markdownGuide: "Руководство по Markdown",
+    moveChecklistUp: "Переместить чек-лист вверх",
+    moveChecklistDown: "Переместить чек-лист вниз",
 };
 
 export let tr: Translation = {
@@ -3302,6 +3328,8 @@ export let tr: Translation = {
     insertTable: "Tablo Ekle",
     insertHorizontalLine: "Yatay Çizgi Ekle",
     markdownGuide: "Markdown Kılavuzu",
+    moveChecklistUp: "Kontrol listesini yukarı taşı",
+    moveChecklistDown: "Kontrol listesini aşağı taşı",
 };
 
 export let zh: Translation = {
@@ -3538,4 +3566,6 @@ export let zh: Translation = {
     insertTable: "插入表格",
     insertHorizontalLine: "插入水平线",
     markdownGuide: "Markdown 指南",
+    moveChecklistUp: "将检查列表向上移动",
+    moveChecklistDown: "将检查列表向下移动",
 };

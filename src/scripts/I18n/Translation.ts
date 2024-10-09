@@ -195,4 +195,6 @@ export default interface Translation
     insertTable: string;
     insertHorizontalLine: string;
     markdownGuide: string;
+    moveChecklistUp: string;
+    moveChecklistDown: string;
 }
