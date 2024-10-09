@@ -84,91 +84,91 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     let menuItems = [
         {
             'name': 'arabic',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "ar"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ar"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ar")} (${I18n.t("arInAr")})`,
             'svg': ''
         },
         {
             'name': 'german',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "de"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("de"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("de")} (${I18n.t("deInDe")})`,
             'svg': ''
         },
         {
             'name': 'english',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "en"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("en"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("en")} (${I18n.t("enInEn")})`,
             'svg': ''
         },
         {
             'name': 'spanish',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "es"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("es"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("es")} (${I18n.t("esInEs")})`,
             'svg': ''
         },
         {
             'name': 'estonian',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "et"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("et"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("et")} (${I18n.t("etInEt")})`,
             'svg': ''
         },
         {
             'name': 'french',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "fr"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("fr"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("fr")} (${I18n.t("frInFr")})`,
             'svg': ''
         },
         {
             'name': 'hindi',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "hi"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("hi"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("hi")} (${I18n.t("hiInHi")})`,
             'svg': ''
         },
         {
             'name': 'indonesian',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "id"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("id"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("id")} (${I18n.t("idInId")})`,
             'svg': ''
         },
         {
             'name': 'japanese',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "ja"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ja"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ja")} (${I18n.t("jaInJa")})`,
             'svg': ''
         },
         {
             'name': 'korean',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "ko"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ko"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ko")} (${I18n.t("koInKo")})`,
             'svg': ''
         },
         {
             'name': 'dutch',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "nl"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("nl"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("nl")} (${I18n.t("nlInNl")})`,
             'svg': ''
         },
         {
             'name': 'portuguese',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "pt"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("pt"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("pt")} (${I18n.t("ptInPt")})`,
             'svg': ''
         },
         {
             'name': 'russian',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "ru"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ru"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ru")} (${I18n.t("ruInRu")})`,
             'svg': ''
         },
         {
             'name': 'turkish',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "tr"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("tr"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("tr")} (${I18n.t("trInTr")})`,
             'svg': ''
         },
         {
             'name': 'chinese',
-            'onClick': () => {SaveLoadManager.getData().displayLanguage = "zh"; refreshWelcomeScreen();},
+            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("zh"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("zh")} (${I18n.t("zhInZh")})`,
             'svg': ''
         },

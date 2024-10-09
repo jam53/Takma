@@ -126,11 +126,11 @@ export class TakmaData
     /**
      * Sets the display language in which Takma should be displayed
      */
-    set displayLanguage(value: string)
+    public async setDisplayLanguage(value: string)
     {
         this._displayLanguage = value;
         localStorage.setItem("displayLanguage", value);
-        SaveLoadManager.saveToDisk();
+        await SaveLoadManager.saveToDisk();
     }
 
     /**
