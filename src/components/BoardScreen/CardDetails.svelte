@@ -48,8 +48,8 @@
                 cardToSave = SaveLoadManager.getData().getCard($selectedBoardId, value);
                 cardDesc = cardToSave.description;
 
-                //If the card has no description yet, we enter the description editing "mode" by default. Instead of having requiring the user to click on it.
-                if (cardDesc === "")
+                // In some cases we want to enter the "card description editing mode" by default, without requiring the user to enter the "card description editing mode" manually. We only do this when the card doesn't have a description yet and doesn't have any checklists nor attachments.
+                if (cardDesc === "" && cardToSave.checklists.length === 0 && cardToSave.attachments.length === 0)
                 {
                     editingDescription = true; //Displays the EasyMDE markdown editor
                     typing = true; //Ensures that we don't lose focus of the EasyMDE markdown editor while typing, otherwise the user might have to refocus by clicking on it after every character they typed
