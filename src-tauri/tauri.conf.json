@@ -15,7 +15,7 @@
             "icons/icon.ico"
         ],
         "resources": [
-            "resources/*"
+            "resources/**/*"
         ],
         "targets": "all"
     },
@@ -30,7 +30,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.6.0 (624)",
+                "title": "Takma 1.6.0 (626)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,
