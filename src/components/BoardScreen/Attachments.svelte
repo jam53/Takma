@@ -3,7 +3,7 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {exists, remove} from "@tauri-apps/plugin-fs";
     import {open} from "@tauri-apps/plugin-shell"
-    import {core} from "@tauri-apps/api";
+    import {invoke} from "@tauri-apps/api/core";
     import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
@@ -42,7 +42,7 @@
     {
         const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
 
-        await tauri.invoke('show_in_folder', {path});
+        await invoke('show_in_folder', {path});
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
