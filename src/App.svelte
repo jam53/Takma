@@ -1,14 +1,14 @@
 <script lang="ts">
-    import "./stylesheets/styles.css"
-    import "./stylesheets/fonts.css"
+    import "./stylesheets/styles.css";
+    import "./stylesheets/fonts.css";
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
     import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
     import {selectedBoardId, selectedCardId} from "./scripts/stores";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
+    import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
     import {
-        appWindow,
         currentMonitor,
         PhysicalPosition,
         PhysicalSize
@@ -18,8 +18,10 @@
     import {I18n} from "./scripts/I18n/I18n";
     import {listen} from "@tauri-apps/api/event";
     import PopupWindow from "./components/PopupWindow.svelte";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {convertFileSrc} from "@tauri-apps/api/core";
     import {normalize} from "@tauri-apps/api/path";
+
+    const appWindow = getCurrentWebviewWindow();
 
     /**
      * Sets the background image of the body to the image of the selected board
@@ -71,8 +73,8 @@
     }
 
     // listen to the 'deep-link-received' event
-    listen('deep-link-received', (event) => {
-        let takmaLink = event.payload; // event.payload is the request object AKA the takma link
+    listen("deep-link-received", event => {
+        let takmaLink = event.payload;
         const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
         // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
         // `([\w-]+)` - This is the first capturing group (`(...)`) and it matches one or more word characters `(\w)` or hyphens (`-`). The hyphen is included within the character set `[\w-]`. Word characters include uppercase and lowercase letters, digits, and underscores. This capturing group captures the board ID.

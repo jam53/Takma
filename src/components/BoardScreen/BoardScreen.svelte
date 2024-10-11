@@ -6,12 +6,11 @@
     } from "../../scripts/stores";
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {open} from "@tauri-apps/api/dialog";
+    import {open} from "@tauri-apps/plugin-dialog";
     import {
         imageExtensions,
         removeFileFromSaveDirectory,
-        saveAbsoluteFilePathToSaveDirectory,
-        saveFilePathToSaveDirectory
+        saveAbsoluteFilePathToSaveDirectory
     } from "../../scripts/TakmaDataFolderIO";
     import CreateNewList from "./CreateNewList.svelte";
     import List from "./List.svelte";
@@ -20,10 +19,10 @@
     import {onDestroy, onMount} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {convertFileSrc} from "@tauri-apps/api/core";
     import {listen} from "@tauri-apps/api/event";
     import {normalize} from "@tauri-apps/api/path";
-    import {readDir, removeFile} from "@tauri-apps/api/fs";
+    import {readDir, remove} from "@tauri-apps/plugin-fs";
 
     let createNewCardElements;
     let createNewListElement
@@ -73,15 +72,15 @@
     }
 
     let unlisten;
-    (async () => {unlisten = await listen('tauri://file-drop', async event => {
+    (async () => {unlisten = await listen('tauri://drag-drop', async event => {
         if ($selectedCardId == "") //We only want to react to this filedrop event if there isn't a card selected. Otherwise it would mean the drop event was meant to drop attachements onto a card. Rather than to change the background image of the board.
         {
-            await handleContainerFileDrop(event.payload[0]);
+            await handleContainerFileDrop(event.payload.paths[0]);
         }
     })})();
     onDestroy(() => {
         unlisten();
-    })
+    });
 
     /**
      * If the user drops a file on the container div, i.e. the background image, this function gets called to replace the background image.
@@ -180,12 +179,13 @@
         {
             if (fileOnDisk && !boardFiles.includes(fileOnDisk))
             {
-                await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/` + fileOnDisk));
+                await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/` + fileOnDisk));
             }
         }
     }
     removeDanglingAttachments();
 </script>
+
 <div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}

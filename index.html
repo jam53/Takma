@@ -155,32 +155,26 @@
 
     .body {
         margin: 0;
-
         overflow: hidden;
-
         transition: 0.4s;
         background-color: var(--background-color);
+        min-height: 100vh;
 
         background-size: cover;
         background-position: center center; /* Because of the border, titlebar and navbar we need to offset the image slightly towards the bottom. We devide by 2, this way a bit of the top and a bit of the bottom is cut off. Rather than the top being fully on there and only the bottom being cutoff (the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` + height title bar in the `.titlebar` styleclass in `index.html` + navbar height in the `.containingDiv` styleclass in `NavBar.svelte`) / 2 */
         background-attachment: fixed;
         background-repeat: no-repeat;
     }
-
-    .bodyNotMaximized {
-        min-height: calc(100vh - 4px); /* Adjust the value based on your border size */
-        border: 2px solid var(--border);
-        border-radius: 10px;
-    }
 </style>
 
 <script type="module">
-    import { appWindow } from '@tauri-apps/api/window'
+    import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow"
     import tauriConf from "./src-tauri/tauri.conf.json"
     import takmaLogoUrl from "./src/images/Takma.svg"
 
-    document.getElementById("titlebar-title").textContent = tauriConf.tauri.windows[0].title;
+    const appWindow = getCurrentWebviewWindow();
 
+    document.getElementById("titlebar-title").textContent = tauriConf.app.windows[0].title;
     document.getElementById("titlebar-icon").src = takmaLogoUrl; //If we don't set it through code, and just leave the source of the image "./src/images/Takma.svg" as set in the HTML. It will only work in debug builds but not in release builds. We need to import the image using Vite, and use that image url.
 
     document.getElementById('titlebar-minimize').addEventListener('click', () => appWindow.minimize());
@@ -196,13 +190,11 @@
 
         if (isMaximized)
         {
-            document.body.classList.remove("bodyNotMaximized");
             document.getElementById("titlebar-close").classList.remove("titlebar-button-closeNotMaximized");
             document.getElementById("titlebar").classList.remove("titlebarNotMaximized");
         }
         else
         {
-            document.body.classList.add("bodyNotMaximized");
             document.getElementById("titlebar-close").classList.add("titlebar-button-closeNotMaximized");
             document.getElementById("titlebar").classList.add("titlebarNotMaximized");
         }

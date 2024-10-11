@@ -2,7 +2,7 @@
     import type {Card, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId, selectedCardId, draggingCard} from "../../scripts/stores";
-    import {exists} from "@tauri-apps/api/fs";
+    import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {normalize} from "@tauri-apps/api/path";

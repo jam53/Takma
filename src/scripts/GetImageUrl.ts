@@ -1,4 +1,4 @@
-import {BaseDirectory, readBinaryFile} from '@tauri-apps/api/fs';
+import {BaseDirectory, readBinaryFile} from '@tauri-apps/plugin-fs';
 
 /**
  * Given a path to an image file, this function returns an url to the image.

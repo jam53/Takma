@@ -1,6 +1,6 @@
 import {SaveLoadManager} from "./SaveLoadManager";
 import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
-import {removeDir, removeFile} from "@tauri-apps/api/fs";
+import {remove} from "@tauri-apps/plugin-fs";
 import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
 import {normalize} from "@tauri-apps/api/path";
 
@@ -278,7 +278,7 @@ export class TakmaData
         this._boards = this.boards.filter(board => board.id != id);
         await SaveLoadManager.saveToDisk();
 
-        await removeDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${id}/`), {recursive: true});
+        await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${id}/`), {recursive: true});
     }
 
     /**
@@ -419,16 +419,16 @@ export class TakmaData
     private deleteAllFilesTiedToCard(card: Card)
     {
         card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
-            await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment));
+            await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment));
         });
 
         if (card.coverImage !== "")
         {
-            (async () => await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + card.coverImage)))();
+            (async () => await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + card.coverImage)))();
         }
 
         this.getAllLocalMarkdownImagesInCardDescription(card).forEach(async imgSrc => {
-            await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + imgSrc));
+            await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + imgSrc));
         })
     }
 

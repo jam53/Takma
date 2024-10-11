@@ -7,25 +7,26 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import {marked} from "marked";
     import DOMPurify from "dompurify";
-    import {open} from "@tauri-apps/api/shell"
-    import {readText, writeText} from "@tauri-apps/api/clipboard";
+    import {open} from "@tauri-apps/plugin-shell"
+    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import hljs from "highlight.js";
     import LabelsPopup from "./LabelsPopup.svelte";
-    import {appWindow} from "@tauri-apps/api/window";
+    import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
     import Attachments from "./Attachments.svelte";
     import {
         imageExtensions,
-        removeFileFromSaveDirectory, saveAbsoluteFilePathToSaveDirectory,
-        saveFilePathToSaveDirectory, saveFileToSaveDirectory
+        removeFileFromSaveDirectory,
+        saveAbsoluteFilePathToSaveDirectory,
+        saveFileToSaveDirectory
     } from "../../scripts/TakmaDataFolderIO";
-    import {open as openDialog} from "@tauri-apps/api/dialog";
+    import {open as openDialog} from "@tauri-apps/plugin-dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {listen} from "@tauri-apps/api/event";
-    import {convertFileSrc} from "@tauri-apps/api/tauri";
+    import {convertFileSrc} from "@tauri-apps/api/core";
 
     export let refreshListsFunction;
 
@@ -287,6 +288,7 @@
     }
 
     $: overlayElement && applyMaximizedNotMaximizedStyleClasses();
+    const appWindow = getCurrentWebviewWindow()
     appWindow.onResized(() => applyMaximizedNotMaximizedStyleClasses());
     async function applyMaximizedNotMaximizedStyleClasses()
     {
@@ -341,10 +343,10 @@
     }
 
     let unlisten;
-    (async () => {unlisten = await listen('tauri://file-drop', async event => {
+    (async () => {unlisten = await listen('tauri://drag-drop', async event => {
         if ($selectedCardId != "") //We only want to react to this filedrop event if there is a card selected. Otherwise it would mean the drop event was meant to change the background image of the board. Rather than to drop attachements onto a card.
         {
-            await fileDropAttachments(event.payload);
+            await fileDropAttachments(event.payload.paths);
         }
     })})();
     onDestroy(() => {

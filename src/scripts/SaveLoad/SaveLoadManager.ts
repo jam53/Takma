@@ -1,9 +1,9 @@
-import {createDir, exists, readTextFile, writeTextFile} from "@tauri-apps/api/fs";
+import {mkdir, exists, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
 import {TakmaData} from "./TakmaData";
-import {message} from "@tauri-apps/api/dialog";
+import {message} from "@tauri-apps/plugin-dialog";
 import {normalize} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
-import {tempdir} from "@tauri-apps/api/os";
+import {tempDir} from "@tauri-apps/api/path";
 import "../StringExtensions.ts";
 
 /**
@@ -36,7 +36,7 @@ export class SaveLoadManager
     public static async loadSaveFileFromDisk(): Promise<void>
     {
         const pathToSavefile = await normalize(this.getSaveDirectoryPath() + this.saveFilename);
-        await createDir(pathToSavefile.getDirectoryPath(), {recursive: true}); //Should the folder not exist and we don't create it here, the next if where we check if the savefile exists with `exists(...)` will throw an error.
+        await mkdir(pathToSavefile.getDirectoryPath(), {recursive: true}); //Should the folder not exist and we don't create it here, the next if where we check if the savefile exists with `exists(...)` will throw an error.
 
         if (await exists(pathToSavefile)) //Check if the save file exists, before trying to use it to overwrite the default values
         {
@@ -119,6 +119,6 @@ export class SaveLoadManager
      */
     public static async getTempDirectoryPath(): Promise<string>
     {
-        return await normalize(await tempdir() + "/Takma/");
+        return await normalize(await tempDir() + "/Takma/");
     }
 }

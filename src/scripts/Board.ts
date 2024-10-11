@@ -4,7 +4,7 @@ import {
     saveFilePathToTempFile
 } from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {exists} from "@tauri-apps/api/fs";
+import {exists} from "@tauri-apps/plugin-fs";
 import {normalize} from "@tauri-apps/api/path";
 
 export interface Board

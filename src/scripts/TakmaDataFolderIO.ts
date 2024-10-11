@@ -1,4 +1,4 @@
-import {copyFile, createDir, removeFile, writeBinaryFile} from "@tauri-apps/api/fs";
+import {copyFile, mkdir, remove, writeFile} from "@tauri-apps/plugin-fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {normalize} from "@tauri-apps/api/path";
 
@@ -67,7 +67,7 @@ async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, 
 {
     savePath = await normalize(savePath + trimLongFilename(filename));
 
-    await createDir(savePath.getDirectoryPath(), {recursive: true});
+    await mkdir(savePath.getDirectoryPath(), {recursive: true});
 
     await copyFile(pathToFile, savePath);
 
@@ -85,7 +85,7 @@ async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, 
  */
 export async function saveFileToSaveDirectory(file: File, boardID: string): Promise<string>
 {
-    const fileData = await file.arrayBuffer();
+    const fileData = new Uint8Array(await file.arrayBuffer());
 
     const filename = crypto.randomUUID() + file.name;
 
@@ -93,25 +93,25 @@ export async function saveFileToSaveDirectory(file: File, boardID: string): Prom
 }
 
 /**
- * Saves a binary array buffer to Takma's save directory for a specific board.
+ * Saves a binary `Uint8Array` to Takma's save directory for a specific board.
  * A file with the specified filename is created, and the binary data is written to disk.
  * Returns the relative path to the saved file.
  *
- * @param arrayBuffer - The ArrayBuffer containing the binary file data.
+ * @param uint8Array - The `Uint8Array` containing the binary file data.
  * @param filename - The desired name for the file to be saved.
  * @param boardID - The unique ID of the board the file is associated with.
  * @returns A promise that resolves to the relative path of the saved file.
  */
-async function saveArrayBufferToSaveDirectory(arrayBuffer: ArrayBuffer, filename: string, boardID: string): Promise<string>
+async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: string, boardID: string): Promise<string>
 {
     filename = trimLongFilename(filename);
 
     const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
     const absoluteSavePath = await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath);
 
-    await createDir(absoluteSavePath.getDirectoryPath(), {recursive: true});
+    await mkdir(absoluteSavePath.getDirectoryPath(), {recursive: true});
 
-    await writeBinaryFile(absoluteSavePath, arrayBuffer);
+    await writeFile(absoluteSavePath, uint8Array);
 
     return relativeSavePath;
 }
@@ -124,7 +124,7 @@ async function saveArrayBufferToSaveDirectory(arrayBuffer: ArrayBuffer, filename
  */
 export async function removeFileFromSaveDirectory(pathToFile: string)
 {
-    await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+    await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
 }
 
 /**

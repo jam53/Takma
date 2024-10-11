@@ -1,10 +1,10 @@
 <script lang="ts">
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {exists, removeFile} from "@tauri-apps/api/fs";
-    import {open} from "@tauri-apps/api/shell"
-    import {tauri} from "@tauri-apps/api";
-    import {readText, writeText} from "@tauri-apps/api/clipboard";
+    import {exists, remove} from "@tauri-apps/plugin-fs";
+    import {open} from "@tauri-apps/plugin-shell"
+    import {core} from "@tauri-apps/api";
+    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -62,7 +62,7 @@
 
     async function deleteAttachment(pathToFile: string)
     {
-        await removeFile(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+        await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
         saveCardFunction();
 
         refreshComponent();

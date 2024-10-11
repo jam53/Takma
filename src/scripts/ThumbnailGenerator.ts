@@ -1,5 +1,5 @@
-import {createDir, exists, writeBinaryFile} from "@tauri-apps/api/fs";
-import {convertFileSrc} from "@tauri-apps/api/tauri";
+import {mkdir, exists, writeFile} from "@tauri-apps/plugin-fs";
+import {convertFileSrc} from "@tauri-apps/api/core";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {normalize} from "@tauri-apps/api/path";
 import {imageExtensions} from "./TakmaDataFolderIO";
@@ -60,21 +60,21 @@ async function generateThumbnail(imgPath: string, maxPixelSize: number, thumbnai
         else if (imageExtensions.includes(imgPath.getFileExtension()))
         {
             const img = new Image();
-            img.onerror = reject
-            img.onload = function () {
-                const scaleRatio = maxPixelSize / Math.min(img.width, img.height)
-                const w = img.width * scaleRatio
-                const h = img.height * scaleRatio
-                canvas.width = w
-                canvas.height = h
-                ctx.drawImage(img, 0, 0, w, h)
+            img.onerror = reject;
+            img.onload = () => {
+                const scaleRatio = maxPixelSize / Math.min(img.width, img.height);
+                const w = img.width * scaleRatio;
+                const h = img.height * scaleRatio;
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(img, 0, 0, w, h);
                 canvas.toBlob(async blob => {
-                    await createDir(thumbnailPath.getDirectoryPath(), {recursive: true});
-                    await writeBinaryFile(thumbnailPath, await blob!.arrayBuffer())
+                    await mkdir(thumbnailPath.getDirectoryPath(), {recursive: true});
+                    await writeFile(thumbnailPath, new Uint8Array(await blob!.arrayBuffer()));
                     resolve(convertFileSrc(thumbnailPath));
                 },
-                "image/webp", 0.85)
-            }
+                "image/webp", 0.85);
+            };
 
             img.crossOrigin = "anonymous"; //Enable cross-origin access for external URLs.
             // If we don't do this, the URL we get from `convertFileSrc()` (https://asset.localhost/...) will be seen as an external URL and therefore we won't be allowed to call `canvas.toDataUrl()`. Because that will throw the error "toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported."

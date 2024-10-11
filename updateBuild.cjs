@@ -37,10 +37,10 @@ fs.readJson(packageJsonPath, (err, packageData) =>
             }
 
             // Update the package.version property
-            tauriConfData.package.version = version;
+            tauriConfData.version = version;
 
             // Update the tauri.windows.title property
-            tauriConfData.tauri.windows[0].title = `${name} ${version} (${updatedBuildNumber})`;
+            tauriConfData.app.windows[0].title = `${name} ${version} (${updatedBuildNumber})`;
 
             // Write the updated tauri.conf.json
             fs.writeJson(tauriConfFilePath, tauriConfData, {spaces: 4}, writeTauriConfErr =>
@@ -51,7 +51,7 @@ fs.readJson(packageJsonPath, (err, packageData) =>
                     return;
                 }
 
-                console.log(`tauri.conf.json updated with tauri.windows.title: ${tauriConfData.tauri.windows[0].title}`);
+                console.log(`tauri.conf.json updated with tauri.windows.title: ${tauriConfData.app.windows[0].title}`);
             });
         });
     });

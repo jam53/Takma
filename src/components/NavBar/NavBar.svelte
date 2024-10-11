@@ -5,7 +5,7 @@
     import SearchBar from "./SearchBar.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {readText, writeText} from "@tauri-apps/api/clipboard";
+    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast, Toaster} from "svelte-sonner";
     import OrderBoardsMenu from "./OrderBoardsMenu.svelte";
     import FilterCardsPopup from "../BoardScreen/FilterCardsPopup.svelte";

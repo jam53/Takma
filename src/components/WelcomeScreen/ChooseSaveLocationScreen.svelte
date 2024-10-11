@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {open} from "@tauri-apps/api/shell";
-    import {open as openDialog} from "@tauri-apps/api/dialog"
+    import {open} from "@tauri-apps/plugin-shell";
+    import {open as openDialog} from "@tauri-apps/plugin-dialog"
     import {appLocalDataDir, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
 

@@ -4,15 +4,14 @@
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/stores";
-    import {exists, readDir} from "@tauri-apps/api/fs";
-    import {open} from "@tauri-apps/api/dialog"
+    import {exists, readDir} from "@tauri-apps/plugin-fs";
+    import {open} from "@tauri-apps/plugin-dialog"
     import {
         imageExtensions,
         removeFileFromSaveDirectory,
         saveAbsoluteFilePathToSaveDirectory,
-        saveFilePathToSaveDirectory
     } from "../../scripts/TakmaDataFolderIO";
-    import {normalize, resolveResource} from "@tauri-apps/api/path";
+    import {normalize, resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -72,7 +71,8 @@
 
     async function loadImagesIncludedInTakma()
     {
-        let includedImagesPaths = (await readDir((await resolveResource("resources/backgrounds/")))).map(fileEntry => fileEntry.path);
+        let includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
+
         shuffle(includedImagesPaths);
 
         selectedImg = includedImagesPaths[0];
@@ -84,7 +84,7 @@
     {
         if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/")))
         {
-            let customImagesPaths = (await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/"))).map(fileEntry => fileEntry.path);
+            let customImagesPaths = await Promise.all((await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/"))).map(async fileEntry => await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + fileEntry.name)));
             shuffle(customImagesPaths);
 
             return customImagesPaths;
@@ -101,7 +101,7 @@
 
         if (saveBoardBackgroundForFuture)
         {
-            await saveAbsoluteFilePathToSaveDirectory(selectedImg, "CustomBoardBackgrounds"); //The second parameter of this function is supposed to be a board id, which "CustomBoardBackgrounds" clearly is not. However, the way `saveFilePathToSaveDirectory()` uses that boardId is to decide in which subfolder to save/write the file to. So in this case we want that to be a folder called "CustomBoardBackgrounds" hence why we pass that as the `boardId`
+            await saveAbsoluteFilePathToSaveDirectory(selectedImg, "CustomBoardBackgrounds"); //The second parameter of this function is supposed to be a board id, which "CustomBoardBackgrounds" clearly is not. However, the way `saveAbsoluteFilePathToSaveDirectory()` uses that boardId is to decide in which subfolder to save/write the file to. So in this case we want that to be a folder called "CustomBoardBackgrounds" hence why we pass that as the `boardId`
         }
 
         $selectedBoardId = idCreatedBoard;

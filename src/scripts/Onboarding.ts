@@ -1,13 +1,13 @@
 import introJs from "intro.js";
 import "intro.js/introjs.css";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {readDir} from "@tauri-apps/api/fs";
-import {resolveResource} from "@tauri-apps/api/path";
+import {readDir} from "@tauri-apps/plugin-fs";
+import {resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
 import {shuffle} from "./KnuthShuffle";
 import CardCreationDateVideo from "../videos/OnboardingCardCreationDate.mp4";
 import ShiftClickDeleteCardVideo from "../videos/OnboardingShiftClickDeleteCard.mp4";
 import {I18n} from "./I18n/I18n";
-import {relaunch} from "@tauri-apps/api/process";
+import {relaunch} from "@tauri-apps/plugin-process";
 
 /**
  * This function starts the onboarding for the welcome screen. Once the onboarding for the welcome screen is finished, it calls the function that handles the onboarding for the board screen
@@ -34,7 +34,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         exitOnEsc: false,
         exitOnOverlayClick: false
     }).oncomplete(async () => {
-        const includedImagesPaths = (await readDir((await resolveResource("resources/backgrounds/")))).map(fileEntry => fileEntry.path);
+        const includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
         shuffle(includedImagesPaths);
         const boardBg = includedImagesPaths[0];
 
