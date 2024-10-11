@@ -14,6 +14,7 @@
     export let cardToSave: Card;
     export let addAttachmentFunction;
     export let saveCardFunction;
+    export let focusOnCardDetailsFunction;
 
     /**
      * Given a path to a file, this function returns the filename. I.e. it removes the uuid in front of the filename (36 characters) and the path to the file
@@ -68,6 +69,7 @@
         saveCardFunction();
 
         refreshComponent();
+        focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
     }
 
     async function getExistingAttachments(): Promise<string[]>
