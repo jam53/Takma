@@ -657,6 +657,17 @@
             </div>
             <div class="bottomPart">
                 <div class="cardMainAreaHolder">
+                    <div class="labels">
+                        {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
+                            <div style="background-color: {label.color}"
+                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                            >
+                                <span style="color: {label.titleColor}">
+                                    {label.title}
+                                </span>
+                            </div>
+                        {/each}
+                    </div>
                     {#if cardToSave.dueDate !== null}
                         <button class="dueDate"
                                 title={I18n.t("dueDate")}
@@ -670,17 +681,6 @@
                             </span>
                         </button>
                     {/if}
-                    <div class="labels">
-                        {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
-                            <div style="background-color: {label.color}"
-                                 on:click={e => new LabelsPopup({props: {mouseClickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshCardFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
-                            >
-                                <span style="color: {label.titleColor}">
-                                    {label.title}
-                                </span>
-                            </div>
-                        {/each}
-                    </div>
                     {#if editingDescription}
                         <textarea bind:this={markdownTextArea}>{cardDesc}</textarea>
                     {:else}
