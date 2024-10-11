@@ -146,6 +146,8 @@
                             cardToSave.checklists = cardToSave.checklists.filter(checklistt => checklistt.id !== checklist.id)
                             saveCardFunction();
                         }
+
+                        focusOnCardDetailsFunction(); // If we don't focus on the CardDetails component after the user clicked on a button of this CheckLists component. The CardDetails component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
                     }}>
                         {I18n.t("delete")}
                     </button>
