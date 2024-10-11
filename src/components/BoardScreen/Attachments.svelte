@@ -9,8 +9,9 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {normalize} from "@tauri-apps/api/path";
+    import type {Card} from "../../scripts/Board";
 
-    export let cardToSave;
+    export let cardToSave: Card;
     export let addAttachmentFunction;
     export let saveCardFunction;
 
@@ -63,6 +64,7 @@
     async function deleteAttachment(pathToFile: string)
     {
         await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+        cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
         saveCardFunction();
 
         refreshComponent();
