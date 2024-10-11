@@ -28,15 +28,14 @@
     onMount(() =>
     {
         title = title ?? "Takma";
-
-        window.addEventListener("keydown", listenToKeyDown);
     });
 
-    function listenToKeyDown(e)
+    function handleKeyDown(e)
     {
         if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
         {
-            showPopup = false;
+            answer = false;
+            closePopup();
         }
         else if (e.key === "Enter")
         {
@@ -47,14 +46,8 @@
         }
     }
 
-    function removeKeyDownListeners()
-    {
-        window.removeEventListener("keydown", listenToKeyDown);
-    }
-
     function closePopup()
     {
-        removeKeyDownListeners();
         showPopup = false;
     }
 
@@ -83,10 +76,19 @@
 
         return inputValue ?? "";
     }
+
+    let overlayElement;
+    $: overlayElement?.focus(); //If we don't focus on the overlayElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
 </script>
 
 {#if showPopup}
-    <div transition:blur|global class="overlay" on:click={closePopup}>
+    <div transition:blur|global
+         class="overlay"
+         on:click={() => {answer = false; closePopup()}}
+         bind:this={overlayElement}
+         on:keydown|stopPropagation={handleKeyDown}
+         tabindex="1"
+    >
         <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
