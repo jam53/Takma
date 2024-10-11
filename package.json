@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "1.5.3",
-    "build": 621,
+    "build": 622,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -12,7 +12,7 @@
         "tauri": "node updateBuild.cjs && tauri"
     },
     "dependencies": {
-        "@tauri-apps/api": "^2.0.0",
+        "@tauri-apps/api": "^2.0.2",
         "@tauri-apps/plugin-clipboard-manager": "^2.0.0",
         "@tauri-apps/plugin-deep-link": "^2.0.0",
         "@tauri-apps/plugin-dialog": "^2.0.0",
@@ -36,14 +36,14 @@
         "@tauri-apps/cli": "^2.0.2",
         "@tsconfig/svelte": "^5.0.4",
         "@types/dompurify": "^3.0.5",
-        "@types/node": "^22.7.4",
+        "@types/node": "^22.7.5",
         "@types/xxhashjs": "^0.2.4",
         "fs-extra": "^11.2.0",
         "svelte": "^4.2.19",
         "svelte-check": "^4.0.4",
         "svelte-preprocess": "^6.0.3",
         "tslib": "^2.7.0",
-        "typescript": "^5.6.2",
+        "typescript": "^5.6.3",
         "vite": "^5.4.8"
     }
 }
