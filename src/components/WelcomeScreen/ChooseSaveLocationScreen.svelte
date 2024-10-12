@@ -4,9 +4,9 @@
     import {appLocalDataDir, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    function setSaveLocation(saveDirectoryPath: string)
+    async function setSaveLocation(saveDirectoryPath: string)
     {
-        localStorage.setItem("saveDirectoryPath", saveDirectoryPath);
+        localStorage.setItem("saveDirectoryPath", await normalize(saveDirectoryPath + "/"));
         location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
     }
 
@@ -18,7 +18,7 @@
         });
         if (selectedDirectory !== null && typeof(selectedDirectory) === "string")
         {
-            setSaveLocation(await normalize(selectedDirectory + "/"));
+            await setSaveLocation(selectedDirectory);
         }
     }
 </script>
@@ -31,7 +31,7 @@
         <span class="defaultTag">
             {I18n.t("default")}
         </span>
-        <div class="option" on:click={async () => setSaveLocation(await appLocalDataDir())}>
+        <div class="option" on:click={async () => await setSaveLocation(await appLocalDataDir())}>
             <h1>
                 {I18n.t("localAppData")}
             </h1>
