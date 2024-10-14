@@ -136,7 +136,12 @@ html[data-theme="dark"] {
 }
 
 .introjs-skipbutton {
-    display: none !important;
+    transition: 300ms;
+    color: var(--unselected-button) !important;
+}
+
+.introjs-skipbutton:hover {
+    color: var(--selected-button) !important;
 }
 
 .introjs-tooltip-title {

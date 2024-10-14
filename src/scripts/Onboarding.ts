@@ -16,7 +16,8 @@ import {relaunch} from "@tauri-apps/plugin-process";
  */
 export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: string) => void, setSelectedCard: (id: string) => void)
 {
-    let canExit = false;
+    let onboardingStepComplete = false;
+    let canExit = true;
 
     introJs().onbeforeexit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
         steps:[
@@ -30,10 +31,11 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         nextLabel: I18n.t("next"),
         prevLabel: I18n.t("back"),
         doneLabel: I18n.t("done"),
-        skipLabel: "",
         exitOnEsc: false,
         exitOnOverlayClick: false
     }).oncomplete(async () => {
+        onboardingStepComplete = true;
+
         const includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
         shuffle(includedImagesPaths);
         const boardBg = includedImagesPaths[0];
@@ -44,7 +46,13 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
 
         setSelectedBoard(boardId); //Sets the $selectedBoardId Svelte store, i.e. opens the boardscreen
         canExit = true;
-       startBoardScreenOnBoarding(boardId, cardId, setSelectedCard);
+        startBoardScreenOnBoarding(boardId, cardId, setSelectedCard, () => {setSelectedCard(""); setSelectedBoard("");});
+    }).onexit(() => {
+        // If the user exits the onboarding process before completing it
+        if (!onboardingStepComplete)
+        {
+            SaveLoadManager.getData().onboardingCompleted = true; // Even if the user exits the onboarding process prematurely, mark it as complete in the savefile to prevent it from starting automatically at the next startup
+        }
     }).start();
 }
 
@@ -53,12 +61,14 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
  * @param currentBoardId The id of the board the onboarding is taking place on
  * @param currentCardId The id of the card the onboarding will use
  * @param setSelectedCard Function used to set the $selectedCard store (we can't access Svelte stores in .ts files, hence why use a lambda to set the store)
+ * @param returnToWelcomeScreen Function used to return to the welcome screen after exiting or completing the onboarding
  */
-export async function startBoardScreenOnBoarding(currentBoardId: string, currentCardId: string, setSelectedCard: (id: string) => void)
+export async function startBoardScreenOnBoarding(currentBoardId: string, currentCardId: string, setSelectedCard: (id: string) => void, returnToWelcomeScreen: () => void)
 {
     await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `oncomplete()` has been executed. So we just need to wait until it's actually removed from the DOM
 
-    let canExit = false;
+    let onboardingStepComplete = false;
+    let canExit = true;
 
     await introJs().onbeforeexit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
         steps:[
@@ -77,25 +87,34 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
         nextLabel: I18n.t("next"),
         prevLabel: I18n.t("back"),
         doneLabel: I18n.t("done"),
-        skipLabel: "",
         exitOnEsc: false,
         exitOnOverlayClick: false
     }).oncomplete(async () => {
+        onboardingStepComplete = true;
         setSelectedCard(currentCardId); //Sets the $selectedBoardId Svelte store, i.e. opens the boardscreen
         canExit = true;
-        startCardDetailsScreenOnBoarding(currentBoardId);
+        startCardDetailsScreenOnBoarding(currentBoardId, returnToWelcomeScreen);
+    }).onexit(async () => {
+        // If the user exits the onboarding process before completing it
+        if (!onboardingStepComplete)
+        {
+            SaveLoadManager.getData().onboardingCompleted = true; // Even if the user exits the onboarding process prematurely, mark it as complete in the savefile to prevent it from starting automatically at the next startup
+            await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
+            returnToWelcomeScreen();
+        }
     }).start();
 }
 
 /**
  * This function starts the onboarding for the card details screen.
  * @param currentBoardId The id of the board the onboarding is taking place on
+ * @param returnToWelcomeScreen Function used to return to the welcome screen after exiting or completing the onboarding
  */
-export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
+export async function startCardDetailsScreenOnBoarding(currentBoardId: string, returnToWelcomeScreen: () => void)
 {
     await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `oncomplete()` has been executed. So we just need to wait until it's actually removed from the DOM
 
-    let canExit = false;
+    let canExit = true;
 
     await introJs().onbeforeexit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
         steps:[
@@ -113,15 +132,13 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
         nextLabel: I18n.t("next"),
         prevLabel: I18n.t("back"),
         doneLabel: I18n.t("done"),
-        skipLabel: "",
         exitOnEsc: false,
         exitOnOverlayClick: false
-    }).oncomplete(async () => {
+    }).onexit(async () => {
         SaveLoadManager.getData().onboardingCompleted = true;
-        await SaveLoadManager.getData().deleteBoard(currentBoardId); //Delete the board that was used for the onboarding
+        await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
         canExit = true;
-
-        await relaunch(); //Relaunch Takma. We could in theory also just refresh the front-end AKA webview using `location.reload()`. However, if we do that the title bar and navbar get rendered on top of each other for some reason
+        returnToWelcomeScreen();
     }).start();
 }
 
