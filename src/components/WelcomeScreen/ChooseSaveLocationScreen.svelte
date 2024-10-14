@@ -62,7 +62,7 @@
 </div>
 <div class="licenseAgreement">
     <span>
-        {I18n.t("acceptTermsAndConditions")}<a on:click={async () => open((await resolveResource("resources/LICENSE.txt")).substring(4))}>{I18n.t("licenseAgreement")}</a>
+        {I18n.t("acceptTermsAndConditions")}<a on:click={async () => open(await resolveResource("resources/LICENSE.txt"))}>{I18n.t("licenseAgreement")}</a>
     </span>
 </div>
 

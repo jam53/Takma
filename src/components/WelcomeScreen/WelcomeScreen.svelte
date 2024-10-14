@@ -37,9 +37,9 @@
             const boards = SaveLoadManager.getData().boards;
 
             const easterEggBoard = I18n.t("easterEggBoard");
-            easterEggBoard.backgroundImagePath = await saveAbsoluteFilePathToSaveDirectory((await resolveResource("resources/EasterEggBoardBg.webp")).substring(4), easterEggBoard.id);
+            easterEggBoard.backgroundImagePath = await saveAbsoluteFilePathToSaveDirectory(await resolveResource("resources/EasterEggBoardBg.webp"), easterEggBoard.id);
             easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|00|$", await normalize(SaveLoadManager.getSaveDirectoryPath() + "/"));
-            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|01|$", (await resolveResource("resources/backgrounds")).substring(4));
+            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|01|$", await resolveResource("resources/backgrounds"));
 
 
             boards.push(easterEggBoard);
