@@ -9,7 +9,6 @@
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "tauri": "node updateBuild.cjs && tauri",
         "postinstall": "patch-package"
     },
     "dependencies": {
@@ -17,17 +16,6 @@
         "@schedule-x/calendar": "^3.4.2",
         "@schedule-x/svelte": "^3.0.0",
         "@schedule-x/theme-default": "^3.4.2",
-        "@tauri-apps/api": "^2.9.1",
-        "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
-        "@tauri-apps/plugin-deep-link": "^2.4.5",
-        "@tauri-apps/plugin-dialog": "^2.4.2",
-        "@tauri-apps/plugin-fs": "^2.4.4",
-        "@tauri-apps/plugin-log": "^2.7.1",
-        "@tauri-apps/plugin-notification": "^2.3.3",
-        "@tauri-apps/plugin-opener": "^2.5.2",
-        "@tauri-apps/plugin-os": "^2.3.2",
-        "@tauri-apps/plugin-process": "^2.3.1",
-        "@tauri-apps/plugin-shell": "^2.3.3",
         "@tiptap/core": "^3.11.1",
         "@tiptap/extension-bubble-menu": "^3.11.1",
         "@tiptap/extension-code-block-lowlight": "^3.11.1",
@@ -57,11 +45,13 @@
         "svelty-picker": "^6.1.6",
         "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1",
         "temporal-polyfill": "^0.3.0",
-        "xxhashjs": "^0.2.2"
+        "xxhashjs": "^0.2.2",
+        "dompurify": "^3.1.7",
+        "highlight.js": "^11.10.0",
+        "marked": "^14.1.2"
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^6.2.1",
-        "@tauri-apps/cli": "^2.9.5",
         "@tsconfig/svelte": "^5.0.6",
         "@types/node": "^24.10.1",
         "@types/xxhashjs": "^0.2.4",
