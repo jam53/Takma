@@ -40,8 +40,8 @@
         "svelte-dnd-action": "^0.9.70",
         "svelte-sonner": "^1.1.1",
         "svelty-picker": "^6.1.6",
-        "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1",
-        "xxhashjs": "^0.2.2"
+        "xxhashjs": "^0.2.2",
+        "@cloudfour/simple-svg-placeholder": "^1.1.0",
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^7.1.2",
