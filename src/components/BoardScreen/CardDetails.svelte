@@ -583,7 +583,7 @@
                     day: "numeric"
                 })}
             </div>
-            <div class="bottomPart">
+            <div class="bottomPart" class:bottomPartOnMobile={SaveLoadManager.getData().isUserOnMobile()}>
                 <div class="cardMainAreaHolder">
                     <div class="labels">
                         {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
@@ -855,6 +855,11 @@
         display: flex;
         gap: 1em;
         justify-content: space-between;
+    }
+
+    .bottomPartOnMobile {
+        flex-flow: column;
+        align-items: center;
     }
 
     .cardMainAreaHolder {
