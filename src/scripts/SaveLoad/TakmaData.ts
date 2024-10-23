@@ -1,9 +1,6 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, Label, List, ShowConfirmationPreferences, SortBoardsFunctionName, WindowState} from "../Board";
-import {remove} from "@tauri-apps/plugin-fs";
+import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
 import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
-import {join} from "@tauri-apps/api/path";
-import {debug} from "@tauri-apps/plugin-log";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -296,8 +293,6 @@ export class TakmaData
         debug("Delete board:" + id);
         this._boards = this.boards.filter(board => board.id != id);
         await SaveLoadManager.saveToDisk();
-
-        await remove(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), id), {recursive: true});
     }
 
     /**
@@ -449,28 +444,6 @@ export class TakmaData
         let deletedList = this._boards[indexOfBoard].lists.splice(listIndexToDelete, 1);
 
         SaveLoadManager.saveToDisk();
-
-        deletedList[0].cards.forEach(card => this.deleteAllFilesTiedToCard(card));
-    }
-
-    /**
-     * Deletes all the files on disk associated with this card
-     */
-    private async deleteAllFilesTiedToCard(card: Card)
-    {
-        debug(`Deleting all files tied to card: ${card.id}`);
-        card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
-            await remove(await join(SaveLoadManager.getSaveDirectoryPath(), attachment));
-        });
-
-        if (card.coverImage !== "")
-        {
-            await remove(await join(SaveLoadManager.getSaveDirectoryPath(), card.coverImage));
-        }
-
-        (await this.getAllLocalMarkdownImagesInCardDescription(card)).forEach(async imgSrc => {
-            await remove(await join(SaveLoadManager.getSaveDirectoryPath(), imgSrc));
-        })
     }
 
     /**
@@ -500,8 +473,6 @@ export class TakmaData
         const deletedCard: Card = this._boards[indexOfBoard].lists[indexOfList].cards.splice(indexOfCardToDelete, 1)[0];
 
         SaveLoadManager.saveToDisk();
-
-        this.deleteAllFilesTiedToCard(deletedCard);
     }
 
     /**

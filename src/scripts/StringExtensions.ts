@@ -40,4 +40,14 @@ String.prototype.getDirectoryPath = function (): string {
     return matches ? matches[1] : ''; // Return the path without the filename or empty string if no match
 };
 
+/**
+ * Capitalizes the first letter of a string and leaves the rest of the string unchanged.
+ *
+ * @returns {string} A new string where the first character is converted to uppercase and the rest of the string remains unchanged.
+ * If the string is empty, the function will return an empty string.
+ */
+String.prototype.capitalizeFirstLetter = function (): string {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
 export {};
