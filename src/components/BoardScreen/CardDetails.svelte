@@ -480,7 +480,7 @@
                     day: "numeric"
                 })}
             </div>
-            <div class="bottomPart">
+            <div class="bottomPart" class:bottomPartOnMobile={SaveLoadManager.getData().isUserOnMobile()}>
                 <div class="cardMainAreaHolder">
                     <div class="labels">
                         {#key invalidateLabels.value}
@@ -773,6 +773,11 @@
         display: flex;
         gap: 1em;
         justify-content: space-between;
+    }
+
+    .bottomPartOnMobile {
+        flex-flow: column;
+        align-items: center;
     }
 
     .cardMainAreaHolder {
