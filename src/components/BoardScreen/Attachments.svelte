@@ -1,15 +1,10 @@
 <script lang="ts">
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {exists, remove} from "@tauri-apps/plugin-fs";
-    import {open} from "@tauri-apps/plugin-shell"
-    import {invoke} from "@tauri-apps/api/core";
-    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {normalize} from "@tauri-apps/api/path";
     import type {Card} from "../../scripts/Board";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     export let cardToSave: Card;
     export let addAttachmentFunction;
@@ -35,36 +30,19 @@
 
     async function openWithDefaultApp(pathToFile: string)
     {
-        await open(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
     }
 
     async function showInFolder(pathToFile: string)
     {
-        const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
-
-        await invoke('show_in_folder', {path});
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
     {
-        const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
-
-        await writeText(path); //Copy to clipboard
-
-        let textInClipboard = await readText();
-        if (textInClipboard === path)
-        {
-            toast(I18n.t("copiedFilePathToClipboard"))
-        }
-        else
-        {
-            toast.error(I18n.t("clipboardCopyErrorFilePath") + path);
-        }
+        toast(pathToFile);
     }
 
     async function deleteAttachment(pathToFile: string)
     {
-        await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
         cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
         saveCardFunction();
 
@@ -74,17 +52,7 @@
 
     async function getExistingAttachments(): Promise<string[]>
     {
-        let existingAttachments: string[] = [];
-
-        for (let attachment of cardToSave.attachments)
-        {
-            if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
-            {
-                existingAttachments.push(attachment);
-            }
-        }
-
-        return existingAttachments;
+        return cardToSave.attachments;
     }
 
     let refreshComponentToggle = false;
@@ -108,17 +76,7 @@
                 <div class="preview"
                      on:click={() => openWithDefaultApp(attachment)}
                 >
-                    {#if imageExtensions.includes(getFileExtension(attachment).toLowerCase())}
-                        {#await (async () => await getThumbnail(attachment, 224))()}
-                            <button class="boardButtons">
-                                <span class="loader"></span>
-                            </button>
-                        {:then imgSrc}
-                            <img src={imgSrc} />
-                        {/await}
-                    {:else}
-                        {getFileExtension(attachment)}
-                    {/if}
+                    {getFileExtension(attachment)}
                 </div>
                 <div class="titleAndActionsHolder">
                     <p

@@ -79,7 +79,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
      */
     function refreshWelcomeScreen()
     {
-        location.reload();
+        closeContextMenu();
     }
 
     function sortByCreationDateAscending()

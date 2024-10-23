@@ -236,6 +236,13 @@ export let en: Translation = {
     markdownGuide: "Markdown Guide",
     moveChecklistUp: "Move checklist up",
     moveChecklistDown: "Move checklist down",
+    saveFileNotValid: "The selected save file is not valid. Please choose a different file.",
+    enterURL: "Enter URL",
+    loadTakmaJsonFromOnlineSource: "Provide a URL to load the Takma.json file from an online source",
+    welcomeToTakmaWebPreview: "Welcome to the Takma Web Preview",
+    thisIsALimitedDemo: "This website provides a limited demo of Takma, allowing you to preview existing save files. Please note that this version is for viewing only — you won’t be able to create, edit, or interact with boards beyond their basic display. Attachments and images within your save files are not supported in this preview.\n\nFor the complete experience, including full functionality, download Takma through the Jam54 Launcher or directly from the GitHub releases page.",
+    selectFile: "Select a file",
+    uploadLocalTakmaJson: "Upload a local Takma.json file from your device to view your saved boards.",
 };
 
 export let ar: Translation = {
@@ -474,6 +481,13 @@ export let ar: Translation = {
     markdownGuide: "دليل ماركداون",
     moveChecklistUp: "نقل القائمة لأعلى",
     moveChecklistDown: "نقل القائمة لأسفل",
+    saveFileNotValid: "ملف الحفظ المحدد غير صالح. يرجى اختيار ملف آخر.",
+    enterURL: "أدخل الرابط",
+    loadTakmaJsonFromOnlineSource: "يرجى تقديم رابط لتحميل ملف Takma.json من مصدر عبر الإنترنت",
+    welcomeToTakmaWebPreview: "مرحبًا بك في العرض التمهيدي لموقع Takma",
+    thisIsALimitedDemo: "يوفر هذا الموقع عرضًا تجريبيًا محدودًا لتطبيق Takma، مما يسمح لك بمعاينة ملفات الحفظ الموجودة. يرجى ملاحظة أن هذا الإصدار مخصص للعرض فقط — لا يمكنك إنشاء أو تعديل أو التفاعل مع اللوحات بخلاف عرضها الأساسي. لا يتم دعم المرفقات والصور داخل ملفات الحفظ الخاصة بك في هذا العرض.\n\nللحصول على التجربة الكاملة، بما في ذلك جميع الميزات، قم بتنزيل Takma عبر Jam54 Launcher أو مباشرة من صفحة إصدارات GitHub.",
+    selectFile: "اختر ملفًا",
+    uploadLocalTakmaJson: "قم بتحميل ملف Takma.json محلي من جهازك لعرض اللوحات المحفوظة.",
 };
 
 export let de: Translation = {
@@ -712,6 +726,13 @@ export let de: Translation = {
     markdownGuide: "Markdown-Anleitung",
     moveChecklistUp: "Checkliste nach oben verschieben",
     moveChecklistDown: "Checkliste nach unten verschieben",
+    saveFileNotValid: "Die ausgewählte Speicherdatei ist nicht gültig. Bitte wählen Sie eine andere Datei aus.",
+    enterURL: "URL eingeben",
+    loadTakmaJsonFromOnlineSource: "Geben Sie eine URL an, um die Takma.json-Datei von einer Online-Quelle zu laden",
+    welcomeToTakmaWebPreview: "Willkommen zur Takma Web-Vorschau",
+    thisIsALimitedDemo: "Diese Website bietet eine eingeschränkte Demo von Takma, mit der Sie vorhandene Speicherdateien anzeigen können. Bitte beachten Sie, dass diese Version nur zum Anzeigen gedacht ist — Sie können keine Boards erstellen, bearbeiten oder mit ihnen interagieren, außer sie im Grundlayout zu sehen. Anhänge und Bilder innerhalb Ihrer Speicherdateien werden in dieser Vorschau nicht unterstützt.\n\nFür die vollständige Erfahrung, einschließlich aller Funktionen, laden Sie Takma über den Jam54 Launcher oder direkt von der GitHub-Releases-Seite herunter.",
+    selectFile: "Datei auswählen",
+    uploadLocalTakmaJson: "Laden Sie eine lokale Takma.json-Datei von Ihrem Gerät hoch, um Ihre gespeicherten Boards anzuzeigen.",
 };
 
 export let es: Translation = {
@@ -950,6 +971,13 @@ export let es: Translation = {
     markdownGuide: "Guía de Markdown",
     moveChecklistUp: "Mover lista de verificación hacia arriba",
     moveChecklistDown: "Mover lista de verificación hacia abajo",
+    saveFileNotValid: "El archivo de guardado seleccionado no es válido. Por favor, elige otro archivo.",
+    enterURL: "Introduce la URL",
+    loadTakmaJsonFromOnlineSource: "Proporciona una URL para cargar el archivo Takma.json desde una fuente en línea",
+    welcomeToTakmaWebPreview: "Bienvenido a la vista previa web de Takma",
+    thisIsALimitedDemo: "Este sitio web ofrece una demostración limitada de Takma, permitiéndote previsualizar archivos de guardado existentes. Ten en cuenta que esta versión es solo para visualización: no podrás crear, editar ni interactuar con los tableros más allá de su visualización básica. Los adjuntos e imágenes en tus archivos de guardado no son compatibles en esta vista previa.\n\nPara obtener la experiencia completa, con todas las funcionalidades, descarga Takma a través del Jam54 Launcher o directamente desde la página de lanzamientos en GitHub.",
+    selectFile: "Seleccionar archivo",
+    uploadLocalTakmaJson: "Sube un archivo local Takma.json desde tu dispositivo para ver tus tableros guardados.",
 };
 
 export let et: Translation = {
@@ -1188,6 +1216,13 @@ export let et: Translation = {
     markdownGuide: "Markdowni juhend",
     moveChecklistUp: "Liiguta kontrollnimekiri üles",
     moveChecklistDown: "Liiguta kontrollnimekiri alla",
+    saveFileNotValid: "Valitud salvestusfail ei ole kehtiv. Palun vali teine fail.",
+    enterURL: "Sisesta URL",
+    loadTakmaJsonFromOnlineSource: "Sisesta URL, et laadida Takma.json fail veebiallika kaudu",
+    welcomeToTakmaWebPreview: "Tere tulemast Takma veebieelvaatesse",
+    thisIsALimitedDemo: "See veebisait pakub piiratud Takma demo, mis võimaldab sul olemasolevaid salvestusfaile eelvaadata. Pange tähele, et see versioon on ainult vaatamiseks — te ei saa luua, redigeerida ega tahvlitega muul viisil suhelda, kui ainult nende põhilist kuvamist vaadata. Selles eelvaates ei toetata manuseid ja pilte teie salvestusfailides.\n\nTäieliku kogemuse saamiseks, sealhulgas kõigi funktsioonidega, laadige Takma alla Jam54 Launcheri kaudu või otse GitHubi väljaannete lehelt.",
+    selectFile: "Vali fail",
+    uploadLocalTakmaJson: "Laadi oma seadmest üles kohalik Takma.json fail, et näha oma salvestatud tahvleid.",
 };
 
 export let fr: Translation = {
@@ -1426,6 +1461,13 @@ export let fr: Translation = {
     markdownGuide: "Guide Markdown",
     moveChecklistUp: "Déplacer la liste de contrôle vers le haut",
     moveChecklistDown: "Déplacer la liste de contrôle vers le bas",
+    saveFileNotValid: "Le fichier de sauvegarde sélectionné n'est pas valide. Veuillez choisir un autre fichier.",
+    enterURL: "Saisir l'URL",
+    loadTakmaJsonFromOnlineSource: "Fournissez une URL pour charger le fichier Takma.json depuis une source en ligne",
+    welcomeToTakmaWebPreview: "Bienvenue dans l'aperçu web de Takma",
+    thisIsALimitedDemo: "Ce site web offre une démo limitée de Takma, vous permettant de prévisualiser des fichiers de sauvegarde existants. Veuillez noter que cette version est uniquement destinée à la visualisation — vous ne pourrez ni créer, ni modifier, ni interagir avec les tableaux au-delà de leur affichage basique. Les pièces jointes et images dans vos fichiers de sauvegarde ne sont pas prises en charge dans cet aperçu.\n\nPour profiter de l'expérience complète, incluant toutes les fonctionnalités, téléchargez Takma via le Jam54 Launcher ou directement depuis la page des versions GitHub.",
+    selectFile: "Sélectionner un fichier",
+    uploadLocalTakmaJson: "Téléchargez un fichier local Takma.json depuis votre appareil pour afficher vos tableaux sauvegardés.",
 };
 
 export let hi: Translation = {
@@ -1664,6 +1706,13 @@ export let hi: Translation = {
     markdownGuide: "मार्कडाउन गाइड",
     moveChecklistUp: "चेकलिस्ट को ऊपर ले जाएं",
     moveChecklistDown: "चेकलिस्ट को नीचे ले जाएं",
+    saveFileNotValid: "चयनित सहेजने वाली फ़ाइल मान्य नहीं है। कृपया कोई अन्य फ़ाइल चुनें।",
+    enterURL: "यूआरएल दर्ज करें",
+    loadTakmaJsonFromOnlineSource: "Takma.json फ़ाइल को किसी ऑनलाइन स्रोत से लोड करने के लिए एक URL प्रदान करें",
+    welcomeToTakmaWebPreview: "Takma वेब पूर्वावलोकन में आपका स्वागत है",
+    thisIsALimitedDemo: "यह वेबसाइट Takma का एक सीमित डेमो प्रदान करती है, जिससे आप मौजूदा सहेजी गई फ़ाइलों का पूर्वावलोकन कर सकते हैं। कृपया ध्यान दें कि यह संस्करण केवल देखने के लिए है — आप नए बोर्ड बना नहीं सकते, न ही संपादित कर सकते हैं, और न ही मूल प्रदर्शन से परे इनके साथ कोई इंटरैक्शन कर सकते हैं। आपके सहेजी गई फ़ाइलों में संलग्नक और चित्र इस पूर्वावलोकन में समर्थित नहीं हैं।\n\nपूर्ण अनुभव के लिए, जिसमें सभी सुविधाएँ शामिल हैं, Takma को Jam54 लॉन्चर के माध्यम से या सीधे GitHub रिलीज़ पृष्ठ से डाउनलोड करें।",
+    selectFile: "फ़ाइल चुनें",
+    uploadLocalTakmaJson: "अपने डिवाइस से स्थानीय Takma.json फ़ाइल अपलोड करें ताकि आप अपनी सहेजी गई बोर्ड देख सकें।",
 };
 
 export let id: Translation = {
@@ -1902,6 +1951,13 @@ export let id: Translation = {
     markdownGuide: "Panduan Markdown",
     moveChecklistUp: "Pindahkan checklist ke atas",
     moveChecklistDown: "Pindahkan checklist ke bawah",
+    saveFileNotValid: "File penyimpanan yang dipilih tidak valid. Silakan pilih file lain.",
+    enterURL: "Masukkan URL",
+    loadTakmaJsonFromOnlineSource: "Berikan URL untuk memuat file Takma.json dari sumber online",
+    welcomeToTakmaWebPreview: "Selamat datang di pratinjau web Takma",
+    thisIsALimitedDemo: "Situs web ini menyediakan demo terbatas Takma, memungkinkan Anda untuk meninjau file penyimpanan yang ada. Harap diperhatikan bahwa versi ini hanya untuk tampilan saja — Anda tidak dapat membuat, mengedit, atau berinteraksi dengan papan selain tampilannya yang dasar. Lampiran dan gambar dalam file penyimpanan Anda tidak didukung dalam pratinjau ini.\n\nUntuk pengalaman lengkap, termasuk fungsionalitas penuh, unduh Takma melalui Jam54 Launcher atau langsung dari halaman rilis GitHub.",
+    selectFile: "Pilih file",
+    uploadLocalTakmaJson: "Unggah file Takma.json lokal dari perangkat Anda untuk melihat papan yang disimpan.",
 };
 
 export let ja: Translation = {
@@ -2140,6 +2196,13 @@ export let ja: Translation = {
     markdownGuide: "Markdown ガイド",
     moveChecklistUp: "チェックリストを上に移動",
     moveChecklistDown: "チェックリストを下に移動",
+    saveFileNotValid: "選択された保存ファイルは無効です。別のファイルを選択してください。",
+    enterURL: "URLを入力",
+    loadTakmaJsonFromOnlineSource: "オンラインソースからTakma.jsonファイルを読み込むためのURLを提供してください",
+    welcomeToTakmaWebPreview: "Takma Webプレビューへようこそ",
+    thisIsALimitedDemo: "このウェブサイトはTakmaの限定デモを提供しており、既存の保存ファイルをプレビューできます。このバージョンは閲覧専用であり、ボードの作成、編集、または表示以外の操作はできません。保存ファイル内の添付ファイルや画像は、このプレビューではサポートされていません。\n\n完全な機能を備えたエクスペリエンスをお楽しみいただくには、Jam54 Launcherを通じて、またはGitHubのリリースページから直接Takmaをダウンロードしてください。",
+    selectFile: "ファイルを選択",
+    uploadLocalTakmaJson: "デバイスからローカルのTakma.jsonファイルをアップロードして、保存されたボードを表示します。",
 };
 
 export let ko: Translation = {
@@ -2378,6 +2441,13 @@ export let ko: Translation = {
     markdownGuide: "Markdown 가이드",
     moveChecklistUp: "체크리스트 위로 이동",
     moveChecklistDown: "체크리스트 아래로 이동",
+    saveFileNotValid: "선택한 저장 파일이 유효하지 않습니다. 다른 파일을 선택해 주세요.",
+    enterURL: "URL 입력",
+    loadTakmaJsonFromOnlineSource: "온라인 소스에서 Takma.json 파일을 로드할 URL을 입력해 주세요.",
+    welcomeToTakmaWebPreview: "Takma 웹 미리보기에 오신 것을 환영합니다.",
+    thisIsALimitedDemo: "이 웹사이트는 Takma의 제한된 데모를 제공하며, 기존 저장 파일을 미리 볼 수 있습니다. 이 버전은 보기 전용으로, 보드를 생성하거나 편집하거나 기본 표시 외의 상호작용을 할 수 없습니다. 저장 파일 내의 첨부 파일 및 이미지는 이 미리보기에서 지원되지 않습니다.\n\n모든 기능을 포함한 전체 경험을 위해 Jam54 Launcher 또는 GitHub 릴리즈 페이지를 통해 Takma를 다운로드하세요.",
+    selectFile: "파일 선택",
+    uploadLocalTakmaJson: "저장된 보드를 보려면 장치에서 로컬 Takma.json 파일을 업로드하세요.",
 };
 
 export let nl: Translation = {
@@ -2616,6 +2686,13 @@ export let nl: Translation = {
     markdownGuide: "Markdown-gids",
     moveChecklistUp: "Checklist omhoog verplaatsen",
     moveChecklistDown: "Checklist omlaag verplaatsen",
+    saveFileNotValid: "Het geselecteerde opslagbestand is niet geldig. Kies een ander bestand.",
+    enterURL: "Voer URL in",
+    loadTakmaJsonFromOnlineSource: "Geef een URL op om het Takma.json-bestand van een online bron te laden",
+    welcomeToTakmaWebPreview: "Welkom bij de Takma Web Preview",
+    thisIsALimitedDemo: "Deze website biedt een beperkte demo van Takma, waarmee je bestaande opslagbestanden kunt bekijken. Let op: deze versie is alleen voor weergave — je kunt geen borden maken, bewerken of ermee interageren, behalve ze in hun basisvorm weer te geven. Bijlagen en afbeeldingen in je opslagbestanden worden in deze preview niet ondersteund.\n\nVoor de volledige ervaring, inclusief alle functionaliteiten, download Takma via de Jam54 Launcher of direct vanaf de GitHub releases-pagina.",
+    selectFile: "Selecteer een bestand",
+    uploadLocalTakmaJson: "Upload een lokaal Takma.json-bestand vanaf je apparaat om je opgeslagen borden te bekijken.",
 };
 
 export let pt: Translation = {
@@ -2854,6 +2931,13 @@ export let pt: Translation = {
     markdownGuide: "Guia Markdown",
     moveChecklistUp: "Mover checklist para cima",
     moveChecklistDown: "Mover checklist para baixo",
+    saveFileNotValid: "O arquivo de salvamento selecionado não é válido. Por favor, escolha outro arquivo.",
+    enterURL: "Digite a URL",
+    loadTakmaJsonFromOnlineSource: "Forneça uma URL para carregar o arquivo Takma.json de uma fonte online",
+    welcomeToTakmaWebPreview: "Bem-vindo à pré-visualização da web do Takma",
+    thisIsALimitedDemo: "Este site oferece uma demonstração limitada do Takma, permitindo que você visualize arquivos de salvamento existentes. Observe que esta versão é apenas para visualização — você não poderá criar, editar ou interagir com os painéis além da exibição básica. Anexos e imagens em seus arquivos de salvamento não são suportados nesta pré-visualização.\n\nPara uma experiência completa, incluindo todas as funcionalidades, baixe o Takma através do Jam54 Launcher ou diretamente da página de lançamentos do GitHub.",
+    selectFile: "Selecionar arquivo",
+    uploadLocalTakmaJson: "Faça o upload de um arquivo Takma.json local do seu dispositivo para visualizar seus painéis salvos.",
 };
 
 export let ru: Translation = {
@@ -3092,6 +3176,13 @@ export let ru: Translation = {
     markdownGuide: "Руководство по Markdown",
     moveChecklistUp: "Переместить чек-лист вверх",
     moveChecklistDown: "Переместить чек-лист вниз",
+    saveFileNotValid: "Выбранный файл сохранения недействителен. Пожалуйста, выберите другой файл.",
+    enterURL: "Введите URL",
+    loadTakmaJsonFromOnlineSource: "Укажите URL для загрузки файла Takma.json из онлайн-источника",
+    welcomeToTakmaWebPreview: "Добро пожаловать в веб-просмотр Takma",
+    thisIsALimitedDemo: "Этот веб-сайт предоставляет ограниченную демонстрацию Takma, позволяя вам просматривать существующие файлы сохранения. Обратите внимание, что эта версия предназначена только для просмотра — вы не сможете создавать, редактировать или взаимодействовать с досками за пределами их базового отображения. Вложения и изображения в ваших файлах сохранения не поддерживаются в этом предварительном просмотре.\n\nДля полного опыта, включая все функции, загрузите Takma через Jam54 Launcher или напрямую со страницы релизов GitHub.",
+    selectFile: "Выберите файл",
+    uploadLocalTakmaJson: "Загрузите локальный файл Takma.json с вашего устройства, чтобы просмотреть ваши сохраненные доски.",
 };
 
 export let tr: Translation = {
@@ -3330,6 +3421,13 @@ export let tr: Translation = {
     markdownGuide: "Markdown Kılavuzu",
     moveChecklistUp: "Kontrol listesini yukarı taşı",
     moveChecklistDown: "Kontrol listesini aşağı taşı",
+    saveFileNotValid: "Seçilen kaydetme dosyası geçerli değil. Lütfen başka bir dosya seçin.",
+    enterURL: "URL girin",
+    loadTakmaJsonFromOnlineSource: "Bir çevrimiçi kaynaktan Takma.json dosyasını yüklemek için bir URL sağlayın",
+    welcomeToTakmaWebPreview: "Takma Web Önizlemesine hoş geldiniz",
+    thisIsALimitedDemo: "Bu web sitesi, mevcut kaydetme dosyalarını önizlemenize olanak tanıyan Takma'nın sınırlı bir demosunu sunmaktadır. Lütfen bu sürümün yalnızca görüntüleme amaçlı olduğunu unutmayın — panolar oluşturamaz, düzenleyemez veya temel görüntülemenin ötesinde etkileşimde bulunamazsınız. Kaydetme dosyalarınızdaki ekler ve resimler bu önizlemede desteklenmemektedir.\n\nTam deneyim için, tüm işlevsellikleri içeren Takma'yı Jam54 Launcher üzerinden veya doğrudan GitHub sürüm sayfasından indirin.",
+    selectFile: "Bir dosya seçin",
+    uploadLocalTakmaJson: "Kaydedilmiş panolarınızı görüntülemek için cihazınızdan yerel bir Takma.json dosyası yükleyin.",
 };
 
 export let zh: Translation = {
@@ -3568,4 +3666,11 @@ export let zh: Translation = {
     markdownGuide: "Markdown 指南",
     moveChecklistUp: "将检查列表向上移动",
     moveChecklistDown: "将检查列表向下移动",
+    saveFileNotValid: "所选的保存文件无效。请重新选择其他文件。",
+    enterURL: "输入 URL",
+    loadTakmaJsonFromOnlineSource: "提供一个 URL 从在线源加载 Takma.json 文件",
+    welcomeToTakmaWebPreview: "欢迎来到 Takma 网页预览",
+    thisIsALimitedDemo: "本网站提供 Takma 的有限演示，允许您预览现有的保存文件。请注意，此版本仅供查看 — 您无法创建、编辑或与面板进行超出基本显示的交互。您保存文件中的附件和图片在此预览中不受支持。\n\n要获得完整体验，包括所有功能，请通过 Jam54 启动器下载 Takma，或直接从 GitHub 发布页面下载。",
+    selectFile: "选择文件",
+    uploadLocalTakmaJson: "上传您设备上的本地 Takma.json 文件以查看保存的面板。",
 };

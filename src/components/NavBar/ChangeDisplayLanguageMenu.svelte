@@ -78,7 +78,16 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
      */
     function refreshWelcomeScreen()
     {
-        location.reload();
+        // This means the savefile hasn't been loaded in yet, therefore we are still on the ChooseSaveLocationScreen and we can do `location.reload()`
+        if (SaveLoadManager.getData().totalCardsCreated == 0)
+        {
+            location.reload();
+        }
+        // This means the savefile has been loaded in, if we would refresh the website using `location.reload()`, we would lose the selected savefile. Which is why we only close the context menu, in this case only on the next screen change/UI update will the correct language be displayed.
+        else
+        {
+            closeContextMenu();
+        }
     }
 
     let menuItems = [

@@ -96,7 +96,7 @@
     let titleHolderElement;
     afterUpdate(() =>
     {
-        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px)`);
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 2.5em - ${titleHolderElement.clientHeight}px)`);
     /*
         100vh        - hoogte scherm
         4px          - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html`
@@ -105,7 +105,7 @@
         (2 * 8px)    - (2 * height of the scrollbar at the bottom)
         (2 * 0.5em)  - padding bottom en top van .listHolder in BoardScreen
         (2 * 1px)    - (2 * breedte van de border van de lists)
-        5.5em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
+        2.5em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
         ${...}       - hoogte van de titel van de lijst
      */
 
@@ -222,7 +222,7 @@
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background-color: rgba(var(--background-color-rgb-values), 0.3);
+        background-color: rgba(var(--main-text-rgb-values), 0.1);
     }
 
     /* Handle on hover */

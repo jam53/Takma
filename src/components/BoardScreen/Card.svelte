@@ -2,10 +2,8 @@
     import type {Card, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId, selectedCardId, draggingCard} from "../../scripts/stores";
-    import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {normalize} from "@tauri-apps/api/path";
 
     export let card: Card;
     export let refreshListFunction; //Used to visually refresh the list this card is in
@@ -31,17 +29,7 @@
      */
     async function amountOfExistingAttachments(attachments: String[])
     {
-        let amount = 0;
-
-        for (let attachment of attachments)
-        {
-            if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
-            {
-                amount++;
-            }
-        }
-
-        return amount;
+        return attachments.length;
     }
 
     let hovering = false; //Is this component being hovered over

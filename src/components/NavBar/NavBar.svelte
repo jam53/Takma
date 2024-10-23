@@ -5,7 +5,6 @@
     import SearchBar from "./SearchBar.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast, Toaster} from "svelte-sonner";
     import OrderBoardsMenu from "./OrderBoardsMenu.svelte";
     import FilterCardsPopup from "../BoardScreen/FilterCardsPopup.svelte";
@@ -26,7 +25,9 @@
 <div class="containingDiv">
     <div class="leftSideContainer">
         {#if !saveLocationSet}
-            <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em"/>
+            <a href="https://jam54.com">
+                <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em; padding-top: 0.5em"/>
+            </a>
         {:else}
             <img on:click={() => {
                     $selectedBoardId = "";
@@ -36,7 +37,9 @@
             <!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
         {/if}
         {#if !saveLocationSet}
-            <h1 style="color: white; font-family: Inter">Jam54</h1>
+            <a style="text-decoration: none" href="https://jam54.com">
+                <h1 style="color: white; font-family: Inter">Jam54</h1>
+            </a>
         {:else if $selectedBoardId === ""}
             <h1>Takma</h1>
         {:else}
@@ -79,17 +82,8 @@
                 <button class="copyLinkButton" title={I18n.t("copyThisBoardLink")}
                         on:click={async () => {
                          let linkToThisBoard = `takma://${$selectedBoardId}`
-                         await writeText(linkToThisBoard);
 
-                         let textInClipboard = await readText();
-                         if (textInClipboard === linkToThisBoard)
-                         {
-                             toast(I18n.t("boardLinkCopiedToClipboard"))
-                         }
-                         else
-                         {
-                             toast.error(I18n.t("clipboardCopyBoardErrorLink") + linkToThisBoard);
-                         }
+                         toast(linkToThisBoard);
                     }}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>

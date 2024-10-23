@@ -1,13 +1,10 @@
 import introJs from "intro.js";
 import "intro.js/introjs.css";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {readDir} from "@tauri-apps/plugin-fs";
-import {resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
 import {shuffle} from "./KnuthShuffle";
 import CardCreationDateVideo from "../videos/OnboardingCardCreationDate.mp4";
 import ShiftClickDeleteCardVideo from "../videos/OnboardingShiftClickDeleteCard.mp4";
 import {I18n} from "./I18n/I18n";
-import {relaunch} from "@tauri-apps/plugin-process";
 
 /**
  * This function starts the onboarding for the welcome screen. Once the onboarding for the welcome screen is finished, it calls the function that handles the onboarding for the board screen
@@ -36,9 +33,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
     }).oncomplete(async () => {
         onboardingStepComplete = true;
 
-        const includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
-        shuffle(includedImagesPaths);
-        const boardBg = includedImagesPaths[0];
+        const boardBg = "";
 
         const boardId = await SaveLoadManager.getData().createNewBoard(I18n.t("onboarding"), boardBg); //Create a new board that will be used for the rest of the onboarding. This board will be deleted at the end of the onboarding
         const listId = SaveLoadManager.getData().createNewList(boardId, I18n.t("listTitle"));

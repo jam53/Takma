@@ -4,17 +4,13 @@
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/stores";
-    import {exists, readDir} from "@tauri-apps/plugin-fs";
-    import {open} from "@tauri-apps/plugin-dialog"
     import {
         imageExtensions,
         removeFileFromSaveDirectory,
         saveAbsoluteFilePathToSaveDirectory,
     } from "../../scripts/TakmaDataFolderIO";
-    import {normalize, resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     let showPopup = true;
     let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit

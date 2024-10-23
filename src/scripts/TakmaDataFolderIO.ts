@@ -1,6 +1,4 @@
-import {copyFile, mkdir, remove, writeFile} from "@tauri-apps/plugin-fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {normalize} from "@tauri-apps/api/path";
 
 /**
  * Copies a file from the provided relative path (starting in Takma's save directory) to a new file in a subfolder named after the board ID within Takma's save directory.
@@ -14,7 +12,7 @@ import {normalize} from "@tauri-apps/api/path";
  */
 export async function saveFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
-    return await saveAbsoluteFilePathToSaveDirectory(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile), boardID, filename);
+    return pathToFile;
 }
 
 /**
@@ -30,16 +28,7 @@ export async function saveFilePathToSaveDirectory(pathToFile: string, boardID: s
  */
 export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
-    filename = crypto.randomUUID() + (filename ?? pathToFile.getFilename()); //We add a random UUID, to avoid overwriting files with the same name
-    const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
-
-    await saveAbsoluteFilePathToDisk(
-        pathToFile,
-        relativeSavePath.getFilename(),
-        await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath.getDirectoryPath())
-    );
-
-    return relativeSavePath;
+    return pathToFile;
 }
 
 /**
@@ -51,7 +40,7 @@ export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, bo
  */
 export async function saveFilePathToTempFile(pathToFile: string): Promise<string>
 {
-    return await saveAbsoluteFilePathToDisk(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile), crypto.randomUUID(), await SaveLoadManager.getTempDirectoryPath());
+    return pathToFile;
 }
 
 /**
@@ -65,13 +54,7 @@ export async function saveFilePathToTempFile(pathToFile: string): Promise<string
  */
 async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, savePath: string): Promise<string>
 {
-    savePath = await normalize(savePath + trimLongFilename(filename));
-
-    await mkdir(savePath.getDirectoryPath(), {recursive: true});
-
-    await copyFile(pathToFile, savePath);
-
-    return savePath
+    return pathToFile;
 }
 
 /**
@@ -85,11 +68,7 @@ async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, 
  */
 export async function saveFileToSaveDirectory(file: File, boardID: string): Promise<string>
 {
-    const fileData = new Uint8Array(await file.arrayBuffer());
-
-    const filename = crypto.randomUUID() + file.name;
-
-    return await saveArrayBufferToSaveDirectory(fileData, filename, boardID);
+    return "";
 }
 
 /**
@@ -104,16 +83,7 @@ export async function saveFileToSaveDirectory(file: File, boardID: string): Prom
  */
 async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: string, boardID: string): Promise<string>
 {
-    filename = trimLongFilename(filename);
-
-    const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
-    const absoluteSavePath = await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath);
-
-    await mkdir(absoluteSavePath.getDirectoryPath(), {recursive: true});
-
-    await writeFile(absoluteSavePath, uint8Array);
-
-    return relativeSavePath;
+    return filename;
 }
 
 /**
@@ -124,7 +94,7 @@ async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: 
  */
 export async function removeFileFromSaveDirectory(pathToFile: string)
 {
-    await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+    return;
 }
 
 /**

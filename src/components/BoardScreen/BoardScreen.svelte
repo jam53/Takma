@@ -6,7 +6,6 @@
     } from "../../scripts/stores";
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {open} from "@tauri-apps/plugin-dialog";
     import {
         imageExtensions,
         removeFileFromSaveDirectory,
@@ -19,10 +18,6 @@
     import {onDestroy, onMount} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {convertFileSrc} from "@tauri-apps/api/core";
-    import {listen} from "@tauri-apps/api/event";
-    import {normalize} from "@tauri-apps/api/path";
-    import {readDir, remove} from "@tauri-apps/plugin-fs";
 
     let createNewCardElements;
     let createNewListElement
@@ -57,30 +52,8 @@
      */
     async function handleContainerRightClick()
     {
-        const selectedFile = await open({
-            multiple: false,
-            filters: [{
-                name: I18n.t("image"),
-                extensions: imageExtensions
-            }]
-        });
-        if (selectedFile !== null && typeof(selectedFile) === "string")
-        {
-            let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(selectedFile, $selectedBoardId); //We save the selected image by the user to Takma's data folder, this way we can still access it even if the original file is deleted/moved
-            await setBoardBackgroundImage(savedFilePath);
-        }
-    }
 
-    let unlisten;
-    (async () => {unlisten = await listen('tauri://drag-drop', async event => {
-        if ($selectedCardId == "") //We only want to react to this filedrop event if there isn't a card selected. Otherwise it would mean the drop event was meant to drop attachements onto a card. Rather than to change the background image of the board.
-        {
-            await handleContainerFileDrop(event.payload.paths[0]);
-        }
-    })})();
-    onDestroy(() => {
-        unlisten();
-    });
+    }
 
     /**
      * If the user drops a file on the container div, i.e. the background image, this function gets called to replace the background image.
@@ -165,25 +138,6 @@
 
         return cardsToFilter;
     }
-
-    /**
-     * Sometimes attachments/the cover image of cards or the background image of the board don't get removed when they are no longer needed.
-     * This function loops through all of the files in the directory of the board, and removes all the files which aren't referenced by either the attachments/the cover image of cards in this board, or the background image of this board.
-     */
-    async function removeDanglingAttachments()
-    {
-        const filesOnDisk = await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/`), {recursive: false}) //All of the files in the directory associated with this board
-        const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard($selectedBoardId);
-
-        for (const fileOnDisk of filesOnDisk.map(file => file.name))
-        {
-            if (fileOnDisk && !boardFiles.includes(fileOnDisk))
-            {
-                await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/` + fileOnDisk));
-            }
-        }
-    }
-    removeDanglingAttachments();
 </script>
 
 <div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
@@ -204,7 +158,7 @@
 
 <style>
     .container {
-        height: calc(100vh - 4px - 30px - 2em - (2 * 8px)); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) */
+        height: calc(100vh - 2em - (2 * 8px)); /* 100vh - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) */
         display: flex;
         overflow-x: scroll;
         overflow-y: hidden;
@@ -212,7 +166,7 @@
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background-color: rgba(var(--background-color-rgb-values), 0.5);
+        background-color: rgba(var(--main-text-rgb-values), 0.1);
         border-radius: 8px;
     }
 

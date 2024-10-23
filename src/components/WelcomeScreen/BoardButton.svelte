@@ -2,8 +2,8 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {createEventDispatcher} from "svelte";
     import {scale} from "svelte/transition";
-    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import BoardOptionsMenu from "./BoardOptionsMenu.svelte";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     export let image: string;
     export let title: string;

@@ -4,8 +4,6 @@ import {
     saveFilePathToTempFile
 } from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {exists} from "@tauri-apps/plugin-fs";
-import {normalize} from "@tauri-apps/api/path";
 
 export interface Board
 {
@@ -118,14 +116,7 @@ export async function duplicateCard(card: Card, boardId: string): Promise<Card>
 
     card.attachments = await Promise.all(card.attachments.map(async attachment => {
 
-        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
-        {
-            return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
-        }
-        else
-        {
-            return "";
-        }
+        return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
 
     }));
 
@@ -189,17 +180,10 @@ export async function duplicateCardAsCopiedCard(card: Card, boardId: string): Pr
     card = structuredClone(card); //To make sure we no longer hold any references to `attachments` array of the original card we will delete here.
 
     let attachments = await Promise.all(card!.attachments.map(async attachment => {
-        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
-        {
-            return {
-                fileName: attachment.getFilename().substring(36) ?? "",
-                pathToTempfile: await saveFilePathToTempFile(attachment)
-            };
-        }
-        else
-        {
-            return null;
-        }
+        return {
+            fileName: attachment.getFilename().substring(36) ?? "",
+            pathToTempfile: await saveFilePathToTempFile(attachment)
+        };
     }).filter(async attachment => await attachment !== null));
     let coverImage = card!.coverImage !== "" ? {fileName: card!.coverImage.getFilename().substring(36) ?? "", pathToTempfile: await saveFilePathToTempFile(card!.coverImage)} : null;
 

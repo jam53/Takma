@@ -11,6 +11,7 @@
         "check": "svelte-check --tsconfig ./tsconfig.json"
     },
     "dependencies": {
+        "@cloudfour/simple-svg-placeholder": "^1.1.0",
         "dompurify": "^3.1.7",
         "highlight.js": "^11.10.0",
         "intro.js": "^7.2.0",

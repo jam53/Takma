@@ -7,11 +7,8 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import {marked} from "marked";
     import DOMPurify from "dompurify";
-    import {open} from "@tauri-apps/plugin-shell"
-    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import hljs from "highlight.js";
     import LabelsPopup from "./LabelsPopup.svelte";
-    import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
     import {toast, Toaster} from "svelte-sonner";
     import CheckLists from "./CheckLists.svelte";
     import Attachments from "./Attachments.svelte";
@@ -21,12 +18,10 @@
         saveAbsoluteFilePathToSaveDirectory,
         saveFileToSaveDirectory
     } from "../../scripts/TakmaDataFolderIO";
-    import {open as openDialog} from "@tauri-apps/plugin-dialog";
     import DueDatePopup from "./DueDatePopup.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
-    import {listen} from "@tauri-apps/api/event";
-    import {convertFileSrc} from "@tauri-apps/api/core";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     export let refreshListsFunction;
 
@@ -178,15 +173,9 @@
         {
             return imageSrc;
         }
-        // If the image is saved in Takma's data folder
-        else if (imageSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()))
-        {
-            return convertFileSrc(SaveLoadManager.getSaveDirectoryPath() + imageSrc);
-        }
-        // If the image is stored somewhere locally on disk
         else
         {
-            return convertFileSrc(imageSrc);
+            return getThumbnail(imageSrc);
         }
     }
     //endregion
@@ -287,23 +276,6 @@
         cardToSave = cardToSave;
     }
 
-    $: overlayElement && applyMaximizedNotMaximizedStyleClasses();
-    const appWindow = getCurrentWebviewWindow()
-    appWindow.onResized(() => applyMaximizedNotMaximizedStyleClasses());
-    async function applyMaximizedNotMaximizedStyleClasses()
-    {
-        let isMaximized = await appWindow.isMaximized();
-
-        if (isMaximized)
-        {
-            overlayElement?.classList.add("overlayScreenMaximized");
-        }
-        else
-        {
-            overlayElement?.classList.remove("overlayScreenMaximized");
-        }
-    }
-
     function focusOnCardDetailsFunction()
     {
         overlayElement?.focus();
@@ -319,39 +291,8 @@
     let attachmentsComponent;
     async function addAttachment()
     {
-        const selectedFile = await openDialog({
-            multiple: true,
-        });
 
-        if (Array.isArray(selectedFile))
-        {//User selected multiple files
-            for (let file of selectedFile)
-            {
-                let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(file, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
-                cardToSave.attachments.push(savedFilePath);
-            }
-        }
-        else if (selectedFile !== null)
-        {//User selected a single file
-            let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(selectedFile, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
-            cardToSave.attachments.push(savedFilePath);
-        }
-
-        cardToSave = cardToSave; //If we don't do this, the function below `attachmentsComponent.refreshComponent()` will cause the component to refresh but it will still use the "old" values of the cardToSave variable because it would think it hasn't changed. So the component would refresh but nothing would visibly change because the old value of cardToSave would still be used
-        saveCard();
-        attachmentsComponent.refreshComponent();
     }
-
-    let unlisten;
-    (async () => {unlisten = await listen('tauri://drag-drop', async event => {
-        if ($selectedCardId != "") //We only want to react to this filedrop event if there is a card selected. Otherwise it would mean the drop event was meant to change the background image of the board. Rather than to drop attachements onto a card.
-        {
-            await fileDropAttachments(event.payload.paths);
-        }
-    })})();
-    onDestroy(() => {
-        unlisten();
-    })
 
     /**
      * If the user drops one or more files onto the card, this function will add the files as attachments to the card
@@ -382,20 +323,7 @@
         }
         else
         {
-            const selected = await openDialog({
-                multiple: false,
-                filters: [{
-                    name: I18n.t("image"),
-                    extensions: imageExtensions
-                }]
-            });
 
-            if (selected !== null && typeof(selected) === "string")
-            {
-                cardToSave.coverImage = await saveAbsoluteFilePathToSaveDirectory(selected, $selectedBoardId); //We save the selected file to Takma's data folder, this way we can still access it even if the original file is deleted/moved
-
-                toast(I18n.t("addCardCoverImage"))
-            }
         }
         saveCard();
     }
@@ -753,17 +681,8 @@
                     <button title={I18n.t("link")} id="cardDetailsCopyLinkButton"
                             on:click={async () => {
                                 let linkToThisCard = `takma://${$selectedBoardId}/${cardToSave.id}`
-                                await writeText(linkToThisCard);
 
-                                let textInClipboard = await readText();
-                                if (textInClipboard === linkToThisCard)
-                                {
-                                    toast(I18n.t("cardLinkCopiedToClipboard"))
-                                }
-                                else
-                                {
-                                    toast.error(I18n.t("clipboardCopyCardErrorLink") + linkToThisCard);
-                                }
+                                toast(linkToThisCard);
                             }}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
