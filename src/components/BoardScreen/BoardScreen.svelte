@@ -89,9 +89,16 @@
     }
 
     let lists: ListInterface[] = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
-    let dragDisabled = SaveLoadManager.getData().isUserOnMobile();
+    let dragDisabled = SaveLoadManager.getData().isUserOnMobile() ? true : false;
     let setDragDisabled = (bool) => {
-        dragDisabled = bool;
+        if (SaveLoadManager.getData().isUserOnMobile())
+        {
+            dragDisabled = true;
+        }
+        else
+        {
+            dragDisabled = bool;
+        }
     };
 
     /**
