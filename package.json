@@ -8,23 +8,11 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "check": "svelte-check --tsconfig ./tsconfig.json",
-        "tauri": "node updateBuild.cjs && tauri"
+        "check": "svelte-check --tsconfig ./tsconfig.json"
     },
     "dependencies": {
         "@event-calendar/core": "^5.7.1",
         "@floating-ui/dom": "^1.7.6",
-        "@tauri-apps/api": "^2.11.1",
-        "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
-        "@tauri-apps/plugin-deep-link": "^2.4.9",
-        "@tauri-apps/plugin-dialog": "^2.7.1",
-        "@tauri-apps/plugin-fs": "^2.5.1",
-        "@tauri-apps/plugin-log": "^2.8.0",
-        "@tauri-apps/plugin-notification": "^2.3.3",
-        "@tauri-apps/plugin-opener": "^2.5.4",
-        "@tauri-apps/plugin-os": "^2.3.2",
-        "@tauri-apps/plugin-process": "^2.3.1",
-        "@tauri-apps/plugin-shell": "^2.3.5",
         "@tiptap/core": "^3.27.1",
         "@tiptap/extension-bubble-menu": "^3.27.1",
         "@tiptap/extension-code-block-lowlight": "^3.27.1",
@@ -57,7 +45,6 @@
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^7.1.2",
-        "@tauri-apps/cli": "^2.11.3",
         "@tsconfig/svelte": "^5.0.8",
         "@types/node": "^26.0.1",
         "@types/xxhashjs": "^0.2.4",
