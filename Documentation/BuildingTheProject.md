@@ -7,9 +7,5 @@
         - PATCH version when making bugfixes or small improvements.
 
 
-- Edit `package.json` and `Cargo.toml` to update the version number
-- Run `npm i`
-- Run `npm run tauri build`
-- The executable together with the `resources` folder will be placed in: `src-tauri/target/release/`
-  - An msi installer can be found in: `src-tauri/target/release/bundle/msi/`
-  - An exe installer can be found in: `src-tauri/target/release/bundle/nsis/`
+- Run `npm i`.
+- Run `npm run build`, the generated files will be placed inside `/dist`.
