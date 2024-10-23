@@ -1,5 +1,0 @@
-Copyright 2023 jam54
-
-All rights reserved. This program and its accompanying files are protected by copyright law. Unauthorized copying, modification, or distribution is strictly prohibited.
-
-This software is provided "as-is", without any express or implied warranty. In no event shall jam54 be held liable for any damages arising from the use of this software.
