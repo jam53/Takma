@@ -163,7 +163,7 @@
     .option {
         border: 3px solid white;
         border-radius: 1em;
-        width: 20em;
+        max-width: 20em;
         height: 15em;
         padding: 1em;
         overflow-y: auto;
