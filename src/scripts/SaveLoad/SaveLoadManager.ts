@@ -1,12 +1,7 @@
-import {mkdir, exists, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
 import {TakmaData} from "./TakmaData";
-import {message} from "@tauri-apps/plugin-dialog";
-import {join} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
-import {tempDir} from "@tauri-apps/api/path";
 import "../StringExtensions.ts";
-import {debug, info, warn} from "@tauri-apps/plugin-log";
-import {toast} from "svelte-sonner";
+import PopupWindow from "../../components/PopupWindow.svelte";
 
 /**
  * This class is used to save/load data within Takma
@@ -37,42 +32,33 @@ export class SaveLoadManager
     /**
      * This method loads the save file from the disk. And overwrites the default values inside the "data" object
      */
-    public static async loadSaveFileFromDisk(): Promise<void>
+    public static async loadSaveFile(fileContents: string, onSuccesCallback: Function): void
     {
-        const pathToSavefile = await this.getSaveFilePath();
-        await mkdir(pathToSavefile.getDirectoryPath(), {recursive: true}); //Should the folder not exist and we don't create it here, the next if where we check if the savefile exists with `exists(...)` will throw an error.
-
-        if (await exists(pathToSavefile)) //Check if the save file exists, before trying to use it to overwrite the default values
+        try
         {
-            let fileContents: string = await readTextFile(pathToSavefile);
-            try 
-            {
-                Object.assign(this.data, JSON.parse(fileContents));
-                /* Load the user's save file and use it to overwrite the default values. Leave new default values that aren't present in the user's save file untouched
-                 * ---
-                 * The reason as to why we write `Object.assign(this.data, JSON.parse(fileContents));`
-                 * `And not this.data = JSON.parse(fileContents));`
-                 * is because the latter overwritese all the values `in this.data`.
-                 * ---
-                 * This makes it so that only the data from in `filecontents` is being kept. This means that all of the variables/entries/keys already defined in `this.data` will be lost.
-                 * This is less than ideal since when we release a new update, where we add a new variable/entry/key. It will never be added to the savefile.
-                 * This is because the new entry will be in `this.data`, but then all the values in there will be overwritten by `filecontents`. Thus we will lose that new entry
-                 * ---
-                 * If we instead use `Object.assign`, we won't have this problem since the keys from filecontents get copied over and replace the values of any existing keys, but leave new keys that exist in `this.data` but not in filecontents alone.
-                 */
-                await info(`Save file loaded successfully from: "${pathToSavefile}"`);
-            }
-            catch (error)
-            {
-                const savePath: string = await join(this.getSaveDirectoryPath(), this.saveFilename + "_Corrupted" + "." + this.saveFilename.getFileExtension());
-                await writeTextFile(savePath, fileContents);
-                await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", kind: "error" });
-                await warn("Encountered corrupted save file, created a new empty save file and placed the corrupted save file at: " + savePath);
-            }
-        }
+            Object.assign(this.data, JSON.parse(fileContents));
+            /* Load the user's save file and use it to overwrite the default values. Leave new default values that aren't present in the user's save file untouched
+             * ---
+             * The reason as to why we write `Object.assign(this.data, JSON.parse(fileContents));`
+             * `And not this.data = JSON.parse(fileContents));`
+             * is because the latter overwritese all the values `in this.data`.
+             * ---
+             * This makes it so that only the data from in `filecontents` is being kept. This means that all of the variables/entries/keys already defined in `this.data` will be lost.
+             * This is less than ideal since when we release a new update, where we add a new variable/entry/key. It will never be added to the savefile.
+             * This is because the new entry will be in `this.data`, but then all the values in there will be overwritten by `filecontents`. Thus we will lose that new entry
+             * ---
+             * If we instead use `Object.assign`, we won't have this problem since the keys from filecontents get copied over and replace the values of any existing keys, but leave new keys that exist in `this.data` but not in filecontents alone.
+             */
 
-        await this.saveToDisk(); //Normally we would just save the exact same json that's already saved to the disk. The only exception to this is when there are new default values (i.e. a there was an update, that added additional data/variables to the save file)
-        //, then we will actually write new stuff to the save file
+            onSuccesCallback();
+        }
+        catch (error)
+        {
+            const popup = new PopupWindow({props: {description: I18n.t("saveFileNotValid"), buttonType: "ok"}, target: document.body, intro: true});
+
+            await popup.getAnswer();
+            location.reload();
+        }
     }
 
     /**
@@ -80,14 +66,6 @@ export class SaveLoadManager
      */
     public static async saveToDisk(): Promise<void>
     {
-        debug("Saving save file to disk");
-        try {
-            await writeTextFile(await join(this.getSaveDirectoryPath(), this.saveFilename), JSON.stringify(this.data, null, 0));
-        }
-        catch (e) {
-            toast.error(I18n.t("couldntSaveSaveFile", e as string));
-            throw e;
-        }
     }
 
     /**
@@ -125,29 +103,5 @@ export class SaveLoadManager
     public static getBoardFilesDirectory(): string
     {
         return this.boardFilesDirectory;
-    }
-
-    /**
-     * Returns the absolute path to the directory used for temporary files.
-     */
-    public static async getTempDirectoryPath(): Promise<string>
-    {
-        return await join(await tempDir(), this.getSaveDirectoryName());
-    }
-
-    /**
-     * Returns the absolute path to the save file used for saving the user's data
-     */
-    public static async getSaveFilePath(): Promise<string>
-    {
-        return await join(this.getSaveDirectoryPath(), this.saveFilename);
-    }
-
-    /**
-     * Returns the name of the directory in which the user's data is saved
-     */
-    public static getSaveDirectoryName(): string
-    {
-        return this.saveDirectoryName;
     }
 }

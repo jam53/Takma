@@ -1,15 +1,10 @@
 <script lang="ts">
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {exists, remove} from "@tauri-apps/plugin-fs";
-    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
+    import type {Card} from "../../scripts/Board";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {join} from "@tauri-apps/api/path";
-    import {mount} from "svelte";
-    import PopupWindow from "../PopupWindow.svelte";
-    import {openPath, revealItemInDir} from "@tauri-apps/plugin-opener";
 
     interface Props {
         attachments: string[];
@@ -43,38 +38,21 @@
 
     async function openWithDefaultApp(pathToFile: string)
     {
-        await openPath(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
     }
 
     async function showInFolder(pathToFile: string)
     {
-        const path = await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile);
-
-        await revealItemInDir(path);
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
     {
-        const path = await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile);
-
-        await writeText(path); //Copy to clipboard
-
-        let textInClipboard = await readText();
-        if (textInClipboard === path)
-        {
-            toast(I18n.t("copiedFilePathToClipboard"))
-        }
-        else
-        {
-            toast.error(I18n.t("clipboardCopyErrorFilePath") + path);
-        }
+        toast(pathToFile);
     }
 
     async function deleteAttachment(pathToFile: string)
     {
-        const deleteAttachmentFunction = async () => {
-            await remove(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
-            attachments = attachments.filter(attachment => attachment !== pathToFile);
+        cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
+        saveCardFunction();
 
             focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
         }
@@ -97,17 +75,7 @@
 
     async function getExistingAttachments(): Promise<string[]>
     {
-        let existingAttachments: string[] = [];
-
-        for (let attachment of attachments)
-        {
-            if (attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
-            {
-                existingAttachments.push(attachment);
-            }
-        }
-
-        return existingAttachments;
+        return cardToSave.attachments;
     }
 </script>
 
@@ -124,17 +92,7 @@
                 <div class="preview"
                      onclick={() => openWithDefaultApp(attachment)}
                 >
-                    {#if imageExtensions.includes(attachment.getFileExtension().toLowerCase())}
-                        {#await (async () => await getThumbnail(attachment, 224))()}
-                            <button class="boardButtons">
-                                <span class="loader"></span>
-                            </button>
-                        {:then imgSrc}
-                            <img src={imgSrc} />
-                        {/await}
-                    {:else}
-                        {attachment.getFileExtension()}
-                    {/if}
+                    {getFileExtension(attachment)}
                 </div>
                 <div class="titleAndActionsHolder {isCardFullscreen ? 'titleAndActionsHolderCardFullscreen' : ''}">
                     <p

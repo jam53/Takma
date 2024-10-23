@@ -43,9 +43,9 @@
         "svelte-dnd-action": "^0.9.67",
         "svelte-sonner": "^1.0.7",
         "svelty-picker": "^6.1.6",
-        "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1",
         "temporal-polyfill": "^0.3.0",
         "xxhashjs": "^0.2.2",
+        "@cloudfour/simple-svg-placeholder": "^1.1.0",
         "dompurify": "^3.1.7",
         "highlight.js": "^11.10.0",
         "marked": "^14.1.2"

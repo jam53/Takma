@@ -15,7 +15,7 @@
      */
     function refreshWelcomeScreen()
     {
-        location.reload();
+        closeContextMenu();
     }
 
     function sortByCreationDateAscending()
