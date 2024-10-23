@@ -153,6 +153,8 @@
         justify-content: space-between;
         height: inherit;
         gap: 0.5em;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 
     .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton {
@@ -198,6 +200,11 @@
         font-weight: bold;
         padding: 0;
         flex-grow: 1;
+        width: 10%;
         -webkit-filter: drop-shadow( 0 0 10px rgba(var(--background-color-rgb-values), .75));
+    }
+
+    ::-webkit-scrollbar {
+        height: 0;
     }
 </style>
