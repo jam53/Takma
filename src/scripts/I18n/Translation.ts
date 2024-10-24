@@ -197,4 +197,6 @@ export default interface Translation
     markdownGuide: string;
     moveChecklistUp: string;
     moveChecklistDown: string;
+    takmaWebPreview: string;
+    takmaWebPreviewExplanation: string;
 }

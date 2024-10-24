@@ -15,6 +15,7 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
     import PopupWindow from "../PopupWindow.svelte";
+    import {open} from "@tauri-apps/plugin-shell"
 
     export let saveLocationSet: boolean;
 
@@ -56,6 +57,11 @@
                         on:click={e => orderBoardsMenuElement.openContextMenu(e)}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
+                </button>
+                <button class="orderBoardsButton" id="takmaWebPreviewButton" title={I18n.t("takmaWebPreview")}
+                        on:click={() => open("https://takma.jam54.com")}
+                >
+                    <svg stroke="red" fill="red" stroke-width="0" style="fill: currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2zm0 16H5V7h14v12zm-5.5-6c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM12 9c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4zm0 6.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path></svg>
                 </button>
                 <button class="startOnboarding" title={I18n.t("beginOnboarding")}
                         on:click={async () => {

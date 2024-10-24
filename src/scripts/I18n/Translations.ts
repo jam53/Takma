@@ -236,6 +236,8 @@ export let en: Translation = {
     markdownGuide: "Markdown Guide",
     moveChecklistUp: "Move checklist up",
     moveChecklistDown: "Move checklist down",
+    takmaWebPreview: "Takma Web Preview",
+    takmaWebPreviewExplanation: "If you're unable to install Takma on your device but still want to view your existing save files, you can use the Takma Web Preview. This allows you to preview your save files from anywhere using a web browser.",
 };
 
 export let ar: Translation = {
@@ -474,6 +476,8 @@ export let ar: Translation = {
     markdownGuide: "دليل ماركداون",
     moveChecklistUp: "نقل القائمة لأعلى",
     moveChecklistDown: "نقل القائمة لأسفل",
+    takmaWebPreview: "معاينة Takma على الويب",
+    takmaWebPreviewExplanation: "إذا كنت غير قادر على تثبيت Takma على جهازك ولكنك لا تزال ترغب في عرض ملفات الحفظ الموجودة لديك، يمكنك استخدام معاينة Takma على الويب. يتيح لك ذلك معاينة ملفات الحفظ الخاصة بك من أي مكان باستخدام متصفح الويب.",
 };
 
 export let de: Translation = {
@@ -712,6 +716,8 @@ export let de: Translation = {
     markdownGuide: "Markdown-Anleitung",
     moveChecklistUp: "Checkliste nach oben verschieben",
     moveChecklistDown: "Checkliste nach unten verschieben",
+    takmaWebPreview: "Takma-Webvorschau",
+    takmaWebPreviewExplanation: "Wenn Sie Takma nicht auf Ihrem Gerät installieren können, aber trotzdem Ihre vorhandenen Speicherdateien ansehen möchten, können Sie die Takma-Webvorschau verwenden. Dies ermöglicht es Ihnen, Ihre Speicherdateien von überall aus mit einem Webbrowser vorzuschauen.",
 };
 
 export let es: Translation = {
@@ -950,6 +956,8 @@ export let es: Translation = {
     markdownGuide: "Guía de Markdown",
     moveChecklistUp: "Mover lista de verificación hacia arriba",
     moveChecklistDown: "Mover lista de verificación hacia abajo",
+    takmaWebPreview: "Vista previa web de Takma",
+    takmaWebPreviewExplanation: "Si no puedes instalar Takma en tu dispositivo pero aún deseas ver tus archivos de guardado existentes, puedes usar la vista previa web de Takma. Esto te permite previsualizar tus archivos de guardado desde cualquier lugar utilizando un navegador web.",
 };
 
 export let et: Translation = {
@@ -1188,6 +1196,8 @@ export let et: Translation = {
     markdownGuide: "Markdowni juhend",
     moveChecklistUp: "Liiguta kontrollnimekiri üles",
     moveChecklistDown: "Liiguta kontrollnimekiri alla",
+    takmaWebPreview: "Takma veebieelvaade",
+    takmaWebPreviewExplanation: "Kui te ei saa Takma't oma seadmesse installida, kuid soovite siiski vaadata oma olemasolevaid salvestusfaile, saate kasutada Takma veebieelvaadet. See võimaldab teil vaadata oma salvestusfaile kõikjal veebibrauseri kaudu.",
 };
 
 export let fr: Translation = {
@@ -1426,6 +1436,8 @@ export let fr: Translation = {
     markdownGuide: "Guide Markdown",
     moveChecklistUp: "Déplacer la liste de contrôle vers le haut",
     moveChecklistDown: "Déplacer la liste de contrôle vers le bas",
+    takmaWebPreview: "Aperçu web de Takma",
+    takmaWebPreviewExplanation: "Si vous ne pouvez pas installer Takma sur votre appareil mais que vous souhaitez tout de même consulter vos fichiers de sauvegarde existants, vous pouvez utiliser l'aperçu web de Takma. Cela vous permet de prévisualiser vos fichiers de sauvegarde depuis n'importe où à l'aide d'un navigateur web.",
 };
 
 export let hi: Translation = {
@@ -1664,6 +1676,8 @@ export let hi: Translation = {
     markdownGuide: "मार्कडाउन गाइड",
     moveChecklistUp: "चेकलिस्ट को ऊपर ले जाएं",
     moveChecklistDown: "चेकलिस्ट को नीचे ले जाएं",
+    takmaWebPreview: "Takma वेब पूर्वावलोकन",
+    takmaWebPreviewExplanation: "यदि आप अपने डिवाइस पर Takma स्थापित करने में असमर्थ हैं लेकिन फिर भी अपने मौजूदा सहेजे गए फ़ाइलों को देखना चाहते हैं, तो आप Takma वेब पूर्वावलोकन का उपयोग कर सकते हैं। यह आपको वेब ब्राउज़र का उपयोग करके कहीं से भी अपने सहेजे गए फ़ाइलों का पूर्वावलोकन करने की अनुमति देता है।",
 };
 
 export let id: Translation = {
@@ -1902,6 +1916,8 @@ export let id: Translation = {
     markdownGuide: "Panduan Markdown",
     moveChecklistUp: "Pindahkan checklist ke atas",
     moveChecklistDown: "Pindahkan checklist ke bawah",
+    takmaWebPreview: "Pratinjau Web Takma",
+    takmaWebPreviewExplanation: "Jika Anda tidak dapat menginstal Takma di perangkat Anda tetapi tetap ingin melihat file simpanan Anda yang ada, Anda dapat menggunakan Pratinjau Web Takma. Ini memungkinkan Anda untuk melihat file simpanan Anda dari mana saja menggunakan browser web.",
 };
 
 export let ja: Translation = {
@@ -2140,6 +2156,8 @@ export let ja: Translation = {
     markdownGuide: "Markdown ガイド",
     moveChecklistUp: "チェックリストを上に移動",
     moveChecklistDown: "チェックリストを下に移動",
+    takmaWebPreview: "Takmaウェブプレビュー",
+    takmaWebPreviewExplanation: "デバイスにTakmaをインストールできない場合でも、既存の保存ファイルを表示したい場合は、Takmaウェブプレビューを使用できます。これにより、ウェブブラウザーを使用してどこからでも保存ファイルをプレビューできます。",
 };
 
 export let ko: Translation = {
@@ -2378,6 +2396,8 @@ export let ko: Translation = {
     markdownGuide: "Markdown 가이드",
     moveChecklistUp: "체크리스트 위로 이동",
     moveChecklistDown: "체크리스트 아래로 이동",
+    takmaWebPreview: "Takma 웹 미리보기",
+    takmaWebPreviewExplanation: "장치에 Takma를 설치할 수 없지만 기존 저장 파일을 보려면 Takma 웹 미리보기를 사용할 수 있습니다. 이를 통해 웹 브라우저를 사용하여 어디서나 저장 파일을 미리 볼 수 있습니다.",
 };
 
 export let nl: Translation = {
@@ -2616,6 +2636,8 @@ export let nl: Translation = {
     markdownGuide: "Markdown-gids",
     moveChecklistUp: "Checklist omhoog verplaatsen",
     moveChecklistDown: "Checklist omlaag verplaatsen",
+    takmaWebPreview: "Takma Web Preview",
+    takmaWebPreviewExplanation: "Als je Takma niet op je apparaat kunt installeren, maar toch je bestaande opgeslagen bestanden wilt bekijken, kun je de Takma Web Preview gebruiken. Hiermee kun je je opgeslagen bestanden vanaf elke locatie in een webbrowser bekijken.",
 };
 
 export let pt: Translation = {
@@ -2854,6 +2876,8 @@ export let pt: Translation = {
     markdownGuide: "Guia Markdown",
     moveChecklistUp: "Mover checklist para cima",
     moveChecklistDown: "Mover checklist para baixo",
+    takmaWebPreview: "Visualização Web do Takma",
+    takmaWebPreviewExplanation: "Se você não consegue instalar o Takma em seu dispositivo, mas ainda deseja visualizar seus arquivos de salvamento existentes, pode usar a Visualização Web do Takma. Isso permite que você visualize seus arquivos de salvamento de qualquer lugar usando um navegador web.",
 };
 
 export let ru: Translation = {
@@ -3092,6 +3116,8 @@ export let ru: Translation = {
     markdownGuide: "Руководство по Markdown",
     moveChecklistUp: "Переместить чек-лист вверх",
     moveChecklistDown: "Переместить чек-лист вниз",
+    takmaWebPreview: "Веб-просмотр Takma",
+    takmaWebPreviewExplanation: "Если вы не можете установить Takma на своем устройстве, но все еще хотите просмотреть свои существующие файлы сохранения, вы можете использовать веб-просмотр Takma. Это позволяет вам просматривать ваши файлы сохранения из любого места с помощью веб-браузера.",
 };
 
 export let tr: Translation = {
@@ -3330,6 +3356,8 @@ export let tr: Translation = {
     markdownGuide: "Markdown Kılavuzu",
     moveChecklistUp: "Kontrol listesini yukarı taşı",
     moveChecklistDown: "Kontrol listesini aşağı taşı",
+    takmaWebPreview: "Takma Web Önizleme",
+    takmaWebPreviewExplanation: "Eğer Takma'yı cihazınıza yükleyemiyorsanız ama mevcut kaydettiğiniz dosyaları yine de görmek istiyorsanız, Takma Web Önizleme'yi kullanabilirsiniz. Bu, web tarayıcısı kullanarak kaydettiğiniz dosyaları her yerden önizlemenizi sağlar.",
 };
 
 export let zh: Translation = {
@@ -3568,4 +3596,6 @@ export let zh: Translation = {
     markdownGuide: "Markdown 指南",
     moveChecklistUp: "将检查列表向上移动",
     moveChecklistDown: "将检查列表向下移动",
+    takmaWebPreview: "Takma网页预览",
+    takmaWebPreviewExplanation: "如果您无法在设备上安装Takma，但仍想查看现有的保存文件，可以使用Takma网页预览。这允许您通过网页浏览器从任何地方预览保存文件。",
 };
