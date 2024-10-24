@@ -76,7 +76,7 @@
 
     function handleKeyDown(e)
     {
-        if((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && SaveLoadManager.getData().onboardingCompleted)
+        if((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && SaveLoadManager.getData().onboardingCompleted)
         {
             closeCard();
         }

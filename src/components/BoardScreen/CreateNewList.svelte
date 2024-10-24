@@ -15,7 +15,7 @@
             openCreateNewList();
         }
 
-        if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewListDiv.classList.contains("newListCreating"))
+        if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && createNewListDiv.classList.contains("newListCreating"))
         {// key(s) to close pressed && create new list div styleclass is applied i.e. we are "creating"/entering a new list title
             closeCreateNewList();
         }

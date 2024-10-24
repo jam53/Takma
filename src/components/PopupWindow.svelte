@@ -32,7 +32,7 @@
 
     function handleKeyDown(e)
     {
-        if (e.key === "Escape" || (e.key === "w" && e.ctrlKey))
+        if (e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             answer = false;
             closePopup();

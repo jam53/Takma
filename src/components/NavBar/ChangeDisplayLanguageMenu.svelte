@@ -178,7 +178,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
     function handleKeyDown(e)
     {
-        if(e.key === "Escape" || (e.key === "w" && e.ctrlKey))
+        if(e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             closeContextMenu();
         }

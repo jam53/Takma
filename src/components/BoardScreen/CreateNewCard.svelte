@@ -16,7 +16,7 @@
             openCreateNewCard();
         }
 
-        if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardDiv.classList.contains("newCardCreating"))
+        if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && createNewCardDiv.classList.contains("newCardCreating"))
         {// key(s) to close pressed && create new card div styleclass is applied i.e. we are "creating"/entering a new card title
             closeCreateNewCard();
         }
