@@ -71,7 +71,7 @@
     <div class="bottom">
         <div class="description">
             <pre>
-                {I18n.t("thisIsALimitedDemo")}
+                {@html I18n.t("thisIsALimitedDemo", "<a href='https://jam54.com/download.html'>Jam54 Launcher</a>", "<a href='https://github.com/jam53/Takma/releases/latest'>GitHub</a>")}
             </pre>
         </div>
         <div class="optionsHolder">
