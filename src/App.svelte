@@ -20,6 +20,7 @@
     import PopupWindow from "./components/PopupWindow.svelte";
     import {convertFileSrc} from "@tauri-apps/api/core";
     import {normalize} from "@tauri-apps/api/path";
+    import {toast} from "svelte-sonner";
 
     const appWindow = getCurrentWebviewWindow();
 
@@ -185,6 +186,17 @@
     //We may only call the appWindow methods we use in `restoreWindowState()` once this component/the app has loaded, otherwise it crashes
     let navBarElement;
     $: navBarElement !== null && restoreWindowState();
+
+    window.addEventListener("keydown", e => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "w" && SaveLoadManager.getData().onboardingCompleted)
+        {
+            appWindow.close();
+        }
+        else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "w" && !SaveLoadManager.getData().onboardingCompleted)
+        {
+            toast(I18n.t("shortcutNotAvailableDuringOnboarding"));
+        }
+    });
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">

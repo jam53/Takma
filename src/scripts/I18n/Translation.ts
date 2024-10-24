@@ -199,4 +199,6 @@ export default interface Translation
     moveChecklistDown: string;
     takmaWebPreview: string;
     takmaWebPreviewExplanation: string;
+    closeWithCtrlShiftWExplanation: string;
+    shortcutNotAvailableDuringOnboarding: string;
 }

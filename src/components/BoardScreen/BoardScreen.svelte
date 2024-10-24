@@ -23,6 +23,7 @@
     import {listen} from "@tauri-apps/api/event";
     import {normalize} from "@tauri-apps/api/path";
     import {readDir, remove} from "@tauri-apps/plugin-fs";
+    import {toast} from "svelte-sonner";
 
     let createNewCardElements;
     let createNewListElement
@@ -40,6 +41,10 @@
         {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
             $selectedBoardId = "";
             $cardFilters = {labelIds: [], dueDates: []};
+        }
+        else if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && !SaveLoadManager.getData().onboardingCompleted)
+        {
+            toast(I18n.t("shortcutNotAvailableDuringOnboarding"));
         }
     }
 
