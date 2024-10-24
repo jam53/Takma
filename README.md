@@ -8,6 +8,13 @@ Drawing inspiration from the renowned Trello platform, Takma offers a sleek and 
 ## Downloading Takma
 Takma can be downloaded using [The Jam54 Launcher](https://jam54.com/download.html) or directly from the [GitHub releases page](https://github.com/jam53/Takma/releases/latest).
 
+## Takma Web Preview
+
+If you're unable to install Takma on your device but still want to view your existing save files, you can use the [Takma Web Preview](https://takma.jam54.com). This allows you to preview your save files from anywhere using a web browser. Please note that this version is for viewing only — you won't be able to create, edit, or interact with boards beyond their basic display. Attachments and images within your save files are not supported in this preview.
+
+For the complete experience, including full functionality, download the aforementioned desktop version.
+
+
 ## Documentation
 - [Setting up the project](./Documentation/SettingUpTheProject.md)
 - [Running the project](./Documentation/RunningTheProject.md)
