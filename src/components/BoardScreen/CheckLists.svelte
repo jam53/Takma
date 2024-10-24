@@ -101,24 +101,20 @@
             <div class="checklistTop">
                 <div id={`checklistTopTitleHolder-${checklist.id}`} class="checklistTopTitleHolder">
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
-                    <span role="textbox" contenteditable="plaintext-only" data-txt-content={I18n.t("checklist")}
-                          on:input={(e) => checklist.title = e.target.textContent}
+                    <textarea
+                          bind:value={checklist.title}
+                          placeholder={I18n.t("checklist")}
+                          spellcheck="false"
                           on:focus={() => {setTypingFunction(true); document.getElementById(`checklistTopTitleHolder-${checklist.id}`).classList.add("typingChecklistTitle")}}
                           on:focusout={() => {setTypingFunction(false); document.getElementById(`checklistTopTitleHolder-${checklist.id}`).classList.remove("typingChecklistTitle")}}
                           on:keydown={e => {
-                              if (e.keyCode === 13 && e.target.matches(":hover"))
-                              {//If we press enter and we are hovering over the element.
-                                  e.preventDefault(); //Basically captures the event and makes it so no enter/new lines can be typed.
-                              }
-                              else if (e.keyCode === 13 && !e.target.matches(":hover"))
-                              {//We pressed enter and are not hovering over the element
-                                  e.target.blur(); //Unfocus the span so that it makes it seem like when pressing enter we stop editing the span
+                              if (e.key === "Enter")
+                              {
+                                  e.target.blur(); //Unfocus the textarea element
                               }
                           }}
                           on:keyup={() => waitUntilUserStoppedTyping(saveCardFunction)}
-                    >
-                        {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId)?.checklists[i].title}
-                    </span>
+                    />
                     <!--In principe is het logischer dat we {checklist.title} schrijven in plaats van {SaveLoadManager.getData().getCard($selectedBoardId, $selectedCardId).cheklists[i].title}. Maar dan hadden we het probleem dat wanneer de checklist nog geen titel had. Dat wanneer we een titel begonnen te typen elke toetsaanslag dubbel in de span zichtbaar was. Waarschijnlijk omdat we in on:input de waarde van checklist.title setten en dan die hier weer toonden. Op deze manier met de SaveLoadManager hebben we geen last meer van die bug-->
                 </div>
                 <div class="checklistTopButtonsHolder">
@@ -250,18 +246,20 @@
         box-shadow: none;
     }
 
-    .checklistTopTitleHolder span {
+    .checklistTopTitleHolder textarea {
         font-weight: bold;
         font-size: large;
         padding: 0.25em 0.25em;
         background: none;
-        cursor: text;
         word-break: break-all;
         box-shadow: none;
+        border: none;
+        resize: none;
+        field-sizing: content;
     }
 
-    .checklistTopTitleHolder span[contenteditable]:empty::before {
-        content: attr(data-txt-content);
+    .checklistTopTitleHolder textarea::placeholder {
+        color: var(--main-text);
     }
 
     .checklistTopTitleHolder svg {
