@@ -50,6 +50,11 @@ export class SaveLoadManager
              * If we instead use `Object.assign`, we won't have this problem since the keys from filecontents get copied over and replace the values of any existing keys, but leave new keys that exist in `this.data` but not in filecontents alone.
              */
 
+            if (this.getData().boards.length === 0)
+            {
+                throw new RangeError();
+            }
+
             onSuccesCallback();
         }
         catch (error)
