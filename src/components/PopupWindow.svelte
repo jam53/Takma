@@ -84,7 +84,14 @@
 {#if showPopup}
     <div transition:blur|global
          class="overlay"
-         on:click={() => {answer = false; closePopup()}}
+         on:click={() => {
+            //The `(window.getSelection().toString().length === 0)` check ensures that selecting text won't cause the popup to close. If we were to press and hold the mouse button to select some text that's part of the popup. And then release the mouse button somewhere outside the popup. This would be considered as a click on this overlay element i.e. outside the popup, therefore closing the popup. With this check we only close the popup if we aren\'t selecting anything.
+            if (window.getSelection().toString().length === 0)
+            {
+                answer = false;
+                closePopup();
+            }
+         }}
          bind:this={overlayElement}
          on:keydown|stopPropagation={handleKeyDown}
          tabindex="1"
