@@ -145,6 +145,23 @@
 
         return cardsToFilter;
     }
+
+    // Used to override the browser's "back" functionality, so the user returns to either board or welcome screen. Depending on if they were previously on the card details or board screen respectively.
+    // We achieve this by pushing a state with pushState(), which will be popped when the back button is pressed (triggering a `popstate` event). By detecting this event we can decide whether to return to the board or welcome screen, depending on whether the user was viewing a card or a board.
+    history.pushState({}, "");
+    const backToBoardOrWelcomeScreen = () => {
+        if ($selectedCardId !== "")
+        {
+            $selectedCardId = "";
+            history.pushState({}, "");
+        }
+        else if ($selectedBoardId !== "")
+        {
+            $selectedBoardId = "";
+            window.removeEventListener("popstate", backToBoardOrWelcomeScreen);
+        }
+    };
+    window.addEventListener("popstate", backToBoardOrWelcomeScreen);
 </script>
 
 <div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
