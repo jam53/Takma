@@ -1,0 +1,86 @@
+{
+  "name": "Takma Web Preview",
+  "short_name": "Takma",
+  "description": "A view-only version of Takma, allowing you to preview existing save files.",
+  "icons": [
+    {
+      "src": "src-tauri/icons/32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/128x128@2x.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square107x107Logo.png",
+      "sizes": "107x107",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square142x142Logo.png",
+      "sizes": "142x142",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square150x150Logo.png",
+      "sizes": "150x150",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square284x284Logo.png",
+      "sizes": "284x284",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square310x310Logo.png",
+      "sizes": "310x310",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square44x44Logo.png",
+      "sizes": "44x44",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square71x71Logo.png",
+      "sizes": "71x71",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/Square89x89Logo.png",
+      "sizes": "89x89",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/StoreLogo.png",
+      "sizes": "50x50",
+      "type": "image/png"
+    },
+    {
+      "src": "src-tauri/icons/icon.icns",
+      "sizes": "512x512",
+      "type": "image/icns"
+    },
+    {
+      "src": "src-tauri/icons/icon.ico",
+      "sizes": "128x128",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "theme_color": "#3b81f4",
+  "background_color": "#202020"
+}
