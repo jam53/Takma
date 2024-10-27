@@ -21,7 +21,7 @@
     },
     "productName": "Takma",
     "mainBinaryName": "Takma",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "identifier": "com.jam54.Takma",
     "plugins": {},
     "app": {
@@ -30,7 +30,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "Takma 1.6.3 (642)",
+                "title": "Takma 1.6.4 (643)",
                 "width": 1600,
                 "height": 800,
                 "decorations": false,
