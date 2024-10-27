@@ -247,6 +247,7 @@ export let en: Translation = {
     takmaWebPreviewExplanation: "If you're unable to install Takma on your device but still want to view your existing save files, you can use the Takma Web Preview. This allows you to preview your save files from anywhere using a web browser.",
     closeWithCtrlShiftWExplanation: "You can quickly close Takma by using the keyboard shortcut CTRL + SHIFT + W. This allows you to exit the program without needing to click the close button.",
     shortcutNotAvailableDuringOnboarding: "This keyboard shortcut will become available once you complete the onboarding process.",
+    takmaPWAExplanation: "Install the Takma Web Preview on your device using this button!\n\nBy installing this previewer as an app, you'll have quick, offline access whenever you need it — perfect if you plan to use the Takma Web Preview regularly.",
 };
 
 export let ar: Translation = {
@@ -496,6 +497,7 @@ export let ar: Translation = {
     takmaWebPreviewExplanation: "إذا كنت غير قادر على تثبيت Takma على جهازك ولكنك لا تزال ترغب في عرض ملفات الحفظ الموجودة لديك، يمكنك استخدام معاينة Takma على الويب. يتيح لك ذلك معاينة ملفات الحفظ الخاصة بك من أي مكان باستخدام متصفح الويب.",
     closeWithCtrlShiftWExplanation: "يمكنك إغلاق تاكما بسرعة باستخدام اختصار لوحة المفاتيح CTRL + SHIFT + W. يتيح لك ذلك الخروج من البرنامج دون الحاجة إلى النقر على زر الإغلاق.",
     shortcutNotAvailableDuringOnboarding: "سيكون هذا اختصار لوحة المفاتيح متاحًا بمجرد إكمال عملية التعريف.",
+    takmaPWAExplanation: "قم بتثبيت معاينة Takma على جهازك باستخدام هذا الزر!\n\nعن طريق تثبيت هذه المعاينة كتطبيق، ستحصل على وصول سريع وغير متصل كلما احتجت لذلك — مثالي إذا كنت تخطط لاستخدام معاينة Takma بانتظام.",
 };
 
 export let de: Translation = {
@@ -745,6 +747,7 @@ export let de: Translation = {
     takmaWebPreviewExplanation: "Wenn Sie Takma nicht auf Ihrem Gerät installieren können, aber trotzdem Ihre vorhandenen Speicherdateien ansehen möchten, können Sie die Takma-Webvorschau verwenden. Dies ermöglicht es Ihnen, Ihre Speicherdateien von überall aus mit einem Webbrowser vorzuschauen.",
     closeWithCtrlShiftWExplanation: "Sie können Takma schnell schließen, indem Sie die Tastenkombination CTRL + SHIFT + W verwenden. Damit können Sie das Programm verlassen, ohne auf die Schaltfläche „Schließen“ klicken zu müssen.",
     shortcutNotAvailableDuringOnboarding: "Diese Tastenkombination wird verfügbar sein, sobald Sie den Onboarding-Prozess abgeschlossen haben.",
+    takmaPWAExplanation: "Installiere die Takma Web-Vorschau auf deinem Gerät mit diesem Button!\n\nWenn du diesen Vorschau-Viewer als App installierst, hast du jederzeit schnellen, offline Zugriff — perfekt, wenn du die Takma Web-Vorschau regelmäßig nutzen möchtest.",
 };
 
 export let es: Translation = {
@@ -994,6 +997,7 @@ export let es: Translation = {
     takmaWebPreviewExplanation: "Si no puedes instalar Takma en tu dispositivo pero aún deseas ver tus archivos de guardado existentes, puedes usar la vista previa web de Takma. Esto te permite previsualizar tus archivos de guardado desde cualquier lugar utilizando un navegador web.",
     closeWithCtrlShiftWExplanation: "Puedes cerrar Takma rápidamente usando el atajo de teclado CTRL + SHIFT + W. Esto te permite salir del programa sin necesidad de hacer clic en el botón de cerrar.",
     shortcutNotAvailableDuringOnboarding: "Este atajo de teclado estará disponible una vez que completes el proceso de incorporación.",
+    takmaPWAExplanation: "¡Instala la Vista Previa de Takma en tu dispositivo usando este botón!\n\nAl instalar esta vista previa como una aplicación, tendrás acceso rápido y sin conexión siempre que lo necesites, perfecto si planeas usar la Vista Previa de Takma regularmente.",
 };
 
 export let et: Translation = {
@@ -1243,6 +1247,7 @@ export let et: Translation = {
     takmaWebPreviewExplanation: "Kui te ei saa Takma't oma seadmesse installida, kuid soovite siiski vaadata oma olemasolevaid salvestusfaile, saate kasutada Takma veebieelvaadet. See võimaldab teil vaadata oma salvestusfaile kõikjal veebibrauseri kaudu.",
     closeWithCtrlShiftWExplanation: "Sa saad Takma kiiresti sulgeda, kasutades klahvikombinatsiooni CTRL + SHIFT + W. See võimaldab sul programmilt väljuda ilma sulgemisnuppu vajutamata.",
     shortcutNotAvailableDuringOnboarding: "See klahvikombinatsioon on saadaval pärast seda, kui oled koolitusprotsessi lõpetanud.",
+    takmaPWAExplanation: "Installige Takma veebieelsevaade oma seadmesse, kasutades seda nuppu!\n\nKui installite selle eelvaate rakenduse, saate igal ajal kiire ja offline-juurdepääsu — ideaalne, kui plaanite Takma veebieelsevaadet regulaarselt kasutada.",
 };
 
 export let fr: Translation = {
@@ -1492,6 +1497,7 @@ export let fr: Translation = {
     takmaWebPreviewExplanation: "Si vous ne pouvez pas installer Takma sur votre appareil mais que vous souhaitez tout de même consulter vos fichiers de sauvegarde existants, vous pouvez utiliser l'aperçu web de Takma. Cela vous permet de prévisualiser vos fichiers de sauvegarde depuis n'importe où à l'aide d'un navigateur web.",
     closeWithCtrlShiftWExplanation: "Vous pouvez fermer rapidement Takma en utilisant le raccourci clavier CTRL + SHIFT + W. Cela vous permet de quitter le programme sans avoir à cliquer sur le bouton de fermeture.",
     shortcutNotAvailableDuringOnboarding: "Ce raccourci clavier sera disponible une fois que vous aurez terminé le processus d'intégration.",
+    takmaPWAExplanation: "Installez l'aperçu Web de Takma sur votre appareil en utilisant ce bouton !\n\nEn installant cet aperçu en tant qu'application, vous aurez un accès rapide et hors ligne chaque fois que vous en aurez besoin — parfait si vous prévoyez d'utiliser régulièrement l'aperçu Web de Takma.",
 };
 
 export let hi: Translation = {
@@ -1741,6 +1747,7 @@ export let hi: Translation = {
     takmaWebPreviewExplanation: "यदि आप अपने डिवाइस पर Takma स्थापित करने में असमर्थ हैं लेकिन फिर भी अपने मौजूदा सहेजे गए फ़ाइलों को देखना चाहते हैं, तो आप Takma वेब पूर्वावलोकन का उपयोग कर सकते हैं। यह आपको वेब ब्राउज़र का उपयोग करके कहीं से भी अपने सहेजे गए फ़ाइलों का पूर्वावलोकन करने की अनुमति देता है।",
     closeWithCtrlShiftWExplanation: "आप कीबोर्ड शॉर्टकट CTRL + SHIFT + W का उपयोग करके Takma को जल्दी बंद कर सकते हैं। यह आपको बिना बंद करने वाले बटन पर क्लिक किए कार्यक्रम से बाहर निकलने की अनुमति देता है।",
     shortcutNotAvailableDuringOnboarding: "यह कीबोर्ड शॉर्टकट उस समय उपलब्ध होगा जब आप ऑनबोर्डिंग प्रक्रिया को पूरा कर लेंगे।",
+    takmaPWAExplanation: "इस बटन का उपयोग करके अपने डिवाइस पर Takma वेब पूर्वावलोकन इंस्टॉल करें!\n\nइस पूर्वावलोकन को एक ऐप के रूप में इंस्टॉल करने पर, आपके पास जब भी जरूरत हो, त्वरित, ऑफ़लाइन पहुंच होगी — यदि आप नियमित रूप से Takma वेब पूर्वावलोकन का उपयोग करने की योजना बना रहे हैं, तो यह सही है।",
 };
 
 export let id: Translation = {
@@ -1990,6 +1997,7 @@ export let id: Translation = {
     takmaWebPreviewExplanation: "Jika Anda tidak dapat menginstal Takma di perangkat Anda tetapi tetap ingin melihat file simpanan Anda yang ada, Anda dapat menggunakan Pratinjau Web Takma. Ini memungkinkan Anda untuk melihat file simpanan Anda dari mana saja menggunakan browser web.",
     closeWithCtrlShiftWExplanation: "Anda dapat menutup Takma dengan cepat menggunakan pintasan keyboard CTRL + SHIFT + W. Ini memungkinkan Anda keluar dari program tanpa harus mengklik tombol tutup.",
     shortcutNotAvailableDuringOnboarding: "Pintasan keyboard ini akan tersedia setelah Anda menyelesaikan proses onboarding.",
+    takmaPWAExplanation: "Instal Prabala Web Takma di perangkat Anda menggunakan tombol ini!\n\nDengan menginstal prabala ini sebagai aplikasi, Anda akan memiliki akses cepat dan offline kapan pun Anda membutuhkannya — sempurna jika Anda berencana untuk menggunakan Prabala Web Takma secara teratur.",
 };
 
 export let ja: Translation = {
@@ -2239,6 +2247,7 @@ export let ja: Translation = {
     takmaWebPreviewExplanation: "デバイスにTakmaをインストールできない場合でも、既存の保存ファイルを表示したい場合は、Takmaウェブプレビューを使用できます。これにより、ウェブブラウザーを使用してどこからでも保存ファイルをプレビューできます。",
     closeWithCtrlShiftWExplanation: "キーボードショートカット CTRL + SHIFT + W を使用して Takma を迅速に閉じることができます。これにより、閉じるボタンをクリックせずにプログラムを終了できます。",
     shortcutNotAvailableDuringOnboarding: "このキーボードショートカットは、オンボーディングプロセスを完了すると利用可能になります。",
+    takmaPWAExplanation: "このボタンを使用して、デバイスにTakma Webプレビューをインストールしてください！\n\nこのプレビューをアプリとしてインストールすることで、必要なときにすぐにオフラインでアクセスできるようになります。Takma Webプレビューを定期的に使用する予定がある場合に最適です。",
 };
 
 export let ko: Translation = {
@@ -2488,6 +2497,7 @@ export let ko: Translation = {
     takmaWebPreviewExplanation: "장치에 Takma를 설치할 수 없지만 기존 저장 파일을 보려면 Takma 웹 미리보기를 사용할 수 있습니다. 이를 통해 웹 브라우저를 사용하여 어디서나 저장 파일을 미리 볼 수 있습니다.",
     closeWithCtrlShiftWExplanation: "키보드 단축키 CTRL + SHIFT + W를 사용하여 Takma를 빠르게 닫을 수 있습니다. 이를 통해 닫기 버튼을 클릭하지 않고도 프로그램을 종료할 수 있습니다.",
     shortcutNotAvailableDuringOnboarding: "이 키보드 단축키는 온보딩 프로세스를 완료하면 사용 가능합니다.",
+    takmaPWAExplanation: "이 버튼을 사용하여 기기에 Takma 웹 미리보기를 설치하세요!\n\n이 미리보기를 앱으로 설치하면 필요할 때마다 빠르고 오프라인으로 접근할 수 있습니다. Takma 웹 미리보기를 자주 사용할 계획이라면 완벽합니다.",
 };
 
 export let nl: Translation = {
@@ -2737,6 +2747,7 @@ export let nl: Translation = {
     takmaWebPreviewExplanation: "Als je Takma niet op je apparaat kunt installeren, maar toch je bestaande opgeslagen bestanden wilt bekijken, kun je de Takma Web Preview gebruiken. Hiermee kun je je opgeslagen bestanden vanaf elke locatie in een webbrowser bekijken.",
     closeWithCtrlShiftWExplanation: "Je kunt Takma snel sluiten met de toetsencombinatie CTRL + SHIFT + W. Hiermee kun je het programma afsluiten zonder op de sluitknop te klikken.",
     shortcutNotAvailableDuringOnboarding: "Deze toetsencombinatie is beschikbaar zodra je het onboardingproces hebt voltooid.",
+    takmaPWAExplanation: "Installeer de Takma Web Preview op je apparaat met deze knop!\n\nDoor deze previewer als app te installeren, heb je altijd snelle offline toegang wanneer je dat nodig hebt — perfect als je van plan bent om de Takma Web Preview regelmatig te gebruiken.",
 };
 
 export let pt: Translation = {
@@ -2986,6 +2997,7 @@ export let pt: Translation = {
     takmaWebPreviewExplanation: "Se você não consegue instalar o Takma em seu dispositivo, mas ainda deseja visualizar seus arquivos de salvamento existentes, pode usar a Visualização Web do Takma. Isso permite que você visualize seus arquivos de salvamento de qualquer lugar usando um navegador web.",
     closeWithCtrlShiftWExplanation: "Você pode fechar o Takma rapidamente usando o atalho de teclado CTRL + SHIFT + W. Isso permite que você saia do programa sem precisar clicar no botão de fechar.",
     shortcutNotAvailableDuringOnboarding: "Esse atalho de teclado estará disponível assim que você completar o processo de integração.",
+    takmaPWAExplanation: "Instale a Pré-visualização da Web do Takma no seu dispositivo usando este botão!\n\nAo instalar este visualizador como um aplicativo, você terá acesso rápido e offline sempre que precisar — perfeito se você planeja usar a Pré-visualização da Web do Takma regularmente.",
 };
 
 export let ru: Translation = {
@@ -3235,6 +3247,7 @@ export let ru: Translation = {
     takmaWebPreviewExplanation: "Если вы не можете установить Takma на своем устройстве, но все еще хотите просмотреть свои существующие файлы сохранения, вы можете использовать веб-просмотр Takma. Это позволяет вам просматривать ваши файлы сохранения из любого места с помощью веб-браузера.",
     closeWithCtrlShiftWExplanation: "Вы можете быстро закрыть Takma, используя сочетание клавиш CTRL + SHIFT + W. Это позволит вам выйти из программы, не нажимая на кнопку закрытия.",
     shortcutNotAvailableDuringOnboarding: "Это сочетание клавиш станет доступным после завершения процесса onboarding.",
+    takmaPWAExplanation: "Установите веб-просмотр Takma на свое устройство, используя эту кнопку!\n\nУстановив этот просмотрщик в качестве приложения, вы получите быстрый доступ в оффлайн в любое время, когда это необходимо — идеально, если вы планируете регулярно использовать веб-просмотр Takma.",
 };
 
 export let tr: Translation = {
@@ -3484,6 +3497,7 @@ export let tr: Translation = {
     takmaWebPreviewExplanation: "Eğer Takma'yı cihazınıza yükleyemiyorsanız ama mevcut kaydettiğiniz dosyaları yine de görmek istiyorsanız, Takma Web Önizleme'yi kullanabilirsiniz. Bu, web tarayıcısı kullanarak kaydettiğiniz dosyaları her yerden önizlemenizi sağlar.",
     closeWithCtrlShiftWExplanation: "Takma'yı hızlı bir şekilde kapatmak için CTRL + SHIFT + W kısayolunu kullanabilirsiniz. Bu, kapatma düğmesine tıklamadan programdan çıkmanıza olanak tanır.",
     shortcutNotAvailableDuringOnboarding: "Bu klavye kısayolu, onboarding sürecini tamamladıktan sonra kullanılabilir hale gelecektir.",
+    takmaPWAExplanation: "Bu butonu kullanarak Takma Web Önizlemesini cihazınıza yükleyebilirsiniz!\n\nBu önizlemeyi bir uygulama olarak yükleyerek ihtiyaç duyduğunuzda hızlı ve çevrimdışı erişime sahip olacaksınız — Takma Web Önizlemesini düzenli olarak kullanmayı planlıyorsanız mükemmel.",
 };
 
 export let zh: Translation = {
@@ -3733,4 +3747,5 @@ export let zh: Translation = {
     takmaWebPreviewExplanation: "如果您无法在设备上安装Takma，但仍想查看现有的保存文件，可以使用Takma网页预览。这允许您通过网页浏览器从任何地方预览保存文件。",
     closeWithCtrlShiftWExplanation: "您可以通过使用键盘快捷键 CTRL + SHIFT + W 快速关闭 Takma。这允许您在不点击关闭按钮的情况下退出程序。",
     shortcutNotAvailableDuringOnboarding: "此键盘快捷键将在您完成入职培训后可用。",
+    takmaPWAExplanation: "使用此按钮将Takma网页预览安装到您的设备上！\n\n通过将此预览安装为应用程序，您将能够随时快速离线访问，非常适合您计划定期使用Takma网页预览。",
 };

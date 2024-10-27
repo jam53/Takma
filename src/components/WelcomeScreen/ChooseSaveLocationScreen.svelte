@@ -63,6 +63,12 @@
             setSavefile(await file.text());
         }
     }
+
+    let installPWAPrompt: BeforeInstallPromptEvent | undefined = $state();
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); // Prevents the default mini-infobar or install dialog from appearing on mobile
+        installPWAPrompt = e;
+    });
 </script>
 
 <div class="container">
@@ -75,13 +81,18 @@
                 {@html I18n.t("thisIsALimitedDemo", "<a href='https://jam54.com/download.html'>Jam54 Launcher</a>", "<a href='https://github.com/jam53/Takma/releases/latest'>GitHub</a>")}
             </pre>
         </div>
+        {#if installPWAPrompt}
+            <div class="description descriptionClickable" onclick={() => installPWAPrompt.prompt()}>
+                <pre>{I18n.t("takmaPWAExplanation")}</pre>
+            </div>
+        {/if}
         <div class="optionsHolder">
             <div>
                 <span class="defaultTag">
                     {I18n.t("default")}
                 </span>
                 <label for="file-upload">
-                    <input id="file-upload" type="file" accept=".json" on:change={handleFileSelection}
+                    <input id="file-upload" type="file" accept=".json" onchange={handleFileSelection}
                     />
                     <div class="option">
                         <h1>
@@ -97,7 +108,7 @@
                 <span class="defaultTag" style="visibility: hidden">
                     {I18n.t("default")}
                 </span>
-                <div class="option" on:click={async () => await handleURLSelection()}>
+                <div class="option" onclick={async () => await handleURLSelection()}>
                     <h1>
                         {I18n.t("enterURL")}
                     </h1>
@@ -109,7 +120,7 @@
         </div>
         <div class="licenseAgreement">
             <span>
-                {I18n.t("acceptTermsAndConditions")}<a on:click={async () => {
+                {I18n.t("acceptTermsAndConditions")}<a onclick={async () => {
                     let response = await fetch("LICENSE.txt");
 
                     mount(PopupWindow, {props: {title: I18n.t("licenseAgreement").capitalizeFirstLetter(), description: await response.text(), buttonType: "ok"}, target: document.body, intro: true});
@@ -123,11 +134,11 @@
     .container {
         display: flex;
         flex-flow: column;
-        gap: 2em;
+        gap: 1em;
 
+        height: 100%;
+        margin-top: 0.5em;
         overflow-y: auto;
-        width: 100vw;
-        height: 90vh;
     }
 
     .title {
@@ -145,7 +156,7 @@
         column-gap: 5em;
         row-gap: 2em;
         align-items: center;
-        margin: 4em 1em 0 1em;
+        margin: 1em 1em 0 1em;
         color: white;
     }
 
@@ -201,19 +212,21 @@
     }
 
     .licenseAgreement {
-        position: fixed;
-        bottom: 0;
-        left: 0;
+        margin-top: auto;
         padding-bottom: 0.5em;
         color: white;
-        width: 100%;
         text-align: center;
         background-color: rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(10px);
     }
 
-    .licenseAgreement span {
+    @media only screen and (max-width: 768px) {
+        .licenseAgreement {
+            padding-bottom: 4em;
+        }
+    }
 
+    .licenseAgreement span {
         border-radius: 1em;
         color: dimgrey;
     }
@@ -255,16 +268,29 @@
         border: 3px solid rgba(255, 255, 255, 0.1);
     }
 
+    .descriptionClickable pre {
+        cursor: pointer;
+
+        /*  needed for firefox to have a valid output */
+        --transparency: 100%;
+        /**/
+        transition: --transparency 0.4s, all 0.4s;
+        background: linear-gradient(transparent var(--transparency), #404040);
+    }
+
+    .descriptionClickable:hover pre {
+        cursor: pointer;
+        border: 3px solid var(--accent);
+        --transparency:30%;
+        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.25);
+    }
+
     .bottom {
         display: flex;
         flex-flow: column wrap;
         align-content: center;
         gap: 2em;
-        padding-bottom: 2em;
-    }
-
-    @media only screen and (device-width: 768px) {
-        /* default iPad screens */
+        flex-grow: 1;
     }
 
     input[type="file"] {

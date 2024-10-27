@@ -208,4 +208,5 @@ export default interface Translation
     takmaWebPreviewExplanation: string;
     closeWithCtrlShiftWExplanation: string;
     shortcutNotAvailableDuringOnboarding: string;
+    takmaPWAExplanation: string;
 }

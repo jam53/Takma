@@ -34,7 +34,7 @@
     window.addEventListener("blur", () => lastFocusedElement?.focus());
 </script>
 
-<main class="wrapper wrapperNotMaximized" id="main">
+<main class="wrapper" id="main">
 <NavBar saveLocationSet={savefileSet.value}/>
 {#if !savefileSet.value}
     <ChooseSaveLocationScreen/>
@@ -50,13 +50,11 @@
 
 <style>
     .wrapper {
-        height: 100vh;
         border: none;
         position: relative;
-    }
-
-    .wrapperNotMaximized { /* Gets applied in index.html*/
-        height: calc(100vh - 4px - 30px - 2em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` */
+        display: flex;
+        flex-flow: column;
+        height: 100vh;
     }
 
     .scroll-container {
