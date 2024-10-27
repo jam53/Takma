@@ -127,7 +127,6 @@ export class TakmaData
     public async setDisplayLanguage(value: string)
     {
         this._displayLanguage = value;
-        localStorage.setItem("displayLanguage", value);
         await SaveLoadManager.saveToDisk();
     }
 
@@ -430,7 +429,7 @@ export class TakmaData
             }
         }
 
-        const deletedCard: Card[] = this._boards[indexOfBoard].lists[indexOfList].cards.splice(indexOfCardToDelete, 1);
+        const deletedCard: Card = this._boards[indexOfBoard].lists[indexOfList].cards.splice(indexOfCardToDelete, 1)[0];
 
         SaveLoadManager.saveToDisk();
     }

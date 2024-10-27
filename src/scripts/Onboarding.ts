@@ -21,7 +21,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
             {title: I18n.t("welcomeToTakma"), intro:I18n.t("quickGuideEssentials")},
             {intro: I18n.t("redoOnboardingProcess"), element: document.querySelector(".startOnboarding")},
             {intro: I18n.t("dueDatesOverviewExplanation"), element: document.querySelector(".dueDatesOverviewButton")},
-            {intro: I18n.t("createNewBoards"), element: document.querySelector(".createButton")},
+            {intro: I18n.t("closeWithCtrlShiftWExplanation")},
         ],
         disableInteraction: true,
         tooltipClass: "IntroJsCSSOverride",
@@ -39,7 +39,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         const listId = SaveLoadManager.getData().createNewList(boardId, I18n.t("listTitle"));
         const cardId = SaveLoadManager.getData().createNewCard(I18n.t("cardTitle"), boardId, listId);
 
-        setSelectedBoard(boardId); //Sets the $selectedBoardId Svelte store, i.e. opens the boardscreen
+        setSelectedBoard(boardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
         startBoardScreenOnBoarding(boardId, cardId, setSelectedCard, () => {setSelectedCard(""); setSelectedBoard("");});
     }).onexit(() => {
@@ -70,7 +70,6 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
             {title: I18n.t("boardScreen"), intro:I18n.t("efficientTaskManagement")},
             {intro: I18n.t("returnToHomeScreen"), element: document.querySelector(".takmaLogo"), disableInteraction: true},
             {intro: I18n.t("renameBoardTitle"), element: document.querySelector(".boardTitle")},
-            {intro: I18n.t("setNewBoardBackground"), element: document.querySelector(".container")},
             {intro: I18n.t("copyBoardLink"), element: document.querySelector(".copyLinkButton")},
             {intro: I18n.t("deleteCardShiftClick") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${ShiftClickDeleteCardVideo} autoplay loop width=300</video></video></div>`, element: document.querySelector(".cardContainer"), disableInteraction: true},
             {intro: I18n.t("rearrangeCardsDragDrop"), element: document.querySelector(".cardContainer"), disableInteraction: true},
@@ -86,7 +85,7 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
         exitOnOverlayClick: false
     }).oncomplete(async () => {
         onboardingStepComplete = true;
-        setSelectedCard(currentCardId); //Sets the $selectedBoardId Svelte store, i.e. opens the boardscreen
+        setSelectedCard(currentCardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
         startCardDetailsScreenOnBoarding(currentBoardId, returnToWelcomeScreen);
     }).onexit(async () => {
@@ -117,8 +116,6 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string, r
             {intro: I18n.t("autoSaveCardEdits"), element: document.querySelector(".popup")},
             {intro: I18n.t("viewCreationDateHover") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${CardCreationDateVideo} autoplay loop width=208 height=74</video></div>`, element: document.querySelector(".separator")},
             {intro: I18n.t("markdownCardDescriptions"), element: document.querySelector(".renderedDescriptionHolder")},
-            {intro: I18n.t("addAttachmentsDragDrop"), element: document.getElementById("cardDetailsAttachmentsButton")},
-            {intro: I18n.t("addCover"), element: document.getElementById("cardDetailsCoverButton")},
             {intro: I18n.t("copyCardLink"), element: document.getElementById("cardDetailsCopyLinkButton")},
             {intro: I18n.t("cardFullscreen"), element: document.querySelector(".fullScreenButton")},
         ],

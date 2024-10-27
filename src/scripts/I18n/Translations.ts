@@ -243,6 +243,10 @@ export let en: Translation = {
     thisIsALimitedDemo: "This website provides a limited demo of Takma, allowing you to preview existing save files. Please note that this version is for viewing only — you won’t be able to create, edit, or interact with boards beyond their basic display. Attachments and images within your save files are not supported in this preview.\n\nFor the complete experience, including full functionality, download Takma through the $|00|$ or directly from $|01|$.",
     selectFile: "Select a file",
     uploadLocalTakmaJson: "Upload a local Takma.json file from your device to view your saved boards.",
+    takmaWebPreview: "Takma Web Preview",
+    takmaWebPreviewExplanation: "If you're unable to install Takma on your device but still want to view your existing save files, you can use the Takma Web Preview. This allows you to preview your save files from anywhere using a web browser.",
+    closeWithCtrlShiftWExplanation: "You can quickly close Takma by using the keyboard shortcut CTRL + SHIFT + W. This allows you to exit the program without needing to click the close button.",
+    shortcutNotAvailableDuringOnboarding: "This keyboard shortcut will become available once you complete the onboarding process.",
 };
 
 export let ar: Translation = {
@@ -488,6 +492,10 @@ export let ar: Translation = {
     thisIsALimitedDemo: "يوفر هذا الموقع عرضًا تجريبيًا محدودًا لتطبيق Takma، مما يسمح لك بمعاينة ملفات الحفظ الموجودة. يرجى ملاحظة أن هذا الإصدار مخصص للعرض فقط — لا يمكنك إنشاء أو تعديل أو التفاعل مع اللوحات بخلاف عرضها الأساسي. لا يتم دعم المرفقات والصور داخل ملفات الحفظ الخاصة بك في هذا العرض.\n\nللحصول على التجربة الكاملة، بما في ذلك جميع الميزات، قم بتنزيل Takma عبر $|00|$ أو مباشرة من $|01|$.",
     selectFile: "اختر ملفًا",
     uploadLocalTakmaJson: "قم بتحميل ملف Takma.json محلي من جهازك لعرض اللوحات المحفوظة.",
+    takmaWebPreview: "معاينة Takma على الويب",
+    takmaWebPreviewExplanation: "إذا كنت غير قادر على تثبيت Takma على جهازك ولكنك لا تزال ترغب في عرض ملفات الحفظ الموجودة لديك، يمكنك استخدام معاينة Takma على الويب. يتيح لك ذلك معاينة ملفات الحفظ الخاصة بك من أي مكان باستخدام متصفح الويب.",
+    closeWithCtrlShiftWExplanation: "يمكنك إغلاق تاكما بسرعة باستخدام اختصار لوحة المفاتيح CTRL + SHIFT + W. يتيح لك ذلك الخروج من البرنامج دون الحاجة إلى النقر على زر الإغلاق.",
+    shortcutNotAvailableDuringOnboarding: "سيكون هذا اختصار لوحة المفاتيح متاحًا بمجرد إكمال عملية التعريف.",
 };
 
 export let de: Translation = {
@@ -733,6 +741,10 @@ export let de: Translation = {
     thisIsALimitedDemo: "Diese Website bietet eine eingeschränkte Demo von Takma, mit der Sie vorhandene Speicherdateien anzeigen können. Bitte beachten Sie, dass diese Version nur zum Anzeigen gedacht ist — Sie können keine Boards erstellen, bearbeiten oder mit ihnen interagieren, außer sie im Grundlayout zu sehen. Anhänge und Bilder innerhalb Ihrer Speicherdateien werden in dieser Vorschau nicht unterstützt.\n\nFür die vollständige Erfahrung, einschließlich aller Funktionen, laden Sie Takma über den $|00|$ oder direkt von $|01|$ herunter.",
     selectFile: "Datei auswählen",
     uploadLocalTakmaJson: "Laden Sie eine lokale Takma.json-Datei von Ihrem Gerät hoch, um Ihre gespeicherten Boards anzuzeigen.",
+    takmaWebPreview: "Takma-Webvorschau",
+    takmaWebPreviewExplanation: "Wenn Sie Takma nicht auf Ihrem Gerät installieren können, aber trotzdem Ihre vorhandenen Speicherdateien ansehen möchten, können Sie die Takma-Webvorschau verwenden. Dies ermöglicht es Ihnen, Ihre Speicherdateien von überall aus mit einem Webbrowser vorzuschauen.",
+    closeWithCtrlShiftWExplanation: "Sie können Takma schnell schließen, indem Sie die Tastenkombination CTRL + SHIFT + W verwenden. Damit können Sie das Programm verlassen, ohne auf die Schaltfläche „Schließen“ klicken zu müssen.",
+    shortcutNotAvailableDuringOnboarding: "Diese Tastenkombination wird verfügbar sein, sobald Sie den Onboarding-Prozess abgeschlossen haben.",
 };
 
 export let es: Translation = {
@@ -978,6 +990,10 @@ export let es: Translation = {
     thisIsALimitedDemo: "Este sitio web ofrece una demostración limitada de Takma, permitiéndote previsualizar archivos de guardado existentes. Ten en cuenta que esta versión es solo para visualización: no podrás crear, editar ni interactuar con los tableros más allá de su visualización básica. Los adjuntos e imágenes en tus archivos de guardado no son compatibles en esta vista previa.\n\nPara obtener la experiencia completa, con todas las funcionalidades, descarga Takma a través del $|00|$ o directamente desde $|01|$.",
     selectFile: "Seleccionar archivo",
     uploadLocalTakmaJson: "Sube un archivo local Takma.json desde tu dispositivo para ver tus tableros guardados.",
+    takmaWebPreview: "Vista previa web de Takma",
+    takmaWebPreviewExplanation: "Si no puedes instalar Takma en tu dispositivo pero aún deseas ver tus archivos de guardado existentes, puedes usar la vista previa web de Takma. Esto te permite previsualizar tus archivos de guardado desde cualquier lugar utilizando un navegador web.",
+    closeWithCtrlShiftWExplanation: "Puedes cerrar Takma rápidamente usando el atajo de teclado CTRL + SHIFT + W. Esto te permite salir del programa sin necesidad de hacer clic en el botón de cerrar.",
+    shortcutNotAvailableDuringOnboarding: "Este atajo de teclado estará disponible una vez que completes el proceso de incorporación.",
 };
 
 export let et: Translation = {
@@ -1223,6 +1239,10 @@ export let et: Translation = {
     thisIsALimitedDemo: "See veebisait pakub piiratud Takma demo, mis võimaldab sul olemasolevaid salvestusfaile eelvaadata. Pange tähele, et see versioon on ainult vaatamiseks — te ei saa luua, redigeerida ega tahvlitega muul viisil suhelda, kui ainult nende põhilist kuvamist vaadata. Selles eelvaates ei toetata manuseid ja pilte teie salvestusfailides.\n\nTäieliku kogemuse saamiseks, sealhulgas kõigi funktsioonidega, laadige Takma alla $|00|$ kaudu või otse $|01|$.",
     selectFile: "Vali fail",
     uploadLocalTakmaJson: "Laadi oma seadmest üles kohalik Takma.json fail, et näha oma salvestatud tahvleid.",
+    takmaWebPreview: "Takma veebieelvaade",
+    takmaWebPreviewExplanation: "Kui te ei saa Takma't oma seadmesse installida, kuid soovite siiski vaadata oma olemasolevaid salvestusfaile, saate kasutada Takma veebieelvaadet. See võimaldab teil vaadata oma salvestusfaile kõikjal veebibrauseri kaudu.",
+    closeWithCtrlShiftWExplanation: "Sa saad Takma kiiresti sulgeda, kasutades klahvikombinatsiooni CTRL + SHIFT + W. See võimaldab sul programmilt väljuda ilma sulgemisnuppu vajutamata.",
+    shortcutNotAvailableDuringOnboarding: "See klahvikombinatsioon on saadaval pärast seda, kui oled koolitusprotsessi lõpetanud.",
 };
 
 export let fr: Translation = {
@@ -1468,6 +1488,10 @@ export let fr: Translation = {
     thisIsALimitedDemo: "Ce site web offre une démo limitée de Takma, vous permettant de prévisualiser des fichiers de sauvegarde existants. Veuillez noter que cette version est uniquement destinée à la visualisation — vous ne pourrez ni créer, ni modifier, ni interagir avec les tableaux au-delà de leur affichage basique. Les pièces jointes et images dans vos fichiers de sauvegarde ne sont pas prises en charge dans cet aperçu.\n\nPour profiter de l'expérience complète, incluant toutes les fonctionnalités, téléchargez Takma via $|00|$ ou directement depuis $|01|$.",
     selectFile: "Sélectionner un fichier",
     uploadLocalTakmaJson: "Téléchargez un fichier local Takma.json depuis votre appareil pour afficher vos tableaux sauvegardés.",
+    takmaWebPreview: "Aperçu web de Takma",
+    takmaWebPreviewExplanation: "Si vous ne pouvez pas installer Takma sur votre appareil mais que vous souhaitez tout de même consulter vos fichiers de sauvegarde existants, vous pouvez utiliser l'aperçu web de Takma. Cela vous permet de prévisualiser vos fichiers de sauvegarde depuis n'importe où à l'aide d'un navigateur web.",
+    closeWithCtrlShiftWExplanation: "Vous pouvez fermer rapidement Takma en utilisant le raccourci clavier CTRL + SHIFT + W. Cela vous permet de quitter le programme sans avoir à cliquer sur le bouton de fermeture.",
+    shortcutNotAvailableDuringOnboarding: "Ce raccourci clavier sera disponible une fois que vous aurez terminé le processus d'intégration.",
 };
 
 export let hi: Translation = {
@@ -1713,6 +1737,10 @@ export let hi: Translation = {
     thisIsALimitedDemo: "यह वेबसाइट Takma का एक सीमित डेमो प्रदान करती है, जिससे आप मौजूदा सहेजी गई फ़ाइलों का पूर्वावलोकन कर सकते हैं। कृपया ध्यान दें कि यह संस्करण केवल देखने के लिए है — आप नए बोर्ड बना नहीं सकते, न ही संपादित कर सकते हैं, और न ही मूल प्रदर्शन से परे इनके साथ कोई इंटरैक्शन कर सकते हैं। आपके सहेजी गई फ़ाइलों में संलग्नक और चित्र इस पूर्वावलोकन में समर्थित नहीं हैं।\n\nपूर्ण अनुभव के लिए, जिसमें सभी सुविधाएँ शामिल हैं, Takma को $|00|$ के माध्यम से या सीधे $|01|$ से डाउनलोड करें।",
     selectFile: "फ़ाइल चुनें",
     uploadLocalTakmaJson: "अपने डिवाइस से स्थानीय Takma.json फ़ाइल अपलोड करें ताकि आप अपनी सहेजी गई बोर्ड देख सकें।",
+    takmaWebPreview: "Takma वेब पूर्वावलोकन",
+    takmaWebPreviewExplanation: "यदि आप अपने डिवाइस पर Takma स्थापित करने में असमर्थ हैं लेकिन फिर भी अपने मौजूदा सहेजे गए फ़ाइलों को देखना चाहते हैं, तो आप Takma वेब पूर्वावलोकन का उपयोग कर सकते हैं। यह आपको वेब ब्राउज़र का उपयोग करके कहीं से भी अपने सहेजे गए फ़ाइलों का पूर्वावलोकन करने की अनुमति देता है।",
+    closeWithCtrlShiftWExplanation: "आप कीबोर्ड शॉर्टकट CTRL + SHIFT + W का उपयोग करके Takma को जल्दी बंद कर सकते हैं। यह आपको बिना बंद करने वाले बटन पर क्लिक किए कार्यक्रम से बाहर निकलने की अनुमति देता है।",
+    shortcutNotAvailableDuringOnboarding: "यह कीबोर्ड शॉर्टकट उस समय उपलब्ध होगा जब आप ऑनबोर्डिंग प्रक्रिया को पूरा कर लेंगे।",
 };
 
 export let id: Translation = {
@@ -1958,6 +1986,10 @@ export let id: Translation = {
     thisIsALimitedDemo: "Situs web ini menyediakan demo terbatas Takma, memungkinkan Anda untuk meninjau file penyimpanan yang ada. Harap diperhatikan bahwa versi ini hanya untuk tampilan saja — Anda tidak dapat membuat, mengedit, atau berinteraksi dengan papan selain tampilannya yang dasar. Lampiran dan gambar dalam file penyimpanan Anda tidak didukung dalam pratinjau ini.\n\nUntuk pengalaman lengkap, termasuk fungsionalitas penuh, unduh Takma melalui $|00|$ atau langsung dari $|01|$.",
     selectFile: "Pilih file",
     uploadLocalTakmaJson: "Unggah file Takma.json lokal dari perangkat Anda untuk melihat papan yang disimpan.",
+    takmaWebPreview: "Pratinjau Web Takma",
+    takmaWebPreviewExplanation: "Jika Anda tidak dapat menginstal Takma di perangkat Anda tetapi tetap ingin melihat file simpanan Anda yang ada, Anda dapat menggunakan Pratinjau Web Takma. Ini memungkinkan Anda untuk melihat file simpanan Anda dari mana saja menggunakan browser web.",
+    closeWithCtrlShiftWExplanation: "Anda dapat menutup Takma dengan cepat menggunakan pintasan keyboard CTRL + SHIFT + W. Ini memungkinkan Anda keluar dari program tanpa harus mengklik tombol tutup.",
+    shortcutNotAvailableDuringOnboarding: "Pintasan keyboard ini akan tersedia setelah Anda menyelesaikan proses onboarding.",
 };
 
 export let ja: Translation = {
@@ -2203,6 +2235,10 @@ export let ja: Translation = {
     thisIsALimitedDemo: "このウェブサイトはTakmaの限定デモを提供しており、既存の保存ファイルをプレビューできます。このバージョンは閲覧専用であり、ボードの作成、編集、または表示以外の操作はできません。保存ファイル内の添付ファイルや画像は、このプレビューではサポートされていません。\n\n完全な機能を備えたエクスペリエンスをお楽しみいただくには、$|00|$を通じて、または$|01|$から直接Takmaをダウンロードしてください。",
     selectFile: "ファイルを選択",
     uploadLocalTakmaJson: "デバイスからローカルのTakma.jsonファイルをアップロードして、保存されたボードを表示します。",
+    takmaWebPreview: "Takmaウェブプレビュー",
+    takmaWebPreviewExplanation: "デバイスにTakmaをインストールできない場合でも、既存の保存ファイルを表示したい場合は、Takmaウェブプレビューを使用できます。これにより、ウェブブラウザーを使用してどこからでも保存ファイルをプレビューできます。",
+    closeWithCtrlShiftWExplanation: "キーボードショートカット CTRL + SHIFT + W を使用して Takma を迅速に閉じることができます。これにより、閉じるボタンをクリックせずにプログラムを終了できます。",
+    shortcutNotAvailableDuringOnboarding: "このキーボードショートカットは、オンボーディングプロセスを完了すると利用可能になります。",
 };
 
 export let ko: Translation = {
@@ -2448,6 +2484,10 @@ export let ko: Translation = {
     thisIsALimitedDemo: "이 웹사이트는 Takma의 제한된 데모를 제공하며, 기존 저장 파일을 미리 볼 수 있습니다. 이 버전은 보기 전용으로, 보드를 생성하거나 편집하거나 기본 표시 외의 상호작용을 할 수 없습니다. 저장 파일 내의 첨부 파일 및 이미지는 이 미리보기에서 지원되지 않습니다.\n\n모든 기능을 포함한 전체 경험을 위해 $|00|$ 또는 $|01|$를 통해 Takma를 다운로드하세요.",
     selectFile: "파일 선택",
     uploadLocalTakmaJson: "저장된 보드를 보려면 장치에서 로컬 Takma.json 파일을 업로드하세요.",
+    takmaWebPreview: "Takma 웹 미리보기",
+    takmaWebPreviewExplanation: "장치에 Takma를 설치할 수 없지만 기존 저장 파일을 보려면 Takma 웹 미리보기를 사용할 수 있습니다. 이를 통해 웹 브라우저를 사용하여 어디서나 저장 파일을 미리 볼 수 있습니다.",
+    closeWithCtrlShiftWExplanation: "키보드 단축키 CTRL + SHIFT + W를 사용하여 Takma를 빠르게 닫을 수 있습니다. 이를 통해 닫기 버튼을 클릭하지 않고도 프로그램을 종료할 수 있습니다.",
+    shortcutNotAvailableDuringOnboarding: "이 키보드 단축키는 온보딩 프로세스를 완료하면 사용 가능합니다.",
 };
 
 export let nl: Translation = {
@@ -2693,6 +2733,10 @@ export let nl: Translation = {
     thisIsALimitedDemo: "Deze website biedt een beperkte demo van Takma, waarmee je bestaande opslagbestanden kunt bekijken. Let op: deze versie is alleen voor weergave — je kunt geen borden maken, bewerken of ermee interageren, behalve ze in hun basisvorm weer te geven. Bijlagen en afbeeldingen in je opslagbestanden worden in deze preview niet ondersteund.\n\nVoor de volledige ervaring, inclusief alle functionaliteiten, download Takma via de $|00|$ of direct vanaf $|01|$.",
     selectFile: "Selecteer een bestand",
     uploadLocalTakmaJson: "Upload een lokaal Takma.json-bestand vanaf je apparaat om je opgeslagen borden te bekijken.",
+    takmaWebPreview: "Takma Web Preview",
+    takmaWebPreviewExplanation: "Als je Takma niet op je apparaat kunt installeren, maar toch je bestaande opgeslagen bestanden wilt bekijken, kun je de Takma Web Preview gebruiken. Hiermee kun je je opgeslagen bestanden vanaf elke locatie in een webbrowser bekijken.",
+    closeWithCtrlShiftWExplanation: "Je kunt Takma snel sluiten met de toetsencombinatie CTRL + SHIFT + W. Hiermee kun je het programma afsluiten zonder op de sluitknop te klikken.",
+    shortcutNotAvailableDuringOnboarding: "Deze toetsencombinatie is beschikbaar zodra je het onboardingproces hebt voltooid.",
 };
 
 export let pt: Translation = {
@@ -2938,6 +2982,10 @@ export let pt: Translation = {
     thisIsALimitedDemo: "Este site oferece uma demonstração limitada do Takma, permitindo que você visualize arquivos de salvamento existentes. Observe que esta versão é apenas para visualização — você não poderá criar, editar ou interagir com os painéis além da exibição básica. Anexos e imagens em seus arquivos de salvamento não são suportados nesta pré-visualização.\n\nPara uma experiência completa, incluindo todas as funcionalidades, baixe o Takma através do $|00|$ ou diretamente da $|01|$.",
     selectFile: "Selecionar arquivo",
     uploadLocalTakmaJson: "Faça o upload de um arquivo Takma.json local do seu dispositivo para visualizar seus painéis salvos.",
+    takmaWebPreview: "Visualização Web do Takma",
+    takmaWebPreviewExplanation: "Se você não consegue instalar o Takma em seu dispositivo, mas ainda deseja visualizar seus arquivos de salvamento existentes, pode usar a Visualização Web do Takma. Isso permite que você visualize seus arquivos de salvamento de qualquer lugar usando um navegador web.",
+    closeWithCtrlShiftWExplanation: "Você pode fechar o Takma rapidamente usando o atalho de teclado CTRL + SHIFT + W. Isso permite que você saia do programa sem precisar clicar no botão de fechar.",
+    shortcutNotAvailableDuringOnboarding: "Esse atalho de teclado estará disponível assim que você completar o processo de integração.",
 };
 
 export let ru: Translation = {
@@ -3183,6 +3231,10 @@ export let ru: Translation = {
     thisIsALimitedDemo: "Этот веб-сайт предоставляет ограниченную демонстрацию Takma, позволяя вам просматривать существующие файлы сохранения. Обратите внимание, что эта версия предназначена только для просмотра — вы не сможете создавать, редактировать или взаимодействовать с досками за пределами их базового отображения. Вложения и изображения в ваших файлах сохранения не поддерживаются в этом предварительном просмотре.\n\nДля полного опыта, включая все функции, загрузите Takma через $|00|$ или напрямую со $|01|$.",
     selectFile: "Выберите файл",
     uploadLocalTakmaJson: "Загрузите локальный файл Takma.json с вашего устройства, чтобы просмотреть ваши сохраненные доски.",
+    takmaWebPreview: "Веб-просмотр Takma",
+    takmaWebPreviewExplanation: "Если вы не можете установить Takma на своем устройстве, но все еще хотите просмотреть свои существующие файлы сохранения, вы можете использовать веб-просмотр Takma. Это позволяет вам просматривать ваши файлы сохранения из любого места с помощью веб-браузера.",
+    closeWithCtrlShiftWExplanation: "Вы можете быстро закрыть Takma, используя сочетание клавиш CTRL + SHIFT + W. Это позволит вам выйти из программы, не нажимая на кнопку закрытия.",
+    shortcutNotAvailableDuringOnboarding: "Это сочетание клавиш станет доступным после завершения процесса onboarding.",
 };
 
 export let tr: Translation = {
@@ -3428,6 +3480,10 @@ export let tr: Translation = {
     thisIsALimitedDemo: "Bu web sitesi, mevcut kaydetme dosyalarını önizlemenize olanak tanıyan Takma'nın sınırlı bir demosunu sunmaktadır. Lütfen bu sürümün yalnızca görüntüleme amaçlı olduğunu unutmayın — panolar oluşturamaz, düzenleyemez veya temel görüntülemenin ötesinde etkileşimde bulunamazsınız. Kaydetme dosyalarınızdaki ekler ve resimler bu önizlemede desteklenmemektedir.\n\nTam deneyim için, tüm işlevsellikleri içeren Takma'yı $|00|$ üzerinden veya doğrudan $|01|$ sayfasından indirin.",
     selectFile: "Bir dosya seçin",
     uploadLocalTakmaJson: "Kaydedilmiş panolarınızı görüntülemek için cihazınızdan yerel bir Takma.json dosyası yükleyin.",
+    takmaWebPreview: "Takma Web Önizleme",
+    takmaWebPreviewExplanation: "Eğer Takma'yı cihazınıza yükleyemiyorsanız ama mevcut kaydettiğiniz dosyaları yine de görmek istiyorsanız, Takma Web Önizleme'yi kullanabilirsiniz. Bu, web tarayıcısı kullanarak kaydettiğiniz dosyaları her yerden önizlemenizi sağlar.",
+    closeWithCtrlShiftWExplanation: "Takma'yı hızlı bir şekilde kapatmak için CTRL + SHIFT + W kısayolunu kullanabilirsiniz. Bu, kapatma düğmesine tıklamadan programdan çıkmanıza olanak tanır.",
+    shortcutNotAvailableDuringOnboarding: "Bu klavye kısayolu, onboarding sürecini tamamladıktan sonra kullanılabilir hale gelecektir.",
 };
 
 export let zh: Translation = {
@@ -3673,4 +3729,8 @@ export let zh: Translation = {
     thisIsALimitedDemo: "本网站提供 Takma 的有限演示，允许您预览现有的保存文件。请注意，此版本仅供查看 — 您无法创建、编辑或与面板进行超出基本显示的交互。您保存文件中的附件和图片在此预览中不受支持。\n\n要获得完整体验，包括所有功能，请通过 $|00|$ 下载 Takma，或直接从 $|01|$ 下载。",
     selectFile: "选择文件",
     uploadLocalTakmaJson: "上传您设备上的本地 Takma.json 文件以查看保存的面板。",
+    takmaWebPreview: "Takma网页预览",
+    takmaWebPreviewExplanation: "如果您无法在设备上安装Takma，但仍想查看现有的保存文件，可以使用Takma网页预览。这允许您通过网页浏览器从任何地方预览保存文件。",
+    closeWithCtrlShiftWExplanation: "您可以通过使用键盘快捷键 CTRL + SHIFT + W 快速关闭 Takma。这允许您在不点击关闭按钮的情况下退出程序。",
+    shortcutNotAvailableDuringOnboarding: "此键盘快捷键将在您完成入职培训后可用。",
 };

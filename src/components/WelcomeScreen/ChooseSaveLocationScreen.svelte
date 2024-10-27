@@ -2,12 +2,13 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {savefileSet} from "../../scripts/stores";
+    import {savefileSet} from "../../scripts/Stores.svelte";
+    import {mount} from "svelte";
 
     function setSavefile(fileContents: string)
     {
         SaveLoadManager.loadSaveFile(fileContents, () => {
-            $savefileSet = true;
+            savefileSet.value = true;
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = `var(--background-color)`;
         });
@@ -15,7 +16,7 @@
 
     async function handleURLSelection()
     {
-        const popup = new PopupWindow({props: {title: I18n.t("enterURL"), description: I18n.t("loadTakmaJsonFromOnlineSource"), inputValue: localStorage.getItem("savefileURL"), buttonType: "input"}, target: document.body, intro: true});
+        const popup = mount(PopupWindow, {props: {title: I18n.t("enterURL"), description: I18n.t("loadTakmaJsonFromOnlineSource"), inputValue: localStorage.getItem("savefileURL"), buttonType: "input"}, target: document.body, intro: true});
 
         if (await popup.getAnswer() === true)
         {
@@ -111,7 +112,7 @@
                 {I18n.t("acceptTermsAndConditions")}<a on:click={async () => {
                     let response = await fetch("LICENSE.txt");
 
-                    new PopupWindow({props: {title: I18n.t("licenseAgreement").capitalizeFirstLetter(), description: await response.text(), buttonType: "ok"}, target: document.body, intro: true})
+                    mount(PopupWindow, {props: {title: I18n.t("licenseAgreement").capitalizeFirstLetter(), description: await response.text(), buttonType: "ok"}, target: document.body, intro: true});
                 }}>{I18n.t("licenseAgreement")}</a>
             </span>
         </div>

@@ -2,6 +2,7 @@ import {TakmaData} from "./TakmaData";
 import {I18n} from "../I18n/I18n";
 import "../StringExtensions.ts";
 import PopupWindow from "../../components/PopupWindow.svelte";
+import {mount} from "svelte";
 
 /**
  * This class is used to save/load data within Takma
@@ -57,7 +58,7 @@ export class SaveLoadManager
         }
         catch (error)
         {
-            const popup = new PopupWindow({props: {description: I18n.t("saveFileNotValid"), buttonType: "ok"}, target: document.body, intro: true});
+            const popup = mount(PopupWindow, {props: {description: I18n.t("saveFileNotValid"), buttonType: "ok"}, target: document.body, intro: true});
 
             await popup.getAnswer();
             location.reload();
@@ -68,8 +69,8 @@ export class SaveLoadManager
      * This method saves the variables inside the "data" object as a JSON to the disk.
      */
     public static async saveToDisk(): Promise<void>
-    {//Kan deze functie volledig weg? Of makkelijker om gwn te laten staan met geen body?
-        //await writeTextFile(await normalize(this.getSaveDirectoryPath() + this.saveFilename), JSON.stringify(this.data, null, 0));
+    {
+
     }
 
     /**

@@ -3,7 +3,7 @@
         cardFilters,
         dueDatesOverviewPopupIsVisible,
         selectedBoardId, selectedCardId
-    } from "../../scripts/stores";
+    } from "../../scripts/Stores.svelte.js";
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {
@@ -18,6 +18,7 @@
     import {onDestroy, onMount} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {toast} from "svelte-sonner";
 
     let createNewCardElements;
     let createNewListElement
@@ -29,12 +30,17 @@
         window.addEventListener("keydown", listenToKeyDown);
     });
 
-    function listenToKeyDown(e)
+    function listenToKeyDown(e: MouseEvent)
     {
-        if ((e.key === "Escape" || (e.key === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !$dueDatesOverviewPopupIsVisible)
+        if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !dueDatesOverviewPopupIsVisible.value)
         {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
-            $selectedBoardId = "";
-            $cardFilters = {labelIds: [], dueDates: []};
+            selectedBoardId.value = "";
+            cardFilters.labelIds = [];
+            cardFilters.dueDates = [];
+        }
+        else if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && !SaveLoadManager.getData().onboardingCompleted)
+        {
+            toast(I18n.t("shortcutNotAvailableDuringOnboarding"));
         }
     }
 
@@ -63,7 +69,7 @@
 
         if (imageExtensions.includes(getFileExtension(droppedFile).toLowerCase()))
         {
-            let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, $selectedBoardId);
+            let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, selectedBoardId.value);
             await setBoardBackgroundImage(savedPath);
         }
     }
@@ -77,19 +83,19 @@
     {
         if (pathToImage != undefined)
         {
-            let backgroundImagePath: string = SaveLoadManager.getData().getBoard($selectedBoardId).backgroundImagePath;
+            let backgroundImagePath: string = SaveLoadManager.getData().getBoard(selectedBoardId.value).backgroundImagePath;
 
             await removeFileFromSaveDirectory(backgroundImagePath);
 
-            SaveLoadManager.getData().setBoardBackgroundImage($selectedBoardId, pathToImage);
+            SaveLoadManager.getData().setBoardBackgroundImage(selectedBoardId.value, pathToImage);
 
             const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToImage));
             document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
 
-    let lists: ListInterface[] = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
-    let dragDisabled = SaveLoadManager.getData().isUserOnMobile() ? true : false;
+    let lists: ListInterface[] = $state(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
+    let dragDisabled = $state(SaveLoadManager.getData().isUserOnMobile() ? true : false);
     let setDragDisabled = (bool) => {
         if (SaveLoadManager.getData().isUserOnMobile())
         {
@@ -107,7 +113,7 @@
     function onFinalDragUpdate(newListsData: ListInterface[])
     {
         lists = newListsData;
-        SaveLoadManager.getData().setLists($selectedBoardId, newListsData);
+        SaveLoadManager.getData().setLists(selectedBoardId.value, newListsData);
     }
 
     function handleDndConsiderLists(e)
@@ -126,19 +132,24 @@
         onFinalDragUpdate([...lists]);
     }
 
+    function refreshListFunction(listIndex: number)
+    {
+        lists[listIndex] = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists[listIndex];
+    }
+
     function refreshListsFunction()
     {
-        lists = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
+        lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
     }
 
     function filterCards(cardsToFilter: Card[]): Card[]
     {
-        for (let dueDate of $cardFilters.dueDates)
+        for (let dueDate of cardFilters.dueDates)
         {
             cardsToFilter = cardsToFilter.filter(card => card.dueDate !== null && parseInt(card.dueDate) - Date.now() < dueDate);
         }
 
-        for (let labelId of $cardFilters.labelIds)
+        for (let labelId of cardFilters.labelIds)
         {
             cardsToFilter = cardsToFilter.filter(card => card.labelIds.includes(labelId));
         }
@@ -150,30 +161,30 @@
     // We achieve this by pushing a state with pushState(), which will be popped when the back button is pressed (triggering a `popstate` event). By detecting this event we can decide whether to return to the board or welcome screen, depending on whether the user was viewing a card or a board.
     history.pushState({}, "");
     const backToBoardOrWelcomeScreen = () => {
-        if ($selectedCardId !== "")
+        if (selectedCardId.value !== "")
         {
-            $selectedCardId = "";
+            selectedCardId.value = "";
             history.pushState({}, "");
         }
-        else if ($selectedBoardId !== "")
+        else if (selectedBoardId.value !== "")
         {
-            $selectedBoardId = "";
+            selectedBoardId.value = "";
             window.removeEventListener("popstate", backToBoardOrWelcomeScreen);
         }
     };
     window.addEventListener("popstate", backToBoardOrWelcomeScreen);
 </script>
 
-<div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
-    <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
+<div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
+    <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} onconsider={handleDndConsiderLists} onfinalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>
-                {#key $cardFilters}
-                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListsFunction={refreshListsFunction}/>
+                {#key cardFilters}
+                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListFunction={() => refreshListFunction(listIndex)} refreshListsFunction={refreshListsFunction}/>
                 {/key}
             </div>
         {/each}
-        <div on:mouseenter={() => setDragDisabled(true)}>
+        <div onmouseenter={() => setDragDisabled(true)}>
             <CreateNewList refreshListsFunction={refreshListsFunction}/>
         </div>
     </div>

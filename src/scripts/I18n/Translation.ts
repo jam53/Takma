@@ -204,4 +204,8 @@ export default interface Translation
     thisIsALimitedDemo: string;
     selectFile: string;
     uploadLocalTakmaJson: string;
+    takmaWebPreview: string;
+    takmaWebPreviewExplanation: string;
+    closeWithCtrlShiftWExplanation: string;
+    shortcutNotAvailableDuringOnboarding: string;
 }

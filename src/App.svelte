@@ -1,23 +1,21 @@
 <script lang="ts">
-    import "./stylesheets/styles.css";
     import "./stylesheets/fonts.css";
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
     import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
-    import {savefileSet, selectedBoardId, selectedCardId} from "./scripts/stores";
+    import {savefileSet, selectedBoardId, selectedCardId} from "./scripts/Stores.svelte.js";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
     import {I18n} from "./scripts/I18n/I18n";
     import PopupWindow from "./components/PopupWindow.svelte";
-    import {getThumbnail} from "./scripts/ThumbnailGenerator";
 
     /**
      * Sets the background image of the body to the image of the selected board
      */
-    selectedBoardId.subscribe(async boardId => {
-        if (!$savefileSet)
+    $effect(() => {
+        if (!savefileSet.value)
         {
             document.body.style.backgroundImage = `url('${paintDrops}')`;
             document.body.style.backgroundColor = `transparent`;
@@ -37,19 +35,16 @@
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
-{#if !$savefileSet}
-    <NavBar saveLocationSet={false}/>
+<NavBar saveLocationSet={savefileSet.value}/>
+{#if !savefileSet.value}
     <ChooseSaveLocationScreen/>
-{:else}
-    <NavBar saveLocationSet={true}/>
-    {#if $selectedBoardId === ""}
-        <div class="scroll-container">
+{:else if selectedBoardId.value === ""}
+    <div class="scroll-container">
         <!--If we also want to be able to scroll on the board screen, we should ideally place it in this div. But we don't want that; we only want to be able to scroll in the lists, not the entire board screen itself.-->
-            <WelcomeScreen/>
-        </div>
-    {:else}
-        <BoardScreen/>
-    {/if}
+        <WelcomeScreen/>
+    </div>
+{:else}
+    <BoardScreen/>
 {/if}
 </main>
 

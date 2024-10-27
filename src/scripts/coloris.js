@@ -1059,7 +1059,7 @@
             const shiftKey = event.shiftKey;
             const navKeys = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
-            if ((key === 'Escape' || (key === "w" && event.ctrlKey)) && isOpen) {
+            if ((key === 'Escape' || (key.toLowerCase() === "w" && event.ctrlKey)) && isOpen) {
                 closePicker(true);
                 event.stopPropagation();
 
