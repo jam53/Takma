@@ -37,17 +37,17 @@
     import {blur, slide} from "svelte/transition";
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {dueDatesOverviewPopupIsVisible, selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {dueDatesOverviewPopupIsVisible, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    let showPopup = true; $dueDatesOverviewPopupIsVisible = true;
+    let showPopup = $state(true); dueDatesOverviewPopupIsVisible.value = true;
 
     onMount(() =>
     {
         window.addEventListener("keydown", listenToKeyDown);
     });
 
-    function listenToKeyDown(e)
+    function listenToKeyDown(e: KeyboardEvent)
     {
         if (e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
@@ -64,7 +64,7 @@
 
     function closePopup()
     {
-        showPopup = false; $dueDatesOverviewPopupIsVisible = false;
+        showPopup = false; dueDatesOverviewPopupIsVisible.value = false;
         removeKeyDownListeners();
     }
 
@@ -80,9 +80,9 @@
             });
         });
 
-        if ($selectedBoardId !== "")
+        if (selectedBoardId.value !== "")
         {//This will be true in the case that the DueDatesOverviewPopup is opened on the boardscreen. In that case we only want to show the due dates of that board
-            allDueDates = allDueDates.filter(dueDate => dueDate.boardId === $selectedBoardId);
+            allDueDates = allDueDates.filter(dueDate => dueDate.boardId === selectedBoardId.value);
         }
 
         return allDueDates;
@@ -133,23 +133,23 @@
 </script>
 
 {#if showPopup}
-    <div transition:blur|global class="overlay" on:click={closePopup}>
-        <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
+    <div transition:blur|global class="overlay" onclick={closePopup}>
+        <div transition:slide|global class="popup" onclick={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
-                {#if $selectedBoardId === ""}
+                {#if selectedBoardId.value === ""}
                     <h1>{I18n.t("dueDatesOverview")}</h1>
                 {:else}
-                    <h1>{SaveLoadManager.getData().getBoard($selectedBoardId).title + " " + I18n.t("dueDatesOverview").toLowerCase()}</h1>
+                    <h1>{SaveLoadManager.getData().getBoard(selectedBoardId.value).title + " " + I18n.t("dueDatesOverview").toLowerCase()}</h1>
                 {/if}
-                <svg on:click={closePopup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
+                <svg onclick={closePopup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
             <hr/>
-            {#if getAllCardsWithDueDates().length === 0 && $selectedBoardId === ""}
+            {#if getAllCardsWithDueDates().length === 0 && selectedBoardId.value === ""}
                 <span>{I18n.t("noCardsWithDueDates")}</span>
-            {:else if getAllCardsWithDueDates().length === 0 && $selectedBoardId !== ""}
+            {:else if getAllCardsWithDueDates().length === 0 && selectedBoardId.value !== ""}
                 <span>{I18n.t("noCardsWithDueDatesOnThisBoard")}</span>
             {/if}
             {#each calculateAllDueDates() as dueDateValue}
@@ -158,14 +158,14 @@
                 {/if}
                 {#each dueDateValue.dueDates as dueDateItem}
                     <div class="dueDateItem" class:danger={dueDateValue.color === "danger"} class:warning={dueDateValue.color === "warning"}
-                         on:click={() => {
-                             $selectedBoardId = dueDateItem.boardId;
-                             $selectedCardId = dueDateItem.cardId;
+                         onclick={() => {
+                             selectedBoardId.value = dueDateItem.boardId;
+                             selectedCardId.value = dueDateItem.cardId;
                              closePopup();
                          }}
                     >
                         <h4>
-                            {#if $selectedBoardId === ""}
+                            {#if selectedBoardId.value === ""}
                                 {@html dueDateItem.titleWithBoardName}
                             {:else}
                                 {@html dueDateItem.titleWithListName}

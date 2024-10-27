@@ -1,7 +1,7 @@
 <script lang="ts">
     import takmaIcon from "../../images/Takma.svg"
     import ThemeToggleButton from "./ThemeToggleButton.svelte";
-    import {cardFilters, selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {cardFilters, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import SearchBar from "./SearchBar.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
@@ -16,12 +16,13 @@
     import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
     import PopupWindow from "../PopupWindow.svelte";
     import {open} from "@tauri-apps/plugin-shell"
+    import {mount} from "svelte";
 
-    export let saveLocationSet: boolean;
+    interface Props {
+        saveLocationSet: boolean;
+    }
 
-    let orderBoardsMenuElement;
-    let filterCardsPopupElement;
-    let changeDisplayLanguageMenuElement;
+    let { saveLocationSet }: Props = $props();
 </script>
 
 <div class="containingDiv">
@@ -29,48 +30,49 @@
         {#if !saveLocationSet}
             <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em"/>
         {:else}
-            <img on:click={() => {
-                    $selectedBoardId = "";
-                    $cardFilters = {labelIds: [], dueDates: []};
+            <img onclick={() => {
+                    selectedBoardId.value = "";
+                    cardFilters.labelIds = [];
+                    cardFilters.dueDates = [];
                  }}
                  src={takmaIcon} alt="Takma logo" class="takmaLogo"/>
             <!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
         {/if}
         {#if !saveLocationSet}
             <h1 style="color: white; font-family: Inter">Jam54</h1>
-        {:else if $selectedBoardId === ""}
+        {:else if selectedBoardId.value === ""}
             <h1>Takma</h1>
         {:else}
-            <input class="boardTitle" value={SaveLoadManager.getData().getBoard($selectedBoardId).title} on:input={e => SaveLoadManager.getData().setBoardTitle($selectedBoardId, e.target.value)}/>
+            <input class="boardTitle" value={SaveLoadManager.getData().getBoard(selectedBoardId.value).title} oninput={e => SaveLoadManager.getData().setBoardTitle(selectedBoardId.value, e.target.value)}/>
         {/if}
     </div>
     <div class="rightSideContainer">
         {#if saveLocationSet}
             <SearchBar/>
             <button class="dueDatesOverviewButton" title={I18n.t("dueDatesOverview")}
-                    on:click={() => new DueDatesOverviewPopup({target: document.body, intro: true})}
+                    onclick={() => mount(DueDatesOverviewPopup, {target: document.body, intro: true})}
             >
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
             </button>
-            {#if $selectedBoardId === ""}
+            {#if selectedBoardId.value === ""}
                 <button class="orderBoardsButton" title={I18n.t("orderBoards")}
-                        on:click={e => orderBoardsMenuElement.openContextMenu(e)}
+                    onclick={e => mount(OrderBoardsMenu, {props: {clickEvent: e}, target: document.body, intro: true })}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
                 </button>
                 <button class="orderBoardsButton" id="takmaWebPreviewButton" title={I18n.t("takmaWebPreview")}
-                        on:click={() => open("https://takma.jam54.com")}
+                    onclick={() => open("https://takma.jam54.com")}
                 >
                     <svg stroke="red" fill="red" stroke-width="0" style="fill: currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2zm0 16H5V7h14v12zm-5.5-6c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM12 9c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4zm0 6.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path></svg>
                 </button>
                 <button class="startOnboarding" title={I18n.t("beginOnboarding")}
-                        on:click={async () => {
-                            const popup = new PopupWindow({props: {description: I18n.t("confirmRestartOnboarding"), buttonType: "yesno"}, target: document.body, intro: true});
+                        onclick={async () => {
+                            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmRestartOnboarding"), buttonType: "yesno"}, target: document.body, intro: true});
 
                             if (await popup.getAnswer() === true)
                             {
                                 SaveLoadManager.getData().onboardingCompleted = false;
-                                startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId);
+                                startWelcomeScreenOnBoarding(boardId => selectedBoardId.value = boardId, cardId => selectedCardId.value = cardId);
                             }
                         }}
                 >
@@ -78,13 +80,13 @@
                 </button>
             {:else}
                 <button class="filterButton" title={I18n.t("filterCards")}
-                        on:click={e => filterCardsPopupElement.openContextMenu(e)}
+                        onclick={e => mount(FilterCardsPopup, {props: {clickEvent: e}, target: document.body, intro: true})}
                 >
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M472 168H40a24 24 0 010-48h432a24 24 0 010 48zm-80 112H120a24 24 0 010-48h272a24 24 0 010 48zm-96 112h-80a24 24 0 010-48h80a24 24 0 010 48z"></path></svg>
                 </button>
                 <button class="copyLinkButton" title={I18n.t("copyThisBoardLink")}
-                        on:click={async () => {
-                         let linkToThisBoard = `takma://${$selectedBoardId}`
+                        onclick={async () => {
+                         let linkToThisBoard = `takma://${selectedBoardId.value}`
                          await writeText(linkToThisBoard);
 
                          let textInClipboard = await readText();
@@ -103,9 +105,9 @@
                 <DeleteBoardButton/>
             {/if}
         {/if}
-        {#if $selectedBoardId === ""}
+        {#if selectedBoardId.value === ""}
             <button class="i18nButton" title={I18n.t("changeDisplayLanguage")}
-                    on:click={e => changeDisplayLanguageMenuElement.openContextMenu(e)}
+                    onclick={e => mount(ChangeDisplayLanguageMenu, {props: {clickEvent: e}, target: document.body, intro: true})}
             >
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M478.33 433.6l-90-218a22 22 0 00-40.67 0l-90 218a22 22 0 1040.67 16.79L316.66 406h102.67l18.33 44.39A22 22 0 00458 464a22 22 0 0020.32-30.4zM334.83 362L368 281.65 401.17 362zm-66.99-19.08a22 22 0 00-4.89-30.7c-.2-.15-15-11.13-36.49-34.73 39.65-53.68 62.11-114.75 71.27-143.49H330a22 22 0 000-44H214V70a22 22 0 00-44 0v20H54a22 22 0 000 44h197.25c-9.52 26.95-27.05 69.5-53.79 108.36-31.41-41.68-43.08-68.65-43.17-68.87a22 22 0 00-40.58 17c.58 1.38 14.55 34.23 52.86 83.93.92 1.19 1.83 2.35 2.74 3.51-39.24 44.35-77.74 71.86-93.85 80.74a22 22 0 1021.07 38.63c2.16-1.18 48.6-26.89 101.63-85.59 22.52 24.08 38 35.44 38.93 36.1a22 22 0 0030.75-4.9z"></path></svg>
             </button>
@@ -113,13 +115,10 @@
         <ThemeToggleButton saveLocationSet={saveLocationSet}/>
     </div>
 </div>
-{#key [$selectedBoardId, $selectedCardId]}
+{#key [selectedBoardId.value, selectedCardId.value]}
     <!--This makes it so that if the user toggles the color theme. The toast will use the correct color. Now this change will only be reflected if either the selected board/card changes. This is the best we can do, since we can't listen for a color theme changed event-->
     <Toaster richColors theme={document.documentElement.style.getPropertyValue("color-scheme")}/>
 {/key}
-<OrderBoardsMenu bind:this={orderBoardsMenuElement}/>
-<FilterCardsPopup bind:this={filterCardsPopupElement}/>
-<ChangeDisplayLanguageMenu bind:this={changeDisplayLanguageMenuElement}/>
 
 <style>
     .containingDiv {

@@ -3,32 +3,35 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import SveltyPicker from "svelty-picker";
     import {I18n} from "../../scripts/I18n/I18n";
+    import type {Card} from "../../scripts/Board";
 
-    export let mouseClickEvent;
-    export let cardToSave;
-    export let refreshCardFunction;
-    export let focusOnCardDetailsFunction;
-    export let saveCardFunction;
+    interface Props {
+        clickEvent: MouseEvent;
+        cardToSave: Card;
+        focusOnCardDetailsFunction: Function;
+        saveCardFunction: Function;
+    }
+
+    let {
+        clickEvent,
+        cardToSave = $bindable(),
+        focusOnCardDetailsFunction,
+        saveCardFunction
+    }: Props = $props();
 
     const initialDueDate = cardToSave.dueDate;
 
-    let navElement;
-    $: (mouseClickEvent && navElement) && openContextMenu(mouseClickEvent); //Runs the `openContextMenu()` function to show the context menu, once the `mouseClickEvent` and `navElement` variables are set i.e. no longer undefined
-
     // pos is cursor position when right click occur
-    let pos = {x: 0, y: 0}
+    let pos = $state({x: 0, y: 0});
     // menu is dimension (height and width) of context menu
-    let menu = {h: 0, w: 0}
+    let menu = {h: 0, w: 0};
     // browser/window dimension (height and width)
-    let browser = {w: 0, h: 0}
+    let browser = {w: 0, h: 0};
     // showMenu is state of context-menu visibility
-    let showMenu = true;
-    // to display some text
-    let content;
+    let showMenu = $state(true);
 
-    function openContextMenu(e)
+    function openContextMenu(e: MouseEvent)
     {
-        getContextMenuDimension(navElement);
         showMenu = true
         browser = {
             w: window.innerWidth,
@@ -45,9 +48,9 @@
         // Instead of context menu is displayed from top left of cursor position
         // when right-click occur, it will be displayed from bottom left.
         if (browser.h - pos.y < menu.h)
-            pos.y = pos.y - menu.h
+            pos.y = pos.y - menu.h;
         if (browser.w - pos.x < menu.w)
-            pos.x = pos.x - menu.w
+            pos.x = pos.x - menu.w;
     }
 
     function closeContextMenu()
@@ -63,40 +66,46 @@
         }
     }
 
-    function getContextMenuDimension(node)
+    function getContextMenuDimension(node: HTMLElement)
     {
         // This function will get context menu dimension
         // when navigation is shown => showMenu = true
-        let height = node.offsetHeight
-        let width = node.offsetWidth
+        let height = node.offsetHeight;
+        let width = node.offsetWidth;
         menu = {
             h: height,
             w: width
-        }
+        };
+        openContextMenu(clickEvent);
     }
 
-    $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
-    function handleKeyDown(e)
+    let navElement: HTMLElement | null = $state(null);
+    $effect(() => {
+        navElement?.focus();
+    }); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+    $effect(() => {
+        if (initialDueDate !== cardToSave.dueDate)
+        {//If the cardToSave.dueDate no longer equals its initial value, this means the user picked a new due date/removed the existing due date. Therefore we can close this DueDatePopup
+            closeContextMenu();
+        }
+    });
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if(e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             closeContextMenu();
         }
-    }
-
-    $: if (initialDueDate !== cardToSave.dueDate)
-    {//If the cardToSave.dueDate no longer equals its initial value, this means the user picked a new due date/removed the existing due date. Therefore we can close this DueDatePopup
-        refreshCardFunction();
-        closeContextMenu();
     }
 </script>
 
 {#if showMenu}
     <nav use:getContextMenuDimension style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none;"
          use:clickOutside
-         on:click_outside={closeContextMenu}
+         onclick_outside={closeContextMenu}
          bind:this={navElement}
-         on:keydown|stopPropagation={handleKeyDown} tabindex="1"
+         onkeydown={handleKeyDown} tabindex="1"
     >
         <div class="navbar" id="navbar" transition:slide|global>
             <h3 class="title">

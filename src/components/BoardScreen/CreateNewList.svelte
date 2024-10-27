@@ -1,15 +1,19 @@
 <script lang="ts">
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
-    import {onMount} from "svelte";
+    import {selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {slide} from "svelte/transition";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    export let refreshListsFunction; //We call this function when we add a new list to the board. We do so by passing this lambda function to the CreateNewList component, which then calls this lambda upon making a new list. This function basically overwrites the previous value of the `lists` variable in the board with the new value it gets from `SaveLoadManager.getData().getBoard($selectedBoardId).lists`.
+    interface Props {
+        refreshListsFunction: Function;
+    }
 
-    function handleKeyDown(e)
+    let { refreshListsFunction }: Props = $props();
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if (e.key === "Enter")
         {
             openCreateNewList();
@@ -21,12 +25,13 @@
         }
     }
 
-    let createNewListDiv;
-    let newListTitleInput;
-    let newListTitleValue = "";
-    function createNewList()
+    let createNewListDiv: HTMLElement = $state();
+    let newListTitleInput: HTMLElement = $state();
+    let newListTitleValue = $state("");
+    function createNewList(e?: Event)
     {
-        SaveLoadManager.getData().createNewList($selectedBoardId, newListTitleValue);
+        e?.stopPropagation();
+        SaveLoadManager.getData().createNewList(selectedBoardId.value, newListTitleValue);
         refreshListsFunction(); //If we don't do this, the UI won't update to show the newly added list because Svelte would have no way of knowing that the values of the `lists` variable parent component should now include this new list.
 
         newListTitleValue = ""; //When we just created a list, the createNewList "screen" will still be open in case the user wants to create another list. But we don't want the title of the list we just created to still be present in the input component, hence why we set the value of the input component to ""
@@ -44,13 +49,14 @@
     /**
      * This does the opposite of openCreateNewList() and hides the input field + add/close buttons and reveals the "+ Add another list" text again
      */
-    function closeCreateNewList()
+    function closeCreateNewList(e?: MouseEvent)
     {
+        e?.stopPropagation();
         createNewListDiv.classList.remove("newListCreating");
     }
 </script>
 
-<div id="createNewListDiv" class="newList" bind:this={createNewListDiv} on:click={openCreateNewList} use:clickOutside on:click_outside={closeCreateNewList} in:slide|global={{delay: 100 + ((SaveLoadManager.getData().getBoard($selectedBoardId)).lists.length * 100)}} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault tabindex="0" on:keydown|stopPropagation={handleKeyDown}>
+<div id="createNewListDiv" class="newList" bind:this={createNewListDiv} onclick={openCreateNewList} use:clickOutside onclick_outside={closeCreateNewList} in:slide|global={{delay: 100 + ((SaveLoadManager.getData().getBoard(selectedBoardId.value)).lists.length * 100)}} tabindex="0" onkeydown={handleKeyDown}>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
@@ -58,12 +64,12 @@
         {I18n.t("addAnotherList")}
     </span>
     <!--     The things above this line are only displayed when the `newListCreating` styleclass isn't applied. The elements below this line are only displayed when the `newListCreating` styleclass is applied       -->
-    <input bind:this={newListTitleInput} bind:value={newListTitleValue} on:keydown={e => e.key === "Enter" && createNewList()} placeholder={I18n.t("enterListTitle")}>
+    <input bind:this={newListTitleInput} bind:value={newListTitleValue} onkeydown={e => e.key === "Enter" && createNewList()} placeholder={I18n.t("enterListTitle")}>
     <div>
-        <button on:click|stopPropagation={createNewList}>
+        <button onclick={createNewList}>
             {I18n.t("addList")}
         </button>
-        <svg on:click|stopPropagation={closeCreateNewList} xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20" stroke-width="1.5">
+        <svg onclick={closeCreateNewList} xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
     </div>
@@ -98,43 +104,43 @@
         display: none;
     }
 
-    :is(.newListCreating) { /* If we don't add the :is() then this styleclass gets stripped from the build because "it isn't used" */
-        background-color: var(--background-color);
-        text-decoration: none;
-        display: flex;
-        flex-flow: column;
-        gap: 1em;
-        padding: 0.5em;
+    :global(.newListCreating) { /* If we don't add the :global() then this styleclass gets stripped from the build because "it isn't used" */
+        background-color: var(--background-color) !important;
+        text-decoration: none !important;
+        display: flex !important;
+        flex-flow: column !important;
+        gap: 1em !important;
+        padding: 0.5em !important;
     }
 
-    :is(.newListCreating:hover) {
-        cursor: auto;
-        background-color: var(--background-color);
+    :global(.newListCreating:hover) {
+        cursor: auto !important;
+        background-color: var(--background-color) !important;
     }
 
-    :is(.newListCreating input, .newListCreating button) {
-        display: unset;
+    :global(.newListCreating input, .newListCreating button) {
+        display: unset !important;
     }
 
-    :is(.newListCreating svg, .newListCreating span) {
+    :global(.newListCreating svg, .newListCreating span) {
         display: none;
     }
 
-    :is(.newListCreating input) {
+    :global(.newListCreating input) {
         border: 2px solid var(--accent);
         border-radius: 3px;
         box-shadow: none;
         padding: 0.5em;
     }
 
-    :is(.newListCreating div) {
+    :global(.newListCreating div) {
         display: flex;
         justify-content: space-between;
         align-items: center;
         align-content: center;
     }
 
-    :is(.newListCreating div button) {
+    :global(.newListCreating div button) {
         height: 2.5em;
         background-color: var(--accent);
         border: none;
@@ -145,22 +151,22 @@
         transition: 0.2s;
     }
 
-    :is(.newListCreating div button:hover) {
+    :global(.newListCreating div button:hover) {
         height: 2.5em;
         background-color: var(--accent-button-hover);
         cursor: pointer;
     }
 
-    :is(.newListCreating div svg) {
+    :global(.newListCreating div svg) {
         stroke: var(--unselected-button);
         display: unset;
         height: 1.75em;
-        width: 1.75em;
+        width: 1.75em !important;
         transition: 0.2s;
-        padding: 0;
+        padding: 0 !important;
     }
 
-    :is(.newListCreating div svg:hover) {
+    :global(.newListCreating div svg:hover) {
         stroke: var(--selected-button);
         cursor: pointer;
     }

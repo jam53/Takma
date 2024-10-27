@@ -46,7 +46,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         const listId = SaveLoadManager.getData().createNewList(boardId, I18n.t("listTitle"));
         const cardId = SaveLoadManager.getData().createNewCard(I18n.t("cardTitle"), boardId, listId);
 
-        setSelectedBoard(boardId); //Sets the $selectedBoardId Svelte store, i.e. opens the boardscreen
+        setSelectedBoard(boardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
         startBoardScreenOnBoarding(boardId, cardId, setSelectedCard, () => {setSelectedCard(""); setSelectedBoard("");});
     }).onexit(() => {
@@ -77,7 +77,7 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
             {title: I18n.t("boardScreen"), intro:I18n.t("efficientTaskManagement")},
             {intro: I18n.t("returnToHomeScreen"), element: document.querySelector(".takmaLogo"), disableInteraction: true},
             {intro: I18n.t("renameBoardTitle"), element: document.querySelector(".boardTitle")},
-            {intro: I18n.t("setNewBoardBackground"), element: document.querySelector(".container")},
+            {intro: I18n.t("setNewBoardBackground"), element: document.getElementById("body")},
             {intro: I18n.t("copyBoardLink"), element: document.querySelector(".copyLinkButton")},
             {intro: I18n.t("deleteCardShiftClick") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${ShiftClickDeleteCardVideo} autoplay loop width=300</video></video></div>`, element: document.querySelector(".cardContainer"), disableInteraction: true},
             {intro: I18n.t("rearrangeCardsDragDrop"), element: document.querySelector(".cardContainer"), disableInteraction: true},
@@ -93,9 +93,9 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
         exitOnOverlayClick: false
     }).oncomplete(async () => {
         onboardingStepComplete = true;
-        setSelectedCard(currentCardId); //Sets the $selectedBoardId Svelte store, i.e. opens the boardscreen
+        setSelectedCard(currentCardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
-        startCardDetailsScreenOnBoarding(currentBoardId, returnToWelcomeScreen);
+        startCardDetailsScreenOnBoarding(currentBoardId);
     }).onexit(async () => {
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
@@ -110,9 +110,8 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
 /**
  * This function starts the onboarding for the card details screen.
  * @param currentBoardId The id of the board the onboarding is taking place on
- * @param returnToWelcomeScreen Function used to return to the welcome screen after exiting or completing the onboarding
  */
-export async function startCardDetailsScreenOnBoarding(currentBoardId: string, returnToWelcomeScreen: () => void)
+export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
 {
     await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `oncomplete()` has been executed. So we just need to wait until it's actually removed from the DOM
 
@@ -140,7 +139,7 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string, r
         SaveLoadManager.getData().onboardingCompleted = true;
         await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
         canExit = true;
-        returnToWelcomeScreen();
+        await relaunch(); //Relaunch Takma. We could in theory also just refresh the front-end AKA webview using `location.reload()` or `returnToWelcomeScreen()`. However, if we do that the title bar and navbar get rendered on top of each other for some reason
     }).start();
 }
 

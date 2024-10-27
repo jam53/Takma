@@ -17,21 +17,32 @@
      * ```
      */
 
-    export let title: string | null;
-    export let description: string;
-    export let inputValue: string | null;
-    export let buttonType: "yesno" | "ok" | "input";
+    interface Props {
+        title: string | null;
+        description: string;
+        inputValue: string | null;
+        buttonType: "yesno" | "ok" | "input";
+    }
 
-    let showPopup = true;
-    let answer: boolean | null = null;
+    let {
+        title = $bindable(),
+        description,
+        inputValue = $bindable(),
+        buttonType
+    }: Props = $props();
+
+    let showPopup = $state(true);
+    let answer: boolean | null = $state(null);
 
     onMount(() =>
     {
         title = title ?? "Takma";
     });
 
-    function handleKeyDown(e)
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
+
         if (e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             answer = false;
@@ -41,7 +52,6 @@
         {
             answer = true;
             closePopup();
-            e.stopPropagation();
             e.preventDefault();
         }
     }
@@ -77,14 +87,16 @@
         return inputValue ?? "";
     }
 
-    let overlayElement;
-    $: overlayElement?.focus(); //If we don't focus on the overlayElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+    let overlayElement: HTMLElement | null = $state(null);
+    $effect(() => {
+        overlayElement?.focus();
+    }); //If we don't focus on the overlayElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
 </script>
 
 {#if showPopup}
     <div transition:blur|global
          class="overlay"
-         on:click={() => {
+         onclick={() => {
             //The `(window.getSelection().toString().length === 0)` check ensures that selecting text won't cause the popup to close. If we were to press and hold the mouse button to select some text that's part of the popup. And then release the mouse button somewhere outside the popup. This would be considered as a click on this overlay element i.e. outside the popup, therefore closing the popup. With this check we only close the popup if we aren\'t selecting anything.
             if (window.getSelection().toString().length === 0)
             {
@@ -93,14 +105,14 @@
             }
          }}
          bind:this={overlayElement}
-         on:keydown|stopPropagation={handleKeyDown}
+         onkeydown={handleKeyDown}
          tabindex="1"
     >
-        <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
+        <div transition:slide|global class="popup" onclick={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <h1>{title}</h1>
-                <svg on:click={() => {answer = false; closePopup()}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
+                <svg onclick={() => {answer = false; closePopup()}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
@@ -116,7 +128,7 @@
             <div class="buttonsHolder">
                 {#if buttonType === "yesno"}
                     <button class="cancelButton"
-                            on:click={() => {
+                            onclick={() => {
                                 answer = false;
                                 closePopup();
                             }}
@@ -124,7 +136,7 @@
                         {I18n.t("no")}
                     </button>
                     <button class="okButton"
-                            on:click={() => {
+                            onclick={() => {
                             answer = true;
                             closePopup();
                         }}
@@ -133,7 +145,7 @@
                     </button>
                 {:else if buttonType === "ok"}
                     <button class="okButton"
-                            on:click={() => {
+                            onclick={() => {
                             answer = true;
                             closePopup();
                         }}
@@ -142,7 +154,7 @@
                     </button>
                 {:else if buttonType === "input"}
                     <button class="cancelButton"
-                            on:click={() => {
+                            onclick={() => {
                                 answer = false;
                                 closePopup();
                             }}
@@ -150,7 +162,7 @@
                         {I18n.t("cancel")}
                     </button>
                     <button class="okButton"
-                            on:click={() => {
+                            onclick={() => {
                             answer = true;
                             closePopup();
                         }}

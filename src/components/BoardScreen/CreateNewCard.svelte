@@ -1,16 +1,21 @@
 <script lang="ts">
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId, selectedCardId} from "../../scripts/stores";
-    import {afterUpdate, onMount} from "svelte";
+    import {selectedBoardId} from "../../scripts/Stores.svelte.js";
+    import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    export let refreshListsFunction; //We call this function when we add a new card to the board. We do so by passing this lambda function to the CreateNewCard component, which then calls this lambda upon making a new card. This function basically overwrites the previous value of the `lists` variable in the board with the new value it gets from `SaveLoadManager.getData().getBoard($selectedBoardId).lists`.
-    export let listId; //The id of the list this CreateNewCard component is in
-    export let outerWrapperElement; //The outer div which contains the cards and scrollbar. We use this reference to the element to scroll to the bottom when adding a new card
+    interface Props {
+        refreshListFunction: Function;
+        listId: string;
+        outerWrapperElement: HTMLElement;
+    }
 
-    function handleKeyDown(e)
+    let { refreshListFunction, listId, outerWrapperElement = $bindable() }: Props = $props();
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if (e.key === "Enter")
         {
             openCreateNewCard();
@@ -22,13 +27,14 @@
         }
     }
 
-    let createNewCardDiv;
-    let newCardTitleInput;
-    let newCardTitleValue = "";
-    function createNewCard()
+    let createNewCardDiv: HTMLElement = $state();
+    let newCardTitleInput: HTMLElement = $state();
+    let newCardTitleValue = $state("");
+    function createNewCard(e?: Event)
     {
-        SaveLoadManager.getData().createNewCard(newCardTitleValue, $selectedBoardId, listId);
-        refreshListsFunction(); //If we don't do this, the UI won't update to show the newly added card because Svelte would have no way of knowing that the contents of the `lists` variable parent component changed to now include this new card.
+        e?.stopPropagation();
+        SaveLoadManager.getData().createNewCard(newCardTitleValue, selectedBoardId.value, listId);
+        refreshListFunction(); //If we don't do this, the UI won't update to show the newly added card because Svelte would have no way of knowing that the contents of the `lists` variable parent component changed to now include this new card.
 
         newCardTitleValue = ""; //When we just created a card, the createNewCard "screen" will still be open in case the user wants to create another card. But we don't want the title of the card we just created to still be present in the input component, hence why we set the value of the input component to ""
 
@@ -61,7 +67,7 @@
         }
     }
 
-    let createNewDivInitialHeight;
+    let createNewDivInitialHeight: number;
     onMount(() =>
     {
         createNewDivInitialHeight = createNewCardDiv.clientHeight;
@@ -70,7 +76,7 @@
     /**
      * This function executes the callback everytime a card has been fully loaded by checking the size of the elementToObserve. Which in this case will always be the container element that holds all of the cards. So this container element's size will change once a card has been fully loaded, since a fully loaded card with a cover image/amount of attachments is larger than a card that is still loading
      */
-    function executeCallbackOnElementSizeChange(elementToObserve, callback)
+    function executeCallbackOnElementSizeChange(elementToObserve: HTMLElement, callback: Function)
     {
         let resizeObserver = new ResizeObserver(entries => {//Gets called when the element(s) we observed with `resizeObserver.observe()` change(s) in size. Since we are observering the element that holds all of the card elements, its size will change (the height will increase) everytime a card is loaded. When we say "a card loaded" we mean its cover image/amount of attachments loaded
 
@@ -87,14 +93,15 @@
     /**
      * This does the opposite of openCreateNewCard() and hides the input field + add/close buttons and reveals the "+ Add a card" text again
      */
-    function closeCreateNewCard()
+    function closeCreateNewCard(e?: MouseEvent)
     {
+        e?.stopPropagation();
         createNewCardDiv.classList.remove("newCardCreating");
         outerWrapperElement.style.height = "auto";
     }
 </script>
 
-<div id="createNewCardDiv" class="newCard" bind:this={createNewCardDiv} on:click={openCreateNewCard} use:clickOutside on:click_outside={closeCreateNewCard} on:contextmenu|stopPropagation on:drop|stopPropagation|preventDefault tabindex="0" on:keydown|stopPropagation={handleKeyDown}>
+<div id="createNewCardDiv" class="newCard" bind:this={createNewCardDiv} onclick={openCreateNewCard} use:clickOutside onclick_outside={closeCreateNewCard} tabindex="0" onkeydown={handleKeyDown}>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
@@ -102,12 +109,12 @@
         {I18n.t("addACard")}
     </span>
     <!--     The things above this line are only displayed when the `newCardCreating` styleclass isn't applied. The elements below this line are only displayed when the `newCardCreating` styleclass is applied       -->
-    <input bind:this={newCardTitleInput} bind:value={newCardTitleValue} on:keydown={e => e.key === "Enter" && createNewCard()} placeholder={I18n.t("enterCardTitle")}>
+    <input bind:this={newCardTitleInput} bind:value={newCardTitleValue} onkeydown={e => e.key === "Enter" && createNewCard()} placeholder={I18n.t("enterCardTitle")}>
     <div>
-        <button on:click|stopPropagation={createNewCard}>
+        <button onclick={createNewCard}>
             {I18n.t("addCard")}
         </button>
-        <svg on:click|stopPropagation={closeCreateNewCard} xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20" stroke-width="1.5">
+        <svg onclick={closeCreateNewCard} xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
     </div>
@@ -138,44 +145,44 @@
         display: none;
     }
 
-    :is(.newCardCreating) { /* If we don't add the :is() then this styleclass gets stripped from the build because "it isn't used" */
-        background-color: var(--background-color);
-        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5);
-        text-decoration: none;
-        display: flex;
-        flex-flow: column;
-        gap: 1em;
-        padding: 0.5em;
+    :global(.newCardCreating) { /* If we don't add the :global() then this styleclass gets stripped from the build because "it isn't used" */
+        background-color: var(--background-color) !important;
+        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5) !important;
+        text-decoration: none !important;
+        display: flex !important;
+        flex-flow: column !important;
+        gap: 1em !important;
+        padding: 0.5em !important;
     }
 
-    :is(.newCardCreating:hover) {
-        cursor: auto;
-        background-color: var(--background-color);
+    :global(.newCardCreating:hover) {
+        cursor: auto !important;
+        background-color: var(--background-color) !important;
     }
 
-    :is(.newCardCreating input, .newCardCreating button) {
-        display: unset;
+    :global(.newCardCreating input, .newCardCreating button) {
+        display: unset !important;
     }
 
-    :is(.newCardCreating svg, .newCardCreating span) {
+    :global(.newCardCreating svg, .newCardCreating span) {
         display: none;
     }
 
-    :is(.newCardCreating input) {
+    :global(.newCardCreating input) {
         border: 2px solid var(--accent);
         border-radius: 3px;
         box-shadow: none;
         padding: 0.5em;
     }
 
-    :is(.newCardCreating div) {
+    :global(.newCardCreating div) {
         display: flex;
         justify-content: space-between;
         align-items: center;
         align-content: center;
     }
 
-    :is(.newCardCreating div button) {
+    :global(.newCardCreating div button) {
         height: 2.5em;
         background-color: var(--accent);
         border: none;
@@ -186,22 +193,22 @@
         transition: 0.2s;
     }
 
-    :is(.newCardCreating div button:hover) {
+    :global(.newCardCreating div button:hover) {
         height: 2.5em;
         background-color: var(--accent-button-hover);
         cursor: pointer;
     }
 
-    :is(.newCardCreating div svg) {
+    :global(.newCardCreating div svg) {
         stroke: var(--unselected-button);
         display: unset;
         height: 1.75em;
-        width: 1.75em;
+        width: 1.75em !important;
         transition: 0.2s;
-        padding: 0;
+        padding: 0 !important;
     }
 
-    :is(.newCardCreating div svg:hover) {
+    :global(.newCardCreating div svg:hover) {
         stroke: var(--selected-button);
         cursor: pointer;
     }

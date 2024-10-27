@@ -17,18 +17,22 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    // pos is cursor position when right click occur
-    let pos = {x: 0, y: 0}
-    // menu is dimension (height and width) of context menu
-    let menu = {h: 0, w: 0}
-    // browser/window dimension (height and width)
-    let browser = {w: 0, h: 0}
-    // showMenu is state of context-menu visibility
-    let showMenu = false;
-    // to display some text
-    let content;
+    interface Props {
+        clickEvent: MouseEvent,
+    }
 
-    export function openContextMenu(e)
+    let { clickEvent }: Props = $props();
+
+    // pos is cursor position when right click occur
+    let pos = $state({x: 0, y: 0});
+    // menu is dimension (height and width) of context menu
+    let menu = {h: 0, w: 0};
+    // browser/window dimension (height and width)
+    let browser = {w: 0, h: 0};
+    // showMenu is state of context-menu visibility
+    let showMenu = $state(true);
+
+    function openContextMenu(e: MouseEvent)
     {
         showMenu = true
         browser = {
@@ -46,12 +50,12 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         // Instead of context menu is displayed from top left of cursor position
         // when right-click occur, it will be displayed from bottom left.
         if (browser.h - pos.y < menu.h)
-            pos.y = pos.y - menu.h
+            pos.y = pos.y - menu.h;
         if (browser.w - pos.x < menu.w)
-            pos.x = pos.x - menu.w
+            pos.x = pos.x - menu.w;
     }
 
-    export function closeContextMenu()
+    function closeContextMenu()
     {
         // To make context menu disappear when
         // mouse is clicked outside context menu
@@ -61,16 +65,17 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     /**
      * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
      */
-    function getContextMenuDimension(node)
+    function getContextMenuDimension(node: HTMLElement)
     {
         // This function will get context menu dimension
         // when navigation is shown => showMenu = true
-        let height = node.offsetHeight
-        let width = node.offsetWidth
+        let height = node.offsetHeight;
+        let width = node.offsetWidth;
         menu = {
             h: height,
             w: width
-        }
+        };
+        openContextMenu(clickEvent);
     }
 
     /**
@@ -81,103 +86,124 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         location.reload();
     }
 
+    /**
+     * Sets the display language in which Takma should be displayed.
+     */
+    async function setDisplayLanguage(language: string)
+    {
+        // If the save location for the save file hasn't been set yet. I.e. when the user opened Takma for the first time and is presented the ChooseSaveLocation screen. The user still has the ability to pick a display language.
+        // Which is why this function will store the language preference temporarily in the browser's local storage if that is the case. Once a save location has been set, the language preference is saved to Takma's save file.
+        if (localStorage.getItem("saveDirectoryPath") === null)
+        {
+            localStorage.setItem("displayLanguage", language);
+        }
+        else
+        {
+            await SaveLoadManager.getData().setDisplayLanguage(language);
+        }
+    }
+
     let menuItems = [
         {
             'name': 'arabic',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ar"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("ar"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ar")} (${I18n.t("arInAr")})`,
             'svg': ''
         },
         {
             'name': 'german',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("de"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("de"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("de")} (${I18n.t("deInDe")})`,
             'svg': ''
         },
         {
             'name': 'english',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("en"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("en"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("en")} (${I18n.t("enInEn")})`,
             'svg': ''
         },
         {
             'name': 'spanish',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("es"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("es"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("es")} (${I18n.t("esInEs")})`,
             'svg': ''
         },
         {
             'name': 'estonian',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("et"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("et"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("et")} (${I18n.t("etInEt")})`,
             'svg': ''
         },
         {
             'name': 'french',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("fr"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("fr"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("fr")} (${I18n.t("frInFr")})`,
             'svg': ''
         },
         {
             'name': 'hindi',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("hi"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("hi"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("hi")} (${I18n.t("hiInHi")})`,
             'svg': ''
         },
         {
             'name': 'indonesian',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("id"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("id"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("id")} (${I18n.t("idInId")})`,
             'svg': ''
         },
         {
             'name': 'japanese',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ja"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("ja"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ja")} (${I18n.t("jaInJa")})`,
             'svg': ''
         },
         {
             'name': 'korean',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ko"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("ko"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ko")} (${I18n.t("koInKo")})`,
             'svg': ''
         },
         {
             'name': 'dutch',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("nl"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("nl"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("nl")} (${I18n.t("nlInNl")})`,
             'svg': ''
         },
         {
             'name': 'portuguese',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("pt"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("pt"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("pt")} (${I18n.t("ptInPt")})`,
             'svg': ''
         },
         {
             'name': 'russian',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("ru"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("ru"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("ru")} (${I18n.t("ruInRu")})`,
             'svg': ''
         },
         {
             'name': 'turkish',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("tr"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("tr"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("tr")} (${I18n.t("trInTr")})`,
             'svg': ''
         },
         {
             'name': 'chinese',
-            'onClick': async () => {await SaveLoadManager.getData().setDisplayLanguage("zh"); refreshWelcomeScreen();},
+            'onClick': async () => {await setDisplayLanguage("zh"); refreshWelcomeScreen();},
             'displayText': `${I18n.t("zh")} (${I18n.t("zhInZh")})`,
             'svg': ''
         },
     ].sort((a, b) => a.displayText.localeCompare(b.displayText));
 
-    let navElement;
-    $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
-    function handleKeyDown(e)
+    let navElement: HTMLElement | null = $state(null);
+    $effect(() => {
+        navElement?.focus();
+    }); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if(e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             closeContextMenu();
@@ -194,7 +220,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                     <hr>
                 {:else}
                     <li>
-                        <button on:click={item.onClick}>
+                        <button onclick={item.onClick}>
                             {@html item.svg}
                             {item.displayText}
                         </button>
@@ -207,18 +233,18 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 {#if showMenu}
     <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
-         on:click_outside={closeContextMenu}
+         onclick_outside={closeContextMenu}
          bind:this={navElement}
-         on:keydown|stopPropagation={handleKeyDown} tabindex="1"
+         onkeydown={handleKeyDown} tabindex="1"
     >
-        <div class="navbar" id="navbar" transition:slide>
+        <div class="navbar" id="navbar" transition:slide|global>
             <ul>
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
                     {:else}
                         <li>
-                            <button on:click={item.onClick}>
+                            <button onclick={item.onClick}>
                                 {@html item.svg}
                                 {item.displayText}
                             </button>

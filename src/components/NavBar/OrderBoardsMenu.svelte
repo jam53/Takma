@@ -18,18 +18,22 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    // pos is cursor position when right click occur
-    let pos = {x: 0, y: 0}
-    // menu is dimension (height and width) of context menu
-    let menu = {h: 0, w: 0}
-    // browser/window dimension (height and width)
-    let browser = {w: 0, h: 0}
-    // showMenu is state of context-menu visibility
-    let showMenu = false;
-    // to display some text
-    let content;
+    interface Props {
+        clickEvent: MouseEvent,
+    }
 
-    export function openContextMenu(e)
+    let { clickEvent }: Props = $props();
+
+    // pos is cursor position when right click occur
+    let pos = $state({x: 0, y: 0});
+    // menu is dimension (height and width) of context menu
+    let menu = {h: 0, w: 0};
+    // browser/window dimension (height and width)
+    let browser = {w: 0, h: 0};
+    // showMenu is state of context-menu visibility
+    let showMenu = $state(true);
+
+    function openContextMenu(e: MouseEvent)
     {
         showMenu = true
         browser = {
@@ -47,12 +51,12 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         // Instead of context menu is displayed from top left of cursor position
         // when right-click occur, it will be displayed from bottom left.
         if (browser.h - pos.y < menu.h)
-            pos.y = pos.y - menu.h
+            pos.y = pos.y - menu.h;
         if (browser.w - pos.x < menu.w)
-            pos.x = pos.x - menu.w
+            pos.x = pos.x - menu.w;
     }
 
-    export function closeContextMenu()
+    function closeContextMenu()
     {
         // To make context menu disappear when
         // mouse is clicked outside context menu
@@ -62,16 +66,17 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     /**
      * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
      */
-    function getContextMenuDimension(node)
+    function getContextMenuDimension(node: HTMLElement)
     {
         // This function will get context menu dimension
         // when navigation is shown => showMenu = true
-        let height = node.offsetHeight
-        let width = node.offsetWidth
+        let height = node.offsetHeight;
+        let width = node.offsetWidth;
         menu = {
             h: height,
             w: width
-        }
+        };
+        openContextMenu(clickEvent);
     }
 
     /**
@@ -188,10 +193,14 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         },
     ];
 
-    let navElement;
-    $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
-    function handleKeyDown(e)
+    let navElement: HTMLElement | null = $state(null);
+    $effect(() => {
+        navElement?.focus();
+    }); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if(e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             closeContextMenu();
@@ -210,7 +219,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                     <hr>
                 {:else}
                    <li>
-                        <button on:click={item.onClick}>
+                        <button onclick={item.onClick}>
                             {@html item.svg}
                             {item.displayText}
                         </button>
@@ -223,18 +232,18 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 {#if showMenu}
     <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
-         on:click_outside={closeContextMenu}
+         onclick_outside={closeContextMenu}
          bind:this={navElement}
-         on:keydown|stopPropagation={handleKeyDown} tabindex="1"
+         onkeydown={handleKeyDown} tabindex="1"
     >
-        <div class="navbar" id="navbar" transition:slide>
+        <div class="navbar" id="navbar" transition:slide|global>
             <ul>
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
                     {:else}
                         <li>
-                            <button on:click={item.onClick}>
+                            <button onclick={item.onClick}>
                                 {@html item.svg}
                                 {item.displayText}
                             </button>

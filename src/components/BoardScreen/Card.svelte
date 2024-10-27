@@ -1,20 +1,28 @@
 <script lang="ts">
     import type {Card, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId, selectedCardId, draggingCard} from "../../scripts/stores";
+    import {selectedBoardId, selectedCardId, draggingCard} from "../../scripts/Stores.svelte.js";
     import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {normalize} from "@tauri-apps/api/path";
+    import {mount} from "svelte";
 
-    export let card: Card;
-    export let refreshListFunction; //Used to visually refresh the list this card is in
-    export let refreshListsFunction; //Used to visually refresh all the lists on this board
-    export let listIdCardIsIn;
+    interface Props {
+        card: Card;
+        refreshListFunction: Function;
+        listIdCardIsIn: string;
+    }
+
+    let {
+        card,
+        refreshListFunction,
+        listIdCardIsIn
+    }: Props = $props();
 
     function displayCardDetails()
     {
-        $selectedCardId = card.id
+        selectedCardId.value = card.id
     }
 
     function amountOfTodosInCard(cardd: Card, completedOnly = false)
@@ -44,13 +52,15 @@
         return amount;
     }
 
-    let hovering = false; //Is this component being hovered over
-    let shiftKeyPressed = false;
+    let hovering = $state(false); //Is this component being hovered over
+    let shiftKeyPressed = $state(false);
     window.addEventListener("keydown", e => e.key === "Shift" && (shiftKeyPressed = true));
     window.addEventListener("keyup", e => e.key === "Shift" && (shiftKeyPressed = false));
 
-    let preProcessedCoverImgSrc = "";
-    $: card.coverImage !== "" && (async () => preProcessedCoverImgSrc = await getThumbnail(card.coverImage, 600))();
+    let preProcessedCoverImgSrc = $state("");
+    $effect(() => {
+        card.coverImage !== "" && (async () => preProcessedCoverImgSrc = await getThumbnail(card.coverImage, 600))();
+    });
     // This reactive statement ensures that whenever the card's cover image is not an empty string (i.e. if the card has a cover image),
     // we asynchronously fetch and store a pre-processed version of the cover image.
     // This pre-processed thumbnail is saved in the `preProcessedCoverImgSrc` variable and is used for smoother drag-and-drop behavior.
@@ -74,10 +84,10 @@
 </script>
 
 <div class="cardContainer" tabindex="0"
-     on:click={() => {
+     onclick={() => {
          if (hovering && shiftKeyPressed)
          {
-             SaveLoadManager.getData().deleteCard($selectedBoardId, card.id);
+             SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
              refreshListFunction();
          }
          else
@@ -85,16 +95,27 @@
              displayCardDetails();
          }
      }}
-     on:contextmenu|preventDefault={e => {
-         (new CardOptionsMenu({props: {cardId: card.id, refreshListsFunction: refreshListFunction, listIdCardIsIn: listIdCardIsIn}, target: document.body, intro: true})).openContextMenu(e);
+     oncontextmenu={e => {
+         e.preventDefault();
+
+         mount(CardOptionsMenu, {
+             props: {
+                 clickEvent: e,
+                 cardId: card.id,
+                 refreshListFunction: refreshListFunction,
+                 listIdCardIsIn: listIdCardIsIn
+             },
+             target: document.body,
+             intro: true
+         });
      }}
      class:deleteCard={hovering && shiftKeyPressed}
-     on:keydown={e => e.key === "Enter" && displayCardDetails()}
-     on:mouseenter={() => hovering = true}
-     on:mouseleave={() => hovering = false}
+     onkeydown={e => e.key === "Enter" && displayCardDetails()}
+     onmouseenter={() => hovering = true}
+     onmouseleave={() => hovering = false}
 >
     {#if card.coverImage !== ""}
-        {#if !$draggingCard}
+        {#if !draggingCard.value}
             {#await (async () => await getThumbnail(card.coverImage, 600))()}
                 <span class="loader"></span>
             {:then coverImage}
@@ -107,17 +128,17 @@
     {/if}
     <div class="nonCoverImageContainer">
         <div class="labels">
-            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel($selectedBoardId, labelId)) as label}
+            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
                 {#key card}
-                    <!--This #key will be triggerd when we call the `refreshListsFunction()` after clicking on a label. If we don't do this #key, the labels won't change their appearance until the next time we open this board/refresh the cards in the lists by dragging a card/list e.g.-->
+                    <!--This #key will be triggerd when we call the `refreshListFunction()` after clicking on a label. If we don't do this #key, the labels won't change their appearance until the next time we open this board/refresh the cards in the lists by dragging a card/list e.g.-->
                     {#if !SaveLoadManager.getData().showLabelsText}
                         <div style="background-color: {label.color}"
-                             on:click|stopPropagation={() => {SaveLoadManager.getData().showLabelsText = true; refreshListsFunction()}}
+                             onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = true; refreshListFunction()}}
                         >
                         </div>
                     {:else}
                         <span style="color: {label.titleColor}; background-color: {label.color}"
-                              on:click|stopPropagation={() => {SaveLoadManager.getData().showLabelsText = false; refreshListsFunction()}}
+                              onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = false; refreshListFunction()}}
                         >
                             {label.title}
                         </span>
@@ -184,16 +205,16 @@
         -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.5);
     }
 
-    :is(.deleteCard):hover {
-        background: var(--danger);
-        border: 1px solid var(--danger);
-        background-image: url("data:image/svg+xml;charset=utf-8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z' clip-rule='evenodd' /%3E%3C/svg%3E"); /* https://stackoverflow.com/a/41407516 */
-        background-repeat: no-repeat;
-        background-position: center;
-        min-height: 2em;
+    :global(.deleteCard):hover {
+        background: var(--danger) !important;
+        border: 1px solid var(--danger) !important;
+        background-image: url("data:image/svg+xml;charset=utf-8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z' clip-rule='evenodd' /%3E%3C/svg%3E") !important; /* https://stackoverflow.com/a/41407516 */
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        min-height: 2em !important;
     }
 
-    :is(.deleteCard img), :is(.deleteCard div) {
+    :global(.deleteCard img), :global(.deleteCard div) {
         visibility: hidden;
     }
 

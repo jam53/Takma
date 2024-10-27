@@ -1,10 +1,9 @@
 <script lang="ts">
-    import "./stylesheets/styles.css";
     import "./stylesheets/fonts.css";
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
     import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
-    import {selectedBoardId, selectedCardId} from "./scripts/stores";
+    import {selectedBoardId, selectedCardId} from "./scripts/Stores.svelte.js";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
     import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
@@ -21,26 +20,27 @@
     import {convertFileSrc} from "@tauri-apps/api/core";
     import {normalize} from "@tauri-apps/api/path";
     import {toast} from "svelte-sonner";
+    import { mount } from "svelte";
 
     const appWindow = getCurrentWebviewWindow();
 
     /**
      * Sets the background image of the body to the image of the selected board
      */
-    selectedBoardId.subscribe(async boardId => {
+    $effect(async () => {
         if (localStorage.getItem("saveDirectoryPath") === null)
         {
             document.body.style.backgroundImage = `url('${paintDrops}')`;
             document.body.style.backgroundColor = `transparent`;
         }
-        else if (boardId != "")
+        else if (selectedBoardId.value !== "")
         {
-            const board: Board = SaveLoadManager.getData().getBoard($selectedBoardId);
+            const board: Board = SaveLoadManager.getData().getBoard(selectedBoardId.value);
             const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + board.backgroundImagePath));
 
             // Set the background image only if the current boardId hasn't changed during the image loading process.
             //Otherwise it's possible that the user opened a board and quickly went back to the welcome screen. In that case we would set the backgroundImage to "" in the `else` below. And then once the backgroundImage of the previous subscribe event loaded in, we would set the background image. Causing us to see the backgroundImage of the board on the welcomescreen. We avoid this by checking whether or not the board is still selected once the image has actually been loaded.
-            if (boardId === $selectedBoardId)
+            if (selectedBoardId.value === selectedBoardId.value)
             {
                 document.body.style.backgroundImage = `url('${imgUrl}')`;
                 document.body.style.backgroundColor = `transparent`;
@@ -98,24 +98,24 @@
         {
             if (boardTitle === undefined)
             {
-                new PopupWindow({props: {description: I18n.t("boardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
+                mount(PopupWindow, {props: {description: I18n.t("boardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
             }
             else if (boardTitle !== undefined && cardId !== undefined && cardTitle === undefined)
             {
-                new PopupWindow({props: {description: I18n.t("cardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
+                mount(PopupWindow, {props: {description: I18n.t("cardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
             }
         }
         finally
         {
             if (boardTitle != undefined && cardTitle != undefined)
             {
-                $selectedBoardId = boardId;
-                $selectedCardId = cardId;
+                selectedBoardId.value = boardId;
+                selectedCardId.value = cardId;
             }
             else if (boardTitle != undefined)
             {
-                $selectedBoardId = boardId;
-                $selectedCardId = "";
+                selectedBoardId.value = boardId;
+                selectedCardId.value = "";
             }
         }
     });
@@ -184,8 +184,8 @@
     }
 
     //We may only call the appWindow methods we use in `restoreWindowState()` once this component/the app has loaded, otherwise it crashes
-    let navBarElement;
-    $: navBarElement !== null && restoreWindowState();
+    let navBarElement = $state(null);
+    $effect(() => navBarElement !== null && restoreWindowState());
 
     window.addEventListener("keydown", e => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "w" && SaveLoadManager.getData().onboardingCompleted)
@@ -208,7 +208,7 @@
         <h1>{I18n.t("loadSaveFile")}</h1>
     {:then _}
         <NavBar bind:this={navBarElement} saveLocationSet={true}/>
-            {#if $selectedBoardId === ""}
+            {#if selectedBoardId.value === ""}
                 <div class="scroll-container">
                 <!--If we also want to be able to scroll on the board screen, we should ideally place it in this div. But we don't want that; we only want to be able to scroll in the lists, not the entire board screen itself.-->
                     <WelcomeScreen/>

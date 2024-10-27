@@ -12,9 +12,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 -->
 
 <script lang="ts">
+    import {clickOutside} from "../../scripts/ClickOutside";
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {copiedList, selectedBoardId} from "../../scripts/stores";
+    import {copiedList, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
@@ -22,22 +23,26 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         duplicateCopiedListAsList,
         duplicateList as duplicateListObject, duplicateListAsCopiedList
     } from "../../scripts/Board";
+    import { mount } from "svelte";
 
-    export let listId;
-    export let refreshListsFunction;
+    interface Props {
+        clickEvent: MouseEvent,
+        listId: string;
+        refreshListsFunction: Function;
+    }
+
+    let { clickEvent, listId, refreshListsFunction }: Props = $props();
 
     // pos is cursor position when right click occur
-    let pos = {x: 0, y: 0}
+    let pos = $state({x: 0, y: 0});
     // menu is dimension (height and width) of context menu
-    let menu = {h: 0, w: 0}
+    let menu = {h: 0, w: 0};
     // browser/window dimension (height and width)
-    let browser = {w: 0, h: 0}
+    let browser = {w: 0, h: 0};
     // showMenu is state of context-menu visibility
-    let showMenu = false;
-    // to display some text
-    let content;
+    let showMenu = $state(true);
 
-    export function openContextMenu(e)
+    function openContextMenu(e: MouseEvent)
     {
         showMenu = true
         browser = {
@@ -55,12 +60,12 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         // Instead of context menu is displayed from top left of cursor position
         // when right-click occur, it will be displayed from bottom left.
         if (browser.h - pos.y < menu.h)
-            pos.y = pos.y - menu.h
+            pos.y = pos.y - menu.h;
         if (browser.w - pos.x < menu.w)
-            pos.x = pos.x - menu.w
+            pos.x = pos.x - menu.w;
     }
 
-    export function closeContextMenu()
+    function closeContextMenu()
     {
         // To make context menu disappear when
         // mouse is clicked outside context menu
@@ -71,25 +76,27 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     /**
      * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
      */
-    function getContextMenuDimension(node)
+    function getContextMenuDimension(node: HTMLElement)
     {
         // This function will get context menu dimension
         // when navigation is shown => showMenu = true
-        let height = node.offsetHeight
-        let width = node.offsetWidth
+        let height = node.offsetHeight;
+        let width = node.offsetWidth;
         menu = {
             h: height,
             w: width
-        }
+        };
+        openContextMenu(clickEvent);
     }
 
     async function duplicateList()
     {
-        let thisListIndex = SaveLoadManager.getData().getBoard($selectedBoardId).lists.findIndex(list => list.id === listId);
-        let duplicatedList = await duplicateListObject(SaveLoadManager.getData().getList($selectedBoardId, listId), $selectedBoardId);
+        let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(list => list.id === listId);
+        let duplicatedList = await duplicateListObject($state.snapshot(SaveLoadManager.getData().getList(selectedBoardId.value, listId)), selectedBoardId.value);
 
-        SaveLoadManager.getData().createNewList($selectedBoardId, duplicatedList.title, duplicatedList.cards, thisListIndex)
+        SaveLoadManager.getData().createNewList(selectedBoardId.value, duplicatedList.title, duplicatedList.cards, thisListIndex)
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortList()
@@ -100,100 +107,109 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function deleteList()
     {
-        const popup = new PopupWindow({props: {description: I18n.t("confirmListRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
+        closeContextMenu();
+        const popup = mount(PopupWindow, {props: {description: I18n.t("confirmListRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
 
         if (await popup.getAnswer() === true)
         {
-            SaveLoadManager.getData().deleteList($selectedBoardId, listId);
+            SaveLoadManager.getData().deleteList(selectedBoardId.value, listId);
             refreshListsFunction();
         }
     }
 
     async function copyList()
     {
-        $copiedList = await duplicateListAsCopiedList(SaveLoadManager.getData().getList($selectedBoardId, listId), $selectedBoardId);
+        copiedList.value = await duplicateListAsCopiedList(SaveLoadManager.getData().getList(selectedBoardId.value, listId), selectedBoardId.value);
         closeContextMenu();
     }
 
     async function pasteList()
     {
-        let thisListIndex = SaveLoadManager.getData().getBoard($selectedBoardId).lists.findIndex(list => list.id === listId);
+        let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(list => list.id === listId);
 
-        let listToPaste = await duplicateCopiedListAsList($copiedList!, $selectedBoardId); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `$copiedList` have been null, then the button on which this function gets called wouldn't have been visible
+        let listToPaste = await duplicateCopiedListAsList($state.snapshot(copiedList.value!), selectedBoardId.value); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `copiedList.value` have been null, then the button on which this function gets called wouldn't have been visible
 
 
-        SaveLoadManager.getData().createNewList($selectedBoardId, listToPaste.title, listToPaste.cards, thisListIndex)
+        SaveLoadManager.getData().createNewList(selectedBoardId.value, listToPaste.title, listToPaste.cards, thisListIndex)
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortByCreationDateAscending()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         thisList.cards.sort((a, b) => a.creationDate - b.creationDate);
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortByCreationDateDescending()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         thisList.cards.sort((a, b) => b.creationDate - a.creationDate);
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortByDueDateAscending()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         thisList.cards.sort((a, b) => parseInt(a.dueDate) - parseInt(b.dueDate));
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortByDueDateDescending()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         thisList.cards.sort((a, b) => parseInt(b.dueDate) - parseInt(a.dueDate));
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortAlphabeticallyAscending()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         thisList.cards.sort((a, b) => a.title.localeCompare(b.title));
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortAlphabeticallyDescending()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         thisList.cards.sort((a, b) => b.title.localeCompare(a.title));
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     function sortShuffle()
     {
-        let thisList = SaveLoadManager.getData().getList($selectedBoardId, listId);
+        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
         shuffle(thisList.cards);
 
-        SaveLoadManager.getData().updateList($selectedBoardId, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
         refreshListsFunction();
+        closeContextMenu();
     }
 
     let menuItemsDefault = [
@@ -234,7 +250,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd"/></svg>'
         },
     ];
-    let menuItems = menuItemsDefault;
+    let menuItems = $state(menuItemsDefault);
 
     let menuItemsSort = [
         {
@@ -290,10 +306,14 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         },
     ];
 
-    let navElement;
-    $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
-    function handleKeyDown(e)
+    let navElement: HTMLElement | null = $state(null);
+    $effect(() => {
+        navElement?.focus();
+    }); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if(e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             closeContextMenu();
@@ -310,9 +330,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             {#each menuItems as item}
                 {#if item.name === "hr"}
                     <hr>
-                {:else if item.name !== "pasteList" || (item.name === "pasteList" && $copiedList !== null)}
+                {:else if item.name !== "pasteList" || (item.name === "pasteList" && copiedList.value !== null)}
                     <li>
-                        <button on:click={item.onClick}>
+                        <button onclick={item.onClick}>
                             {@html item.svg}
                             {item.displayText}
                         </button>
@@ -324,17 +344,19 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 </nav>
 {#if showMenu}
     <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
+         use:clickOutside
+         onclick_outside={closeContextMenu}
          bind:this={navElement}
-         on:keydown|stopPropagation={handleKeyDown} tabindex="1"
+         onkeydown={handleKeyDown} tabindex="1"
     >
-        <div class="navbar" id="navbar" transition:slide>
+        <div class="navbar" id="navbar" transition:slide|global>
             <ul>
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
-                    {:else if item.name !== "pasteList" || (item.name === "pasteList" && $copiedList !== null)}
+                    {:else if item.name !== "pasteList" || (item.name === "pasteList" && copiedList.value !== null)}
                         <li>
-                            <button on:click={item.onClick}>
+                            <button onclick={item.onClick}>
                                 {@html item.svg}
                                 {item.displayText}
                             </button>

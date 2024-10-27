@@ -31,7 +31,7 @@
         <span class="defaultTag">
             {I18n.t("default")}
         </span>
-        <div class="option" on:click={async () => await setSaveLocation(await appLocalDataDir())}>
+        <div class="option" onclick={async () => await setSaveLocation(await appLocalDataDir())}>
             <h1>
                 {I18n.t("localAppData")}
             </h1>
@@ -47,7 +47,7 @@
         <span class="defaultTag" style="visibility: hidden">
             {I18n.t("default")}
         </span>
-        <div class="option" on:click={async () => await handleDirectorySelection()}>
+        <div class="option" onclick={async () => await handleDirectorySelection()}>
             <h1>
                 {I18n.t("customSaveLocation")}
             </h1>
@@ -62,7 +62,7 @@
 </div>
 <div class="licenseAgreement">
     <span>
-        {I18n.t("acceptTermsAndConditions")}<a on:click={async () => open(await resolveResource("resources/LICENSE.txt"))}>{I18n.t("licenseAgreement")}</a>
+        {I18n.t("acceptTermsAndConditions")}<a onclick={async () => open(await resolveResource("resources/LICENSE.txt"))}>{I18n.t("licenseAgreement")}</a>
     </span>
 </div>
 

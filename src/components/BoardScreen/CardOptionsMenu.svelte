@@ -14,7 +14,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {copiedCard, selectedBoardId} from "../../scripts/stores";
+    import {copiedCard, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {
@@ -22,24 +22,25 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         duplicateCardAsCopiedCard, duplicateCopiedCardAsCard
     } from "../../scripts/Board";
 
-    export let cardId;
-    export let refreshListsFunction;
-    export let listIdCardIsIn;
+    interface Props {
+        clickEvent: MouseEvent;
+        cardId: string;
+        refreshListFunction: Function;
+        listIdCardIsIn: string;
+    }
 
-    let navElement;
+    let { clickEvent, cardId, refreshListFunction, listIdCardIsIn }: Props = $props();
 
     // pos is cursor position when right click occur
-    let pos = {x: 0, y: 0}
+    let pos = $state({x: 0, y: 0});
     // menu is dimension (height and width) of context menu
-    let menu = {h: 0, w: 0}
+    let menu = {h: 0, w: 0};
     // browser/window dimension (height and width)
-    let browser = {w: 0, h: 0}
+    let browser = {w: 0, h: 0};
     // showMenu is state of context-menu visibility
-    let showMenu = true;
-    // to display some text
-    let content;
+    let showMenu = $state(true);
 
-    export function openContextMenu(e)
+    function openContextMenu(e: MouseEvent)
     {
         showMenu = true;
         browser = {
@@ -57,12 +58,12 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         // Instead of context menu is displayed from top left of cursor position
         // when right-click occur, it will be displayed from bottom left.
         if (browser.h - pos.y < menu.h)
-            pos.y = pos.y - menu.h
+            pos.y = pos.y - menu.h;
         if (browser.w - pos.x < menu.w)
-            pos.x = pos.x - menu.w
+            pos.x = pos.x - menu.w;
     }
 
-    export function closeContextMenu()
+    function closeContextMenu()
     {
         // To make context menu disappear when
         // mouse is clicked outside context menu
@@ -72,51 +73,52 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     /**
      * @param node This node will always be the hidden navElement, since this function gets called using `use:getContextMenuDimension` which basically means this function gets called as soon as the hidden navElement with `use:` has been loaded into the DOM.
      */
-    function getContextMenuDimension(node)
+    function getContextMenuDimension(node: HTMLElement)
     {
         // This function will get context menu dimension
         // when navigation is shown => showMenu = true
-        let height = node.offsetHeight
-        let width = node.offsetWidth
+        let height = node.offsetHeight;
+        let width = node.offsetWidth;
         menu = {
             h: height,
             w: width
-        }
+        };
+        openContextMenu(clickEvent);
     }
 
     async function duplicateCard()
     {
-        let thisCardIndex = SaveLoadManager.getData().getList($selectedBoardId, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
-        let duplicatedCard = await duplicateCardObject(SaveLoadManager.getData().getCard($selectedBoardId, cardId), $selectedBoardId);
+        let thisCardIndex = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
+        let duplicatedCard = await duplicateCardObject(SaveLoadManager.getData().getCard(selectedBoardId.value, cardId), selectedBoardId.value);
 
-        SaveLoadManager.getData().addCardToList(duplicatedCard, $selectedBoardId, listIdCardIsIn, thisCardIndex);
+        SaveLoadManager.getData().addCardToList(duplicatedCard, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
 
-        refreshListsFunction();
+        refreshListFunction();
         closeContextMenu();
     }
 
     async function deleteCard()
     {
-        SaveLoadManager.getData().deleteCard($selectedBoardId, cardId);
-        refreshListsFunction();
+        SaveLoadManager.getData().deleteCard(selectedBoardId.value, cardId);
+        refreshListFunction();
         closeContextMenu();
     }
 
     async function copyCard()
     {
-        $copiedCard = await duplicateCardAsCopiedCard(SaveLoadManager.getData().getCard($selectedBoardId, cardId)!, $selectedBoardId);
+        copiedCard.value = await duplicateCardAsCopiedCard(SaveLoadManager.getData().getCard(selectedBoardId.value, cardId)!, selectedBoardId.value);
         closeContextMenu();
     }
 
     async function pasteCard()
     {
-        let thisCardIndex = SaveLoadManager.getData().getList($selectedBoardId, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
+        let thisCardIndex = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
 
-        let cardToPaste = await duplicateCopiedCardAsCard($copiedCard!, $selectedBoardId); //Since this function was called, it means the `$copiedCard` variable can't be null. Hadn't there been a card copied i.e. should `$copiedCard` have been null, then the button on which this function gets called wouldn't have been visible
+        let cardToPaste = await duplicateCopiedCardAsCard($state.snapshot(copiedCard.value!), selectedBoardId.value); //Since this function was called, it means the `copiedCard.value` variable can't be null. Hadn't there been a card copied i.e. should `copiedCard.value` have been null, then the button on which this function gets called wouldn't have been visible
 
-        SaveLoadManager.getData().addCardToList(cardToPaste, $selectedBoardId, listIdCardIsIn, thisCardIndex);
+        SaveLoadManager.getData().addCardToList(cardToPaste, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
 
-        refreshListsFunction();
+        refreshListFunction();
         closeContextMenu();
     }
 
@@ -153,9 +155,14 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         },
     ];
 
-    $: navElement?.focus(); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
-    function handleKeyDown(e)
+    let navElement: HTMLElement | null = $state(null);
+    $effect(() => {
+        navElement?.focus();
+    }); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
+
+    function handleKeyDown(e: KeyboardEvent)
     {
+        e.stopPropagation();
         if(e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey))
         {
             closeContextMenu();
@@ -172,9 +179,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             {#each menuItems as item}
                 {#if item.name === "hr"}
                     <hr>
-                {:else if item.name !== "pasteCard" || (item.name === "pasteCard" && $copiedCard !== null)}
+                {:else if item.name !== "pasteCard" || (item.name === "pasteCard" && copiedCard.value !== null)}
                     <li>
-                        <button on:click={item.onClick}>
+                        <button onclick={item.onClick}>
                             {@html item.svg}
                             {item.displayText}
                         </button>
@@ -187,18 +194,18 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 {#if showMenu}
     <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
-         on:click_outside={closeContextMenu}
+         onclick_outside={closeContextMenu}
          bind:this={navElement}
-         on:keydown|stopPropagation={handleKeyDown} tabindex="1"
+         onkeydown={handleKeyDown} tabindex="1"
     >
         <div class="navbar" id="navbar" transition:slide|global>
             <ul>
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
-                    {:else if item.name !== "pasteCard" || (item.name === "pasteCard" && $copiedCard !== null)}
+                    {:else if item.name !== "pasteCard" || (item.name === "pasteCard" && copiedCard.value !== null)}
                         <li>
-                            <button on:click={item.onClick}>
+                            <button onclick={item.onClick}>
                                 {@html item.svg}
                                 {item.displayText}
                             </button>

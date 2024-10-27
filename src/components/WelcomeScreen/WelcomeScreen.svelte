@@ -3,14 +3,14 @@
     import NewBoardPopup from "./NewBoardPopup.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Board} from "../../scripts/Board";
-    import {searchBarValue, selectedBoardId, selectedCardId} from "../../scripts/stores";
+    import {searchBarValue, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {onMount} from "svelte";
+    import {mount, onMount} from "svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {saveAbsoluteFilePathToSaveDirectory} from "../../scripts/TakmaDataFolderIO";
     import {normalize, resolveResource} from "@tauri-apps/api/path";
 
-    let lazyLoaded = false; //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
+    let lazyLoaded = $state(false); //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
     let sortBoardFunctions = new Map<string, (board1: Board, board2: Board) => number>([
         ["sortByCreationDateAscending", (a, b) => a.creationDate - b.creationDate],
@@ -22,14 +22,14 @@
         ["dontSort", (a, b) => 0]
     ]);
 
-    let boards: Board[] = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
+    let boards: Board[] = $state(SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
     const updateWelcomeScreen = () => boards = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
 
     onMount(async () =>
     {
         if (!SaveLoadManager.getData().onboardingCompleted)
         {
-            startWelcomeScreenOnBoarding(boardId => $selectedBoardId = boardId, cardId => $selectedCardId = cardId); //In IntroJs we can reference other elements during the onboarding, but if they don't exist yet when we start the onboarding it doesn't work. That is why we start in onMount, once all the UI components are loaded in
+            startWelcomeScreenOnBoarding(boardId => selectedBoardId.value = boardId, cardId => selectedCardId.value = cardId); //In IntroJs we can reference other elements during the onboarding, but if they don't exist yet when we start the onboarding it doesn't work. That is why we start in onMount, once all the UI components are loaded in
         }
 
         if (SaveLoadManager.getData().totalCardsCreated >= 25 && !SaveLoadManager.getData().easterEggBoardAdded)
@@ -49,21 +49,21 @@
     });
 </script>
 
+{#snippet boardButton(board: Board)}
+    <BoardButton
+        image={board.backgroundImagePath}
+        title={board.title}
+        boardId={board.id}
+        favourite={board.favourite}
+        updateWelcomeScreenFunction={updateWelcomeScreen}
+    />
+{/snippet}
+
 <div>
 <!--Favourited boards-->
     {#each boards as board}
-        {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) && board.favourite}
-            <BoardButton
-                    on:clicked={() => {
-                    $selectedBoardId = board.id;
-                    SaveLoadManager.getData().setBoardLastOpenedTime($selectedBoardId);
-                }}
-                    image={board.backgroundImagePath}
-                    title={board.title}
-                    boardId={board.id}
-                    favourite={board.favourite}
-                    updateWelcomeScreenFunction={updateWelcomeScreen}
-            />
+        {#if board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && board.favourite}
+            {@render boardButton(board)}
         {/if}
     {/each}
 </div>
@@ -73,21 +73,11 @@
 <div>
 <!--Non favourited boards-->
     {#each boards as board}
-        {#if board.title.toLowerCase().includes($searchBarValue.toLowerCase().trim()) && !board.favourite}
-            <BoardButton
-                on:clicked={() => {
-                    $selectedBoardId = board.id;
-                    SaveLoadManager.getData().setBoardLastOpenedTime($selectedBoardId);
-                }}
-                image={board.backgroundImagePath}
-                title={board.title}
-                boardId={board.id}
-                favourite={board.favourite}
-                updateWelcomeScreenFunction={updateWelcomeScreen}
-            />
+        {#if board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && !board.favourite}
+            {@render boardButton(board)}
         {/if}
     {/each}
-    <button on:click={() => {new NewBoardPopup({target: document.body, props: {lazyLoaded: lazyLoaded}, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
+    <button onclick={() => {mount(NewBoardPopup, {props: {lazyLoaded: lazyLoaded}, target: document.body, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
 </div>
 
 <style>

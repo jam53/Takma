@@ -3,7 +3,7 @@
     import boardPreview from "../../images/BoardPreview.svg"
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId} from "../../scripts/stores";
+    import {selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {exists, readDir} from "@tauri-apps/plugin-fs";
     import {open} from "@tauri-apps/plugin-dialog"
     import {
@@ -16,13 +16,12 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
-    let showPopup = true;
-    let selectedImg:string; //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
+    let showPopup = $state(true);
+    let selectedImg: string = $state(""); //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
 
-    let boardTitle = "";
-    let boardTitleInputObject;
+    let boardTitle = $state("");
 
-    let selectedImgObject;
+    let selectedImgObject = $state();
 
     onMount(() =>
     {
@@ -57,7 +56,11 @@
     //Deze lazyLoaded variabele en lazyLoad variabele worden gebruikt om ervoor te zorgen dat de intro animaite van het NewBoardPopup scherm deftig getoond wordt. Anders freezt de app vanaf dat het wordt aangemaakt, omdat de high rest includedInTakma foto's gerenderd moeten worden. Nu wordt eerst de popup getoond, en pas een seconde later de src van de foto's gezet.
     //Na een seconde zit het dus wel weer frozen, maar op die manier werd de intro animatie + het NewBoardPopup scherm toch direct getoond
     //Eenmaal we een keer het NewBoardPopup scherm hebben geopenend, worden de high res images somehow gecached. We moeten dus niet meer wachten om de src te setten van de images maar kunnen dit direct doen. We passen de lazyLoaded variabele als een prop. Want elke keer dat we op de create board knop drukken wordt er een nieuwe instantie van NewBoardPopup gemaakt. Elke nieuwe instantie zou niet meer weten als lazyLoaded nu true was of niet. Maar omdat dit bijgehouden wordt in de parent en gepassed wordt als een prop kan dit wel
-    export let lazyLoaded: boolean;
+    interface Props {
+        lazyLoaded: boolean;
+    }
+
+    let { lazyLoaded = $bindable() }: Props = $props();
     function lazyload()
     {
         if (!lazyLoaded)
@@ -104,7 +107,7 @@
             await saveAbsoluteFilePathToSaveDirectory(selectedImg, "CustomBoardBackgrounds"); //The second parameter of this function is supposed to be a board id, which "CustomBoardBackgrounds" clearly is not. However, the way `saveAbsoluteFilePathToSaveDirectory()` uses that boardId is to decide in which subfolder to save/write the file to. So in this case we want that to be a folder called "CustomBoardBackgrounds" hence why we pass that as the `boardId`
         }
 
-        $selectedBoardId = idCreatedBoard;
+        selectedBoardId.value = idCreatedBoard;
         closePopup();
     }
 
@@ -125,16 +128,25 @@
         }
     }
 
-    let saveBoardBackgroundForFuture = false;
+    let saveBoardBackgroundForFuture = $state(false);
+    $effect(() => {
+        selectedImg && (saveBoardBackgroundForFuture = false); // Defines a reactive effect that triggers whenever the `selectedImg` changes.
+        // This prevents saving an unintended background image as a "custom background image" if the user:
+        // 1. Selected a custom background image.
+        // 2. Then ticked `saveBoardBackgroundForFuture` to `true`.
+        // 3. Then selected another, already existing board background and thus changed `selectedImg`.
+        // Without this reset, the `selectedImg` would be saved to disk as a custom background, even though it was already present on disk.
+    });
+
 </script>
 
 {#if showPopup}
-    <div transition:blur|global class="overlay" on:click={closePopup}>
-        <div transition:slide|global class="popup" on:click={(e) => e.stopPropagation()}>
+    <div transition:blur|global class="overlay" onclick={closePopup}>
+        <div transition:slide|global class="popup" onclick={(e) => e.stopPropagation()}>
         <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <h1>{I18n.t("createNewBoard")}</h1>
-                <svg on:click={closePopup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
+                <svg onclick={closePopup} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </div>
@@ -155,7 +167,7 @@
                     <h2 style="margin-bottom: 0">{I18n.t("background")}</h2>
                     {#if !includedImagesInTakma.includes(selectedImg) && !customBoardBackgrounds.includes(selectedImg)}
                         <div class="saveImageForFutureContainer"
-                             on:click={() => saveBoardBackgroundForFuture = !saveBoardBackgroundForFuture}
+                             onclick={() => saveBoardBackgroundForFuture = !saveBoardBackgroundForFuture}
                         >
                             <input
                                 type="checkbox"
@@ -166,13 +178,10 @@
                                 {I18n.t("saveBackgroundImage")}
                             </span>
                         </div>
-                    {:else}
-                        {void (() => saveBoardBackgroundForFuture = false)() ?? ""}
-                        <!-- The void operator evaluates the given expression and then returns undefined. Then with the nullish operator we return an empty string when it's undefined, which will always be the case. This way we can execute some code in our html, without displaying anything in the UI-->
                     {/if}
                     <div class="imagesHolder">
                         {#if lazyLoaded}
-                            <svg on:click={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                            <svg onclick={handleFileSelection} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                             {#if customBoardBackgrounds.length > 0}
@@ -181,7 +190,7 @@
                                 {:then imgUrl}
                                     <div class="customBackgroundImageAndDeleteButtonContainer">
                                         <svg class="deleteCustomBackgroundButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                             on:click={async e => {
+                                             onclick={async e => {
                                                  await removeFileFromSaveDirectory(await normalize(SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + imgPath.getFilename()));
 
                                                  if (!includedImagesInTakma.includes(selectedImg))
@@ -197,7 +206,7 @@
                                         >
                                             <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
                                         </svg>
-                                        <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720, true));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
+                                        <img onclick={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720, true));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                                         <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                                     </div>
                                 {/await}
@@ -207,7 +216,7 @@
                             {#each includedImagesInTakma as imgPath}
                                 {#await getThumbnail(imgPath, 192, true)}
                                 {:then imgUrl}
-                                <img on:click={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720, true));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
+                                <img onclick={async () => {selectedImg = imgPath; selectedImgObject.setAttribute('src', await getThumbnail(imgPath, 720, true));}} src={imgUrl} style="object-fit: cover" tabindex="0" />
                                 <!--Basically we want to display the border on the last clicked image. We can do this with the :focus selector. However, :focus is only available on elements that receive keyboard input (i.e. form elements). We can get past this limitation by adding `tabindex="0"` to the img-->
                                 {/await}
                             {/each}
@@ -219,10 +228,10 @@
             {/await}
             <h2>{I18n.t("boardName")}</h2>
             <div class="inputHolderDiv">
-                <input class="titleInput" bind:this={boardTitleInputObject} bind:value={boardTitle}>
+                <input class="titleInput" bind:value={boardTitle}>
             </div>
             <br>
-            <button disabled={!lazyLoaded} on:click={createNewBoard} class="createButton">{I18n.t("createBoard")}</button>
+            <button disabled={!lazyLoaded} onclick={createNewBoard} class="createButton">{I18n.t("createBoard")}</button>
         </div>
     </div>
 {/if}

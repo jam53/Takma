@@ -3,7 +3,7 @@
         cardFilters,
         dueDatesOverviewPopupIsVisible,
         selectedBoardId, selectedCardId
-    } from "../../scripts/stores";
+    } from "../../scripts/Stores.svelte.js";
     import type {Card, List as ListInterface} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {open} from "@tauri-apps/plugin-dialog";
@@ -35,12 +35,13 @@
         window.addEventListener("keydown", listenToKeyDown);
     });
 
-    function listenToKeyDown(e)
+    function listenToKeyDown(e: MouseEvent)
     {
-        if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !$dueDatesOverviewPopupIsVisible)
+        if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !dueDatesOverviewPopupIsVisible.value)
         {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
-            $selectedBoardId = "";
-            $cardFilters = {labelIds: [], dueDates: []};
+            selectedBoardId.value = "";
+            cardFilters.labelIds = [];
+            cardFilters.dueDates = [];
         }
         else if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && !SaveLoadManager.getData().onboardingCompleted)
         {
@@ -71,14 +72,14 @@
         });
         if (selectedFile !== null && typeof(selectedFile) === "string")
         {
-            let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(selectedFile, $selectedBoardId); //We save the selected image by the user to Takma's data folder, this way we can still access it even if the original file is deleted/moved
+            let savedFilePath = await saveAbsoluteFilePathToSaveDirectory(selectedFile, selectedBoardId.value); //We save the selected image by the user to Takma's data folder, this way we can still access it even if the original file is deleted/moved
             await setBoardBackgroundImage(savedFilePath);
         }
     }
 
     let unlisten;
     (async () => {unlisten = await listen('tauri://drag-drop', async event => {
-        if ($selectedCardId == "") //We only want to react to this filedrop event if there isn't a card selected. Otherwise it would mean the drop event was meant to drop attachements onto a card. Rather than to change the background image of the board.
+        if (selectedCardId.value == "") //We only want to react to this filedrop event if there isn't a card selected. Otherwise it would mean the drop event was meant to drop attachements onto a card. Rather than to change the background image of the board.
         {
             await handleContainerFileDrop(event.payload.paths[0]);
         }
@@ -95,7 +96,7 @@
 
         if (imageExtensions.includes(getFileExtension(droppedFile).toLowerCase()))
         {
-            let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, $selectedBoardId);
+            let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, selectedBoardId.value);
             await setBoardBackgroundImage(savedPath);
         }
     }
@@ -109,19 +110,19 @@
     {
         if (pathToImage != undefined)
         {
-            let backgroundImagePath: string = SaveLoadManager.getData().getBoard($selectedBoardId).backgroundImagePath;
+            let backgroundImagePath: string = SaveLoadManager.getData().getBoard(selectedBoardId.value).backgroundImagePath;
 
             await removeFileFromSaveDirectory(backgroundImagePath);
 
-            SaveLoadManager.getData().setBoardBackgroundImage($selectedBoardId, pathToImage);
+            SaveLoadManager.getData().setBoardBackgroundImage(selectedBoardId.value, pathToImage);
 
             const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToImage));
             document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
 
-    let lists: ListInterface[] = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
-    let dragDisabled = false;
+    let lists: ListInterface[] = $state(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
+    let dragDisabled = $state(false);
     let setDragDisabled = (bool) => {
         dragDisabled = bool;
     };
@@ -132,7 +133,7 @@
     function onFinalDragUpdate(newListsData: ListInterface[])
     {
         lists = newListsData;
-        SaveLoadManager.getData().setLists($selectedBoardId, newListsData);
+        SaveLoadManager.getData().setLists(selectedBoardId.value, newListsData);
     }
 
     function handleDndConsiderLists(e)
@@ -151,19 +152,24 @@
         onFinalDragUpdate([...lists]);
     }
 
+    function refreshListFunction(listIndex: number)
+    {
+        lists[listIndex] = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists[listIndex];
+    }
+
     function refreshListsFunction()
     {
-        lists = SaveLoadManager.getData().getBoard($selectedBoardId).lists;
+        lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
     }
 
     function filterCards(cardsToFilter: Card[]): Card[]
     {
-        for (let dueDate of $cardFilters.dueDates)
+        for (let dueDate of cardFilters.dueDates)
         {
             cardsToFilter = cardsToFilter.filter(card => card.dueDate !== null && parseInt(card.dueDate) - Date.now() < dueDate);
         }
 
-        for (let labelId of $cardFilters.labelIds)
+        for (let labelId of cardFilters.labelIds)
         {
             cardsToFilter = cardsToFilter.filter(card => card.labelIds.includes(labelId));
         }
@@ -177,30 +183,30 @@
      */
     async function removeDanglingAttachments()
     {
-        const filesOnDisk = await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/`), {recursive: false}) //All of the files in the directory associated with this board
-        const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard($selectedBoardId);
+        const filesOnDisk = await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${selectedBoardId.value}/`), {recursive: false}) //All of the files in the directory associated with this board
+        const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard(selectedBoardId.value);
 
         for (const fileOnDisk of filesOnDisk.map(file => file.name))
         {
             if (fileOnDisk && !boardFiles.includes(fileOnDisk))
             {
-                await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${$selectedBoardId}/` + fileOnDisk));
+                await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${selectedBoardId.value}/` + fileOnDisk));
             }
         }
     }
     removeDanglingAttachments();
 </script>
 
-<div class="container" title={I18n.t("changeBackgroundImage")} on:contextmenu={handleContainerRightClick} on:dragover|preventDefault on:dragenter|preventDefault on:dragleave|preventDefault>
-    <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} on:consider={handleDndConsiderLists} on:finalize={handleDndFinalizeLists}>
+<div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
+    <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} onconsider={handleDndConsiderLists} onfinalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>
-                {#key $cardFilters}
-                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListsFunction={refreshListsFunction}/>
+                {#key cardFilters}
+                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListFunction={() => refreshListFunction(listIndex)} refreshListsFunction={refreshListsFunction}/>
                 {/key}
             </div>
         {/each}
-        <div on:mouseenter={() => setDragDisabled(true)}>
+        <div onmouseenter={() => setDragDisabled(true)}>
             <CreateNewList refreshListsFunction={refreshListsFunction}/>
         </div>
     </div>
