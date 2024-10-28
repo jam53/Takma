@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "Takma"
-version = "1.6.4"
+version = "1.6.5"
 dependencies = [
  "fork",
  "serde",
