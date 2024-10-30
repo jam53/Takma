@@ -40,11 +40,11 @@
 
     $effect(() => {
         // Since we modify `editingDescription` within this effect,
-        // running this block unconditionally would trigger an infinite loop.
+        // running this block unconditionally would trigger an infinite loop. (Same goes for `cardToSave`)
         // Therefore we add an if `!editingDescription` check,
         // this ensures the effect only proceeds when `editingDescription` hasn't been set to true yet.
         // If it is true, it means this effect already ran and this prevents the effect from continuously re-triggering itself.
-        if (selectedCardId.value !== "" && untrack(() => !editingDescription))
+        if (selectedCardId.value !== "" && untrack(() => !editingDescription) && (untrack(() => cardToSave?.id !== selectedCardId.value) || !showPopup))
         {
             showPopup = true;
             cardToSave = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value)!;
@@ -92,7 +92,7 @@
 
     function saveCard()
     {
-        SaveLoadManager.getData().updateCard(cardToSave, selectedBoardId.value, selectedCardId.value);
+        SaveLoadManager.getData().updateCard($state.snapshot(cardToSave), selectedBoardId.value, selectedCardId.value);
     }
 
     let showPopup = $state(false);
