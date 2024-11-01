@@ -61,7 +61,7 @@ export class SaveLoadManager
             {
                 const savePath: string = await normalize(this.getSaveDirectoryPath() + this.saveFilename + "_Corrupted");
                 await writeTextFile(savePath, fileContents);
-                await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", type: "error" });
+                await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", kind: "error" });
             }
         }
 
