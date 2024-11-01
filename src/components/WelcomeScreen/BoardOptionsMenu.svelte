@@ -99,6 +99,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             await SaveLoadManager.getData().createNewBoard(duplicatedBoard.title, duplicatedBoard.backgroundImagePath, false, duplicatedBoard.id, duplicatedBoard.labels, duplicatedBoard.lists, duplicatedBoard.favourite, thisBoardIndex);
             refreshWelcomeScreen();
         }
+        else
+        {
+            await SaveLoadManager.getData().deleteBoard(duplicatedBoard.id);
+        }
     }
 
     async function deleteBoard()
@@ -135,6 +139,10 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             await SaveLoadManager.getData().createNewBoard(boardToPaste.title, boardToPaste.backgroundImagePath, false, boardToPaste.id, boardToPaste.labels, boardToPaste.lists, boardToPaste.favourite, thisBoardIndex)
 
             refreshWelcomeScreen();
+        }
+        else
+        {
+            await SaveLoadManager.getData().deleteBoard(boardToPaste.id);
         }
     }
 
