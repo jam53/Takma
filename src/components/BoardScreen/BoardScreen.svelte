@@ -184,7 +184,7 @@
     async function removeDanglingAttachments()
     {
         const filesOnDisk = await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${selectedBoardId.value}/`), {recursive: false}) //All of the files in the directory associated with this board
-        const boardFiles = SaveLoadManager.getData().getAllFilesRelatedToBoard(selectedBoardId.value);
+        const boardFiles = await SaveLoadManager.getData().getAllFilesRelatedToBoard(selectedBoardId.value);
 
         for (const fileOnDisk of filesOnDisk.map(file => file.name))
         {

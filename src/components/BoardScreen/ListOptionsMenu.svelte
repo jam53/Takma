@@ -19,11 +19,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
-    import {
-        duplicateCopiedListAsList,
-        duplicateList as duplicateListObject, duplicateListAsCopiedList
-    } from "../../scripts/Board";
-    import { mount } from "svelte";
+    import {duplicateList as duplicateListObject} from "../../scripts/Board";
 
     interface Props {
         clickEvent: MouseEvent,
@@ -119,7 +115,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function copyList()
     {
-        copiedList.value = await duplicateListAsCopiedList(SaveLoadManager.getData().getList(selectedBoardId.value, listId), selectedBoardId.value);
+        copiedList.value = await duplicateListObject(SaveLoadManager.getData().getList(selectedBoardId.value, listId), "", false, true);
         closeContextMenu();
     }
 
@@ -127,8 +123,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(list => list.id === listId);
 
-        let listToPaste = await duplicateCopiedListAsList($state.snapshot(copiedList.value!), selectedBoardId.value); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `copiedList.value` have been null, then the button on which this function gets called wouldn't have been visible
-
+        let listToPaste = await duplicateListObject($state.snapshot(copiedList.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `copiedList.value` have been null, then the button on which this function gets called wouldn't have been visible
 
         SaveLoadManager.getData().createNewList(selectedBoardId.value, listToPaste.title, listToPaste.cards, thisListIndex)
         refreshListsFunction();

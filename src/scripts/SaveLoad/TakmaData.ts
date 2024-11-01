@@ -415,7 +415,7 @@ export class TakmaData
     /**
      * Deletes all the files on disk associated with this card
      */
-    private deleteAllFilesTiedToCard(card: Card)
+    private async deleteAllFilesTiedToCard(card: Card)
     {
         card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
             await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment));
@@ -423,10 +423,10 @@ export class TakmaData
 
         if (card.coverImage !== "")
         {
-            (async () => await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + card.coverImage)))();
+            await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + card.coverImage));
         }
 
-        this.getAllLocalMarkdownImagesInCardDescription(card).forEach(async imgSrc => {
+        (await this.getAllLocalMarkdownImagesInCardDescription(card)).forEach(async imgSrc => {
             await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + imgSrc));
         })
     }
@@ -690,7 +690,7 @@ export class TakmaData
     /**
      * Returns a list of filenames of all the files related to this board. These could be attachments of cards, cover images of cards or the board's background image
      */
-    public getAllFilesRelatedToBoard(boardId: string): string[]
+    public async getAllFilesRelatedToBoard(boardId: string): Promise<string[]>
     {
         let files: string[] = [];
 
@@ -703,7 +703,7 @@ export class TakmaData
             {
                 files.push(...card.attachments.map(attachment => attachment.getFilename()));
                 files.push(card.coverImage.getFilename());
-                files.push(...this.getAllLocalMarkdownImagesInCardDescription(card).map(img => img.getFilename()));
+                files.push(...(await this.getAllLocalMarkdownImagesInCardDescription(card)).map(img => img.getFilename()));
             }
         }
 
@@ -718,15 +718,17 @@ export class TakmaData
      * @param card - The Card object containing the description with potential Markdown image links.
      * @returns A unique array of strings, where each string is a path to a local image file referenced in the card's description.
      */
-    public getAllLocalMarkdownImagesInCardDescription(card: Card): string[]
+    public async getAllLocalMarkdownImagesInCardDescription(card: Card): Promise<string[]>
     {
         const markdownImageLinkRegex = /!\[[^\]]*\]\((?<imgSrc>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
         //This regex only matches image links with forward slashes, so we have to make sure that all image links in a card's description use forward slashes.
 
+        const tempDirPath = (await SaveLoadManager.getTempDirectoryPath()).replace(/\\/g, '/'); //Since the path will be compared to Markdown image links, which are formatted using forward slashes. Ensure the file path uses forward slashes, converting any backslashes from Windows file paths.
+
         return [... new Set( //This ensures that if multiple ![]() markdown images refer to the same URL/file, each URL appears only once in the array
             [...card.description.matchAll(markdownImageLinkRegex)]
                 .map(match => match.groups?.imgSrc).filter(imgSrc => imgSrc !== undefined)
-        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory())); //We only want to retain images that are stored in Takma's save directory, not paths to image files somewhere else on disk nor http/https urls to images
+        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()) || imgSrc.startsWith(tempDirPath)); //We only want to retain images that are stored in locations managed by Takma. I.e. Takma's save directory or Takma's temporary folder, not paths to image files somewhere else on disk nor http/https urls to images
     }
     //endregion
 }

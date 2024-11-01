@@ -47,11 +47,34 @@ export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, bo
  * Returns the absolute path to the file in the temporary folder.
  *
  * @param pathToFile - The relative path (from Takma's save directory) of the file to save temporarily.
+ * @param filename - (Optional) The desired filename. If not provided, the original filename from `pathToFile` is used.
+ *                   A random UUID will be prepended to the filename to ensure uniqueness.
  * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
  */
-export async function saveFilePathToTempFile(pathToFile: string): Promise<string>
+export async function saveFilePathToTempFile(pathToFile: string, filename?: string): Promise<string>
 {
-    return await saveAbsoluteFilePathToDisk(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile), crypto.randomUUID(), await SaveLoadManager.getTempDirectoryPath());
+    return await saveAbsoluteFilePathToTempFile(
+        await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile),
+        filename
+    );
+}
+
+/**
+ * Copies a file from a relative path (within Takma's save directory) to the temporary folder.
+ * Returns the absolute path to the file in the temporary folder.
+ *
+ * @param pathToFile - The absolute path of the file to save temporarily.
+ * @param filename - (Optional) The desired filename. If not provided, the original filename from `pathToFile` is used.
+ *                   A random UUID will be prepended to the filename to ensure uniqueness.
+ * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
+ */
+export async function saveAbsoluteFilePathToTempFile(pathToFile: string, filename?: string): Promise<string>
+{
+    return await saveAbsoluteFilePathToDisk(
+        pathToFile,
+        crypto.randomUUID() + (filename ?? pathToFile.getFilename()), //We add a random UUID, to avoid overwriting files with the same name
+        await SaveLoadManager.getTempDirectoryPath()
+    );
 }
 
 /**

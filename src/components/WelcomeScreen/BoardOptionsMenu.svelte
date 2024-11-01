@@ -18,11 +18,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {copiedBoard} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
-    import {
-        duplicateBoard as duplicateBoardObject,
-        duplicateBoardAsCopiedBoard, duplicateCopiedBoardAsBoard
-    } from "../../scripts/Board";
     import { mount } from "svelte";
+    import {duplicateBoard as duplicateBoardObject} from "../../scripts/Board";
 
     interface Props {
         clickEvent: MouseEvent,
@@ -119,7 +116,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     async function copyBoard()
     {
         closeContextMenu();
-        copiedBoard.value = await duplicateBoardAsCopiedBoard(SaveLoadManager.getData().getBoard(boardId))
+        copiedBoard.value = await duplicateBoardObject(SaveLoadManager.getData().getBoard(boardId), false, true);
     }
 
     async function pasteBoard()
@@ -127,8 +124,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         closeContextMenu();
         let thisBoardIndex = SaveLoadManager.getData().boards.findIndex(board => board.id === boardId);
 
-
-        let boardToPaste = await duplicateCopiedBoardAsBoard($state.snapshot(copiedBoard.value!)); //Since this function was called, it means the `copiedBoard` variable can't be null. Hadn't there been a board copied i.e. should `copiedBoard` have been null, then the button on which this function gets called wouldn't have been visible
+        let boardToPaste = await duplicateBoardObject($state.snapshot(copiedBoard.value!), true, false); //Since this function was called, it means the `copiedBoard` variable can't be null. Hadn't there been a board copied i.e. should `copiedBoard` have been null, then the button on which this function gets called wouldn't have been visible
 
         const popupWindow = mount(PopupWindow, {props: {title: I18n.t("createNewBoard"), description: I18n.t("chooseBoardTitle"), inputValue: boardToPaste.title, buttonType: "input"}, target: document.body, intro: true});
 
