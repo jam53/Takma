@@ -57,7 +57,7 @@ async function generateThumbnail(imgPath: string, maxPixelSize: number, thumbnai
         { // We don't generate thumbnails for GIFs, to preserve their motion.
             resolve(convertFileSrc(imgPath));
         }
-        else if (imageExtensions.includes(imgPath.getFileExtension()))
+        else if (imageExtensions.includes(imgPath.getFileExtension().toLowerCase()))
         {
             const img = new Image();
             img.onerror = reject;
