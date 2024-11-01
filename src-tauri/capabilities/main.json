@@ -59,6 +59,7 @@
     "shell:default",
     "notification:default",
     "os:default",
-    "deep-link:default"
+    "deep-link:default",
+    "log:default"
   ]
 }

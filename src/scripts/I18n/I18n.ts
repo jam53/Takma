@@ -1,6 +1,7 @@
 import type Translation from "./Translation";
 import {ar, de, en, es, et, fr, hi, id, ja, ko, nl, pt, ru, tr, zh} from "./Translations";
 import {SaveLoadManager} from "../SaveLoad/SaveLoadManager";
+import {warn} from "@tauri-apps/plugin-log";
 
 /**
  * This class handles anything and everything related to i18n
@@ -43,6 +44,11 @@ export class I18n
         displayLanguage = this.translations.has(displayLanguage) ? displayLanguage : "en"; //Default display language to "en" in case the user has a display language set that isn't supported/translated by Takma
 
         let translation = this.translations.get(displayLanguage)[key] ?? `Translation not found for ${key}`;
+
+        if (!this.translations.get(displayLanguage)[key])
+        {
+            warn(`Translation for "${displayLanguage}:${key}" couldn't be found`);
+        }
 
         for (let i = 0; i < wordsToInsert.length; i++)
         {

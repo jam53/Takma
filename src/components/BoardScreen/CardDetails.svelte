@@ -27,6 +27,7 @@
     import PopupWindow from "../PopupWindow.svelte";
     import {listen} from "@tauri-apps/api/event";
     import {convertFileSrc} from "@tauri-apps/api/core";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         refreshListsFunction: Function;
@@ -46,6 +47,7 @@
         // If it is true, it means this effect already ran and this prevents the effect from continuously re-triggering itself.
         if (selectedCardId.value !== "" && untrack(() => !editingDescription) && (untrack(() => cardToSave?.id !== selectedCardId.value) || !showPopup))
         {
+            info("Opening card: " + selectedCardId.value);
             showPopup = true;
             cardToSave = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value)!;
 

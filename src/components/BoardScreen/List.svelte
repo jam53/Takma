@@ -10,6 +10,7 @@
     import CreateNewCard from "./CreateNewCard.svelte";
     import {mount} from "svelte";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         listId: string;
@@ -69,6 +70,7 @@
 
     function handleDndFinalizeCards(e)
     {
+        info("Dragged card from/to list:" + listId);
         onDrop(e.detail.items);
         draggingCard.value = false;
     }

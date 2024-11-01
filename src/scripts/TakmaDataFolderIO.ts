@@ -1,6 +1,7 @@
 import {copyFile, mkdir, remove, writeFile} from "@tauri-apps/plugin-fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {normalize} from "@tauri-apps/api/path";
+import {debug} from "@tauri-apps/plugin-log";
 
 /**
  * Copies a file from the provided relative path (starting in Takma's save directory) to a new file in a subfolder named after the board ID within Takma's save directory.
@@ -89,6 +90,7 @@ export async function saveAbsoluteFilePathToTempFile(pathToFile: string, filenam
 async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, savePath: string): Promise<string>
 {
     savePath = await normalize(savePath + trimLongFilename(filename));
+    debug(`Copying "${pathToFile}" to "${savePath}"`);
 
     await mkdir(savePath.getDirectoryPath(), {recursive: true});
 
@@ -131,6 +133,7 @@ async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: 
 
     const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
     const absoluteSavePath = await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath);
+    debug(`Writing ${uint8Array.byteLength} bytes to "${absoluteSavePath}"`);
 
     await mkdir(absoluteSavePath.getDirectoryPath(), {recursive: true});
 
@@ -147,6 +150,7 @@ async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: 
  */
 export async function removeFileFromSaveDirectory(pathToFile: string)
 {
+    debug(`Removing file "${await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile)}"`);
     await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
 }
 

@@ -3,6 +3,7 @@ import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from
 import {remove} from "@tauri-apps/plugin-fs";
 import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
 import {normalize} from "@tauri-apps/api/path";
+import {debug} from "@tauri-apps/plugin-log";
 
 /**
  * This is a "data class" that holds all the data/variables that need to be persistent between different sessions
@@ -45,6 +46,7 @@ export class TakmaData
      */
     set darkTheme(value: boolean)
     {
+        debug("Toggle dark theme preference to: " + value);
         this._darkTheme = value;
         SaveLoadManager.saveToDisk();
     }
@@ -62,6 +64,7 @@ export class TakmaData
      */
     set cardsFullscreen(value: boolean)
     {
+        debug("Toggle card fullscreen preference to: " + value);
         this._cardsFullscreen = value;
         SaveLoadManager.saveToDisk();
     }
@@ -111,6 +114,7 @@ export class TakmaData
      */
     set sortBoardsFunctionName(sortBoardsFunctionName: sortBoardsFunctionName)
     {
+        debug("Change boards sort order to: " + sortBoardsFunctionName);
         this._sortBoardsFunctionName = sortBoardsFunctionName;
         SaveLoadManager.saveToDisk();
     }
@@ -128,6 +132,7 @@ export class TakmaData
      */
     public async setDisplayLanguage(value: string)
     {
+        await debug("Set display language to: " + value);
         this._displayLanguage = value;
         await SaveLoadManager.saveToDisk();
     }
@@ -179,6 +184,7 @@ export class TakmaData
      */
     set showLabelsText(value: boolean)
     {
+        debug("Toggle show labels text preference to: " + value);
         this._showLabelsText = value;
         SaveLoadManager.saveToDisk();
     }
@@ -204,6 +210,7 @@ export class TakmaData
      */
     set boards(boards: Board[])
     {
+        debug("Replacing all existing boards");
         this._boards = boards;
         SaveLoadManager.saveToDisk();
     }
@@ -255,6 +262,7 @@ export class TakmaData
         this.incrementTotalBoardsCreated();
         await SaveLoadManager.saveToDisk();
 
+        await debug("Created new board: " + JSON.stringify(board));
         return boardId;
     }
 
@@ -263,6 +271,7 @@ export class TakmaData
      */
     public setBoardTitle(id: string, title: string): void
     {
+        debug(`Set title of board:${id} to "${title}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === id);
 
         this._boards[indexOfBoard].title = title;
@@ -274,6 +283,7 @@ export class TakmaData
      */
     public async deleteBoard(id: string): Promise<void>
     {
+        debug("Delete board:" + id);
         this._boards = this.boards.filter(board => board.id != id);
         await SaveLoadManager.saveToDisk();
 
@@ -287,6 +297,7 @@ export class TakmaData
      */
     public setBoardBackgroundImage(id: string, pathToImage: string): void
     {
+        debug(`Set background image of board:${id} to "${pathToImage}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === id);
 
         this._boards[indexOfBoard].backgroundImagePath = pathToImage;
@@ -302,7 +313,6 @@ export class TakmaData
      */
     public createNewList(boardId: string, listTitle: string, cards?: Card[], indexToInsert?: number): string
     {
-
         let list: List = {
             id: crypto.randomUUID(),
             creationDate: Date.now(),
@@ -323,6 +333,7 @@ export class TakmaData
 
         this.incrementTotalListsCreated();
         SaveLoadManager.saveToDisk();
+        debug("Created new list: " + JSON.stringify(list));
         return list.id;
     }
 
@@ -349,6 +360,7 @@ export class TakmaData
      */
     public setLists(boardId: string, lists: List[]): void
     {
+        debug("Replacing all lists for board: " + boardId);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         this._boards[indexOfBoard].lists = lists;
 
@@ -382,6 +394,7 @@ export class TakmaData
         this.incrementTotalCardsCreated();
         SaveLoadManager.saveToDisk();
 
+        debug("Created new card: " + JSON.stringify(card));
         return card.id;
     }
 
@@ -390,6 +403,7 @@ export class TakmaData
      */
     public setListTitle(title: string, boardId: string, listId: string): void
     {
+        debug(`Setting list title "${title}" for list:${listId} in board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -402,6 +416,7 @@ export class TakmaData
      */
     public deleteList(boardId: string, listId: string): void
     {
+        debug(`Deleting list:${listId} in board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const listIndexToDelete = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -417,6 +432,7 @@ export class TakmaData
      */
     private async deleteAllFilesTiedToCard(card: Card)
     {
+        debug(`Deleting all files tied to card: ${JSON.stringify(card)}`);
         card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
             await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment));
         });
@@ -436,6 +452,7 @@ export class TakmaData
      */
     public deleteCard(boardId: string, cardId: string): void
     {
+        debug(`Deleting card:${cardId} in board:${boardId}`);
         const indexOfBoard: number = this._boards.findIndex(board => board.id === boardId);
         let indexOfList: number;
         let indexOfCardToDelete: number;
@@ -466,6 +483,7 @@ export class TakmaData
      */
     public updateList(boardId: string, listId: string, newListContent: List)
     {
+        debug(`Replacing list:${listId} in board:${boardId} with: ${JSON.stringify(newListContent)}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const listIndexToReplace = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -479,6 +497,7 @@ export class TakmaData
      */
     public getCard(boardId: string, cardId: string): Card|null
     {
+        debug(`Retrieving card:${cardId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         for (const list of board.lists)
@@ -500,6 +519,7 @@ export class TakmaData
      */
     public updateCard(card: Card, boardId: string, cardId: string): void
     {
+        debug(`Replacing card:${cardId} in board:${boardId} with: ${JSON.stringify(card)}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         let currentList: List;
 
@@ -525,6 +545,7 @@ export class TakmaData
      */
     public getLabel(boardId: string, labelId: string): Label
     {
+        debug(`Getting label${labelId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId);
@@ -536,6 +557,7 @@ export class TakmaData
      */
     public getLabelColor(boardId: string, labelId: string): string
     {
+        debug(`Getting label color for label:${labelId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId).color;
@@ -547,6 +569,7 @@ export class TakmaData
      */
     public getLabelTitleColor(boardId: string, labelId: string): string
     {
+        debug(`Getting label title color for label:${labelId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId).titleColor;
@@ -557,6 +580,7 @@ export class TakmaData
      */
     public getLabelTitle(boardId: string, labelId: string): string
     {
+        debug(`Getting label title for label:${labelId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId).title;
@@ -567,6 +591,7 @@ export class TakmaData
      */
     public addLabelToBoard(boardId: string, label: Label)
     {
+        debug(`For board:${boardId} adding label:${JSON.stringify(label)}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].labels.push(label)
@@ -579,6 +604,7 @@ export class TakmaData
      */
     public editLabelColor(boardId: string, labelId: string, labelColor: string, labelTitleColor: string)
     {
+        debug(`Editing label:${labelId} in board:${boardId}, replacing label color "${labelColor}" and label title color "${labelTitleColor}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
@@ -593,6 +619,7 @@ export class TakmaData
      */
     public removeLabel(boardId: string, labelId: string)
     {
+        debug(`Removing label:${labelId} from board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabelInBoard = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
@@ -628,6 +655,7 @@ export class TakmaData
      */
     public setBoardLastOpenedTime(boardId: string, lastOpenedTime: number = Date.now())
     {
+        debug(`Setting last opened timed of board:${boardId} to "${lastOpenedTime}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].lastOpened = lastOpenedTime;
@@ -640,6 +668,7 @@ export class TakmaData
      */
     public toggleBoardFavourity(boardId: string)
     {
+        debug(`Toggling the favourite preference for board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         this._boards[indexOfBoard].favourite = !this._boards[indexOfBoard].favourite;
 
@@ -655,6 +684,7 @@ export class TakmaData
      */
     public addCardToList(card: Card, boardId: string, listId: string, indexToInsert: number = -1): void
     {
+        debug(`Adding a card to list:${listId} in board:${boardId}, at position:${indexToInsert} inserting card:${JSON.stringify(card)}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -692,6 +722,7 @@ export class TakmaData
      */
     public async getAllFilesRelatedToBoard(boardId: string): Promise<string[]>
     {
+        debug(`Retrieving all files tied to board:${boardId}`);
         let files: string[] = [];
 
         const board = this.getBoard(boardId);

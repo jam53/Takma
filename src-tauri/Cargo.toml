@@ -24,6 +24,7 @@ tauri-plugin-process = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-notification = "2"
 tauri-plugin-os = "2"
+tauri-plugin-log = "2"
 
 [target.'cfg(unix)'.dependencies]
 fork = "0.1"

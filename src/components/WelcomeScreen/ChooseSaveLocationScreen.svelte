@@ -3,9 +3,11 @@
     import {open as openDialog} from "@tauri-apps/plugin-dialog"
     import {appLocalDataDir, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {debug} from "@tauri-apps/plugin-log";
 
     async function setSaveLocation(saveDirectoryPath: string)
     {
+        debug(`Setting save directory path to: "${saveDirectoryPath}"`);
         localStorage.setItem("saveDirectoryPath", await normalize(saveDirectoryPath + "/"));
         location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
     }

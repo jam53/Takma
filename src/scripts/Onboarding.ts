@@ -8,6 +8,7 @@ import CardCreationDateVideo from "../videos/OnboardingCardCreationDate.mp4";
 import ShiftClickDeleteCardVideo from "../videos/OnboardingShiftClickDeleteCard.mp4";
 import {I18n} from "./I18n/I18n";
 import {relaunch} from "@tauri-apps/plugin-process";
+import {info} from "@tauri-apps/plugin-log";
 
 /**
  * This function starts the onboarding for the welcome screen. Once the onboarding for the welcome screen is finished, it calls the function that handles the onboarding for the board screen
@@ -16,6 +17,7 @@ import {relaunch} from "@tauri-apps/plugin-process";
  */
 export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: string) => void, setSelectedCard: (id: string) => void)
 {
+    info("Started onboarding");
     let onboardingStepComplete = false;
     let canExit = true;
 
@@ -53,6 +55,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
         {
+            info("Exiting onboarding");
             SaveLoadManager.getData().onboardingCompleted = true; // Even if the user exits the onboarding process prematurely, mark it as complete in the savefile to prevent it from starting automatically at the next startup
         }
     }).start();
@@ -100,6 +103,7 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
         {
+            info("Exiting onboarding");
             SaveLoadManager.getData().onboardingCompleted = true; // Even if the user exits the onboarding process prematurely, mark it as complete in the savefile to prevent it from starting automatically at the next startup
             await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
             returnToWelcomeScreen();
@@ -136,6 +140,7 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
         exitOnEsc: false,
         exitOnOverlayClick: false
     }).onexit(async () => {
+        info("Exiting onboarding");
         SaveLoadManager.getData().onboardingCompleted = true;
         await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
         canExit = true;

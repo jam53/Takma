@@ -6,6 +6,7 @@ import {
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {exists} from "@tauri-apps/plugin-fs";
 import {normalize} from "@tauri-apps/api/path";
+import {debug} from "@tauri-apps/plugin-log";
 
 export interface Board
 {
@@ -83,6 +84,7 @@ export interface windowState
  */
 export async function duplicateCard(card: Card, boardId: string, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<Card>
 {
+    debug(`Duplicating card:${card.id} in board:${boardId}`);
     card = structuredClone(card);
 
     card.id = crypto.randomUUID();
@@ -176,6 +178,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
  */
 export async function duplicateList(list: List, boardId: string, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<List>
 {
+    debug(`Duplicating list:${list.id} in board:${boardId}`);
     list = structuredClone(list);
 
     list.id = crypto.randomUUID();
@@ -195,6 +198,7 @@ export async function duplicateList(list: List, boardId: string, filePathsAbsolu
  */
 export async function duplicateBoard(board: Board, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<Board>
 {
+    debug(`Duplicating board:${board.id}`);
     board = structuredClone(board);
 
     board.id = crypto.randomUUID();

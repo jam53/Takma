@@ -20,6 +20,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {duplicateList as duplicateListObject} from "../../scripts/Board";
+    import {mount} from "svelte";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent,
@@ -40,6 +42,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
+        info("Opening list options menu for list:" + listId);
         showMenu = true
         browser = {
             w: window.innerWidth,

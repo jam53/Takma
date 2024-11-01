@@ -17,6 +17,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent,
@@ -35,6 +36,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
+        info("Opening order boards menu");
         showMenu = true
         browser = {
             w: window.innerWidth,

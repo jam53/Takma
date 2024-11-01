@@ -24,11 +24,13 @@
     import {normalize} from "@tauri-apps/api/path";
     import {readDir, remove} from "@tauri-apps/plugin-fs";
     import {toast} from "svelte-sonner";
+    import {info} from "@tauri-apps/plugin-log";
 
     let createNewCardElements;
     let createNewListElement
     onMount(() =>
     {
+        info("Opening board: " + selectedBoardId.value);
         createNewCardElements = Array.from(document.querySelectorAll('.newCard'));
         createNewListElement = document.getElementById('createNewListDiv');
 

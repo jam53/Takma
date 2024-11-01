@@ -4,6 +4,7 @@
     import SveltyPicker from "svelty-picker";
     import {I18n} from "../../scripts/I18n/I18n";
     import type {Card} from "../../scripts/Board";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent;
@@ -32,6 +33,7 @@
 
     function openContextMenu(e: MouseEvent)
     {
+        info("Opening due date popup for card:" + cardToSave.id);
         showMenu = true
         browser = {
             w: window.innerWidth,

@@ -9,6 +9,7 @@
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {saveAbsoluteFilePathToSaveDirectory} from "../../scripts/TakmaDataFolderIO";
     import {normalize, resolveResource} from "@tauri-apps/api/path";
+    import {info} from "@tauri-apps/plugin-log";
 
     let lazyLoaded = $state(false); //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -27,6 +28,7 @@
 
     onMount(async () =>
     {
+        await info("Opening welcome screen");
         if (!SaveLoadManager.getData().onboardingCompleted)
         {
             startWelcomeScreenOnBoarding(boardId => selectedBoardId.value = boardId, cardId => selectedCardId.value = cardId); //In IntroJs we can reference other elements during the onboarding, but if they don't exist yet when we start the onboarding it doesn't work. That is why we start in onMount, once all the UI components are loaded in

@@ -15,6 +15,7 @@
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
+    import {info} from "@tauri-apps/plugin-log";
 
     let showPopup = $state(true);
     let selectedImg: string = $state(""); //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -25,6 +26,7 @@
 
     onMount(() =>
     {
+        info("Opening new board popup");
         window.addEventListener("keydown", listenToKeyDown);
     });
 
@@ -74,6 +76,7 @@
 
     async function loadImagesIncludedInTakma()
     {
+        info("Loading images included with Takma for new board popup");
         let includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
 
         shuffle(includedImagesPaths);
@@ -85,6 +88,7 @@
 
     async function loadCustomBoardBackgrounds()
     {
+        info("Loading custom backgrounds for new board popup");
         if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/")))
         {
             let customImagesPaths = await Promise.all((await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/"))).map(async fileEntry => await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + fileEntry.name)));
@@ -113,6 +117,7 @@
 
     async function handleFileSelection()
     {
+        info("Opening file picker to select custom board background image");
         const selected = await open({
             multiple: false,
             filters: [{

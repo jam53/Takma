@@ -20,7 +20,8 @@
     import {convertFileSrc} from "@tauri-apps/api/core";
     import {normalize} from "@tauri-apps/api/path";
     import {toast} from "svelte-sonner";
-    import { mount } from "svelte";
+    import {mount} from "svelte";
+    import {error, info, warn} from "@tauri-apps/plugin-log";
 
     const appWindow = getCurrentWebviewWindow();
 
@@ -30,6 +31,7 @@
     $effect(async () => {
         if (localStorage.getItem("saveDirectoryPath") === null)
         {
+            await info("No save file has been set");
             document.body.style.backgroundImage = `url('${paintDrops}')`;
             document.body.style.backgroundColor = `transparent`;
         }
@@ -76,6 +78,7 @@
     // listen to the 'deep-link-received' event
     listen("deep-link-received", event => {
         let takmaLink = event.payload;
+        info("Received deep link: " + takmaLink);
         const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
         // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
         // `([\w-]+)` - This is the first capturing group (`(...)`) and it matches one or more word characters `(\w)` or hyphens (`-`). The hyphen is included within the character set `[\w-]`. Word characters include uppercase and lowercase letters, digits, and underscores. This capturing group captures the board ID.
@@ -98,10 +101,12 @@
         {
             if (boardTitle === undefined)
             {
+                warn("Deep link contained invalid board id");
                 mount(PopupWindow, {props: {description: I18n.t("boardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
             }
             else if (boardTitle !== undefined && cardId !== undefined && cardTitle === undefined)
             {
+                warn("Deep link contained invalid card id");
                 mount(PopupWindow, {props: {description: I18n.t("cardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
             }
         }
@@ -131,6 +136,7 @@
      */
     async function restoreWindowState()
     {
+        await info("Restoring application window state")
         let windowState = SaveLoadManager.getData().windowState;
 
         if (windowState.fullscreen)
@@ -197,6 +203,16 @@
             toast(I18n.t("shortcutNotAvailableDuringOnboarding"));
         }
     });
+
+    // region log any exceptions that may occur
+    window.onerror = (message, source, line) => {
+        error(`${message} at ${source} on line: ${line}`);
+    };
+
+    window.addEventListener('unhandledrejection', event => {
+        error(`Uncaught (in promise): ${event.reason}`);
+    });
+    //endregion
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">

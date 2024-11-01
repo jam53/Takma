@@ -5,6 +5,7 @@ import {normalize} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
 import {tempDir} from "@tauri-apps/api/path";
 import "../StringExtensions.ts";
+import {debug, info, warn} from "@tauri-apps/plugin-log";
 
 /**
  * This class is used to save/load data within Takma
@@ -56,12 +57,14 @@ export class SaveLoadManager
                  * ---
                  * If we instead use `Object.assign`, we won't have this problem since the keys from filecontents get copied over and replace the values of any existing keys, but leave new keys that exist in `this.data` but not in filecontents alone.
                  */
+                await info(`Save file loaded successfully from: "${pathToSavefile}"`);
             }
             catch (error)
             {
                 const savePath: string = await normalize(this.getSaveDirectoryPath() + this.saveFilename + "_Corrupted");
                 await writeTextFile(savePath, fileContents);
                 await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", kind: "error" });
+                await warn("Encountered corrupted save file, created a new empty save file and placed the corrupted save file at: " + savePath);
             }
         }
 
@@ -74,6 +77,7 @@ export class SaveLoadManager
      */
     public static async saveToDisk(): Promise<void>
     {
+        debug("Saving save file to disk");
         await writeTextFile(await normalize(this.getSaveDirectoryPath() + this.saveFilename), JSON.stringify(this.data, null, 0));
     }
 

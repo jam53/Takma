@@ -18,6 +18,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {duplicateCard as duplicateCardObject} from "../../scripts/Board";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent;
@@ -39,6 +40,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
+        info("Opening card options menu for card:" + cardId);
         showMenu = true;
         browser = {
             w: window.innerWidth,
