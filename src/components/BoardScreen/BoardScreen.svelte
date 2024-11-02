@@ -113,7 +113,7 @@
     function onFinalDragUpdate(newListsData: ListInterface[])
     {
         lists = newListsData;
-        SaveLoadManager.getData().setLists(selectedBoardId.value, newListsData);
+        SaveLoadManager.getData().setLists(selectedBoardId.value, $state.snapshot(newListsData));
     }
 
     function handleDndConsiderLists(e)

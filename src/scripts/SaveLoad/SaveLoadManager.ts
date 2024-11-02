@@ -70,7 +70,6 @@ export class SaveLoadManager
      */
     public static async saveToDisk(): Promise<void>
     {
-
     }
 
     /**

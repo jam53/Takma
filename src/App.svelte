@@ -1,15 +1,11 @@
 <script lang="ts">
     import "./stylesheets/fonts.css";
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
-    import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
-    import {savefileSet, selectedBoardId, selectedCardId} from "./scripts/Stores.svelte.js";
+    import {savefileSet, selectedBoardId} from "./scripts/Stores.svelte.js";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
-    import type {Board} from "./scripts/Board";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
-    import {I18n} from "./scripts/I18n/I18n";
-    import PopupWindow from "./components/PopupWindow.svelte";
 
     /**
      * Sets the background image of the body to the image of the selected board
@@ -26,7 +22,6 @@
             document.body.style.backgroundColor = `var(--background-color)`;
         }
     });
-
 
     // The code below makes it so when we lose focus by alt+tabbing, the last element gets refocused when we alt+tab/switch back to the Takma tab. Otherwise it gets annoying when trying to type something over and alt+tabbing in between, since you would have to first click on the element you were typing on so it would regain focus, before you would be able to continue typing
     let lastFocusedElement = document.activeElement;

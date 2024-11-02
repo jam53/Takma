@@ -11,6 +11,7 @@
     } from "../../scripts/TakmaDataFolderIO";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     let showPopup = $state(true);
     let selectedImg: string = $state(""); //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit

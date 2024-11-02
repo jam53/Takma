@@ -298,7 +298,6 @@ export class TakmaData
      */
     public createNewList(boardId: string, listTitle: string, cards?: Card[], indexToInsert?: number): string
     {
-
         let list: List = {
             id: crypto.randomUUID(),
             creationDate: Date.now(),
@@ -663,7 +662,7 @@ export class TakmaData
     /**
      * Returns a list of filenames of all the files related to this board. These could be attachments of cards, cover images of cards or the board's background image
      */
-    public getAllFilesRelatedToBoard(boardId: string): string[]
+    public async getAllFilesRelatedToBoard(boardId: string): Promise<string[]>
     {
         let files: string[] = [];
 
@@ -676,7 +675,7 @@ export class TakmaData
             {
                 files.push(...card.attachments.map(attachment => attachment.getFilename()));
                 files.push(card.coverImage.getFilename());
-                files.push(...this.getAllLocalMarkdownImagesInCardDescription(card).map(img => img.getFilename()));
+                files.push(...(await this.getAllLocalMarkdownImagesInCardDescription(card)).map(img => img.getFilename()));
             }
         }
 
@@ -691,7 +690,7 @@ export class TakmaData
      * @param card - The Card object containing the description with potential Markdown image links.
      * @returns A unique array of strings, where each string is a path to a local image file referenced in the card's description.
      */
-    public getAllLocalMarkdownImagesInCardDescription(card: Card): string[]
+    public async getAllLocalMarkdownImagesInCardDescription(card: Card): Promise<string[]>
     {
         const markdownImageLinkRegex = /!\[[^\]]*\]\((?<imgSrc>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
         //This regex only matches image links with forward slashes, so we have to make sure that all image links in a card's description use forward slashes.

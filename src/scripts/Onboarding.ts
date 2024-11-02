@@ -1,7 +1,6 @@
 import introJs from "intro.js";
 import "intro.js/introjs.css";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {shuffle} from "./KnuthShuffle";
 import CardCreationDateVideo from "../videos/OnboardingCardCreationDate.mp4";
 import ShiftClickDeleteCardVideo from "../videos/OnboardingShiftClickDeleteCard.mp4";
 import {I18n} from "./I18n/I18n";

@@ -17,10 +17,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {copiedCard, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
-    import {
-        duplicateCard as duplicateCardObject,
-        duplicateCardAsCopiedCard, duplicateCopiedCardAsCard
-    } from "../../scripts/Board";
+    import {duplicateCard as duplicateCardObject} from "../../scripts/Board";
 
     interface Props {
         clickEvent: MouseEvent;
@@ -106,7 +103,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function copyCard()
     {
-        copiedCard.value = await duplicateCardAsCopiedCard(SaveLoadManager.getData().getCard(selectedBoardId.value, cardId)!, selectedBoardId.value);
+        copiedCard.value = await duplicateCardObject(SaveLoadManager.getData().getCard(selectedBoardId.value, cardId)!, "", false, true);
         closeContextMenu();
     }
 
@@ -114,7 +111,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         let thisCardIndex = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
 
-        let cardToPaste = await duplicateCopiedCardAsCard($state.snapshot(copiedCard.value!), selectedBoardId.value); //Since this function was called, it means the `copiedCard.value` variable can't be null. Hadn't there been a card copied i.e. should `copiedCard.value` have been null, then the button on which this function gets called wouldn't have been visible
+        let cardToPaste = await duplicateCardObject($state.snapshot(copiedCard.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedCard.value` variable can't be null. Hadn't there been a card copied i.e. should `copiedCard.value` have been null, then the button on which this function gets called wouldn't have been visible
 
         SaveLoadManager.getData().addCardToList(cardToPaste, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
 

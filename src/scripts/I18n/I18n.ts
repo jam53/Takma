@@ -44,6 +44,10 @@ export class I18n
 
         let translation = this.translations.get(displayLanguage)[key] ?? `Translation not found for ${key}`;
 
+        if (!this.translations.get(displayLanguage)[key])
+        {
+        }
+
         for (let i = 0; i < wordsToInsert.length; i++)
         {
             if (typeof translation === "string")
