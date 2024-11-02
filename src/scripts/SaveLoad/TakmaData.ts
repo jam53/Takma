@@ -545,7 +545,7 @@ export class TakmaData
      */
     public getLabel(boardId: string, labelId: string): Label
     {
-        debug(`Getting label${labelId} in board:${boardId}`);
+        debug(`Getting label:${labelId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId);
