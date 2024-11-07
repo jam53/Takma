@@ -154,6 +154,25 @@
         onFinalDragUpdate([...lists]);
     }
 
+    function refreshSelectedCardFunction()
+    {
+        let currentList;
+
+        for (let indexOfList = 0; indexOfList < lists.length; indexOfList++)
+        {
+            currentList = lists[indexOfList];
+
+            for (let indexOfCard = 0; indexOfCard < currentList.cards.length; indexOfCard++)
+            {
+                if (currentList.cards[indexOfCard].id === selectedCardId.value)
+                {
+                    lists[indexOfList].cards[indexOfCard] = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value) ?? lists[indexOfList].cards[indexOfCard];
+                    return;
+                }
+            }
+        }
+    }
+
     function refreshListFunction(listIndex: number)
     {
         lists[listIndex] = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists[listIndex];
@@ -213,7 +232,7 @@
         </div>
     </div>
 </div>
-<CardDetails refreshListsFunction={refreshListsFunction}/>
+<CardDetails refreshSelectedCardFunction={refreshSelectedCardFunction} refreshListsFunction={refreshListsFunction}/>
 
 <style>
     .container {
