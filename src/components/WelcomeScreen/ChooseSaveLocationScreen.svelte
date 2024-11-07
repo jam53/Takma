@@ -20,7 +20,7 @@
 
         if (await popup.getAnswer() === true)
         {
-            let savefileURL = await popup.getInputFieldAnswer();
+            let savefileURL = (await popup.getInputFieldAnswer()).trim();
             savefileURL = savefileURL.startsWith("https://1drv.ms/u/s!") ? getOneDriveDirectDownloadLink(savefileURL) : savefileURL;
 
             let response = await fetch(savefileURL);
