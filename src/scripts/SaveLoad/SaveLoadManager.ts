@@ -1,7 +1,7 @@
 import {mkdir, exists, readTextFile, writeTextFile} from "@tauri-apps/plugin-fs";
 import {TakmaData} from "./TakmaData";
 import {message} from "@tauri-apps/plugin-dialog";
-import {normalize} from "@tauri-apps/api/path";
+import {join} from "@tauri-apps/api/path";
 import {I18n} from "../I18n/I18n";
 import {tempDir} from "@tauri-apps/api/path";
 import "../StringExtensions.ts";
@@ -36,7 +36,7 @@ export class SaveLoadManager
      */
     public static async loadSaveFileFromDisk(): Promise<void>
     {
-        const pathToSavefile = await normalize(this.getSaveDirectoryPath() + this.saveFilename);
+        const pathToSavefile = await join(this.getSaveDirectoryPath(), this.saveFilename);
         await mkdir(pathToSavefile.getDirectoryPath(), {recursive: true}); //Should the folder not exist and we don't create it here, the next if where we check if the savefile exists with `exists(...)` will throw an error.
 
         if (await exists(pathToSavefile)) //Check if the save file exists, before trying to use it to overwrite the default values
@@ -61,7 +61,7 @@ export class SaveLoadManager
             }
             catch (error)
             {
-                const savePath: string = await normalize(this.getSaveDirectoryPath() + this.saveFilename + "_Corrupted");
+                const savePath: string = await join(this.getSaveDirectoryPath(), this.saveFilename + "_Corrupted" + "." + this.saveFilename.getFileExtension());
                 await writeTextFile(savePath, fileContents);
                 await message(I18n.t("corruptedSaveFileReplacement") + savePath, { title: "Takma", kind: "error" });
                 await warn("Encountered corrupted save file, created a new empty save file and placed the corrupted save file at: " + savePath);
@@ -78,7 +78,7 @@ export class SaveLoadManager
     public static async saveToDisk(): Promise<void>
     {
         debug("Saving save file to disk");
-        await writeTextFile(await normalize(this.getSaveDirectoryPath() + this.saveFilename), JSON.stringify(this.data, null, 0));
+        await writeTextFile(await join(this.getSaveDirectoryPath(), this.saveFilename), JSON.stringify(this.data, null, 0));
     }
 
     /**
@@ -123,6 +123,6 @@ export class SaveLoadManager
      */
     public static async getTempDirectoryPath(): Promise<string>
     {
-        return await normalize(await tempDir() + "/Takma/");
+        return await join(await tempDir(), "Takma");
     }
 }

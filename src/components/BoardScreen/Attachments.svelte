@@ -8,7 +8,7 @@
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {normalize} from "@tauri-apps/api/path";
+    import {join} from "@tauri-apps/api/path";
     import type {Card} from "../../scripts/Board";
 
     interface Props {
@@ -44,19 +44,19 @@
 
     async function openWithDefaultApp(pathToFile: string)
     {
-        await open(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+        await open(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
     }
 
     async function showInFolder(pathToFile: string)
     {
-        const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
+        const path = await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile);
 
         await invoke('show_in_folder', {path});
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
     {
-        const path = await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile);
+        const path = await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile);
 
         await writeText(path); //Copy to clipboard
 
@@ -73,7 +73,7 @@
 
     async function deleteAttachment(pathToFile: string)
     {
-        await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+        await remove(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
         cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
         saveCardFunction();
 
@@ -87,7 +87,7 @@
 
         for (let attachment of cardToSave.attachments)
         {
-            if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
+            if (attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
             {
                 existingAttachments.push(attachment);
             }

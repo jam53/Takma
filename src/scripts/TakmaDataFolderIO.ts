@@ -1,6 +1,6 @@
 import {copyFile, mkdir, remove, writeFile} from "@tauri-apps/plugin-fs";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {normalize} from "@tauri-apps/api/path";
+import {join} from "@tauri-apps/api/path";
 import {debug} from "@tauri-apps/plugin-log";
 
 /**
@@ -15,7 +15,7 @@ import {debug} from "@tauri-apps/plugin-log";
  */
 export async function saveFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
-    return await saveAbsoluteFilePathToSaveDirectory(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile), boardID, filename);
+    return await saveAbsoluteFilePathToSaveDirectory(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile), boardID, filename);
 }
 
 /**
@@ -32,12 +32,12 @@ export async function saveFilePathToSaveDirectory(pathToFile: string, boardID: s
 export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, boardID: string, filename?: string): Promise<string>
 {
     filename = crypto.randomUUID() + (filename ?? pathToFile.getFilename()); //We add a random UUID, to avoid overwriting files with the same name
-    const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
+    const relativeSavePath = "." + await join("/", SaveLoadManager.getBoardFilesDirectory(), boardID, filename);
 
     await saveAbsoluteFilePathToDisk(
         pathToFile,
         relativeSavePath.getFilename(),
-        await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath.getDirectoryPath())
+        await join(SaveLoadManager.getSaveDirectoryPath(), relativeSavePath.getDirectoryPath())
     );
 
     return relativeSavePath;
@@ -55,7 +55,7 @@ export async function saveAbsoluteFilePathToSaveDirectory(pathToFile: string, bo
 export async function saveFilePathToTempFile(pathToFile: string, filename?: string): Promise<string>
 {
     return await saveAbsoluteFilePathToTempFile(
-        await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile),
+        await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile),
         filename
     );
 }
@@ -89,7 +89,7 @@ export async function saveAbsoluteFilePathToTempFile(pathToFile: string, filenam
  */
 async function saveAbsoluteFilePathToDisk(pathToFile: string, filename: string, savePath: string): Promise<string>
 {
-    savePath = await normalize(savePath + trimLongFilename(filename));
+    savePath = await join(savePath, trimLongFilename(filename));
     debug(`Copying "${pathToFile}" to "${savePath}"`);
 
     await mkdir(savePath.getDirectoryPath(), {recursive: true});
@@ -131,8 +131,8 @@ async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: 
 {
     filename = trimLongFilename(filename);
 
-    const relativeSavePath = "./" + await normalize(SaveLoadManager.getBoardFilesDirectory() + `${boardID}/` + filename);
-    const absoluteSavePath = await normalize(SaveLoadManager.getSaveDirectoryPath() + relativeSavePath);
+    const relativeSavePath = "." + await join("/", SaveLoadManager.getBoardFilesDirectory(), boardID, filename);
+    const absoluteSavePath = await join(SaveLoadManager.getSaveDirectoryPath(), relativeSavePath);
     debug(`Writing ${uint8Array.byteLength} bytes to "${absoluteSavePath}"`);
 
     await mkdir(absoluteSavePath.getDirectoryPath(), {recursive: true});
@@ -150,8 +150,8 @@ async function saveArrayBufferToSaveDirectory(uint8Array: Uint8Array, filename: 
  */
 export async function removeFileFromSaveDirectory(pathToFile: string)
 {
-    debug(`Removing file "${await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile)}"`);
-    await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToFile));
+    debug(`Removing file "${await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile)}"`);
+    await remove(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
 }
 
 /**

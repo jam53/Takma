@@ -5,7 +5,7 @@ import {
 } from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {exists} from "@tauri-apps/plugin-fs";
-import {normalize} from "@tauri-apps/api/path";
+import {join} from "@tauri-apps/api/path";
 import {debug} from "@tauri-apps/plugin-log";
 
 export interface Board
@@ -93,7 +93,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
     //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
     card.attachments = await Promise.all(card.attachments.map(async attachment => {
 
-        if (!filePathsAbsolute && await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
+        if (!filePathsAbsolute && attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
         {
             if (!saveFilesToTemp)
             {
@@ -104,7 +104,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
                 return await saveFilePathToTempFile(attachment, attachment.getFilename().substring(36));
             }
         }
-        else if (filePathsAbsolute && await exists(attachment) && attachment !== "")
+        else if (filePathsAbsolute && attachment !== "" && await exists(attachment))
         {
             if (!saveFilesToTemp)
             {
@@ -139,7 +139,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
     let duplicatedImagesInCardDescription: string[] = [];
     for (const imgSrc of imagesInCardDescription)
     {
-        if (!filePathsAbsolute && await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + imgSrc)))
+        if (!filePathsAbsolute && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), imgSrc)))
         {
             duplicatedImagesInCardDescription.push(
                 !saveFilesToTemp ?

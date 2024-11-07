@@ -7,18 +7,14 @@
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
     import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
-    import {
-        currentMonitor,
-        PhysicalPosition,
-        PhysicalSize
-    } from "@tauri-apps/api/window";
+    import {currentMonitor, PhysicalPosition, PhysicalSize} from "@tauri-apps/api/window";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
     import {I18n} from "./scripts/I18n/I18n";
     import {listen} from "@tauri-apps/api/event";
     import PopupWindow from "./components/PopupWindow.svelte";
     import {convertFileSrc} from "@tauri-apps/api/core";
-    import {normalize} from "@tauri-apps/api/path";
+    import {join} from "@tauri-apps/api/path";
     import {toast} from "svelte-sonner";
     import {mount} from "svelte";
     import {error, info, warn} from "@tauri-apps/plugin-log";
@@ -38,7 +34,7 @@
         else if (selectedBoardId.value !== "")
         {
             const board: Board = SaveLoadManager.getData().getBoard(selectedBoardId.value);
-            const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + board.backgroundImagePath));
+            const imgUrl: string = convertFileSrc(await join(SaveLoadManager.getSaveDirectoryPath(), board.backgroundImagePath));
 
             // Set the background image only if the current boardId hasn't changed during the image loading process.
             //Otherwise it's possible that the user opened a board and quickly went back to the welcome screen. In that case we would set the backgroundImage to "" in the `else` below. And then once the backgroundImage of the previous subscribe event loaded in, we would set the background image. Causing us to see the backgroundImage of the board on the welcomescreen. We avoid this by checking whether or not the board is still selected once the image has actually been loaded.

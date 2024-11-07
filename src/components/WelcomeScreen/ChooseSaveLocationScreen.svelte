@@ -8,7 +8,7 @@
     async function setSaveLocation(saveDirectoryPath: string)
     {
         debug(`Setting save directory path to: "${saveDirectoryPath}"`);
-        localStorage.setItem("saveDirectoryPath", await normalize(saveDirectoryPath + "/"));
+        localStorage.setItem("saveDirectoryPath", await normalize(saveDirectoryPath));
         location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
     }
 

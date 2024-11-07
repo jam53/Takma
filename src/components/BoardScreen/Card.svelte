@@ -5,7 +5,7 @@
     import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {normalize} from "@tauri-apps/api/path";
+    import {join} from "@tauri-apps/api/path";
     import {mount} from "svelte";
 
     interface Props {
@@ -37,13 +37,13 @@
     /**
      * Given a list of attachments, returns the amount of attachments that actually exist on the disk
      */
-    async function amountOfExistingAttachments(attachments: String[])
+    async function amountOfExistingAttachments(attachments: string[])
     {
         let amount = 0;
 
         for (let attachment of attachments)
         {
-            if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + attachment)) && attachment !== "")
+            if (attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
             {
                 amount++;
             }

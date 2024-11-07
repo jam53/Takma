@@ -11,7 +11,7 @@
         removeFileFromSaveDirectory,
         saveAbsoluteFilePathToSaveDirectory,
     } from "../../scripts/TakmaDataFolderIO";
-    import {normalize, resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
+    import {join, resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -89,9 +89,9 @@
     async function loadCustomBoardBackgrounds()
     {
         info("Loading custom backgrounds for new board popup");
-        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/")))
+        if (await exists(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds")))
         {
-            let customImagesPaths = await Promise.all((await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/"))).map(async fileEntry => await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + fileEntry.name)));
+            let customImagesPaths = await Promise.all((await readDir(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds"))).map(async fileEntry => await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds", fileEntry.name)));
             shuffle(customImagesPaths);
 
             return customImagesPaths;
@@ -196,7 +196,7 @@
                                     <div class="customBackgroundImageAndDeleteButtonContainer">
                                         <svg class="deleteCustomBackgroundButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                              onclick={async e => {
-                                                 await removeFileFromSaveDirectory(await normalize(SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + imgPath.getFilename()));
+                                                 await removeFileFromSaveDirectory(await join(SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds", imgPath.getFilename()));
 
                                                  if (!includedImagesInTakma.includes(selectedImg))
                                                  {

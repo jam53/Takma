@@ -21,7 +21,7 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {convertFileSrc} from "@tauri-apps/api/core";
     import {listen} from "@tauri-apps/api/event";
-    import {normalize} from "@tauri-apps/api/path";
+    import {join} from "@tauri-apps/api/path";
     import {readDir, remove} from "@tauri-apps/plugin-fs";
     import {toast} from "svelte-sonner";
     import {info} from "@tauri-apps/plugin-log";
@@ -118,7 +118,7 @@
 
             SaveLoadManager.getData().setBoardBackgroundImage(selectedBoardId.value, pathToImage);
 
-            const imgUrl: string = convertFileSrc(await normalize(SaveLoadManager.getSaveDirectoryPath() + pathToImage));
+            const imgUrl: string = convertFileSrc(await join(SaveLoadManager.getSaveDirectoryPath(), pathToImage));
             document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
@@ -185,14 +185,14 @@
      */
     async function removeDanglingAttachments()
     {
-        const filesOnDisk = await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${selectedBoardId.value}/`), {recursive: false}) //All of the files in the directory associated with this board
+        const filesOnDisk = await readDir(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), selectedBoardId.value), {recursive: false}) //All of the files in the directory associated with this board
         const boardFiles = await SaveLoadManager.getData().getAllFilesRelatedToBoard(selectedBoardId.value);
 
         for (const fileOnDisk of filesOnDisk.map(file => file.name))
         {
             if (fileOnDisk && !boardFiles.includes(fileOnDisk))
             {
-                await remove(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + `${selectedBoardId.value}/` + fileOnDisk));
+                await remove(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), selectedBoardId.value, fileOnDisk));
             }
         }
     }

@@ -1,7 +1,7 @@
 import {mkdir, exists, writeFile} from "@tauri-apps/plugin-fs";
 import {convertFileSrc} from "@tauri-apps/api/core";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {normalize} from "@tauri-apps/api/path";
+import {join} from "@tauri-apps/api/path";
 import {imageExtensions} from "./TakmaDataFolderIO";
 import XXH from "xxhashjs";
 
@@ -20,8 +20,8 @@ export async function getThumbnail(imgPath: string, maxPixelSize: number, imgPat
 {
     const hashedImgName: string = XXH.h64(imgPath + maxPixelSize, 0).toString(16); // We include both the `imgPath` and `maxPixelSize` in the hash to handle cases where the same `imgPath` is used in multiple places in the UI with different resolutions. If we only hashed the `imgPath`, we could risk overwriting cached images that were previously generated at different resolutions. By hashing both the image URL and the target size, we ensure that each unique image/size combination has its own cached thumbnail, avoiding conflicts between different resolution variants.
 
-    let absoluteImgPath = imgPathIsAbsolute ? imgPath : await normalize(SaveLoadManager.getSaveDirectoryPath() + imgPath); // Image paths in Takma are stored relative to the save directory. This resolves the relative path to an absolute one.
-    let absoluteThumbnailPath = await normalize(await SaveLoadManager.getTempDirectoryPath() + hashedImgName);
+    let absoluteImgPath = imgPathIsAbsolute ? imgPath : await join(SaveLoadManager.getSaveDirectoryPath(), imgPath); // Image paths in Takma are stored relative to the save directory. This resolves the relative path to an absolute one.
+    let absoluteThumbnailPath = await join(await SaveLoadManager.getTempDirectoryPath(), hashedImgName);
 
     if (await exists(absoluteThumbnailPath))
     {
