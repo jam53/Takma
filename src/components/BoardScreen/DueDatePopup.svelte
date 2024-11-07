@@ -20,8 +20,6 @@
         saveCardFunction
     }: Props = $props();
 
-    const initialDueDate = cardToSave.dueDate;
-
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
     // menu is dimension (height and width) of context menu
@@ -85,12 +83,6 @@
     $effect(() => {
         navElement?.focus();
     }); //If we don't focus on the navElement, i.e. the container of this popup, then we won't be able to detect the on:keydown event
-    $effect(() => {
-        if (initialDueDate !== cardToSave.dueDate)
-        {//If the cardToSave.dueDate no longer equals its initial value, this means the user picked a new due date/removed the existing due date. Therefore we can close this DueDatePopup
-            closeContextMenu();
-        }
-    });
 
     function handleKeyDown(e: KeyboardEvent)
     {
@@ -114,7 +106,7 @@
                 {I18n.t("dueDate")}
             </h3>
             <br>
-            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={cardToSave.dueDate} i18n={I18n.t("sveltyPicker")}/>
+            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={cardToSave.dueDate} i18n={I18n.t("sveltyPicker")} on:change={closeContextMenu}/>
         </div>
     </nav>
 {/if}

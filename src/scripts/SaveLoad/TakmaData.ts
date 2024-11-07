@@ -519,6 +519,11 @@ export class TakmaData
      */
     public updateCard(card: Card, boardId: string, cardId: string): void
     {
+        if (boardId === "" || cardId === "")
+        {
+            return;
+        }
+
         debug(`Replacing card:${cardId} in board:${boardId} with: ${JSON.stringify(card)}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         let currentList: List;
