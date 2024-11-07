@@ -2,7 +2,7 @@
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card as CardInterface} from "../../scripts/Board";
-    import {cardFilters, draggingCard, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
+    import {cardFilters, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
@@ -72,11 +72,9 @@
     {
         info("Dragged card from/to list:" + listId);
         onDrop(e.detail.items);
-        draggingCard.value = false;
     }
 
     function handleDraggedElement(draggedElement, data, index) {
-        draggingCard.value = true;
     }
 
     let editingTitle: boolean = $state(false); //We use a span to display the list title when we are not editing it, and an input element when we are. We do this since we can't drag the list by the input element.

@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {Card, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId, selectedCardId, draggingCard} from "../../scripts/Stores.svelte.js";
+    import {selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -22,7 +22,7 @@
 
     function displayCardDetails()
     {
-        selectedCardId.value = card.id
+        selectedCardId.value = card.id;
     }
 
     function amountOfTodosInCard(cardd: Card, completedOnly = false)
@@ -115,16 +115,7 @@
      onmouseleave={() => hovering = false}
 >
     {#if card.coverImage !== ""}
-        {#if !draggingCard.value}
-            {#await (async () => await getThumbnail(card.coverImage, 600))()}
-                <span class="loader"></span>
-            {:then coverImage}
-                <img class="coverImage" src={coverImage} />
-            {/await}
-        {:else}
-            <!-- While dragging the card, display the pre-processed image to prevent layout shifts -->
-            <img class="coverImage" src="{preProcessedCoverImgSrc}"/>
-        {/if}
+        <img class="coverImage" src="{preProcessedCoverImgSrc}"/>
     {/if}
     <div class="nonCoverImageContainer">
         <div class="labels">
