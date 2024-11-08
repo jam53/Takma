@@ -102,7 +102,14 @@
 
     function shouldCardBeHidden(card: CardInterface)
     {
-        return !(card.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) || card.description.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()));
+        const searchValue: string = searchBarValue.value.toLowerCase().trim();
+        
+        return !(
+            card.title.toLowerCase().includes(searchValue) ||
+            card.description.toLowerCase().includes(searchValue) ||
+            card.checklists.some(checklist => checklist.title.toLowerCase().includes(searchValue)) ||
+            card.checklists.some(checklist => checklist.todos.some(todo => todo.content.toLowerCase().includes(searchValue)))
+        );
     }
 
     let titleHolderElement: HTMLElement;
