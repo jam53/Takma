@@ -103,7 +103,7 @@
     function shouldCardBeHidden(card: CardInterface)
     {
         const searchValue: string = searchBarValue.value.toLowerCase().trim();
-        
+
         return !(
             card.title.toLowerCase().includes(searchValue) ||
             card.description.toLowerCase().includes(searchValue) ||
@@ -168,7 +168,7 @@
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#if !shouldCardBeHidden(card)}
-                        <Card card={card} refreshListFunction={refreshListFunction} listIdCardIsIn={listId}/>
+                        <Card card={card} refreshListsFunction={refreshListsFunction} refreshListFunction={refreshListFunction} listIdCardIsIn={listId}/>
                     {/if}
                 </div>
             {/each}

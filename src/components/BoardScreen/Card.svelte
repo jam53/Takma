@@ -10,12 +10,14 @@
 
     interface Props {
         card: Card;
+        refreshListsFunction: Function;
         refreshListFunction: Function;
         listIdCardIsIn: string;
     }
 
     let {
         card,
+        refreshListsFunction,
         refreshListFunction,
         listIdCardIsIn
     }: Props = $props();
@@ -124,12 +126,12 @@
                     <!--This #key will be triggerd when we call the `refreshListFunction()` after clicking on a label. If we don't do this #key, the labels won't change their appearance until the next time we open this board/refresh the cards in the lists by dragging a card/list e.g.-->
                     {#if !SaveLoadManager.getData().showLabelsText}
                         <div style="background-color: {label.color}"
-                             onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = true; refreshListFunction()}}
+                             onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = true; refreshListsFunction()}}
                         >
                         </div>
                     {:else}
                         <span style="color: {label.titleColor}; background-color: {label.color}"
-                              onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = false; refreshListFunction()}}
+                              onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = false; refreshListsFunction()}}
                         >
                             {label.title}
                         </span>
