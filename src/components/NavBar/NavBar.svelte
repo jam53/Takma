@@ -43,7 +43,7 @@
         {:else if selectedBoardId.value === ""}
             <h1>Takma</h1>
         {:else}
-            <input class="boardTitle" value={SaveLoadManager.getData().getBoard(selectedBoardId.value).title} oninput={e => SaveLoadManager.getData().setBoardTitle(selectedBoardId.value, e.target.value)}/>
+            <input class="boardTitle" spellcheck="false" value={SaveLoadManager.getData().getBoard(selectedBoardId.value).title} oninput={e => SaveLoadManager.getData().setBoardTitle(selectedBoardId.value, e.target.value)}/>
         {/if}
     </div>
     <div class="rightSideContainer">
@@ -128,7 +128,7 @@
         justify-content: space-between;
         height: 2em;
 
-        padding: 0.5em;
+        padding-top: 0.25em;
         transition: 0.4s;
 
         background: transparent;
@@ -140,6 +140,7 @@
         align-items: center;
         gap: 0.5em;
         flex-grow: 1;
+        padding: 1em 0.5em;
     }
 
     h1 {
@@ -164,6 +165,8 @@
         justify-content: space-between;
         height: inherit;
         gap: 0.5em;
+        overflow: hidden;
+        padding: 1em 0.5em;
     }
 
     .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton {
@@ -210,6 +213,7 @@
         padding: 0;
         flex-grow: 1;
         -webkit-filter: drop-shadow( 0 0 10px rgba(var(--background-color-rgb-values), .75));
+        height: 1.25em;
         text-overflow: ellipsis;
     }
 </style>

@@ -54,6 +54,7 @@
         position: relative;
         height: var(--toggleHeight);
         width: var(--toggleWidth);
+        min-width: var(--toggleWidth);
         border-radius: var(--toggleHeight);
         transition: all 500ms ease-in-out;
         background: var(--bgColor--night);

@@ -108,7 +108,7 @@
     let titleHolderElement: HTMLElement;
     $effect(() =>
     {
-        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px)`);
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px + 0.25em)`);
     /*
         100vh        - hoogte scherm
         4px          - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html`
@@ -119,6 +119,7 @@
         (2 * 1px)    - (2 * breedte van de border van de lists)
         5.5em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
         ${...}       - hoogte van de titel van de lijst
+        0.25em       - margin-top of .container in BoardScreen.svelte
      */
 
         applyOverFlowedStyleClasses();

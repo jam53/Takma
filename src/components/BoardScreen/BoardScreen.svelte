@@ -37,7 +37,7 @@
         window.addEventListener("keydown", listenToKeyDown);
     });
 
-    function listenToKeyDown(e: MouseEvent)
+    function listenToKeyDown(e: KeyboardEvent)
     {
         if ((e.key === "Escape" || (e.key.toLowerCase() === "w" && e.ctrlKey)) && createNewCardElements.every(newCardElement => !newCardElement.classList.contains("newCardCreating")) && !createNewListElement.classList.contains("newListCreating") && SaveLoadManager.getData().onboardingCompleted && !dueDatesOverviewPopupIsVisible.value)
         {// key(s) to close pressed && create new card div styleclass isn't applied i.e. we aren't "creating"/entering a new card title && create new list div styleclass isn't applied i.e. we aren't "creating"/entering a new list title. This means we can close the board window, otherwise we would close the board window, while we might have intended to close the create new card/create new list element.
@@ -236,10 +236,12 @@
 
 <style>
     .container {
-        height: calc(100vh - 4px - 30px - 2em - (2 * 8px)); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) */
+        height: calc(100vh - 4px - 30px - 2em - (2 * 8px) + 0.25em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) + margin-top of this style class */
         display: flex;
         overflow-x: scroll;
         overflow-y: hidden;
+        padding-top: 0.75em;
+        margin-top: -0.25em;
     }
 
     /* Handle */

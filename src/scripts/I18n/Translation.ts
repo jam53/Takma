@@ -201,4 +201,5 @@ export default interface Translation
     takmaWebPreviewExplanation: string;
     closeWithCtrlShiftWExplanation: string;
     shortcutNotAvailableDuringOnboarding: string;
+    searchBarShortcutsExplanation: string;
 }
