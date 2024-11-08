@@ -519,7 +519,7 @@ export class TakmaData
      */
     public updateCard(card: Card, boardId: string, cardId: string): void
     {
-        if (boardId === "" || cardId === "")
+        if (boardId === "" || cardId === "" || card.id !== cardId)
         {
             return;
         }

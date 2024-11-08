@@ -258,6 +258,7 @@
             }
             finally
             {
+                info(`Opening Takma link with board:${boardId} and card:${cardId}`);
                 if (boardTitle != undefined && cardTitle != undefined)
                 {
                     selectedBoardId.value = boardId;
@@ -444,7 +445,7 @@
     });
 
     let typingTimer;                //timer identifier
-    let doneTypingInterval = 5000;  //time in ms
+    let doneTypingInterval = 2000;  //time in ms
     //This function should be added as a "keyup" event listener to whatever element that should be used to check whether or not the user stopped typing
     function waitUntilUserStoppedTyping(callback)
     {
