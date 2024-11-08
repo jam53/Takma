@@ -210,5 +210,6 @@
         padding: 0;
         flex-grow: 1;
         -webkit-filter: drop-shadow( 0 0 10px rgba(var(--background-color-rgb-values), .75));
+        text-overflow: ellipsis;
     }
 </style>
