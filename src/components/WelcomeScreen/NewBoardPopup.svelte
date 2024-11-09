@@ -82,9 +82,10 @@
 
     async function loadCustomBoardBackgrounds()
     {
-        if (await exists(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/")))
+        info("Loading custom backgrounds for new board popup");
+        if (await exists(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds")))
         {
-            let customImagesPaths = await Promise.all((await readDir(await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/"))).map(async fileEntry => await normalize(SaveLoadManager.getSaveDirectoryPath() + SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + fileEntry.name)));
+            let customImagesPaths = await Promise.all((await readDir(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds"))).map(async fileEntry => await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds", fileEntry.name)));
             shuffle(customImagesPaths);
 
             return customImagesPaths;
@@ -188,7 +189,7 @@
                                     <div class="customBackgroundImageAndDeleteButtonContainer">
                                         <svg class="deleteCustomBackgroundButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                              onclick={async e => {
-                                                 await removeFileFromSaveDirectory(await normalize(SaveLoadManager.getBoardFilesDirectory() + "CustomBoardBackgrounds/" + imgPath.getFilename()));
+                                                 await removeFileFromSaveDirectory(await join(SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds", imgPath.getFilename()));
 
                                                  if (!includedImagesInTakma.includes(selectedImg))
                                                  {

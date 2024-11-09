@@ -172,7 +172,7 @@ export let en: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Open this card to learn more",
-                    description: "If you're interested in finding out the number of boards, lists, and cards you've created in Takma, you can check the savefile located at:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nThe counts for boards, lists, and cards can be obtained from the `_totalBoardsCreated`, `_totalListsCreated`, and `_totalCardsCreated` variables, respectively.\n\n---\n\nAs evident from the background image of this board, it is possible to create fully transparent boards. This can be accomplished by using an image with *transparency* as the board's background.\n\n---\n\n- To modify the images displayed in the popup when creating a new board, replace the images within the folder: `" + "$|01|$" + "`. \n> Make sure that there is at least one image present in the aforementioned folder to ensure that Takma works as intended.\n- If you were to input an exceptionally lengthy search query in the search bar, the Takma window will disappear.",
+                    description: "If you're interested in finding out the number of boards, lists, and cards you've created in Takma, you can check the savefile located at:\n\n```bat\n" + "$|00|$" + "\n``` \n\nThe counts for boards, lists, and cards can be obtained from the `_totalBoardsCreated`, `_totalListsCreated`, and `_totalCardsCreated` variables, respectively.\n\n---\n\nAs evident from the background image of this board, it is possible to create fully transparent boards. This can be accomplished by using an image with *transparency* as the board's background.\n\n---\n\n- To modify the images displayed in the popup when creating a new board, replace the images within the folder: `" + "$|01|$" + "`. \n> Make sure that there is at least one image present in the aforementioned folder to ensure that Takma works as intended.\n- If you were to input an exceptionally lengthy search query in the search bar, the Takma window will disappear.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -248,6 +248,7 @@ export let en: Translation = {
     closeWithCtrlShiftWExplanation: "You can quickly close Takma by using the keyboard shortcut CTRL + SHIFT + W. This allows you to exit the program without needing to click the close button.",
     shortcutNotAvailableDuringOnboarding: "This keyboard shortcut will become available once you complete the onboarding process.",
     takmaPWAExplanation: "Install the Takma Web Preview on your device using this button!\n\nBy installing this previewer as an app, you'll have quick, offline access whenever you need it — perfect if you plan to use the Takma Web Preview regularly.",
+    searchBarShortcutsExplanation: "You can open the search bar by clicking on it or by using the keyboard shortcut CTRL + SHIFT + F. To close it, simply press ESC.",
 };
 
 export let ar: Translation = {
@@ -422,7 +423,7 @@ export let ar: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "افتح هذه البطاقة لمعرفة المزيد",
-                    description: "إذا كنت مهتمًا بمعرفة عدد اللوحات والقوائم والبطاقات التي قمت بإنشائها في تكما، يمكنك التحقق من ملف الحفظ الموجود في المسار:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nيمكن الحصول على عدادات اللوحات والقوائم والبطاقات من المتغيرات ``_totalBoardsCreated`` و ``_totalListsCreated`` و ``_totalCardsCreated`` على التوالي.\n\n---\n\nكما يُظهر من صورة الخلفية لهذا اللوح، يمكن إنشاء لوحات شفافة بشكل كامل. يمكن تحقيق ذلك باستخدام صورة مع *شفافية* كخلفية للوح.\n\n---\n\n- لتعديل الصور المعروضة في النافذة المنبثقة عند إنشاء لوح جديد، قم بتبديل الصور داخل المجلد: `" + "$|01|$" + "`. \n> تأكد من وجود صورة واحدة على الأقل في المجلد المذكور لضمان عمل تكما كما هو مقصود.\n- إذا قمت بإدخال استعلام بحث استثنائي طويل في شريط البحث، ستختفي نافذة تكما.",
+                    description: "إذا كنت مهتمًا بمعرفة عدد اللوحات والقوائم والبطاقات التي قمت بإنشائها في تكما، يمكنك التحقق من ملف الحفظ الموجود في المسار:\n\n```bat\n" + "$|00|$" + "\n``` \n\nيمكن الحصول على عدادات اللوحات والقوائم والبطاقات من المتغيرات ``_totalBoardsCreated`` و ``_totalListsCreated`` و ``_totalCardsCreated`` على التوالي.\n\n---\n\nكما يُظهر من صورة الخلفية لهذا اللوح، يمكن إنشاء لوحات شفافة بشكل كامل. يمكن تحقيق ذلك باستخدام صورة مع *شفافية* كخلفية للوح.\n\n---\n\n- لتعديل الصور المعروضة في النافذة المنبثقة عند إنشاء لوح جديد، قم بتبديل الصور داخل المجلد: `" + "$|01|$" + "`. \n> تأكد من وجود صورة واحدة على الأقل في المجلد المذكور لضمان عمل تكما كما هو مقصود.\n- إذا قمت بإدخال استعلام بحث استثنائي طويل في شريط البحث، ستختفي نافذة تكما.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -498,6 +499,7 @@ export let ar: Translation = {
     closeWithCtrlShiftWExplanation: "يمكنك إغلاق تاكما بسرعة باستخدام اختصار لوحة المفاتيح CTRL + SHIFT + W. يتيح لك ذلك الخروج من البرنامج دون الحاجة إلى النقر على زر الإغلاق.",
     shortcutNotAvailableDuringOnboarding: "سيكون هذا اختصار لوحة المفاتيح متاحًا بمجرد إكمال عملية التعريف.",
     takmaPWAExplanation: "قم بتثبيت معاينة Takma على جهازك باستخدام هذا الزر!\n\nعن طريق تثبيت هذه المعاينة كتطبيق، ستحصل على وصول سريع وغير متصل كلما احتجت لذلك — مثالي إذا كنت تخطط لاستخدام معاينة Takma بانتظام.",
+    searchBarShortcutsExplanation: "يمكنك فتح شريط البحث بالنقر عليه أو باستخدام اختصار لوحة المفاتيح CTRL + SHIFT + F. لإغلاقه، ما عليك سوى الضغط على ESC.",
 };
 
 export let de: Translation = {
@@ -672,7 +674,7 @@ export let de: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Öffnen Sie diese Karte, um mehr zu erfahren",
-                    description: "Wenn Sie daran interessiert sind, die Anzahl der von Ihnen in Takma erstellten Boards, Listen und Karten herauszufinden, können Sie die gespeicherte Datei unter folgendem Pfad überprüfen:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nDie Zahlen für Boards, Listen und Karten können jeweils aus den Variablen `_totalBoardsCreated`, `_totalListsCreated` und `_totalCardsCreated` abgerufen werden.\n\n---\n\nWie aus dem Hintergrundbild dieses Boards ersichtlich ist, ist es möglich, vollständig transparente Boards zu erstellen. Dies kann erreicht werden, indem ein Bild mit Transparenz als Hintergrund des Boards verwendet wird.\n\n---\n\n- Um die Bilder in dem Popup-Fenster zu ändern, das beim Erstellen eines neuen Boards angezeigt wird, ersetzen Sie die Bilder im Ordner: `" + "$|01|$" + "`. \n> Stellen Sie sicher, dass sich mindestens ein Bild im genannten Ordner befindet, um sicherzustellen, dass Takma wie beabsichtigt funktioniert.\n- Wenn Sie eine außergewöhnlich lange Suchanfrage in die Suchleiste eingeben würden, verschwindet das Takma-Fenster.",
+                    description: "Wenn Sie daran interessiert sind, die Anzahl der von Ihnen in Takma erstellten Boards, Listen und Karten herauszufinden, können Sie die gespeicherte Datei unter folgendem Pfad überprüfen:\n\n```bat\n" + "$|00|$" + "\n``` \n\nDie Zahlen für Boards, Listen und Karten können jeweils aus den Variablen `_totalBoardsCreated`, `_totalListsCreated` und `_totalCardsCreated` abgerufen werden.\n\n---\n\nWie aus dem Hintergrundbild dieses Boards ersichtlich ist, ist es möglich, vollständig transparente Boards zu erstellen. Dies kann erreicht werden, indem ein Bild mit Transparenz als Hintergrund des Boards verwendet wird.\n\n---\n\n- Um die Bilder in dem Popup-Fenster zu ändern, das beim Erstellen eines neuen Boards angezeigt wird, ersetzen Sie die Bilder im Ordner: `" + "$|01|$" + "`. \n> Stellen Sie sicher, dass sich mindestens ein Bild im genannten Ordner befindet, um sicherzustellen, dass Takma wie beabsichtigt funktioniert.\n- Wenn Sie eine außergewöhnlich lange Suchanfrage in die Suchleiste eingeben würden, verschwindet das Takma-Fenster.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -748,6 +750,7 @@ export let de: Translation = {
     closeWithCtrlShiftWExplanation: "Sie können Takma schnell schließen, indem Sie die Tastenkombination CTRL + SHIFT + W verwenden. Damit können Sie das Programm verlassen, ohne auf die Schaltfläche „Schließen“ klicken zu müssen.",
     shortcutNotAvailableDuringOnboarding: "Diese Tastenkombination wird verfügbar sein, sobald Sie den Onboarding-Prozess abgeschlossen haben.",
     takmaPWAExplanation: "Installiere die Takma Web-Vorschau auf deinem Gerät mit diesem Button!\n\nWenn du diesen Vorschau-Viewer als App installierst, hast du jederzeit schnellen, offline Zugriff — perfekt, wenn du die Takma Web-Vorschau regelmäßig nutzen möchtest.",
+    searchBarShortcutsExplanation: "Sie können die Suchleiste öffnen, indem Sie darauf klicken oder die Tastenkombination STRG + UMSCHALT + F verwenden. Zum Schließen drücken Sie einfach ESC.",
 };
 
 export let es: Translation = {
@@ -922,7 +925,7 @@ export let es: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Abre esta tarjeta para aprender más",
-                    description: "Si estás interesado en conocer la cantidad de tableros, listas y tarjetas que has creado en Takma, puedes revisar el archivo de guardado ubicado en:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nLos recuentos de tableros, listas y tarjetas se pueden obtener de las variables `_totalBoardsCreated`, `_totalListsCreated` y `_totalCardsCreated`, respectivamente.\n\n---\n\nComo se evidencia en la imagen de fondo de este tablero, es posible crear tableros completamente transparentes. Esto se puede lograr utilizando una imagen con transparencia como fondo del tablero.\n\n---\n\n- Para modificar las imágenes que se muestran en el popup al crear un nuevo tablero, reemplaza las imágenes dentro de la carpeta: `" + "$|01|$" + "`. \n> Asegúrate de que al menos haya una imagen presente en la carpeta mencionada para garantizar que Takma funcione como se pretende.\n- Si ingresaras una consulta de búsqueda excepcionalmente larga en la barra de búsqueda, la ventana de Takma desaparecerá.",
+                    description: "Si estás interesado en conocer la cantidad de tableros, listas y tarjetas que has creado en Takma, puedes revisar el archivo de guardado ubicado en:\n\n```bat\n" + "$|00|$" + "\n``` \n\nLos recuentos de tableros, listas y tarjetas se pueden obtener de las variables `_totalBoardsCreated`, `_totalListsCreated` y `_totalCardsCreated`, respectivamente.\n\n---\n\nComo se evidencia en la imagen de fondo de este tablero, es posible crear tableros completamente transparentes. Esto se puede lograr utilizando una imagen con transparencia como fondo del tablero.\n\n---\n\n- Para modificar las imágenes que se muestran en el popup al crear un nuevo tablero, reemplaza las imágenes dentro de la carpeta: `" + "$|01|$" + "`. \n> Asegúrate de que al menos haya una imagen presente en la carpeta mencionada para garantizar que Takma funcione como se pretende.\n- Si ingresaras una consulta de búsqueda excepcionalmente larga en la barra de búsqueda, la ventana de Takma desaparecerá.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -998,6 +1001,7 @@ export let es: Translation = {
     closeWithCtrlShiftWExplanation: "Puedes cerrar Takma rápidamente usando el atajo de teclado CTRL + SHIFT + W. Esto te permite salir del programa sin necesidad de hacer clic en el botón de cerrar.",
     shortcutNotAvailableDuringOnboarding: "Este atajo de teclado estará disponible una vez que completes el proceso de incorporación.",
     takmaPWAExplanation: "¡Instala la Vista Previa de Takma en tu dispositivo usando este botón!\n\nAl instalar esta vista previa como una aplicación, tendrás acceso rápido y sin conexión siempre que lo necesites, perfecto si planeas usar la Vista Previa de Takma regularmente.",
+    searchBarShortcutsExplanation: "Puedes abrir la barra de búsqueda haciendo clic en ella o usando el atajo de teclado CTRL + SHIFT + F. Para cerrarla, simplemente presiona ESC.",
 };
 
 export let et: Translation = {
@@ -1172,7 +1176,7 @@ export let et: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Ava see kaart, et rohkem teada saada",
-                    description: "Kui olete huvitatud teie poolt Takmas loodud tahvlite, loendite ja kaartide arvu teadasaamisest, saate kontrollida salvestatud faili asukohta järgmiselt:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nTahvlite, loendite ja kaartide loendused saab vastavalt kätte muutujatest `_totalBoardsCreated`, `_totalListsCreated` ja `_totalCardsCreated`.\n\n---\n\nNagu näha selle tahvli taustapildilt, on võimalik luua täiesti läbipaistvaid tahvleid. Selle saavutamiseks võib kasutada tahvli taustana läbipaistvat pilti.\n\n---\n\n- Uute tahvlite loomisel kuvatava popup-aknas kuvatavate piltide muutmiseks asendage pildid kausta sees: `" + "$|01|$" + "`. \n> Veenduge, et nimetatud kaustas oleks vähemalt üks pilt, et tagada Takma korrektne toimimine.\n- Kui sisestaksite otsinguribasse erakordselt pika otsingupäringu, kaob Takma aken ära.",
+                    description: "Kui olete huvitatud teie poolt Takmas loodud tahvlite, loendite ja kaartide arvu teadasaamisest, saate kontrollida salvestatud faili asukohta järgmiselt:\n\n```bat\n" + "$|00|$" + "\n``` \n\nTahvlite, loendite ja kaartide loendused saab vastavalt kätte muutujatest `_totalBoardsCreated`, `_totalListsCreated` ja `_totalCardsCreated`.\n\n---\n\nNagu näha selle tahvli taustapildilt, on võimalik luua täiesti läbipaistvaid tahvleid. Selle saavutamiseks võib kasutada tahvli taustana läbipaistvat pilti.\n\n---\n\n- Uute tahvlite loomisel kuvatava popup-aknas kuvatavate piltide muutmiseks asendage pildid kausta sees: `" + "$|01|$" + "`. \n> Veenduge, et nimetatud kaustas oleks vähemalt üks pilt, et tagada Takma korrektne toimimine.\n- Kui sisestaksite otsinguribasse erakordselt pika otsingupäringu, kaob Takma aken ära.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -1248,6 +1252,7 @@ export let et: Translation = {
     closeWithCtrlShiftWExplanation: "Sa saad Takma kiiresti sulgeda, kasutades klahvikombinatsiooni CTRL + SHIFT + W. See võimaldab sul programmilt väljuda ilma sulgemisnuppu vajutamata.",
     shortcutNotAvailableDuringOnboarding: "See klahvikombinatsioon on saadaval pärast seda, kui oled koolitusprotsessi lõpetanud.",
     takmaPWAExplanation: "Installige Takma veebieelsevaade oma seadmesse, kasutades seda nuppu!\n\nKui installite selle eelvaate rakenduse, saate igal ajal kiire ja offline-juurdepääsu — ideaalne, kui plaanite Takma veebieelsevaadet regulaarselt kasutada.",
+    searchBarShortcutsExplanation: "Saate otsinguriba avada, klõpsates sellel või kasutades klaviatuuri otseteed CTRL + SHIFT + F. Sulgemiseks vajutage lihtsalt ESC.",
 };
 
 export let fr: Translation = {
@@ -1422,7 +1427,7 @@ export let fr: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Ouvrez cette carte pour en savoir plus",
-                    description: "Si vous êtes intéressé pour connaître le nombre de tableaux, de listes et de cartes que vous avez créés dans Takma, vous pouvez vérifier le fichier de sauvegarde situé à l'adresse suivante :\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nLes décomptes des tableaux, des listes et des cartes peuvent être obtenus à partir des variables `_totalBoardsCreated`, `_totalListsCreated` et `_totalCardsCreated`, respectivement.\n\n---\n\nComme le montre l'image d'arrière-plan de ce tableau, il est possible de créer des tableaux entièrement transparents. Cela peut être réalisé en utilisant une image avec transparence comme arrière-plan du tableau.\n\n---\n\n- Pour modifier les images affichées dans la fenêtre contextuelle lors de la création d'un nouveau tableau, remplacez les images dans le dossier : `" + "$|01|$" + "`. \n> Assurez-vous qu'au moins une image est présente dans le dossier mentionné pour que Takma fonctionne comme prévu.\n- Si vous entrez une requête de recherche exceptionnellement longue dans la barre de recherche, la fenêtre Takma disparaîtra.",
+                    description: "Si vous êtes intéressé pour connaître le nombre de tableaux, de listes et de cartes que vous avez créés dans Takma, vous pouvez vérifier le fichier de sauvegarde situé à l'adresse suivante :\n\n```bat\n" + "$|00|$" + "\n``` \n\nLes décomptes des tableaux, des listes et des cartes peuvent être obtenus à partir des variables `_totalBoardsCreated`, `_totalListsCreated` et `_totalCardsCreated`, respectivement.\n\n---\n\nComme le montre l'image d'arrière-plan de ce tableau, il est possible de créer des tableaux entièrement transparents. Cela peut être réalisé en utilisant une image avec transparence comme arrière-plan du tableau.\n\n---\n\n- Pour modifier les images affichées dans la fenêtre contextuelle lors de la création d'un nouveau tableau, remplacez les images dans le dossier : `" + "$|01|$" + "`. \n> Assurez-vous qu'au moins une image est présente dans le dossier mentionné pour que Takma fonctionne comme prévu.\n- Si vous entrez une requête de recherche exceptionnellement longue dans la barre de recherche, la fenêtre Takma disparaîtra.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -1498,6 +1503,7 @@ export let fr: Translation = {
     closeWithCtrlShiftWExplanation: "Vous pouvez fermer rapidement Takma en utilisant le raccourci clavier CTRL + SHIFT + W. Cela vous permet de quitter le programme sans avoir à cliquer sur le bouton de fermeture.",
     shortcutNotAvailableDuringOnboarding: "Ce raccourci clavier sera disponible une fois que vous aurez terminé le processus d'intégration.",
     takmaPWAExplanation: "Installez l'aperçu Web de Takma sur votre appareil en utilisant ce bouton !\n\nEn installant cet aperçu en tant qu'application, vous aurez un accès rapide et hors ligne chaque fois que vous en aurez besoin — parfait si vous prévoyez d'utiliser régulièrement l'aperçu Web de Takma.",
+    searchBarShortcutsExplanation: "Vous pouvez ouvrir la barre de recherche en cliquant dessus ou en utilisant le raccourci clavier CTRL + SHIFT + F. Pour la fermer, appuyez simplement sur ESC.",
 };
 
 export let hi: Translation = {
@@ -1672,7 +1678,7 @@ export let hi: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "इस कार्ड को खोलकर और अधिक जानें",
-                    description: "यदि आपको तकमा में बनाए गए बोर्ड, सूचियों और कार्डों की संख्या जानने में रुचि है, तो आप निम्नलिखित पते पर सहेजें गए फ़ाइल की जाँच कर सकते हैं:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nबोर्ड, सूचियों और कार्डों की गिनती `_totalBoardsCreated`, `_totalListsCreated` और `_totalCardsCreated` चरणी से प्राप्त की जा सकती है।\n\n---\n\nइस बोर्ड की पृष्ठभूमि छवि से स्पष्ट होता है कि पूरी तरह से पारदर्शी बोर्ड बनाना संभव है। इसका अभिकल्प पारदर्शिता के साथ एक छवि का उपयोग बोर्ड की पृष्ठभूमि के रूप में किया जा सकता है।\n\n---\n\n- एक नए बोर्ड बनाते समय पॉपअप में प्रदर्शित होने वाली छवियों को संशोधित करने के लिए, फ़ोल्डर में छवियाँ बदल दें: `" + "$|01|$" + "`. \n> यह सुनिश्चित करें कि उपरोक्त फ़ोल्डर में कम से कम एक छवि होनी चाहिए ताकि तकमा उचित ढंग से काम करे।\n- यदि आप खोज संवाद में अत्यधिक लंबे खोज प्रश्न को दर्ज करते हैं, तो तकमा विंडो गायब हो जाएगी।",
+                    description: "यदि आपको तकमा में बनाए गए बोर्ड, सूचियों और कार्डों की संख्या जानने में रुचि है, तो आप निम्नलिखित पते पर सहेजें गए फ़ाइल की जाँच कर सकते हैं:\n\n```bat\n" + "$|00|$" + "\n``` \n\nबोर्ड, सूचियों और कार्डों की गिनती `_totalBoardsCreated`, `_totalListsCreated` और `_totalCardsCreated` चरणी से प्राप्त की जा सकती है।\n\n---\n\nइस बोर्ड की पृष्ठभूमि छवि से स्पष्ट होता है कि पूरी तरह से पारदर्शी बोर्ड बनाना संभव है। इसका अभिकल्प पारदर्शिता के साथ एक छवि का उपयोग बोर्ड की पृष्ठभूमि के रूप में किया जा सकता है।\n\n---\n\n- एक नए बोर्ड बनाते समय पॉपअप में प्रदर्शित होने वाली छवियों को संशोधित करने के लिए, फ़ोल्डर में छवियाँ बदल दें: `" + "$|01|$" + "`. \n> यह सुनिश्चित करें कि उपरोक्त फ़ोल्डर में कम से कम एक छवि होनी चाहिए ताकि तकमा उचित ढंग से काम करे।\n- यदि आप खोज संवाद में अत्यधिक लंबे खोज प्रश्न को दर्ज करते हैं, तो तकमा विंडो गायब हो जाएगी।",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -1748,6 +1754,7 @@ export let hi: Translation = {
     closeWithCtrlShiftWExplanation: "आप कीबोर्ड शॉर्टकट CTRL + SHIFT + W का उपयोग करके Takma को जल्दी बंद कर सकते हैं। यह आपको बिना बंद करने वाले बटन पर क्लिक किए कार्यक्रम से बाहर निकलने की अनुमति देता है।",
     shortcutNotAvailableDuringOnboarding: "यह कीबोर्ड शॉर्टकट उस समय उपलब्ध होगा जब आप ऑनबोर्डिंग प्रक्रिया को पूरा कर लेंगे।",
     takmaPWAExplanation: "इस बटन का उपयोग करके अपने डिवाइस पर Takma वेब पूर्वावलोकन इंस्टॉल करें!\n\nइस पूर्वावलोकन को एक ऐप के रूप में इंस्टॉल करने पर, आपके पास जब भी जरूरत हो, त्वरित, ऑफ़लाइन पहुंच होगी — यदि आप नियमित रूप से Takma वेब पूर्वावलोकन का उपयोग करने की योजना बना रहे हैं, तो यह सही है।",
+    searchBarShortcutsExplanation: "आप सर्च बार को उस पर क्लिक करके या कीबोर्ड शॉर्टकट CTRL + SHIFT + F का उपयोग करके खोल सकते हैं। इसे बंद करने के लिए, बस ESC दबाएं।",
 };
 
 export let id: Translation = {
@@ -1922,7 +1929,7 @@ export let id: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Buka kartu ini untuk mempelajari lebih lanjut",
-                    description: "Jika Anda tertarik untuk mengetahui jumlah papan, daftar, dan kartu yang Anda buat di Takma, Anda dapat memeriksa berkas penyimpanan yang terletak di:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nJumlah papan, daftar, dan kartu dapat diperoleh dari variabel `_totalBoardsCreated`, `_totalListsCreated`, dan `_totalCardsCreated`, masing-masing.\n\n---\n\nSeperti yang terlihat dari gambar latar belakang papan ini, memungkinkan untuk membuat papan yang sepenuhnya transparan. Hal ini dapat dicapai dengan menggunakan gambar dengan transparansi sebagai latar belakang papan.\n\n---\n\n- Untuk mengubah gambar yang ditampilkan dalam popup saat membuat papan baru, gantikan gambar di dalam folder: `" + "$|01|$" + "`. \n> Pastikan bahwa setidaknya ada satu gambar di dalam folder yang disebutkan untuk memastikan Takma berfungsi seperti yang dimaksud.\n- Jika Anda memasukkan kueri pencarian yang sangat panjang di bilah pencarian, jendela Takma akan menghilang.",
+                    description: "Jika Anda tertarik untuk mengetahui jumlah papan, daftar, dan kartu yang Anda buat di Takma, Anda dapat memeriksa berkas penyimpanan yang terletak di:\n\n```bat\n" + "$|00|$" + "\n``` \n\nJumlah papan, daftar, dan kartu dapat diperoleh dari variabel `_totalBoardsCreated`, `_totalListsCreated`, dan `_totalCardsCreated`, masing-masing.\n\n---\n\nSeperti yang terlihat dari gambar latar belakang papan ini, memungkinkan untuk membuat papan yang sepenuhnya transparan. Hal ini dapat dicapai dengan menggunakan gambar dengan transparansi sebagai latar belakang papan.\n\n---\n\n- Untuk mengubah gambar yang ditampilkan dalam popup saat membuat papan baru, gantikan gambar di dalam folder: `" + "$|01|$" + "`. \n> Pastikan bahwa setidaknya ada satu gambar di dalam folder yang disebutkan untuk memastikan Takma berfungsi seperti yang dimaksud.\n- Jika Anda memasukkan kueri pencarian yang sangat panjang di bilah pencarian, jendela Takma akan menghilang.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -1998,6 +2005,7 @@ export let id: Translation = {
     closeWithCtrlShiftWExplanation: "Anda dapat menutup Takma dengan cepat menggunakan pintasan keyboard CTRL + SHIFT + W. Ini memungkinkan Anda keluar dari program tanpa harus mengklik tombol tutup.",
     shortcutNotAvailableDuringOnboarding: "Pintasan keyboard ini akan tersedia setelah Anda menyelesaikan proses onboarding.",
     takmaPWAExplanation: "Instal Prabala Web Takma di perangkat Anda menggunakan tombol ini!\n\nDengan menginstal prabala ini sebagai aplikasi, Anda akan memiliki akses cepat dan offline kapan pun Anda membutuhkannya — sempurna jika Anda berencana untuk menggunakan Prabala Web Takma secara teratur.",
+    searchBarShortcutsExplanation: "Anda dapat membuka bilah pencarian dengan mengkliknya atau menggunakan pintasan keyboard CTRL + SHIFT + F. Untuk menutupnya, cukup tekan ESC.",
 };
 
 export let ja: Translation = {
@@ -2172,7 +2180,7 @@ export let ja: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "詳細を知るためにこのカードを開いてください",
-                    description: "Takmaで作成したボード、リスト、およびカードの数を知りたい場合は、次の場所に保存されているファイルを確認できます:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nボード、リスト、およびカードの数は、それぞれ `_totalBoardsCreated`、`_totalListsCreated`、および `_totalCardsCreated` 変数から取得できます。\n\n---\n\nこのボードの背景画像から明らかなように、完全に透明なボードを作成することが可能です。これは、ボードの背景として透明度を持つ画像を使用することで実現できます。\n\n---\n\n- 新しいボードを作成する際のポップアップで表示される画像を変更するには、次のフォルダ内の画像を置き換えます: `" + "$|01|$" + "`. \n> Takmaが意図した通りに動作するように、前述のフォルダ内に少なくとも1つの画像が存在していることを確認してください。\n- 検索バーに非常に長い検索クエリを入力した場合、Takmaウィンドウは消えます。",
+                    description: "Takmaで作成したボード、リスト、およびカードの数を知りたい場合は、次の場所に保存されているファイルを確認できます:\n\n```bat\n" + "$|00|$" + "\n``` \n\nボード、リスト、およびカードの数は、それぞれ `_totalBoardsCreated`、`_totalListsCreated`、および `_totalCardsCreated` 変数から取得できます。\n\n---\n\nこのボードの背景画像から明らかなように、完全に透明なボードを作成することが可能です。これは、ボードの背景として透明度を持つ画像を使用することで実現できます。\n\n---\n\n- 新しいボードを作成する際のポップアップで表示される画像を変更するには、次のフォルダ内の画像を置き換えます: `" + "$|01|$" + "`. \n> Takmaが意図した通りに動作するように、前述のフォルダ内に少なくとも1つの画像が存在していることを確認してください。\n- 検索バーに非常に長い検索クエリを入力した場合、Takmaウィンドウは消えます。",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -2248,6 +2256,7 @@ export let ja: Translation = {
     closeWithCtrlShiftWExplanation: "キーボードショートカット CTRL + SHIFT + W を使用して Takma を迅速に閉じることができます。これにより、閉じるボタンをクリックせずにプログラムを終了できます。",
     shortcutNotAvailableDuringOnboarding: "このキーボードショートカットは、オンボーディングプロセスを完了すると利用可能になります。",
     takmaPWAExplanation: "このボタンを使用して、デバイスにTakma Webプレビューをインストールしてください！\n\nこのプレビューをアプリとしてインストールすることで、必要なときにすぐにオフラインでアクセスできるようになります。Takma Webプレビューを定期的に使用する予定がある場合に最適です。",
+    searchBarShortcutsExplanation: "検索バーはクリックするか、キーボードショートカットのCTRL + SHIFT + Fを使用して開くことができます。閉じるには、ESCキーを押してください。",
 };
 
 export let ko: Translation = {
@@ -2422,7 +2431,7 @@ export let ko: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "더 알아보려면 이 카드를 열어주세요",
-                    description: "Takma에서 생성한 보드, 리스트 및 카드의 수를 알고 싶다면, 다음 위치에 있는 저장 파일을 확인할 수 있습니다:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\n보드, 리스트 및 카드의 개수는 각각 `_totalBoardsCreated`, `_totalListsCreated`, `_totalCardsCreated` 변수에서 얻을 수 있습니다.\n\n---\n\n이 보드의 배경 이미지에서 보듯, 완전히 투명한 보드를 만들 수 있습니다. 이는 보드의 배경으로 투명도를 가진 이미지를 사용하여 달성할 수 있습니다.\n\n---\n\n- 새 보드를 생성할 때 팝업에 표시되는 이미지를 변경하려면, 다음 폴더 내의 이미지를 교체하세요: `" + "$|01|$" + "`. \n> Takma가 의도한 대로 작동하도록, 언급한 폴더에 적어도 하나의 이미지가 있어야 함을 확인하십시오.\n- 검색 창에 매우 긴 검색 쿼리를 입력하면, Takma 창이 사라질 수 있습니다.",
+                    description: "Takma에서 생성한 보드, 리스트 및 카드의 수를 알고 싶다면, 다음 위치에 있는 저장 파일을 확인할 수 있습니다:\n\n```bat\n" + "$|00|$" + "\n``` \n\n보드, 리스트 및 카드의 개수는 각각 `_totalBoardsCreated`, `_totalListsCreated`, `_totalCardsCreated` 변수에서 얻을 수 있습니다.\n\n---\n\n이 보드의 배경 이미지에서 보듯, 완전히 투명한 보드를 만들 수 있습니다. 이는 보드의 배경으로 투명도를 가진 이미지를 사용하여 달성할 수 있습니다.\n\n---\n\n- 새 보드를 생성할 때 팝업에 표시되는 이미지를 변경하려면, 다음 폴더 내의 이미지를 교체하세요: `" + "$|01|$" + "`. \n> Takma가 의도한 대로 작동하도록, 언급한 폴더에 적어도 하나의 이미지가 있어야 함을 확인하십시오.\n- 검색 창에 매우 긴 검색 쿼리를 입력하면, Takma 창이 사라질 수 있습니다.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -2498,6 +2507,7 @@ export let ko: Translation = {
     closeWithCtrlShiftWExplanation: "키보드 단축키 CTRL + SHIFT + W를 사용하여 Takma를 빠르게 닫을 수 있습니다. 이를 통해 닫기 버튼을 클릭하지 않고도 프로그램을 종료할 수 있습니다.",
     shortcutNotAvailableDuringOnboarding: "이 키보드 단축키는 온보딩 프로세스를 완료하면 사용 가능합니다.",
     takmaPWAExplanation: "이 버튼을 사용하여 기기에 Takma 웹 미리보기를 설치하세요!\n\n이 미리보기를 앱으로 설치하면 필요할 때마다 빠르고 오프라인으로 접근할 수 있습니다. Takma 웹 미리보기를 자주 사용할 계획이라면 완벽합니다.",
+    searchBarShortcutsExplanation: "검색창은 클릭하거나 키보드 단축키 CTRL + SHIFT + F를 사용하여 열 수 있습니다. 닫으려면 ESC를 누르세요.",
 };
 
 export let nl: Translation = {
@@ -2672,7 +2682,7 @@ export let nl: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Open deze kaart om meer te weten te komen",
-                    description: "Als u geïnteresseerd bent in het te weten komen van het aantal borden, lijsten en kaarten dat u hebt gemaakt in Takma, kunt u het opgeslagen bestand controleren dat zich bevindt op:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nDe tellingen voor borden, lijsten en kaarten kunnen respectievelijk worden verkregen uit de variabelen `_totalBoardsCreated`, `_totalListsCreated` en `_totalCardsCreated`.\n\n---\n\nZoals blijkt uit de achtergrondafbeelding van dit bord, is het mogelijk om volledig transparante borden te maken. Dit kan worden bereikt door een afbeelding met transparantie te gebruiken als achtergrond van het bord.\n\n---\n\n- Om de afbeeldingen te wijzigen die worden weergegeven in het popup-venster bij het maken van een nieuw bord, vervangt u de afbeeldingen in de map: `" + "$|01|$" + "`. \n> Zorg ervoor dat er ten minste één afbeelding aanwezig is in de genoemde map om ervoor te zorgen dat Takma naar behoren werkt.\n- Als u een buitengewoon lange zoekopdracht invoert in de zoekbalk, zal het Takma-venster verdwijnen.",
+                    description: "Als u geïnteresseerd bent in het te weten komen van het aantal borden, lijsten en kaarten dat u hebt gemaakt in Takma, kunt u het opgeslagen bestand controleren dat zich bevindt op:\n\n```bat\n" + "$|00|$" + "\n``` \n\nDe tellingen voor borden, lijsten en kaarten kunnen respectievelijk worden verkregen uit de variabelen `_totalBoardsCreated`, `_totalListsCreated` en `_totalCardsCreated`.\n\n---\n\nZoals blijkt uit de achtergrondafbeelding van dit bord, is het mogelijk om volledig transparante borden te maken. Dit kan worden bereikt door een afbeelding met transparantie te gebruiken als achtergrond van het bord.\n\n---\n\n- Om de afbeeldingen te wijzigen die worden weergegeven in het popup-venster bij het maken van een nieuw bord, vervangt u de afbeeldingen in de map: `" + "$|01|$" + "`. \n> Zorg ervoor dat er ten minste één afbeelding aanwezig is in de genoemde map om ervoor te zorgen dat Takma naar behoren werkt.\n- Als u een buitengewoon lange zoekopdracht invoert in de zoekbalk, zal het Takma-venster verdwijnen.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -2748,6 +2758,7 @@ export let nl: Translation = {
     closeWithCtrlShiftWExplanation: "Je kunt Takma snel sluiten met de toetsencombinatie CTRL + SHIFT + W. Hiermee kun je het programma afsluiten zonder op de sluitknop te klikken.",
     shortcutNotAvailableDuringOnboarding: "Deze toetsencombinatie is beschikbaar zodra je het onboardingproces hebt voltooid.",
     takmaPWAExplanation: "Installeer de Takma Web Preview op je apparaat met deze knop!\n\nDoor deze previewer als app te installeren, heb je altijd snelle offline toegang wanneer je dat nodig hebt — perfect als je van plan bent om de Takma Web Preview regelmatig te gebruiken.",
+    searchBarShortcutsExplanation: "Je kunt de zoekbalk openen door erop te klikken of de sneltoets CTRL + SHIFT + F te gebruiken. Om het te sluiten, druk je gewoon op ESC."
 };
 
 export let pt: Translation = {
@@ -2922,7 +2933,7 @@ export let pt: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Abra este cartão para saber mais",
-                    description: "Se você estiver interessado em descobrir a quantidade de quadros, listas e cartões que você criou no Takma, você pode verificar o arquivo de salvamento localizado em:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nAs contagens de quadros, listas e cartões podem ser obtidas nas variáveis `_totalBoardsCreated`, `_totalListsCreated` e `_totalCardsCreated`, respectivamente.\n\n---\n\nConforme evidenciado pela imagem de fundo deste quadro, é possível criar quadros completamente transparentes. Isso pode ser feito usando uma imagem com transparência como plano de fundo do quadro.\n\n---\n\n- Para modificar as imagens exibidas no pop-up ao criar um novo quadro, substitua as imagens na pasta: `" + "$|01|$" + "`. \n> Certifique-se de que haja pelo menos uma imagem presente na pasta mencionada para garantir que o Takma funcione como pretendido.\n- Se você inserir uma consulta de pesquisa excepcionalmente longa na barra de pesquisa, a janela do Takma desaparecerá.",
+                    description: "Se você estiver interessado em descobrir a quantidade de quadros, listas e cartões que você criou no Takma, você pode verificar o arquivo de salvamento localizado em:\n\n```bat\n" + "$|00|$" + "\n``` \n\nAs contagens de quadros, listas e cartões podem ser obtidas nas variáveis `_totalBoardsCreated`, `_totalListsCreated` e `_totalCardsCreated`, respectivamente.\n\n---\n\nConforme evidenciado pela imagem de fundo deste quadro, é possível criar quadros completamente transparentes. Isso pode ser feito usando uma imagem com transparência como plano de fundo do quadro.\n\n---\n\n- Para modificar as imagens exibidas no pop-up ao criar um novo quadro, substitua as imagens na pasta: `" + "$|01|$" + "`. \n> Certifique-se de que haja pelo menos uma imagem presente na pasta mencionada para garantir que o Takma funcione como pretendido.\n- Se você inserir uma consulta de pesquisa excepcionalmente longa na barra de pesquisa, a janela do Takma desaparecerá.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -2998,6 +3009,7 @@ export let pt: Translation = {
     closeWithCtrlShiftWExplanation: "Você pode fechar o Takma rapidamente usando o atalho de teclado CTRL + SHIFT + W. Isso permite que você saia do programa sem precisar clicar no botão de fechar.",
     shortcutNotAvailableDuringOnboarding: "Esse atalho de teclado estará disponível assim que você completar o processo de integração.",
     takmaPWAExplanation: "Instale a Pré-visualização da Web do Takma no seu dispositivo usando este botão!\n\nAo instalar este visualizador como um aplicativo, você terá acesso rápido e offline sempre que precisar — perfeito se você planeja usar a Pré-visualização da Web do Takma regularmente.",
+    searchBarShortcutsExplanation: "Você pode abrir a barra de pesquisa clicando nela ou usando o atalho de teclado CTRL + SHIFT + F. Para fechá-la, basta pressionar ESC.",
 };
 
 export let ru: Translation = {
@@ -3172,7 +3184,7 @@ export let ru: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Откройте эту карту, чтобы узнать больше",
-                    description: "Если вы заинтересованы узнать количество досок, списков и карточек, которые вы создали в Takma, вы можете проверить сохраненный файл по следующему пути:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nКоличество досок, списков и карточек можно получить из переменных `_totalBoardsCreated`, `_totalListsCreated` и `_totalCardsCreated` соответственно.\n\n---\n\nКак видно из фонового изображения этой доски, возможно создание полностью прозрачных досок. Это можно сделать, используя изображение с прозрачностью в качестве фона доски.\n\n---\n\n- Чтобы изменить изображения, отображаемые во всплывающем окне при создании новой доски, замените изображения в папке: `" + "$|01|$" + "`. \n> Убедитесь, что в указанной папке есть хотя бы одно изображение, чтобы гарантировать правильную работу Takma.\n- Если вы введете в поисковой строке исключительно длинный поисковый запрос, окно Takma исчезнет.",
+                    description: "Если вы заинтересованы узнать количество досок, списков и карточек, которые вы создали в Takma, вы можете проверить сохраненный файл по следующему пути:\n\n```bat\n" + "$|00|$" + "\n``` \n\nКоличество досок, списков и карточек можно получить из переменных `_totalBoardsCreated`, `_totalListsCreated` и `_totalCardsCreated` соответственно.\n\n---\n\nКак видно из фонового изображения этой доски, возможно создание полностью прозрачных досок. Это можно сделать, используя изображение с прозрачностью в качестве фона доски.\n\n---\n\n- Чтобы изменить изображения, отображаемые во всплывающем окне при создании новой доски, замените изображения в папке: `" + "$|01|$" + "`. \n> Убедитесь, что в указанной папке есть хотя бы одно изображение, чтобы гарантировать правильную работу Takma.\n- Если вы введете в поисковой строке исключительно длинный поисковый запрос, окно Takma исчезнет.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -3248,6 +3260,7 @@ export let ru: Translation = {
     closeWithCtrlShiftWExplanation: "Вы можете быстро закрыть Takma, используя сочетание клавиш CTRL + SHIFT + W. Это позволит вам выйти из программы, не нажимая на кнопку закрытия.",
     shortcutNotAvailableDuringOnboarding: "Это сочетание клавиш станет доступным после завершения процесса onboarding.",
     takmaPWAExplanation: "Установите веб-просмотр Takma на свое устройство, используя эту кнопку!\n\nУстановив этот просмотрщик в качестве приложения, вы получите быстрый доступ в оффлайн в любое время, когда это необходимо — идеально, если вы планируете регулярно использовать веб-просмотр Takma.",
+    searchBarShortcutsExplanation: "Вы можете открыть строку поиска, кликнув по ней или используя сочетание клавиш CTRL + SHIFT + F. Чтобы закрыть её, просто нажмите ESC.",
 };
 
 export let tr: Translation = {
@@ -3422,7 +3435,7 @@ export let tr: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "Daha fazla bilgi edinmek için bu kartı açın",
-                    description: "Eğer Takma'da oluşturduğunuz panoların, listelerin ve kartların sayısını öğrenmek isterseniz, kayıt dosyasını aşağıdaki konumda kontrol edebilirsiniz:\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\nPano, liste ve kart sayıları sırasıyla `_totalBoardsCreated`, `_totalListsCreated` ve `_totalCardsCreated` değişkenlerinden elde edilebilir.\n\n---\n\nBu panonun arka plan görüntüsünden de anlaşılacağı üzere, tamamen şeffaf panolar oluşturmak mümkündür. Bunun için panonun arka planı olarak saydamlık içeren bir görüntü kullanabilirsiniz.\n\n---\n\n- Yeni bir pano oluşturulurken açılan pencerede görüntülenen resimleri değiştirmek için, aşağıdaki klasördeki resimleri değiştirin: `" + "$|01|$" + "`. \n> Takma'nın düzgün çalışması için bahsi geçen klasörde en az bir resim bulunduğundan emin olun.\n- Arama çubuğuna son derece uzun bir arama sorgusu girerseniz, Takma penceresi kaybolacaktır.",
+                    description: "Eğer Takma'da oluşturduğunuz panoların, listelerin ve kartların sayısını öğrenmek isterseniz, kayıt dosyasını aşağıdaki konumda kontrol edebilirsiniz:\n\n```bat\n" + "$|00|$" + "\n``` \n\nPano, liste ve kart sayıları sırasıyla `_totalBoardsCreated`, `_totalListsCreated` ve `_totalCardsCreated` değişkenlerinden elde edilebilir.\n\n---\n\nBu panonun arka plan görüntüsünden de anlaşılacağı üzere, tamamen şeffaf panolar oluşturmak mümkündür. Bunun için panonun arka planı olarak saydamlık içeren bir görüntü kullanabilirsiniz.\n\n---\n\n- Yeni bir pano oluşturulurken açılan pencerede görüntülenen resimleri değiştirmek için, aşağıdaki klasördeki resimleri değiştirin: `" + "$|01|$" + "`. \n> Takma'nın düzgün çalışması için bahsi geçen klasörde en az bir resim bulunduğundan emin olun.\n- Arama çubuğuna son derece uzun bir arama sorgusu girerseniz, Takma penceresi kaybolacaktır.",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -3498,6 +3511,7 @@ export let tr: Translation = {
     closeWithCtrlShiftWExplanation: "Takma'yı hızlı bir şekilde kapatmak için CTRL + SHIFT + W kısayolunu kullanabilirsiniz. Bu, kapatma düğmesine tıklamadan programdan çıkmanıza olanak tanır.",
     shortcutNotAvailableDuringOnboarding: "Bu klavye kısayolu, onboarding sürecini tamamladıktan sonra kullanılabilir hale gelecektir.",
     takmaPWAExplanation: "Bu butonu kullanarak Takma Web Önizlemesini cihazınıza yükleyebilirsiniz!\n\nBu önizlemeyi bir uygulama olarak yükleyerek ihtiyaç duyduğunuzda hızlı ve çevrimdışı erişime sahip olacaksınız — Takma Web Önizlemesini düzenli olarak kullanmayı planlıyorsanız mükemmel.",
+    searchBarShortcutsExplanation: "Arama çubuğunun üzerine tıklayarak veya CTRL + SHIFT + F klavye kısayolunu kullanarak açabilirsiniz. Kapatmak için ESC tuşuna basın.",
 };
 
 export let zh: Translation = {
@@ -3672,7 +3686,7 @@ export let zh: Translation = {
                     id: "easterEggCard",
                     creationDate: Date.now(),
                     title: "打开此卡片以了解更多",
-                    description: "如果您有兴趣了解在 Takma 中创建的板块、列表和卡片数量，您可以查看位于以下位置的保存文件：\n\n```bat\n" + "$|00|$" + "Takma\\Takma.json" + "\n``` \n\n可以分别从 `_totalBoardsCreated`、`_totalListsCreated` 和 `_totalCardsCreated` 变量获取板块、列表和卡片的计数。\n\n---\n\n正如此板块的背景图所示，可以创建完全透明的板块。这可以通过使用带有透明度的图像作为板块的背景来实现。\n\n---\n\n- 要修改创建新板块时在弹出窗口中显示的图像，请在以下文件夹中替换图像：" + "$|01|$" + "`。\n> 请确保该文件夹中至少存在一张图像，以确保 Takma 正常工作。\n- 如果您在搜索栏中输入了异常长度的搜索查询，Takma 窗口将消失。",
+                    description: "如果您有兴趣了解在 Takma 中创建的板块、列表和卡片数量，您可以查看位于以下位置的保存文件：\n\n```bat\n" + "$|00|$" + "\n``` \n\n可以分别从 `_totalBoardsCreated`、`_totalListsCreated` 和 `_totalCardsCreated` 变量获取板块、列表和卡片的计数。\n\n---\n\n正如此板块的背景图所示，可以创建完全透明的板块。这可以通过使用带有透明度的图像作为板块的背景来实现。\n\n---\n\n- 要修改创建新板块时在弹出窗口中显示的图像，请在以下文件夹中替换图像：" + "$|01|$" + "`。\n> 请确保该文件夹中至少存在一张图像，以确保 Takma 正常工作。\n- 如果您在搜索栏中输入了异常长度的搜索查询，Takma 窗口将消失。",
                     attachments: [],
                     coverImage: "",
                     checklists: [],
@@ -3748,4 +3762,5 @@ export let zh: Translation = {
     closeWithCtrlShiftWExplanation: "您可以通过使用键盘快捷键 CTRL + SHIFT + W 快速关闭 Takma。这允许您在不点击关闭按钮的情况下退出程序。",
     shortcutNotAvailableDuringOnboarding: "此键盘快捷键将在您完成入职培训后可用。",
     takmaPWAExplanation: "使用此按钮将Takma网页预览安装到您的设备上！\n\n通过将此预览安装为应用程序，您将能够随时快速离线访问，非常适合您计划定期使用Takma网页预览。",
+    searchBarShortcutsExplanation: "您可以通过点击搜索栏或使用键盘快捷键 CTRL + SHIFT + F 来打开它。要关闭它，只需按 ESC 键。"
 };

@@ -20,6 +20,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
             {title: I18n.t("welcomeToTakma"), intro:I18n.t("quickGuideEssentials")},
             {intro: I18n.t("redoOnboardingProcess"), element: document.querySelector(".startOnboarding")},
             {intro: I18n.t("dueDatesOverviewExplanation"), element: document.querySelector(".dueDatesOverviewButton")},
+            {intro: I18n.t("searchBarShortcutsExplanation"), element: document.querySelector(".searchIcon")},
             {intro: I18n.t("closeWithCtrlShiftWExplanation")},
         ],
         disableInteraction: true,

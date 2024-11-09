@@ -1,10 +1,7 @@
 <script lang="ts">
-    import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
-    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
     import type {Card} from "../../scripts/Board";
-    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     interface Props {
         cardToSave: Card;

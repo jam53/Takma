@@ -24,10 +24,14 @@
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     interface Props {
+        refreshSelectedCardFunction: Function;
         refreshListsFunction: Function;
     }
 
-    let { refreshListsFunction }: Props = $props();
+    let {
+        refreshSelectedCardFunction,
+        refreshListsFunction
+    }: Props = $props();
 
     let editingDescription: boolean = $state(false); //We use this to know whether or not we should display the rendered html of the description, or display the <pre> so that the user can edit the description
 
@@ -79,7 +83,7 @@
     function closeCard()
     {
         saveCard();
-        refreshListsFunction();
+        refreshSelectedCardFunction();
         selectedCardId.value = "";
         document.activeElement.blur(); //This should or could help preventing the issue where cards can't be dragged at times.
         clearTimeout(typingTimer);
@@ -362,7 +366,7 @@
     });
 
     let typingTimer;                //timer identifier
-    let doneTypingInterval = 5000;  //time in ms
+    let doneTypingInterval = 2000;  //time in ms
     //This function should be added as a "keyup" event listener to whatever element that should be used to check whether or not the user stopped typing
     function waitUntilUserStoppedTyping(callback)
     {
@@ -582,7 +586,7 @@
                         {#key refreshLabels}
                             {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
                                 <div style="background-color: {label.color}"
-                                     onclick={e => mount(LabelsPopup, {props: {clickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshLabelsFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                                     onclick={e => mount(LabelsPopup, {props: {clickEvent: e, cardToSave: cardToSave, refreshLabelsFunction: refreshLabelsFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
                                 >
                                     <span style="color: {label.titleColor}">
                                         {label.title}
@@ -623,7 +627,7 @@
                         {I18n.t("addToCard")}
                     </span>
                     <button title={I18n.t("labels")}
-                            onclick={e => mount(LabelsPopup, {props: {clickEvent: e, cardToSave: cardToSave, refreshCardFunction: refreshLabelsFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                            onclick={e => mount(LabelsPopup, {props: {clickEvent: e, cardToSave: cardToSave, refreshLabelsFunction: refreshLabelsFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         <span>

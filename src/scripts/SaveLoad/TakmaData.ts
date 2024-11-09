@@ -472,6 +472,11 @@ export class TakmaData
      */
     public updateCard(card: Card, boardId: string, cardId: string): void
     {
+        if (boardId === "" || cardId === "" || card.id !== cardId)
+        {
+            return;
+        }
+
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         let currentList: List;
 

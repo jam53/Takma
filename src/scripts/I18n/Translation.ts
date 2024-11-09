@@ -209,4 +209,5 @@ export default interface Translation
     closeWithCtrlShiftWExplanation: string;
     shortcutNotAvailableDuringOnboarding: string;
     takmaPWAExplanation: string;
+    searchBarShortcutsExplanation: string;
 }

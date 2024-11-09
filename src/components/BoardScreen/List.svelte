@@ -2,7 +2,7 @@
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card as CardInterface} from "../../scripts/Board";
-    import {cardFilters, draggingCard, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
+    import {cardFilters, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
@@ -70,11 +70,9 @@
     function handleDndFinalizeCards(e)
     {
         onDrop(e.detail.items);
-        draggingCard.value = false;
     }
 
     function handleDraggedElement(draggedElement, data, index) {
-        draggingCard.value = true;
     }
 
     let editingTitle: boolean = $state(false); //We use a span to display the list title when we are not editing it, and an input element when we are. We do this since we can't drag the list by the input element.
@@ -102,13 +100,20 @@
 
     function shouldCardBeHidden(card: CardInterface)
     {
-        return !(card.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) || card.description.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()));
+        const searchValue: string = searchBarValue.value.toLowerCase().trim();
+
+        return !(
+            card.title.toLowerCase().includes(searchValue) ||
+            card.description.toLowerCase().includes(searchValue) ||
+            card.checklists.some(checklist => checklist.title.toLowerCase().includes(searchValue)) ||
+            card.checklists.some(checklist => checklist.todos.some(todo => todo.content.toLowerCase().includes(searchValue)))
+        );
     }
 
     let titleHolderElement: HTMLElement;
     $effect(() =>
     {
-        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 2.5em - ${titleHolderElement.clientHeight}px)`);
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 3em - ${titleHolderElement.clientHeight}px + 0.25em)`);
     /*
         100vh        - hoogte scherm
         4px          - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html`
@@ -117,8 +122,9 @@
         (2 * 8px)    - (2 * height of the scrollbar at the bottom)
         (2 * 0.5em)  - padding bottom en top van .listHolder in BoardScreen
         (2 * 1px)    - (2 * breedte van de border van de lists)
-        2.5em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
+        3em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
         ${...}       - hoogte van de titel van de lijst
+        0.25em       - margin-top of .container in BoardScreen.svelte
      */
 
         applyOverFlowedStyleClasses();
@@ -160,7 +166,7 @@
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#if !shouldCardBeHidden(card)}
-                        <Card card={card} refreshListFunction={refreshListFunction} listIdCardIsIn={listId}/>
+                        <Card card={card} refreshListsFunction={refreshListsFunction} refreshListFunction={refreshListFunction} listIdCardIsIn={listId}/>
                     {/if}
                 </div>
             {/each}
