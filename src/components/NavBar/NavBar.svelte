@@ -205,7 +205,7 @@
         justify-content: space-between;
         height: inherit;
         gap: 0.5em;
-        overflow: hidden;
+        overflow: auto;
         padding: 1em 0.5em;
     }
 
