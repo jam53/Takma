@@ -137,7 +137,7 @@
 <div class="list" in:slide|global={{delay: inTransitionDelay*100 <= 700 ? inTransitionDelay*100 : 0}} onintrostart={scrollToCreateNewListDiv} onmouseenter={() => setDragDisabled(false)} oncontextmenu={e => e.stopPropagation()}>
     <div class="titleHolder" bind:this={titleHolderElement}>
         {#if !editingTitle}
-            <span class="listTitle" onmousedown={() => editingTitle = true} style="height: 100%; min-height: 1em">
+            <span class="listTitle" onclick={() => editingTitle = true} style="height: 100%; min-height: 1em">
                 {SaveLoadManager.getData().getList(selectedBoardId.value, listId).title}
             </span>
         {:else}
