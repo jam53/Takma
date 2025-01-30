@@ -64,7 +64,7 @@
         {I18n.t("addAnotherList")}
     </span>
     <!--     The things above this line are only displayed when the `newListCreating` styleclass isn't applied. The elements below this line are only displayed when the `newListCreating` styleclass is applied       -->
-    <input bind:this={newListTitleInput} bind:value={newListTitleValue} onkeydown={e => e.key === "Enter" && createNewList()} placeholder={I18n.t("enterListTitle")}>
+    <input bind:this={newListTitleInput} bind:value={newListTitleValue} spellcheck="false" onkeydown={e => e.key === "Enter" && createNewList()} placeholder={I18n.t("enterListTitle")}>
     <div>
         <button onclick={createNewList}>
             {I18n.t("addList")}
