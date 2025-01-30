@@ -412,37 +412,13 @@
         selectedCardId.value = "";
     }
 
-    let isCardFullscreen = SaveLoadManager.getData().cardsFullscreen;
-    let popupElement;
+    let isCardFullscreen = $state(SaveLoadManager.getData().cardsFullscreen);
     function toggleFullscreen(e?: MouseEvent)
     {
         e?.stopPropagation();
         isCardFullscreen = !isCardFullscreen;
-
-        if (isCardFullscreen)
-        {
-            overlayElement.classList.add("overlayCardFullscreen");
-            popupElement.classList.add("popupCardFullscreen");
-
-            Array.from(document.getElementsByClassName("titleAndActionsHolder")).forEach(attachment => attachment.classList.add("titleAndActionsHolderCardFullscreen"));
-        }
-        else
-        {
-            overlayElement.classList.remove("overlayCardFullscreen");
-            popupElement.classList.remove("popupCardFullscreen");
-
-            Array.from(document.getElementsByClassName("titleAndActionsHolder")).forEach(attachment => attachment.classList.remove("titleAndActionsHolderCardFullscreen"));
-        }
-
         SaveLoadManager.getData().cardsFullscreen = isCardFullscreen;
     }
-    $effect(() => {
-        if (overlayElement)
-        {
-            toggleFullscreen(); //When we open the card, we wait until the overlayElement AKA the UI is loaded. Then we proceed to call the toggleFullscreen() function twice. This way the necessary styleclasses get applied/removed. Should we call it just once, then we would toggle the fullscreen state. Which is not what we want, we just want to apply/remove the necessary styleclasses. So we call the function a second time to toggle back the original fullscreen state of the card.
-            toggleFullscreen();
-        }
-    });
 
     let typingTimer;                //timer identifier
     let doneTypingInterval = 2000;  //time in ms
@@ -632,11 +608,11 @@
 </script>
 
 {#if showPopup}
-    <div transition:blur|global bind:this={overlayElement} class="overlay" onclick={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" onkeydown={handleKeyDown}
+    <div transition:blur|global bind:this={overlayElement} class="overlay {isCardFullscreen ? 'overlayCardFullscreen': ''}" onclick={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" onkeydown={handleKeyDown}
     >
         <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->
 
-        <div bind:this={popupElement} transition:slide|global class="popup" onclick={(e) => e.stopPropagation()}>
+        <div transition:slide|global class="popup {isCardFullscreen ? 'popupCardFullscreen': ''}" onclick={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <textarea
@@ -699,7 +675,7 @@
                         <!-- The void operator evaluates the given expression and then returns undefined. Then with the nullish operator we return an empty string when it's undefined, which will always be the case. This way we can execute some code in our html, without displaying anything in the UI-->
                     {/if}
                     <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} amountOfTodosInChecklistFunction={amountOfTodosInChecklist} saveCardFunction={saveCard} focusOnCardDetailsFunction={focusOnCardDetailsFunction}/>
-                    <Attachments bind:this={attachmentsComponent} cardToSave={cardToSave} addAttachmentFunction={addAttachment} saveCardFunction={saveCard} focusOnCardDetailsFunction={focusOnCardDetailsFunction}/>
+                    <Attachments bind:this={attachmentsComponent} cardToSave={cardToSave} addAttachmentFunction={addAttachment} saveCardFunction={saveCard} focusOnCardDetailsFunction={focusOnCardDetailsFunction} isCardFullscreen={isCardFullscreen}/>
                 </div>
                 <div class="cardActionsHolder">
                     <span>

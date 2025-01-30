@@ -16,13 +16,15 @@
         addAttachmentFunction: Function;
         saveCardFunction: Function;
         focusOnCardDetailsFunction: Function;
+        isCardFullscreen: boolean;
     }
 
     let {
         cardToSave = $bindable(),
         addAttachmentFunction,
         saveCardFunction,
-        focusOnCardDetailsFunction
+        focusOnCardDetailsFunction,
+        isCardFullscreen
     }: Props = $props();
 
     /**
@@ -129,7 +131,7 @@
                         {getFileExtension(attachment)}
                     {/if}
                 </div>
-                <div class="titleAndActionsHolder">
+                <div class="titleAndActionsHolder {isCardFullscreen ? 'titleAndActionsHolderCardFullscreen' : ''}">
                     <p
                             title={getFilename(attachment)}
                             onclick={() => openWithDefaultApp(attachment)}
