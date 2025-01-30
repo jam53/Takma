@@ -109,7 +109,7 @@
         {I18n.t("addACard")}
     </span>
     <!--     The things above this line are only displayed when the `newCardCreating` styleclass isn't applied. The elements below this line are only displayed when the `newCardCreating` styleclass is applied       -->
-    <input bind:this={newCardTitleInput} bind:value={newCardTitleValue} onkeydown={e => e.key === "Enter" && createNewCard()} placeholder={I18n.t("enterCardTitle")}>
+    <input bind:this={newCardTitleInput} bind:value={newCardTitleValue} spellcheck="false" onkeydown={e => e.key === "Enter" && createNewCard()} placeholder={I18n.t("enterCardTitle")}>
     <div>
         <button onclick={createNewCard}>
             {I18n.t("addCard")}
