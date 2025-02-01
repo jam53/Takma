@@ -28,7 +28,7 @@
         if (localStorage.getItem("saveDirectoryPath") === null)
         {
             await info("No save file has been set");
-            document.body.style.backgroundImage = `url('${paintDrops}')`;
+            document.body.style.backgroundImage = `url('${paintDrops.replace(/'/g, "\\'")}')`;
             document.body.style.backgroundColor = `transparent`;
         }
         else if (selectedBoardId.value !== "")
@@ -40,7 +40,7 @@
             //Otherwise it's possible that the user opened a board and quickly went back to the welcome screen. In that case we would set the backgroundImage to "" in the `else` below. And then once the backgroundImage of the previous subscribe event loaded in, we would set the background image. Causing us to see the backgroundImage of the board on the welcomescreen. We avoid this by checking whether or not the board is still selected once the image has actually been loaded.
             if (selectedBoardId.value === selectedBoardId.value)
             {
-                document.body.style.backgroundImage = `url('${imgUrl}')`;
+                document.body.style.backgroundImage = `url('${imgUrl.replace(/'/g, "\\'")}')`;
                 document.body.style.backgroundColor = `transparent`;
             }
         }

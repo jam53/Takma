@@ -119,7 +119,7 @@
             SaveLoadManager.getData().setBoardBackgroundImage(selectedBoardId.value, pathToImage);
 
             const imgUrl: string = convertFileSrc(await join(SaveLoadManager.getSaveDirectoryPath(), pathToImage));
-            document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
+            document.body.style.backgroundImage = `url('${imgUrl.replace(/'/g, "\\'")}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
 
