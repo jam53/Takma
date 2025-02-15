@@ -96,16 +96,11 @@
     async function handleContainerFileDrop(droppedFile: String)
     {
 
-        if (imageExtensions.includes(getFileExtension(droppedFile).toLowerCase()))
+        if (imageExtensions.includes(droppedFile.getFileExtension().toLowerCase()))
         {
             let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, selectedBoardId.value);
             await setBoardBackgroundImage(savedPath);
         }
-    }
-
-    function getFileExtension(pathToFile: string): string
-    {
-        return pathToFile.split(".").pop();
     }
 
     async function setBoardBackgroundImage(pathToImage: string)
@@ -123,7 +118,14 @@
         }
     }
 
-    let lists: ListInterface[] = $state(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
+    let lists: ListInterface[] = $state([]); // The actual data is loaded via the $effect below.
+    // This $effect ensures that the 'lists' variable is automatically updated whenever the 'selectedBoardId' changes.
+    // This is crucial for scenarios where the board screen is already open, but the user navigates to a different board (e.g., by clicking a Takma link).
+    // In such cases, the $effect will re-run, fetching the correct lists for the newly selected board and triggering a re-render of the component.
+    $effect(() =>
+    {
+        lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
+    });
     let dragDisabled = $state(false);
     let setDragDisabled = (bool) => {
         dragDisabled = bool;
@@ -152,35 +154,6 @@
     {
         lists[listIndex].cards = newCardsData;
         onFinalDragUpdate([...lists]);
-    }
-
-    function refreshSelectedCardFunction()
-    {
-        let currentList;
-
-        for (let indexOfList = 0; indexOfList < lists.length; indexOfList++)
-        {
-            currentList = lists[indexOfList];
-
-            for (let indexOfCard = 0; indexOfCard < currentList.cards.length; indexOfCard++)
-            {
-                if (currentList.cards[indexOfCard].id === selectedCardId.value)
-                {
-                    lists[indexOfList].cards[indexOfCard] = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value) ?? lists[indexOfList].cards[indexOfCard];
-                    return;
-                }
-            }
-        }
-    }
-
-    function refreshListFunction(listIndex: number)
-    {
-        lists[listIndex] = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists[listIndex];
-    }
-
-    function refreshListsFunction()
-    {
-        lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
     }
 
     function filterCards(cardsToFilter: Card[]): Card[]
@@ -223,16 +196,43 @@
         {#each lists as list, listIndex (list.id)}
             <div animate:flip={{duration: 300}}>
                 {#key cardFilters}
-                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListFunction={() => refreshListFunction(listIndex)} refreshListsFunction={refreshListsFunction}/>
+                    <List
+                        listId={list.id}
+                        cards={filterCards(list.cards)}
+                        onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)}
+                        dragDisabled={dragDisabled}
+                        setDragDisabled={setDragDisabled}
+                        inTransitionDelay={listIndex}
+                        bind:list={() => lists[listIndex], newList => lists[listIndex] = newList}
+                        bind:lists
+                    />
                 {/key}
             </div>
         {/each}
         <div onmouseenter={() => setDragDisabled(true)}>
-            <CreateNewList refreshListsFunction={refreshListsFunction}/>
+            <CreateNewList bind:lists/>
         </div>
     </div>
 </div>
-<CardDetails refreshSelectedCardFunction={refreshSelectedCardFunction} refreshListsFunction={refreshListsFunction}/>
+<CardDetails
+        refreshList={(newList) => {
+            const listIndex = lists.findIndex(list => list.id === newList.id);
+            lists[listIndex] = newList;
+        }}
+        refreshCard={(cardToRefresh) => {
+            for (let list of lists)
+            {
+                for (let [cardIndex, card] of list.cards.entries())
+                {
+                    if (card.id === cardToRefresh?.id)
+                    {
+                        list.cards[cardIndex] = cardToRefresh ?? list.cards[cardIndex];
+                        return;
+                    }
+                }
+            }
+        }}
+/>
 
 <style>
     .container {

@@ -9,20 +9,17 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {join} from "@tauri-apps/api/path";
-    import type {Card} from "../../scripts/Board";
 
     interface Props {
-        cardToSave: Card;
+        attachments: string[];
         addAttachmentFunction: Function;
-        saveCardFunction: Function;
         focusOnCardDetailsFunction: Function;
         isCardFullscreen: boolean;
     }
 
     let {
-        cardToSave = $bindable(),
+        attachments = $bindable(),
         addAttachmentFunction,
-        saveCardFunction,
         focusOnCardDetailsFunction,
         isCardFullscreen
     }: Props = $props();
@@ -37,11 +34,6 @@
         const uuidRemoved = filename.substring(36);
 
         return uuidRemoved;
-    }
-
-    function getFileExtension(pathToFile: string)
-    {
-        return pathToFile.split(".").pop();
     }
 
     async function openWithDefaultApp(pathToFile: string)
@@ -76,10 +68,8 @@
     async function deleteAttachment(pathToFile: string)
     {
         await remove(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
-        cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
-        saveCardFunction();
+        attachments = attachments.filter(attachment => attachment !== pathToFile);
 
-        refreshComponent();
         focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
     }
 
@@ -87,7 +77,7 @@
     {
         let existingAttachments: string[] = [];
 
-        for (let attachment of cardToSave.attachments)
+        for (let attachment of attachments)
         {
             if (attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
             {
@@ -97,15 +87,8 @@
 
         return existingAttachments;
     }
-
-    let refreshComponentToggle = $state(false);
-    export function refreshComponent()
-    {
-        refreshComponentToggle = !refreshComponentToggle;
-    }
 </script>
 
-{#key refreshComponentToggle}
 {#await getExistingAttachments() then attachments}
 {#if attachments.length > 0}
     <hr>
@@ -119,7 +102,7 @@
                 <div class="preview"
                      onclick={() => openWithDefaultApp(attachment)}
                 >
-                    {#if imageExtensions.includes(getFileExtension(attachment).toLowerCase())}
+                    {#if imageExtensions.includes(attachment.getFileExtension().toLowerCase())}
                         {#await (async () => await getThumbnail(attachment, 224))()}
                             <button class="boardButtons">
                                 <span class="loader"></span>
@@ -128,7 +111,7 @@
                             <img src={imgSrc} />
                         {/await}
                     {:else}
-                        {getFileExtension(attachment)}
+                        {attachment.getFileExtension()}
                     {/if}
                 </div>
                 <div class="titleAndActionsHolder {isCardFullscreen ? 'titleAndActionsHolderCardFullscreen' : ''}">
@@ -173,7 +156,6 @@
     </button>
 {/if}
 {/await}
-{/key}
 
 <style>
     hr {

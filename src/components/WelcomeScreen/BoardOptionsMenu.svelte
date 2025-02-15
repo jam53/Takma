@@ -18,17 +18,17 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {copiedBoard} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
-    import {duplicateBoard as duplicateBoardObject} from "../../scripts/Board";
+    import {type Board, duplicateBoard as duplicateBoardObject, type List} from "../../scripts/Board";
     import {mount} from "svelte";
     import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
-        clickEvent: MouseEvent,
-        boardId: string,
-        refreshWelcomeScreen: Function
+        clickEvent: MouseEvent;
+        boardId: string;
+        setBoards: (Boards: Board[]) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
     }
 
-    let { clickEvent, boardId, refreshWelcomeScreen }: Props = $props();
+    let { clickEvent, boardId, setBoards }: Props = $props();
 
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
@@ -99,7 +99,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             duplicatedBoard.title = await popupWindow.getInputFieldAnswer();
 
             await SaveLoadManager.getData().createNewBoard(duplicatedBoard.title, duplicatedBoard.backgroundImagePath, false, duplicatedBoard.id, duplicatedBoard.labels, duplicatedBoard.lists, duplicatedBoard.favourite, thisBoardIndex);
-            refreshWelcomeScreen();
+            setBoards(SaveLoadManager.getData().boards);
         }
         else
         {
@@ -115,7 +115,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         if (await popup.getAnswer() === true)
         {
             await SaveLoadManager.getData().deleteBoard(boardId);
-            refreshWelcomeScreen();
+            setBoards(SaveLoadManager.getData().boards);
         }
     }
 
@@ -140,7 +140,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
             await SaveLoadManager.getData().createNewBoard(boardToPaste.title, boardToPaste.backgroundImagePath, false, boardToPaste.id, boardToPaste.labels, boardToPaste.lists, boardToPaste.favourite, thisBoardIndex)
 
-            refreshWelcomeScreen();
+            setBoards(SaveLoadManager.getData().boards);
         }
         else
         {

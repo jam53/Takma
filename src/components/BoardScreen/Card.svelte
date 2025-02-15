@@ -1,7 +1,12 @@
 <script lang="ts">
-    import type {Card, TodoItem} from "../../scripts/Board";
+    import type {Card, List, TodoItem} from "../../scripts/Board";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
+    import {
+        invalidateLabels,
+        selectedBoardId,
+        selectedCardId,
+        showLabelsText
+    } from "../../scripts/Stores.svelte.js";
     import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -10,16 +15,14 @@
 
     interface Props {
         card: Card;
-        refreshListsFunction: Function;
-        refreshListFunction: Function;
         listIdCardIsIn: string;
+        list: List;
     }
 
     let {
         card,
-        refreshListsFunction,
-        refreshListFunction,
-        listIdCardIsIn
+        listIdCardIsIn,
+        list = $bindable(),
     }: Props = $props();
 
     function displayCardDetails()
@@ -90,7 +93,7 @@
          if (hovering && shiftKeyPressed)
          {
              SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
-             refreshListFunction();
+             list = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn);
          }
          else
          {
@@ -104,8 +107,8 @@
              props: {
                  clickEvent: e,
                  cardId: card.id,
-                 refreshListFunction: refreshListFunction,
-                 listIdCardIsIn: listIdCardIsIn
+                 listIdCardIsIn: listIdCardIsIn,
+                 setList: newList => list = newList,
              },
              target: document.body,
              intro: true
@@ -122,20 +125,19 @@
     <div class="nonCoverImageContainer">
         <div class="labels">
             {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
-                {#key card}
-                    <!--This #key will be triggerd when we call the `refreshListFunction()` after clicking on a label. If we don't do this #key, the labels won't change their appearance until the next time we open this board/refresh the cards in the lists by dragging a card/list e.g.-->
-                    {#if !SaveLoadManager.getData().showLabelsText}
-                        <div style="background-color: {label.color}"
-                             onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = true; refreshListsFunction()}}
-                        >
-                        </div>
-                    {:else}
-                        <span style="color: {label.titleColor}; background-color: {label.color}"
-                              onclick={e => {e.stopPropagation(); SaveLoadManager.getData().showLabelsText = false; refreshListsFunction()}}
-                        >
+                {#key invalidateLabels.value}
+                    <span style="color: {label.titleColor}; background-color: {label.color}"
+                          class="{showLabelsText.value ? 'labelsWithText' : 'labelsWithoutText'}"
+                          onclick={e => {
+                              e.stopPropagation();
+                              SaveLoadManager.getData().showLabelsText = !SaveLoadManager.getData().showLabelsText;
+                              showLabelsText.value = SaveLoadManager.getData().showLabelsText;
+                          }}
+                    >
+                        {#if showLabelsText.value}
                             {label.title}
-                        </span>
-                    {/if}
+                        {/if}
+                    </span>
                 {/key}
             {/each}
         </div>
@@ -226,14 +228,18 @@
         padding: 0;
     }
 
-    .labels div {
+    .labels span:hover {
+        filter: brightness(70%);
+    }
+
+    .labelsWithoutText {
         height: 0.5em;
         width: 2.4em;
         border-radius: 100px;
         transition: 0.2s;
     }
 
-    .labels span {
+    .labelsWithText {
         min-width: 2.4em;
         height: 1.35em;
         text-overflow: ellipsis;
@@ -243,10 +249,6 @@
         white-space: nowrap;
         text-align: center;
         transition: 0.2s;
-    }
-
-    .labels div:hover, .labels span:hover {
-        filter: brightness(70%);
     }
 
     .icons {

@@ -17,17 +17,17 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {copiedCard, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
-    import {duplicateCard as duplicateCardObject} from "../../scripts/Board";
+    import {duplicateCard as duplicateCardObject, type List} from "../../scripts/Board";
     import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent;
         cardId: string;
-        refreshListFunction: Function;
         listIdCardIsIn: string;
+        setList: (list: List) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
     }
 
-    let { clickEvent, cardId, refreshListFunction, listIdCardIsIn }: Props = $props();
+    let { clickEvent, cardId, listIdCardIsIn, setList }: Props = $props();
 
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
@@ -92,14 +92,14 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().addCardToList(duplicatedCard, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
 
-        refreshListFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
         closeContextMenu();
     }
 
     async function deleteCard()
     {
         SaveLoadManager.getData().deleteCard(selectedBoardId.value, cardId);
-        refreshListFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
         closeContextMenu();
     }
 
@@ -117,7 +117,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().addCardToList(cardToPaste, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
 
-        refreshListFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
         closeContextMenu();
     }
 

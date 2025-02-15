@@ -4,14 +4,14 @@
     import {onMount} from "svelte";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
+    import type {List} from "../../scripts/Board";
 
     interface Props {
-        refreshListFunction: Function;
-        listId: string;
+        list: List,
         outerWrapperElement: HTMLElement;
     }
 
-    let { refreshListFunction, listId, outerWrapperElement = $bindable() }: Props = $props();
+    let { list = $bindable(), outerWrapperElement = $bindable() }: Props = $props();
 
     function handleKeyDown(e: KeyboardEvent)
     {
@@ -33,8 +33,8 @@
     function createNewCard(e?: Event)
     {
         e?.stopPropagation();
-        SaveLoadManager.getData().createNewCard(newCardTitleValue, selectedBoardId.value, listId);
-        refreshListFunction(); //If we don't do this, the UI won't update to show the newly added card because Svelte would have no way of knowing that the contents of the `lists` variable parent component changed to now include this new card.
+        SaveLoadManager.getData().createNewCard(newCardTitleValue, selectedBoardId.value, list.id);
+        list = SaveLoadManager.getData().getList(selectedBoardId.value, list.id);
 
         newCardTitleValue = ""; //When we just created a card, the createNewCard "screen" will still be open in case the user wants to create another card. But we don't want the title of the card we just created to still be present in the input component, hence why we set the value of the input component to ""
 

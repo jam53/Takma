@@ -1,7 +1,7 @@
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Card as CardInterface} from "../../scripts/Board";
+    import type {Card as CardInterface, List} from "../../scripts/Board";
     import {cardFilters, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
@@ -19,8 +19,8 @@
         dragDisabled: boolean;
         setDragDisabled: Function;
         inTransitionDelay: number;
-        refreshListFunction: Function;
-        refreshListsFunction: Function;
+        list: List;
+        lists: List[];
     }
 
     let {
@@ -30,8 +30,8 @@
         dragDisabled,
         setDragDisabled,
         inTransitionDelay,
-        refreshListFunction,
-        refreshListsFunction
+        list = $bindable(),
+        lists = $bindable(),
     }: Props = $props();
 
 
@@ -151,7 +151,7 @@
             >{SaveLoadManager.getData().getList(selectedBoardId.value, listId).title}</textarea>
         {/if}
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="listOptionsMenu"
-             onclick={e => mount(ListOptionsMenu, {props: {clickEvent: e, listId: listId, refreshListsFunction: refreshListsFunction}, target: document.body, intro: true})}
+             onclick={e => mount(ListOptionsMenu, {props: {clickEvent: e, listId, setList: newList => list = newList, setLists: newLists => lists = newLists}, target: document.body, intro: true})}
         >
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
@@ -169,7 +169,7 @@
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#if !shouldCardBeHidden(card)}
-                        <Card card={card} refreshListsFunction={refreshListsFunction} refreshListFunction={refreshListFunction} listIdCardIsIn={listId}/>
+                        <Card card={card} listIdCardIsIn={listId} bind:list/>
                     {/if}
                 </div>
             {/each}
@@ -181,7 +181,7 @@
         </div>
     </div>
     <div onmouseenter={() => setDragDisabled(true)} onmouseleave={() => setDragDisabled(false)}>
-        <CreateNewCard refreshListFunction={refreshListFunction} listId={listId} outerWrapperElement={outerWrapperElement}/>
+        <CreateNewCard bind:list {outerWrapperElement}/>
     </div>
 </div>
 

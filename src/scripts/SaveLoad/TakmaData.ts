@@ -356,6 +356,21 @@ export class TakmaData
     }
 
     /**
+     * Returns a list given an id of a card that is in the list and the id of the board that contains the list.
+     */
+    public getListContainingCard(boardId: string, cardId: string): List
+    {
+        let emptyList: List = {
+            id: "empty list",
+            creationDate: 0,
+            title: "",
+            cards: []
+        };
+
+        return this.getBoard(boardId).lists.find(list => list.cards.some(card => card.id === cardId)) ?? emptyList;
+    }
+
+    /**
      * Given an id of a board and a list of `List`'s this function sets a board's lists
      */
     public setLists(boardId: string, lists: List[]): void
@@ -557,41 +572,6 @@ export class TakmaData
     }
 
     /**
-     * Given a labelId, returns the color matching that labelId
-     * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
-     */
-    public getLabelColor(boardId: string, labelId: string): string
-    {
-        debug(`Getting label color for label:${labelId} in board:${boardId}`);
-        let board: Board = this._boards.find(board => board.id === boardId);
-
-        return board.labels.find(label => label.id === labelId).color;
-    }
-
-    /**
-     * Given a labelId, returns the color that should be used for the title of that label
-     * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
-     */
-    public getLabelTitleColor(boardId: string, labelId: string): string
-    {
-        debug(`Getting label title color for label:${labelId} in board:${boardId}`);
-        let board: Board = this._boards.find(board => board.id === boardId);
-
-        return board.labels.find(label => label.id === labelId).titleColor;
-    }
-
-    /**
-     * Given a labelId, returns the title of that labelId
-     */
-    public getLabelTitle(boardId: string, labelId: string): string
-    {
-        debug(`Getting label title for label:${labelId} in board:${boardId}`);
-        let board: Board = this._boards.find(board => board.id === boardId);
-
-        return board.labels.find(label => label.id === labelId).title;
-    }
-
-    /**
      * Adds a label to a board
      */
     public addLabelToBoard(boardId: string, label: Label)
@@ -600,6 +580,20 @@ export class TakmaData
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].labels.push(label)
+
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Sets the title of a label in a board
+     */
+    public setLabelTitle(boardId: string, labelId: string, title: string)
+    {
+        debug(`Setting title of label:${labelId} in board:${boardId} to "${title}"`);
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
+
+        this._boards[indexOfBoard].labels[indexOfLabel].title = title;
 
         SaveLoadManager.saveToDisk();
     }

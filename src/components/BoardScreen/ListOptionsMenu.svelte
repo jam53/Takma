@@ -19,17 +19,18 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
-    import {duplicateList as duplicateListObject} from "../../scripts/Board";
+    import {duplicateList as duplicateListObject, type List} from "../../scripts/Board";
     import {mount} from "svelte";
     import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent,
         listId: string;
-        refreshListsFunction: Function;
+        setList: (list: List) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
+        setLists: (lists: List[]) => void;
     }
 
-    let { clickEvent, listId, refreshListsFunction }: Props = $props();
+    let { clickEvent, listId, setList, setLists }: Props = $props();
 
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
@@ -93,8 +94,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(list => list.id === listId);
         let duplicatedList = await duplicateListObject($state.snapshot(SaveLoadManager.getData().getList(selectedBoardId.value, listId)), selectedBoardId.value);
 
-        SaveLoadManager.getData().createNewList(selectedBoardId.value, duplicatedList.title, duplicatedList.cards, thisListIndex)
-        refreshListsFunction();
+        SaveLoadManager.getData().createNewList(selectedBoardId.value, duplicatedList.title, duplicatedList.cards, thisListIndex);
+        setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
         closeContextMenu();
     }
 
@@ -112,7 +113,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         if (await popup.getAnswer() === true)
         {
             SaveLoadManager.getData().deleteList(selectedBoardId.value, listId);
-            refreshListsFunction();
+            setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
         }
     }
 
@@ -128,8 +129,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         let listToPaste = await duplicateListObject($state.snapshot(copiedList.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `copiedList.value` have been null, then the button on which this function gets called wouldn't have been visible
 
-        SaveLoadManager.getData().createNewList(selectedBoardId.value, listToPaste.title, listToPaste.cards, thisListIndex)
-        refreshListsFunction();
+        SaveLoadManager.getData().createNewList(selectedBoardId.value, listToPaste.title, listToPaste.cards, thisListIndex);
+        setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
         closeContextMenu();
     }
 
@@ -140,7 +141,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 
@@ -151,7 +152,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 
@@ -162,7 +163,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 
@@ -173,7 +174,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 
@@ -184,7 +185,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 
@@ -195,7 +196,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 
@@ -206,7 +207,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
 
-        refreshListsFunction();
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
         closeContextMenu();
     }
 

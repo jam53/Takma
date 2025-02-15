@@ -24,7 +24,9 @@
     ]);
 
     let boards: Board[] = $state(SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
-    const updateWelcomeScreen = () => boards = SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
+    $effect(() => {
+        boards = boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
+    })
 
     onMount(async () =>
     {
@@ -57,7 +59,7 @@
         title={board.title}
         boardId={board.id}
         favourite={board.favourite}
-        updateWelcomeScreenFunction={updateWelcomeScreen}
+        bind:boards
     />
 {/snippet}
 

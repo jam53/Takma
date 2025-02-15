@@ -5,13 +5,14 @@
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import BoardOptionsMenu from "./BoardOptionsMenu.svelte";
     import {selectedBoardId} from "../../scripts/Stores.svelte.js";
+    import type {Board} from "../../scripts/Board";
 
     interface Props {
         image: string;
         title: string;
         boardId: string;
         favourite: boolean;
-        updateWelcomeScreenFunction: Function;
+        boards: Board[];
     }
 
     let {
@@ -19,7 +20,7 @@
         title,
         boardId,
         favourite,
-        updateWelcomeScreenFunction
+        boards = $bindable(),
     }: Props = $props();
 
     /**
@@ -28,11 +29,10 @@
     function handleFavouriteClick(e)
     {
         SaveLoadManager.getData().toggleBoardFavourity(boardId);
+        boards = SaveLoadManager.getData().boards;
 
         e.preventDefault();
         e.stopPropagation();
-
-        updateWelcomeScreenFunction();
     }
 </script>
 
@@ -55,7 +55,7 @@
                 props: {
                     clickEvent: e,
                     boardId: boardId,
-                    refreshWelcomeScreen: updateWelcomeScreenFunction
+                    setBoards: newBoards => boards = newBoards,
                 },
                 target: document.body,
                 intro: true

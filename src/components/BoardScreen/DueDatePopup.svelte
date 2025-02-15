@@ -3,21 +3,22 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import SveltyPicker from "svelty-picker";
     import {I18n} from "../../scripts/I18n/I18n";
-    import type {Card} from "../../scripts/Board";
     import {info} from "@tauri-apps/plugin-log";
+    import {selectedCardId} from "../../scripts/Stores.svelte";
+    import type {DateChange} from "svelty-picker/dist/types/internal";
 
     interface Props {
         clickEvent: MouseEvent;
-        cardToSave: Card;
+        dueDate: string;
+        setDueDate: (dueDate: string) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
         focusOnCardDetailsFunction: Function;
-        saveCardFunction: Function;
     }
 
     let {
         clickEvent,
-        cardToSave = $bindable(),
+        dueDate,
+        setDueDate,
         focusOnCardDetailsFunction,
-        saveCardFunction
     }: Props = $props();
 
     // pos is cursor position when right click occur
@@ -31,7 +32,7 @@
 
     function openContextMenu(e: MouseEvent)
     {
-        info("Opening due date popup for card:" + cardToSave.id);
+        info("Opening due date popup for card:" + selectedCardId.value);
         showMenu = true
         browser = {
             w: window.innerWidth,
@@ -55,14 +56,18 @@
 
     function closeContextMenu()
     {
-        //This makes it so we don't close the LabelsPopup whilst the color picker is open. Clickoutside would fire and cause this function to be executed when we click on the color picker, since the color picker is a seperate object in the DOM and not part of the LabelsPopup
-        if (document.querySelector(".clr-open") === null)
+        showMenu = false;
+        focusOnCardDetailsFunction(); //If we don't do this after closing the Popup, the CardDetails element wouldn't be selected (as it lost focus as soon as the Popup element was displayed). Therefore CardDetails wouldn't register the on:keydown event. Instead the Board would register that. If we would then press Escape or Ctrl+W. The board would close, whereas it should be the CardDetails element that is open that should be the one to actually close
+        setDueDate(dueDate);
+    }
+
+    function onDateChange(e: DateChange)
+    {
+        // Close the Due Date Popup automatically when the user clears the date (`e.value === null`)
+        // or finishes selecting the date and time (`e.event === "minute," indicating all fields are set), but do not close it prematurely if only the `e.event === "date"` or `e.event === "hour"` has been set.
+        if (e.value === null || e.event === "minute")
         {
-            // To make context menu disappear when
-            // mouse is clicked outside context menu
-            showMenu = false;
-            focusOnCardDetailsFunction(); //If we don't do this after closing the LabelsPopup, the CardDetails element wouldn't be selected (as it lost focus as soon as the LabelsPopup element was displayed). Therefore CardDetails wouldn't register the on:keydown event. Instead the Board would register that. If we would then press Escape or Ctrl+W. The board would close, whereas it should be the CardDetails element that is open that should be the one to actually close
-            saveCardFunction();
+            closeContextMenu();
         }
     }
 
@@ -106,7 +111,7 @@
                 {I18n.t("dueDate")}
             </h3>
             <br>
-            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={cardToSave.dueDate} i18n={I18n.t("sveltyPicker")} on:change={closeContextMenu}/>
+            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={dueDate} i18n={I18n.t("sveltyPicker")} {onDateChange}/>
         </div>
     </nav>
 {/if}

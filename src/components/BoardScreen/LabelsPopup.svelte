@@ -26,25 +26,27 @@
     import {slide} from "svelte/transition";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {cardFilters, selectedBoardId} from "../../scripts/Stores.svelte.js";
-    import type {Card, Label} from "../../scripts/Board";
+    import {
+        cardFilters,
+        invalidateLabels,
+        selectedBoardId,
+    } from "../../scripts/Stores.svelte.js";
+    import type {Label} from "../../scripts/Board";
     import {I18n} from "../../scripts/I18n/I18n";
     import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent;
-        cardToSave: Card;
-        refreshLabelsFunction: Function;
+        labelIds: string[];
+        setLabelIds: (labelIds: string[]) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
         focusOnCardDetailsFunction: Function;
-        saveCardFunction: Function;
     }
 
     let {
         clickEvent,
-        cardToSave = $bindable(),
-        refreshLabelsFunction,
+        labelIds,
+        setLabelIds,
         focusOnCardDetailsFunction,
-        saveCardFunction
     }: Props = $props();
 
     let lastPickedColor: string;  //The last color that was selected using the color picker. Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
@@ -61,7 +63,7 @@
 
     function openContextMenu(e: MouseEvent)
     {
-        info("Opening labels popup for card:" + cardToSave.id);
+        info(`Opening labels popup in board:${selectedBoardId.value} with the following labels: "${labelIds}"`);
         showMenu = true
         browser = {
             w: window.innerWidth,
@@ -85,14 +87,13 @@
 
     function closeContextMenu()
     {
-        //This makes it so we don't close the LabelsPopup whilst the color picker is open. Clickoutside would fire and cause this function to be executed when we click on the color picker, since the color picker is a seperate object in the DOM and not part of the LabelsPopup
+        //This makes it so we don't close the LabelsPopup whilst the color picker is open. Clickoutside would fire and cause this function to be executed when we click on the color picker, since the color picker is a separate object in the DOM and not part of the LabelsPopup
         if (document.querySelector(".clr-open") === null)
         {
             // To make context menu disappear when
             // mouse is clicked outside context menu
             showMenu = false;
             focusOnCardDetailsFunction(); //If we don't do this after closing the LabelsPopup, the CardDetails element wouldn't be selected (as it lost focus as soon as the LabelsPopup element was displayed). Therefore CardDetails wouldn't register the on:keydown event. Instead the Board would register that. If we would then press Escape or Ctrl+W. The board would close, whereas it should be the CardDetails element that is open that should be the one to actually close
-            saveCardFunction();
         }
     }
 
@@ -114,16 +115,16 @@
      */
     function handleLabelClick(clickedLabelId: string)
     {
-        if (cardToSave.labelIds.includes(clickedLabelId))
+        if (labelIds.includes(clickedLabelId))
         {
-            cardToSave.labelIds = cardToSave.labelIds.filter(labelId => labelId != clickedLabelId); //Removes the clicked label from the card
+            labelIds = labelIds.filter(labelId => labelId != clickedLabelId); //Removes the clicked label from the card
         }
         else //The clicked label wasn't assigned to the card yet, so we add it here
         {
-            cardToSave.labelIds.push(clickedLabelId);
+            labelIds.push(clickedLabelId);
         }
 
-        cardToSave = cardToSave; //We do this so that when we select/unselect a label by clicking on the colored div bar, rather than the checbkox. That the checkbox would also update to reflect the new state
+        setLabelIds(labelIds);
     }
 
     function createNewLabel()
@@ -140,7 +141,8 @@
         SaveLoadManager.getData().addLabelToBoard(selectedBoardId.value, newLabel);
         //endregion
 
-        cardToSave.labelIds.push(newLabelId); //Add label to this card
+        labelIds.push(newLabelId); // Add label to this card
+        setLabelIds(labelIds);
 
         closeContextMenu();
     }
@@ -152,7 +154,8 @@
 
         document.getElementById(`colorInput${labelId}`).style.color = labelTitleColor; //Sets the updated color in the labelsPopup UI
         document.getElementById(`colorInput${labelId}`).style.backgroundColor = lastPickedColor; //Sets the updated color in the labelsPopup UI
-        refreshLabelsFunction(); //Refresh the card's UI, so that the color change appears in the card
+
+        invalidateLabels.value = !invalidateLabels.value;
     }
 
     /**
@@ -272,10 +275,13 @@
             <div class="labelsHolder">
                 {#each SaveLoadManager.getData().getBoard(selectedBoardId.value).labels as label}
                     <div id={`labelOptionDiv${label.id}`} class="labelOption">
-                        <input type="checkbox" checked={cardToSave.labelIds.includes(label.id)}
+                        <input type="checkbox" checked={labelIds.includes(label.id)}
                              onclick={() => handleLabelClick(label.id)}/>
                         <input id={`colorInput${label.id}`} style="color: {label.titleColor}; background-color: {label.color}" class="label" placeholder={I18n.t("enterTitle")}
-                            bind:value={label.title} oninput={refreshLabelsFunction}/>
+                            bind:value={label.title} oninput={_ => {
+                                SaveLoadManager.getData().setLabelTitle(selectedBoardId.value, label.id, label.title);
+                                invalidateLabels.value = !invalidateLabels.value;
+                            }}/>
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"
                              onclick={() => document.getElementById(label.id).click()}
                         ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>

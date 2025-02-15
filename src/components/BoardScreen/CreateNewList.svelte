@@ -4,12 +4,13 @@
     import {clickOutside} from "../../scripts/ClickOutside";
     import {slide} from "svelte/transition";
     import {I18n} from "../../scripts/I18n/I18n";
+    import type {List} from "../../scripts/Board";
 
     interface Props {
-        refreshListsFunction: Function;
+        lists: List[],
     }
 
-    let { refreshListsFunction }: Props = $props();
+    let { lists = $bindable() }: Props = $props();
 
     function handleKeyDown(e: KeyboardEvent)
     {
@@ -31,8 +32,8 @@
     function createNewList(e?: Event)
     {
         e?.stopPropagation();
-        SaveLoadManager.getData().createNewList(selectedBoardId.value, newListTitleValue);
-        refreshListsFunction(); //If we don't do this, the UI won't update to show the newly added list because Svelte would have no way of knowing that the values of the `lists` variable parent component should now include this new list.
+        let createdListId = SaveLoadManager.getData().createNewList(selectedBoardId.value, newListTitleValue);
+        lists.push(SaveLoadManager.getData().getList(selectedBoardId.value, createdListId));
 
         newListTitleValue = ""; //When we just created a list, the createNewList "screen" will still be open in case the user wants to create another list. But we don't want the title of the list we just created to still be present in the input component, hence why we set the value of the input component to ""
     }
