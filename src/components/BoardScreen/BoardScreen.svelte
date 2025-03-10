@@ -27,7 +27,7 @@
     import {info} from "@tauri-apps/plugin-log";
 
     let createNewCardElements;
-    let createNewListElement
+    let createNewListElement;
     onMount(() =>
     {
         info("Opening board: " + selectedBoardId.value);
@@ -194,7 +194,8 @@
 <div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} onconsider={handleDndConsiderLists} onfinalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
-            <div animate:flip={{duration: 300}}>
+            <div animate:flip={{duration: 300}} style="height: 1em">
+            <!-- Setting any non-zero height (e.g. `height: 1em`) prevents a quirky visual bug where lists "jump" downwards when dragged. This happens due to incorrect y-position calculations in svelte-dnd-action when the height is dynamic. Any height value other than 0 will fix the issue. -->
                 {#key cardFilters}
                     <List
                         listId={list.id}
