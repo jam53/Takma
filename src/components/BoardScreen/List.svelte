@@ -138,11 +138,12 @@
     <div class="titleHolder" bind:this={titleHolderElement}>
         {#if !editingTitle}
             <span class="listTitle" onclick={() => editingTitle = true} style="height: 100%; min-height: 1em">
-                {SaveLoadManager.getData().getList(selectedBoardId.value, listId).title}
+                {list.title}
             </span>
         {:else}
             <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
-                onfocusout={e => {editingTitle = false; SaveLoadManager.getData().setListTitle(e.target.value.trim(), selectedBoardId.value, listId)}}
+                onfocusout={e => {editingTitle = false; SaveLoadManager.getData().setListTitle(list.title.trim(), selectedBoardId.value, listId)}}
+                bind:value={list.title}
                 onmouseover={() => titleTextAreaElement.focus()}
                 oninput={autoHeightTextArea}
                 use:autoHeightTextArea
