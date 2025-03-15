@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
         cardFilters,
-        dueDatesOverviewPopupIsVisible,
+        dueDatesOverviewPopupIsVisible, listsSortOrder,
         selectedBoardId, selectedCardId
     } from "../../scripts/Stores.svelte.js";
     import type {Card, List as ListInterface} from "../../scripts/Board";
@@ -16,7 +16,7 @@
     import List from "./List.svelte";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
-    import {onDestroy, onMount} from "svelte";
+    import {onDestroy, onMount, untrack} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import {convertFileSrc} from "@tauri-apps/api/core";
@@ -122,10 +122,16 @@
     // This $effect ensures that the 'lists' variable is automatically updated whenever the 'selectedBoardId' changes.
     // This is crucial for scenarios where the board screen is already open, but the user navigates to a different board (e.g., by clicking a Takma link).
     // In such cases, the $effect will re-run, fetching the correct lists for the newly selected board and triggering a re-render of the component.
-    $effect(() =>
-    {
+    $effect(() => {
         lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
     });
+
+    // Gets called when the value of `listsSortOrder` changes.
+    $effect(() => {
+        lists = untrack(() => lists).sort(listsSortOrder.value);
+        SaveLoadManager.getData().setLists(selectedBoardId.value, $state.snapshot(untrack(() => lists)));
+    })
+
     let dragDisabled = $state(false);
     let setDragDisabled = (bool) => {
         dragDisabled = bool;

@@ -202,4 +202,5 @@ export default interface Translation
     closeWithCtrlShiftWExplanation: string;
     shortcutNotAvailableDuringOnboarding: string;
     searchBarShortcutsExplanation: string;
+    orderLists: string;
 }
