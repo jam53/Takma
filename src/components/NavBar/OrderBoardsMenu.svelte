@@ -296,6 +296,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         gap: 0.5em;
         align-items: center;
         padding: 0.5em;
+        transition: 0.3s;
     }
 
     ul li button:hover {
