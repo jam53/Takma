@@ -129,7 +129,7 @@
     // Gets called when the value of `listsSortOrder` changes.
     $effect(() => {
         lists = untrack(() => lists).sort(listsSortOrder.value);
-        SaveLoadManager.getData().setLists(selectedBoardId.value, $state.snapshot(untrack(() => lists)));
+        SaveLoadManager.getData().setLists(selectedBoardId.value, untrack(() => $state.snapshot(lists)));
     })
 
     let dragDisabled = $state(false);
