@@ -17,17 +17,17 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {copiedCard, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {clickOutside} from "../../scripts/ClickOutside";
-    import {duplicateCard as duplicateCardObject, type List} from "../../scripts/Board";
+    import {type Card, duplicateCard as duplicateCardObject, type List} from "../../scripts/Board";
     import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent;
-        cardId: string;
-        listIdCardIsIn: string;
-        setList: (list: List) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
+        card: Card;
+        list: List;
+        setList: (list: List) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`. The reason we don't need a `setCard()` function is that we never replace a card using `card = `, we only change the card object's properties using `card.property = `. Since the card object being passed to this prop is a `$state()` object, any changes we make by modifying the properties will be reflected in the parent component, hence why we don't need a separate `setCard()` function
     }
 
-    let { clickEvent, cardId, listIdCardIsIn, setList }: Props = $props();
+    let { clickEvent, card, list, setList }: Props = $props();
 
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
@@ -40,7 +40,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
-        info("Opening card options menu for card:" + cardId);
+        info("Opening card options menu for card:" + card.id);
         showMenu = true;
         browser = {
             w: window.innerWidth,
@@ -87,37 +87,37 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function duplicateCard()
     {
-        let thisCardIndex = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
-        let duplicatedCard = await duplicateCardObject(SaveLoadManager.getData().getCard(selectedBoardId.value, cardId), selectedBoardId.value);
+        let thisCardIndex = list.cards.findIndex(c => c.id === card.id);
+        let duplicatedCard = await duplicateCardObject($state.snapshot(card), selectedBoardId.value);
 
-        SaveLoadManager.getData().addCardToList(duplicatedCard, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
+        SaveLoadManager.getData().addCardToList(duplicatedCard, selectedBoardId.value, list.id, thisCardIndex);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, list.id));
         closeContextMenu();
     }
 
     async function deleteCard()
     {
-        SaveLoadManager.getData().deleteCard(selectedBoardId.value, cardId);
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
+        SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, list.id));
         closeContextMenu();
     }
 
     async function copyCard()
     {
-        copiedCard.value = await duplicateCardObject(SaveLoadManager.getData().getCard(selectedBoardId.value, cardId)!, "", false, true);
+        copiedCard.value = await duplicateCardObject($state.snapshot(card), "", false, true);
         closeContextMenu();
     }
 
     async function pasteCard()
     {
-        let thisCardIndex = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn).cards.findIndex(card => card.id === cardId);
+        let thisCardIndex = list.cards.findIndex(c => c.id === card.id);
 
         let cardToPaste = await duplicateCardObject($state.snapshot(copiedCard.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedCard.value` variable can't be null. Hadn't there been a card copied i.e. should `copiedCard.value` have been null, then the button on which this function gets called wouldn't have been visible
 
-        SaveLoadManager.getData().addCardToList(cardToPaste, selectedBoardId.value, listIdCardIsIn, thisCardIndex);
+        SaveLoadManager.getData().addCardToList(cardToPaste, selectedBoardId.value, list.id, thisCardIndex);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
+        setList(SaveLoadManager.getData().getList(selectedBoardId.value, list.id));
         closeContextMenu();
     }
 

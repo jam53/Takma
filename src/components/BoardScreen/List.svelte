@@ -8,12 +8,11 @@
     import Card from "./Card.svelte";
     import ListOptionsMenu from "./ListOptionsMenu.svelte";
     import CreateNewCard from "./CreateNewCard.svelte";
-    import {mount} from "svelte";
+    import {mount, untrack} from "svelte";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {info} from "@tauri-apps/plugin-log";
+    import {debug, info} from "@tauri-apps/plugin-log";
 
     interface Props {
-        listId: string;
         cards: CardInterface[];
         onDrop: Event;
         dragDisabled: boolean;
@@ -24,7 +23,6 @@
     }
 
     let {
-        listId,
         cards,
         onDrop,
         dragDisabled,
@@ -70,7 +68,7 @@
 
     function handleDndFinalizeCards(e)
     {
-        info("Dragged card from/to list:" + listId);
+        info("Dragged card from/to list:" + list.id);
         onDrop(e.detail.items);
     }
 
@@ -131,6 +129,13 @@
 
         applyOverFlowedStyleClasses();
     });
+
+    // Automatically save the list object when any changes are made except to it's cards property, as changes to those are tracked and saved elsewhere
+    let {cards: _, ...listWithoutCards} = $derived(list);
+    $effect(() => {
+        debug("Saving list: " + listWithoutCards.id);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listWithoutCards.id, untrack(() => $state.snapshot(list)));
+    });
 </script>
 
 <!--After the first few lists we don't want to show the intro animation so we put its duration to 0. Otherwise if we add a 20th list for example, we would have to wait for 20*100 = 2 seconds until it becomes visible. Usually no more than 7 lists will fit on the screen side by side, hence why we limit the time to 700 milliseconds-->
@@ -142,17 +147,17 @@
             </span>
         {:else}
             <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
-                onfocusout={e => {editingTitle = false; SaveLoadManager.getData().setListTitle(list.title.trim(), selectedBoardId.value, listId)}}
+                onfocusout={_ => editingTitle = false}
                 bind:value={list.title}
                 onmouseover={() => titleTextAreaElement.focus()}
                 oninput={autoHeightTextArea}
                 use:autoHeightTextArea
                 onkeydown={e => (e.key === "Enter") && (editingTitle = false)}
                 spellcheck="false"
-            >{SaveLoadManager.getData().getList(selectedBoardId.value, listId).title}</textarea>
+            >{list.title}</textarea>
         {/if}
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="listOptionsMenu"
-             onclick={e => mount(ListOptionsMenu, {props: {clickEvent: e, listId, setList: newList => list = newList, setLists: newLists => lists = newLists}, target: document.body, intro: true})}
+             onclick={e => mount(ListOptionsMenu, {props: {clickEvent: e, list, setList: newList => list = newList, setLists: newLists => lists = newLists}, target: document.body, intro: true})}
         >
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
@@ -170,7 +175,7 @@
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#if !shouldCardBeHidden(card)}
-                        <Card card={card} listIdCardIsIn={listId} bind:list/>
+                        <Card {card} bind:list/>
                     {/if}
                 </div>
             {/each}

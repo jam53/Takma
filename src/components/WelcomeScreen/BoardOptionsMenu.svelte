@@ -24,11 +24,11 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     interface Props {
         clickEvent: MouseEvent;
-        boardId: string;
+        board: Board;
         setBoards: (Boards: Board[]) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
     }
 
-    let { clickEvent, boardId, setBoards }: Props = $props();
+    let { clickEvent, board, setBoards }: Props = $props();
 
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
@@ -41,7 +41,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
-        info("Opening board options menu for board:" + boardId);
+        info("Opening board options menu for board:" + board.id);
         showMenu = true
         browser = {
             w: window.innerWidth,
@@ -89,8 +89,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     async function duplicateBoard()
     {
         closeContextMenu();
-        let thisBoardIndex = SaveLoadManager.getData().boards.findIndex(board => board.id === boardId);
-        let duplicatedBoard = await duplicateBoardObject($state.snapshot(SaveLoadManager.getData().getBoard(boardId)));
+        let thisBoardIndex = SaveLoadManager.getData().boards.findIndex(b => b.id === board.id);
+        let duplicatedBoard = await duplicateBoardObject($state.snapshot(board));
 
         const popupWindow = mount(PopupWindow, {props: {title: I18n.t("createNewBoard"), description: I18n.t("chooseBoardTitle"), inputValue: duplicatedBoard.title, buttonType: "input"}, target: document.body, intro: true});
 
@@ -114,7 +114,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         if (await popup.getAnswer() === true)
         {
-            await SaveLoadManager.getData().deleteBoard(boardId);
+            await SaveLoadManager.getData().deleteBoard(board.id);
             setBoards(SaveLoadManager.getData().boards);
         }
     }
@@ -122,13 +122,13 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     async function copyBoard()
     {
         closeContextMenu();
-        copiedBoard.value = await duplicateBoardObject(SaveLoadManager.getData().getBoard(boardId), false, true);
+        copiedBoard.value = await duplicateBoardObject($state.snapshot(board), false, true);
     }
 
     async function pasteBoard()
     {
         closeContextMenu();
-        let thisBoardIndex = SaveLoadManager.getData().boards.findIndex(board => board.id === boardId);
+        let thisBoardIndex = SaveLoadManager.getData().boards.findIndex(b => b.id === board.id);
 
         let boardToPaste = await duplicateBoardObject($state.snapshot(copiedBoard.value!), true, false); //Since this function was called, it means the `copiedBoard` variable can't be null. Hadn't there been a board copied i.e. should `copiedBoard` have been null, then the button on which this function gets called wouldn't have been visible
 

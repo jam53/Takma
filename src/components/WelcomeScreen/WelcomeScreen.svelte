@@ -9,7 +9,7 @@
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {saveAbsoluteFilePathToSaveDirectory} from "../../scripts/TakmaDataFolderIO";
     import {join, resolveResource} from "@tauri-apps/api/path";
-    import {info} from "@tauri-apps/plugin-log";
+    import {debug, info} from "@tauri-apps/plugin-log";
 
     let lazyLoaded = $state(false); //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -24,8 +24,10 @@
     ]);
 
     let boards: Board[] = $state(SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
+    // Automatically saves the boards when any changes are made + ensures they are in the correct order
     $effect(() => {
-        boards = boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName));
+        debug("Saving boards");
+        SaveLoadManager.getData().boards = $state.snapshot(boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
     })
 
     onMount(async () =>
@@ -53,21 +55,20 @@
     });
 </script>
 
-{#snippet boardButton(board: Board)}
+{#snippet boardButton(board: Board, boardIndex: number)}
     <BoardButton
         image={board.backgroundImagePath}
         title={board.title}
-        boardId={board.id}
-        favourite={board.favourite}
+        bind:board={() => boards[boardIndex], newBoard => {boards[boardIndex] = newBoard;}}
         bind:boards
     />
 {/snippet}
 
 <div>
 <!--Favourited boards-->
-    {#each boards as board}
+    {#each boards as board, i}
         {#if board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && board.favourite}
-            {@render boardButton(board)}
+            {@render boardButton(board, i)}
         {/if}
     {/each}
 </div>
@@ -76,9 +77,9 @@
 {/if}
 <div>
 <!--Non favourited boards-->
-    {#each boards as board}
+    {#each boards as board, i}
         {#if board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && !board.favourite}
-            {@render boardButton(board)}
+            {@render boardButton(board, i)}
         {/if}
     {/each}
     <button onclick={() => {mount(NewBoardPopup, {props: {lazyLoaded: lazyLoaded}, target: document.body, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>

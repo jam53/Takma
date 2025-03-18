@@ -27,7 +27,7 @@
     import PopupWindow from "../PopupWindow.svelte";
     import {listen} from "@tauri-apps/api/event";
     import {convertFileSrc} from "@tauri-apps/api/core";
-    import {info} from "@tauri-apps/plugin-log";
+    import {debug, info} from "@tauri-apps/plugin-log";
 
     interface Props {
         refreshList: (listToRefresh: List) => void;
@@ -94,6 +94,7 @@
     $effect(() => {
         if (card)
         {
+            debug("Saving card: " + card.id);
             SaveLoadManager.getData().updateCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
             refreshCard(card);
         }

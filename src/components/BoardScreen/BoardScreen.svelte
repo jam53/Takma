@@ -204,7 +204,6 @@
             <!-- Setting any non-zero height (e.g. `height: 1em`) prevents a quirky visual bug where lists "jump" downwards when dragged. This happens due to incorrect y-position calculations in svelte-dnd-action when the height is dynamic. Any height value other than 0 will fix the issue. -->
                 {#key cardFilters}
                     <List
-                        listId={list.id}
                         cards={filterCards(list.cards)}
                         onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)}
                         dragDisabled={dragDisabled}

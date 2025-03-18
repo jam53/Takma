@@ -15,13 +15,11 @@
 
     interface Props {
         card: Card;
-        listIdCardIsIn: string;
         list: List;
     }
 
     let {
         card,
-        listIdCardIsIn,
         list = $bindable(),
     }: Props = $props();
 
@@ -93,7 +91,7 @@
          if (hovering && shiftKeyPressed)
          {
              SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
-             list = SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn);
+             list = SaveLoadManager.getData().getList(selectedBoardId.value, list.id);
          }
          else
          {
@@ -106,8 +104,8 @@
          mount(CardOptionsMenu, {
              props: {
                  clickEvent: e,
-                 cardId: card.id,
-                 listIdCardIsIn: listIdCardIsIn,
+                 card: card,
+                 list: list,
                  setList: newList => list = newList,
              },
              target: document.body,

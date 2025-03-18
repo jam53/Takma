@@ -25,12 +25,12 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     interface Props {
         clickEvent: MouseEvent,
-        listId: string;
+        list: List;
         setList: (list: List) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
         setLists: (lists: List[]) => void;
     }
 
-    let { clickEvent, listId, setList, setLists }: Props = $props();
+    let { clickEvent, list, setList, setLists }: Props = $props();
 
     // pos is cursor position when right click occur
     let pos = $state({x: 0, y: 0});
@@ -43,7 +43,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
-        info("Opening list options menu for list:" + listId);
+        info("Opening list options menu for list:" + list.id);
         showMenu = true
         browser = {
             w: window.innerWidth,
@@ -91,8 +91,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     async function duplicateList()
     {
-        let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(list => list.id === listId);
-        let duplicatedList = await duplicateListObject($state.snapshot(SaveLoadManager.getData().getList(selectedBoardId.value, listId)), selectedBoardId.value);
+        let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(l => l.id === list.id);
+        let duplicatedList = await duplicateListObject($state.snapshot(list), selectedBoardId.value);
 
         SaveLoadManager.getData().createNewList(selectedBoardId.value, duplicatedList.title, duplicatedList.cards, thisListIndex);
         setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
@@ -101,6 +101,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function sortList()
     {
+        info("Displaying list sort options within the list options menu")
         menuItems = menuItemsSort;
         showMenu = true;
     }
@@ -112,20 +113,20 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
         if (await popup.getAnswer() === true)
         {
-            SaveLoadManager.getData().deleteList(selectedBoardId.value, listId);
+            SaveLoadManager.getData().deleteList(selectedBoardId.value, list.id);
             setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
         }
     }
 
     async function copyList()
     {
-        copiedList.value = await duplicateListObject(SaveLoadManager.getData().getList(selectedBoardId.value, listId), "", false, true);
+        copiedList.value = await duplicateListObject($state.snapshot(list), "", false, true);
         closeContextMenu();
     }
 
     async function pasteList()
     {
-        let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(list => list.id === listId);
+        let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(l => l.id === list.id);
 
         let listToPaste = await duplicateListObject($state.snapshot(copiedList.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `copiedList.value` have been null, then the button on which this function gets called wouldn't have been visible
 
@@ -136,78 +137,71 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function sortByCreationDateAscending()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        thisList.cards.sort((a, b) => a.creationDate - b.creationDate);
+        list.cards.sort((a, b) => a.creationDate - b.creationDate);
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
     function sortByCreationDateDescending()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        thisList.cards.sort((a, b) => b.creationDate - a.creationDate);
+        list.cards.sort((a, b) => b.creationDate - a.creationDate);
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
     function sortByDueDateAscending()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        thisList.cards.sort((a, b) => parseInt(a.dueDate) - parseInt(b.dueDate));
+        list.cards.sort((a, b) => parseInt(a.dueDate ?? Number.MAX_SAFE_INTEGER + "") - parseInt(b.dueDate ?? Number.MAX_SAFE_INTEGER + ""));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
     function sortByDueDateDescending()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        thisList.cards.sort((a, b) => parseInt(b.dueDate) - parseInt(a.dueDate));
+        list.cards.sort((a, b) => parseInt(b.dueDate ?? Number.MIN_SAFE_INTEGER + "") - parseInt(a.dueDate ?? Number.MIN_SAFE_INTEGER + ""));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
     function sortAlphabeticallyAscending()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        thisList.cards.sort((a, b) => a.title.localeCompare(b.title));
+        list.cards.sort((a, b) => a.title.localeCompare(b.title));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
     function sortAlphabeticallyDescending()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        thisList.cards.sort((a, b) => b.title.localeCompare(a.title));
+        list.cards.sort((a, b) => b.title.localeCompare(a.title));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
     function sortShuffle()
     {
-        let thisList = SaveLoadManager.getData().getList(selectedBoardId.value, listId);
-        shuffle(thisList.cards);
+        shuffle(list.cards);
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listId, thisList);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
 
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, listId));
+        setList(list);
         closeContextMenu();
     }
 
