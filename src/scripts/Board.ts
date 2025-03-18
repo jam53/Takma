@@ -38,7 +38,8 @@ export interface Card
     coverImage: string, //The path to the cover image of this card. An empty string means this card has no cover image
     checklists: Checklist[],
     labelIds: string[], //The label ids in this array refer to ids of the labels in the board to which this card belongs to
-    dueDate: string | null //The due date of this card in unix milliseconds, null if there is no due date
+    dueDate: string | null, //The due date of this card in unix milliseconds, null if there is no due date
+    complete: boolean,
 }
 
 export interface Label

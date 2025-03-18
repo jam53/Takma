@@ -587,6 +587,7 @@
                         placeholder={I18n.t("enterACardTitle")}
                         spellcheck="false"
                         onkeydown={e => (e.key === "Enter") && e.preventDefault()}
+                        style={`text-decoration: ${card.complete ? "line-through" : "none"}`}
                 ></textarea>
                 <!--This `e.key === Enter` check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the textarea.-->
                 <svg onclick={closeCard} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
@@ -628,11 +629,25 @@
                                 title={I18n.t("dueDate")}
                                 class:dueDateOrange={parseInt(card.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(card.dueDate)}
                                 class:dueDateRed={Date.now() > parseInt(card.dueDate)}
+                                style={`background-color: ${card.complete ? "var(--success)" : ""}`}
                                 onclick={e => mount(DueDatePopup, {props: {clickEvent: e, dueDate: card.dueDate, setDueDate: newDueDate => card.dueDate = newDueDate, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                         >
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                             <span>
                                     {`${(new Date(parseInt(card.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}`}
+                            </span>
+                        </button>
+                    {:else if card.dueDate === null && card.complete}
+                        <button class="completed"
+                                in:slide
+                                out:slide
+                                title={I18n.t("completed")}
+                                style="background-color: var(--success)"
+                                onclick={e => card.complete = !card.complete}
+                        >
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
+                            <span>
+                                {I18n.t("completed")}
                             </span>
                         </button>
                     {/if}
@@ -709,6 +724,14 @@
                     <span>
                         {I18n.t("actions")}
                     </span>
+                    <button title={card.complete ? I18n.t("markAsIncomplete") : I18n.t("markAsComplete")}
+                            onclick={() => card.complete = !card.complete}
+                    >
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
+                        <span>
+                            {card.complete ? I18n.t("markAsIncomplete") : I18n.t("markAsComplete")}
+                        </span>
+                    </button>
                     <button title={I18n.t("link")} id="cardDetailsCopyLinkButton"
                             onclick={async () => {
                                 let linkToThisCard = `takma://${selectedBoardId.value}/${card.id}`
@@ -933,7 +956,7 @@
 
     .cardActionsHolder button {
         width: 100%;
-        height: 2.5em;
+        min-height: 2.5em;
         border: none;
         font-size: medium;
         display: flex;
@@ -946,13 +969,15 @@
     }
 
     .cardActionsHolder button svg {
-        min-width: 1em;
+        min-width: 1.25em;
         height: 1.25em;
     }
 
     .cardActionsHolder button span {
         overflow: hidden;
         text-overflow: ellipsis;
+        text-align: left;
+        margin: 0.25em 0;
     }
 
     .cardActionsHolder button:hover {
@@ -1034,7 +1059,7 @@
         max-width: 30em;
     }
 
-    .dueDate {
+    .dueDate, .completed {
         display: flex;
         background-color: var(--border);
         border-radius: 4px;
@@ -1060,13 +1085,18 @@
         color: white;
     }
 
-    .dueDate:hover {
+    .dueDate:hover, .completed:hover {
         filter: brightness(70%);
     }
 
     .dueDate svg {
         width: 1.5em;
         height: 1.5em;
+    }
+
+    .completed svg {
+        width: 1.25em;
+        height: 1.25em;
     }
 
     .fullScreenButton {

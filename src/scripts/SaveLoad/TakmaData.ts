@@ -402,7 +402,8 @@ export class TakmaData
             coverImage: "",
             checklists: [],
             labelIds: [],
-            dueDate: null
+            dueDate: null,
+            complete: false,
         };
 
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);

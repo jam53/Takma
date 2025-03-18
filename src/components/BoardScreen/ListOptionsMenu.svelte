@@ -157,7 +157,20 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function sortByDueDateAscending()
     {
-        list.cards.sort((a, b) => parseInt(a.dueDate ?? Number.MAX_SAFE_INTEGER + "") - parseInt(b.dueDate ?? Number.MAX_SAFE_INTEGER + ""));
+        list.cards.sort((a, b) => {
+            if (a.complete && !b.complete)
+            {
+                return 1;
+            }
+            else if (!a.complete && b.complete)
+            {
+                return -1;
+            }
+            else
+            {
+                return parseInt(a.dueDate ?? Number.MAX_SAFE_INTEGER + "") - parseInt(b.dueDate ?? Number.MAX_SAFE_INTEGER + "");
+            }
+        });
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
@@ -167,7 +180,20 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function sortByDueDateDescending()
     {
-        list.cards.sort((a, b) => parseInt(b.dueDate ?? Number.MIN_SAFE_INTEGER + "") - parseInt(a.dueDate ?? Number.MIN_SAFE_INTEGER + ""));
+        list.cards.sort((a, b) => {
+            if (a.complete && !b.complete)
+            {
+                return 1;
+            }
+            else if (!a.complete && b.complete)
+            {
+                return -1;
+            }
+            else
+            {
+                return parseInt(b.dueDate ?? Number.MIN_SAFE_INTEGER + "") - parseInt(a.dueDate ?? Number.MIN_SAFE_INTEGER + "");
+            }
+        });
 
         SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 

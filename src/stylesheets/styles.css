@@ -36,6 +36,7 @@ html[data-theme="light"] {
 
     --danger: #c43420;
     --warning: orange;
+    --success: green;
 }
 
 html[data-theme="dark"] {
@@ -52,6 +53,7 @@ html[data-theme="dark"] {
 
     --danger: #c43420;
     --warning: orange;
+    --success: green;
 }
 
 *:focus-visible { /*focus-visible makes it so that the style only gets applied when the element is being focused by using the keyboard. Because in the past the focused border would also appear when clicking on an element */

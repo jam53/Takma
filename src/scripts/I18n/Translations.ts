@@ -177,7 +177,8 @@ export let en: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -242,6 +243,9 @@ export let en: Translation = {
     shortcutNotAvailableDuringOnboarding: "This keyboard shortcut will become available once you complete the onboarding process.",
     searchBarShortcutsExplanation: "You can open the search bar by clicking on it or by using the keyboard shortcut CTRL + SHIFT + F. To close it, simply press ESC.",
     orderLists: "Order lists",
+    completed: "Completed",
+    markAsComplete: "Mark as complete", 
+    markAsIncomplete: "Mark as incomplete",
 };
 
 export let ar: Translation = {
@@ -421,7 +425,8 @@ export let ar: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -486,6 +491,9 @@ export let ar: Translation = {
     shortcutNotAvailableDuringOnboarding: "سيكون هذا اختصار لوحة المفاتيح متاحًا بمجرد إكمال عملية التعريف.",
     searchBarShortcutsExplanation: "يمكنك فتح شريط البحث بالنقر عليه أو باستخدام اختصار لوحة المفاتيح CTRL + SHIFT + F. لإغلاقه، ما عليك سوى الضغط على ESC.",
     orderLists: "ترتيب القوائم",
+    completed: "مكتمل",
+    markAsComplete: "وضع علامة كمكتمل",
+    markAsIncomplete: "وضع علامة كغير مكتمل",
 };
 
 export let de: Translation = {
@@ -665,7 +673,8 @@ export let de: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -730,6 +739,9 @@ export let de: Translation = {
     shortcutNotAvailableDuringOnboarding: "Diese Tastenkombination wird verfügbar sein, sobald Sie den Onboarding-Prozess abgeschlossen haben.",
     searchBarShortcutsExplanation: "Sie können die Suchleiste öffnen, indem Sie darauf klicken oder die Tastenkombination STRG + UMSCHALT + F verwenden. Zum Schließen drücken Sie einfach ESC.",
     orderLists: "Listen anordnen",
+    completed: "Abgeschlossen",
+    markAsComplete: "Als abgeschlossen markieren",
+    markAsIncomplete: "Als nicht abgeschlossen markieren",
 };
 
 export let es: Translation = {
@@ -909,7 +921,8 @@ export let es: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -974,6 +987,9 @@ export let es: Translation = {
     shortcutNotAvailableDuringOnboarding: "Este atajo de teclado estará disponible una vez que completes el proceso de incorporación.",
     searchBarShortcutsExplanation: "Puedes abrir la barra de búsqueda haciendo clic en ella o usando el atajo de teclado CTRL + SHIFT + F. Para cerrarla, simplemente presiona ESC.",
     orderLists: "Ordenar listas",
+    completed: "Completado",
+    markAsComplete: "Marcar como completado",
+    markAsIncomplete: "Marcar como incompleto",
 };
 
 export let et: Translation = {
@@ -1153,7 +1169,8 @@ export let et: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1218,6 +1235,9 @@ export let et: Translation = {
     shortcutNotAvailableDuringOnboarding: "See klahvikombinatsioon on saadaval pärast seda, kui oled koolitusprotsessi lõpetanud.",
     searchBarShortcutsExplanation: "Saate otsinguriba avada, klõpsates sellel või kasutades klaviatuuri otseteed CTRL + SHIFT + F. Sulgemiseks vajutage lihtsalt ESC.",
     orderLists: "Korrasta loendeid",
+    completed: "Lõpetatud",
+    markAsComplete: "Märgi lõpetatuks",
+    markAsIncomplete: "Märgi lõpetamata",
 };
 
 export let fr: Translation = {
@@ -1397,7 +1417,8 @@ export let fr: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1462,6 +1483,9 @@ export let fr: Translation = {
     shortcutNotAvailableDuringOnboarding: "Ce raccourci clavier sera disponible une fois que vous aurez terminé le processus d'intégration.",
     searchBarShortcutsExplanation: "Vous pouvez ouvrir la barre de recherche en cliquant dessus ou en utilisant le raccourci clavier CTRL + SHIFT + F. Pour la fermer, appuyez simplement sur ESC.",
     orderLists: "Ordre des listes",
+    completed: "Terminé",
+    markAsComplete: "Marquer comme terminé",
+    markAsIncomplete: "Marquer comme inachevé",
 };
 
 export let hi: Translation = {
@@ -1641,7 +1665,8 @@ export let hi: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1706,6 +1731,9 @@ export let hi: Translation = {
     shortcutNotAvailableDuringOnboarding: "यह कीबोर्ड शॉर्टकट उस समय उपलब्ध होगा जब आप ऑनबोर्डिंग प्रक्रिया को पूरा कर लेंगे।",
     searchBarShortcutsExplanation: "आप सर्च बार को उस पर क्लिक करके या कीबोर्ड शॉर्टकट CTRL + SHIFT + F का उपयोग करके खोल सकते हैं। इसे बंद करने के लिए, बस ESC दबाएं।",
     orderLists: "सूचियाँ क्रमबद्ध करें",
+    completed: "पूरा हुआ",
+    markAsComplete: "पूर्ण के रूप में चिह्नित करें",
+    markAsIncomplete: "अपूर्ण के रूप में चिह्नित करें",
 };
 
 export let id: Translation = {
@@ -1885,7 +1913,8 @@ export let id: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1950,6 +1979,9 @@ export let id: Translation = {
     shortcutNotAvailableDuringOnboarding: "Pintasan keyboard ini akan tersedia setelah Anda menyelesaikan proses onboarding.",
     searchBarShortcutsExplanation: "Anda dapat membuka bilah pencarian dengan mengkliknya atau menggunakan pintasan keyboard CTRL + SHIFT + F. Untuk menutupnya, cukup tekan ESC.",
     orderLists: "Urutkan daftar",
+    completed: "Selesai",
+    markAsComplete: "Tandai sebagai selesai",
+    markAsIncomplete: "Tandai sebagai belum selesai",
 };
 
 export let ja: Translation = {
@@ -2129,7 +2161,8 @@ export let ja: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2194,6 +2227,9 @@ export let ja: Translation = {
     shortcutNotAvailableDuringOnboarding: "このキーボードショートカットは、オンボーディングプロセスを完了すると利用可能になります。",
     searchBarShortcutsExplanation: "検索バーはクリックするか、キーボードショートカットのCTRL + SHIFT + Fを使用して開くことができます。閉じるには、ESCキーを押してください。",
     orderLists: "リストを並べ替える",
+    completed: "完了",
+    markAsComplete: "完了としてマーク",
+    markAsIncomplete: "未完了としてマーク",
 };
 
 export let ko: Translation = {
@@ -2373,7 +2409,8 @@ export let ko: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2438,6 +2475,9 @@ export let ko: Translation = {
     shortcutNotAvailableDuringOnboarding: "이 키보드 단축키는 온보딩 프로세스를 완료하면 사용 가능합니다.",
     searchBarShortcutsExplanation: "검색창은 클릭하거나 키보드 단축키 CTRL + SHIFT + F를 사용하여 열 수 있습니다. 닫으려면 ESC를 누르세요.",
     orderLists: "목록 정렬",
+    completed: "완료됨",
+    markAsComplete: "완료로 표시",
+    markAsIncomplete: "미완료로 표시",
 };
 
 export let nl: Translation = {
@@ -2617,7 +2657,8 @@ export let nl: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2682,6 +2723,9 @@ export let nl: Translation = {
     shortcutNotAvailableDuringOnboarding: "Deze toetsencombinatie is beschikbaar zodra je het onboardingproces hebt voltooid.",
     searchBarShortcutsExplanation: "Je kunt de zoekbalk openen door erop te klikken of de sneltoets CTRL + SHIFT + F te gebruiken. Om het te sluiten, druk je gewoon op ESC.",
     orderLists: "Lijsten ordenen",
+    completed: "Voltooid",
+    markAsComplete: "Markeren als voltooid",
+    markAsIncomplete: "Markeren als niet voltooid",
 };
 
 export let pt: Translation = {
@@ -2861,7 +2905,8 @@ export let pt: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2926,6 +2971,9 @@ export let pt: Translation = {
     shortcutNotAvailableDuringOnboarding: "Esse atalho de teclado estará disponível assim que você completar o processo de integração.",
     searchBarShortcutsExplanation: "Você pode abrir a barra de pesquisa clicando nela ou usando o atalho de teclado CTRL + SHIFT + F. Para fechá-la, basta pressionar ESC.",
     orderLists: "Ordenar listas",
+    completed: "Concluído",
+    markAsComplete: "Marcar como concluído",
+    markAsIncomplete: "Marcar como incompleto",
 };
 
 export let ru: Translation = {
@@ -3105,7 +3153,8 @@ export let ru: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3170,6 +3219,9 @@ export let ru: Translation = {
     shortcutNotAvailableDuringOnboarding: "Это сочетание клавиш станет доступным после завершения процесса onboarding.",
     searchBarShortcutsExplanation: "Вы можете открыть строку поиска, кликнув по ней или используя сочетание клавиш CTRL + SHIFT + F. Чтобы закрыть её, просто нажмите ESC.",
     orderLists: "Упорядочить списки",
+    completed: "Завершено",
+    markAsComplete: "Пометить как завершённое",
+    markAsIncomplete: "Пометить как незавершённое",
 };
 
 export let tr: Translation = {
@@ -3349,7 +3401,8 @@ export let tr: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3414,6 +3467,9 @@ export let tr: Translation = {
     shortcutNotAvailableDuringOnboarding: "Bu klavye kısayolu, onboarding sürecini tamamladıktan sonra kullanılabilir hale gelecektir.",
     searchBarShortcutsExplanation: "Arama çubuğunun üzerine tıklayarak veya CTRL + SHIFT + F klavye kısayolunu kullanarak açabilirsiniz. Kapatmak için ESC tuşuna basın.",
     orderLists: "Listeleri sırala",
+    completed: "Tamamlandı",
+    markAsComplete: "Tamamlandı olarak işaretle",
+    markAsIncomplete: "Tamamlanmadı olarak işaretle",
 };
 
 export let zh: Translation = {
@@ -3593,7 +3649,8 @@ export let zh: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3658,4 +3715,7 @@ export let zh: Translation = {
     shortcutNotAvailableDuringOnboarding: "此键盘快捷键将在您完成入职培训后可用。",
     searchBarShortcutsExplanation: "您可以通过点击搜索栏或使用键盘快捷键 CTRL + SHIFT + F 来打开它。要关闭它，只需按 ESC 键。",
     orderLists: "排序列表",
+    completed: "完成",
+    markAsComplete: "标记为完成",
+    markAsIncomplete: "标记为未完成",
 };

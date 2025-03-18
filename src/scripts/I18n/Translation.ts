@@ -203,4 +203,7 @@ export default interface Translation
     shortcutNotAvailableDuringOnboarding: string;
     searchBarShortcutsExplanation: string;
     orderLists: string;
+    completed: string;
+    markAsComplete: string;
+    markAsIncomplete: string;
 }

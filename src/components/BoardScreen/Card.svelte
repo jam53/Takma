@@ -139,7 +139,7 @@
                 {/key}
             {/each}
         </div>
-        <span class="cardTitle">
+        <span class="cardTitle" style={`text-decoration: ${card.complete ? "line-through" : "none"}`}>
             {card.title}
         </span>
         {#await amountOfExistingAttachments(card.attachments)}
@@ -150,6 +150,7 @@
                     <div class="dueDate"
                          class:dueDateOrange={parseInt(card.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(card.dueDate)}
                          class:dueDateRed={Date.now() > parseInt(card.dueDate)}
+                         style={`color: ${card.complete ? "var(--success)" : ""}`}
                          title={new Date(parseInt(card.dueDate)).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: "h23"})}
                     >
                         <svg style="height: 1.15em; margin-right: 0.1em" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
@@ -157,6 +158,9 @@
                             {`${(new Date(parseInt(card.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {minute: "numeric", hour: "numeric", hourCycle: "h23", day: "numeric", month: "long"})}`}
                         </div>
                     </div>
+                {/if}
+                {#if card.complete && card.dueDate === null}
+                    <svg stroke="var(--success)" fill="var(--success)" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
                 {/if}
                 {#if card.description !== ""}
                     <svg style="height: 1.4em" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
