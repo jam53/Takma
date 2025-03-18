@@ -262,7 +262,7 @@ export class TakmaData
         this.incrementTotalBoardsCreated();
         await SaveLoadManager.saveToDisk();
 
-        await debug("Created new board: " + JSON.stringify(board));
+        await debug("Created new board: " + board.id);
         return boardId;
     }
 
@@ -333,7 +333,7 @@ export class TakmaData
 
         this.incrementTotalListsCreated();
         SaveLoadManager.saveToDisk();
-        debug("Created new list: " + JSON.stringify(list));
+        debug(`Created new list: ${list.id} with ${list.cards.length} cards`);
         return list.id;
     }
 
@@ -409,7 +409,7 @@ export class TakmaData
         this.incrementTotalCardsCreated();
         SaveLoadManager.saveToDisk();
 
-        debug("Created new card: " + JSON.stringify(card));
+        debug("Created new card: " + card.id);
         return card.id;
     }
 
@@ -447,7 +447,7 @@ export class TakmaData
      */
     private async deleteAllFilesTiedToCard(card: Card)
     {
-        debug(`Deleting all files tied to card: ${JSON.stringify(card)}`);
+        debug(`Deleting all files tied to card: ${card.id}`);
         card.attachments.filter(attachment => attachment !== "" && attachment !== null).forEach(async attachment => {
             await remove(await join(SaveLoadManager.getSaveDirectoryPath(), attachment));
         });
@@ -498,7 +498,7 @@ export class TakmaData
      */
     public updateList(boardId: string, listId: string, newListContent: List)
     {
-        debug(`Replacing list:${listId} in board:${boardId} with: ${JSON.stringify(newListContent)}`);
+        debug(`Replacing list: ${listId} in board: ${boardId} with list: ${newListContent.id}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const listIndexToReplace = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -539,7 +539,7 @@ export class TakmaData
             return;
         }
 
-        debug(`Replacing card:${cardId} in board:${boardId} with: ${JSON.stringify(card)}`);
+        debug(`Replacing card: ${cardId} in board: ${boardId} with: ${card.id}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         let currentList: List;
 
@@ -576,7 +576,7 @@ export class TakmaData
      */
     public addLabelToBoard(boardId: string, label: Label)
     {
-        debug(`For board:${boardId} adding label:${JSON.stringify(label)}`);
+        debug(`Adding label: ${label.id} to board: ${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].labels.push(label)
@@ -589,7 +589,7 @@ export class TakmaData
      */
     public setLabelTitle(boardId: string, labelId: string, title: string)
     {
-        debug(`Setting title of label:${labelId} in board:${boardId} to "${title}"`);
+        debug(`Setting title of label: ${labelId} in board: ${boardId} to "${title}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
@@ -683,7 +683,7 @@ export class TakmaData
      */
     public addCardToList(card: Card, boardId: string, listId: string, indexToInsert: number = -1): void
     {
-        debug(`Adding a card to list:${listId} in board:${boardId}, at position:${indexToInsert} inserting card:${JSON.stringify(card)}`);
+        debug(`Inserting card: ${card.id} into list: ${listId} in board: ${boardId} at position ${indexToInsert}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
