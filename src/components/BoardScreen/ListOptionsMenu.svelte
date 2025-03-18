@@ -139,7 +139,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         list.cards.sort((a, b) => a.creationDate - b.creationDate);
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
@@ -149,7 +149,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         list.cards.sort((a, b) => b.creationDate - a.creationDate);
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
@@ -159,7 +159,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         list.cards.sort((a, b) => parseInt(a.dueDate ?? Number.MAX_SAFE_INTEGER + "") - parseInt(b.dueDate ?? Number.MAX_SAFE_INTEGER + ""));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
@@ -169,7 +169,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         list.cards.sort((a, b) => parseInt(b.dueDate ?? Number.MIN_SAFE_INTEGER + "") - parseInt(a.dueDate ?? Number.MIN_SAFE_INTEGER + ""));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
@@ -179,7 +179,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         list.cards.sort((a, b) => a.title.localeCompare(b.title));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
@@ -189,7 +189,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         list.cards.sort((a, b) => b.title.localeCompare(a.title));
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
@@ -199,7 +199,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     {
         shuffle(list.cards);
 
-        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, list);
+        SaveLoadManager.getData().updateList(selectedBoardId.value, list.id, $state.snapshot(list));
 
         setList(list);
         closeContextMenu();
