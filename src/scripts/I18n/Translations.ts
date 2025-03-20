@@ -246,6 +246,9 @@ export let en: Translation = {
     completed: "Completed",
     markAsComplete: "Mark as complete", 
     markAsIncomplete: "Mark as incomplete",
+    cardStatus: "Card status",
+    complete: "Complete",
+    incomplete: "Incomplete",
 };
 
 export let ar: Translation = {
@@ -494,6 +497,9 @@ export let ar: Translation = {
     completed: "مكتمل",
     markAsComplete: "وضع علامة كمكتمل",
     markAsIncomplete: "وضع علامة كغير مكتمل",
+    cardStatus: "حالة البطاقة",
+    complete: "مكتمل",
+    incomplete: "غير مكتمل",
 };
 
 export let de: Translation = {
@@ -742,6 +748,9 @@ export let de: Translation = {
     completed: "Abgeschlossen",
     markAsComplete: "Als abgeschlossen markieren",
     markAsIncomplete: "Als nicht abgeschlossen markieren",
+    cardStatus: "Kartenstatus",
+    complete: "Abgeschlossen",
+    incomplete: "Unvollständig",
 };
 
 export let es: Translation = {
@@ -990,6 +999,9 @@ export let es: Translation = {
     completed: "Completado",
     markAsComplete: "Marcar como completado",
     markAsIncomplete: "Marcar como incompleto",
+    cardStatus: "Estado de la tarjeta",
+    complete: "Completo",
+    incomplete: "Incompleto",
 };
 
 export let et: Translation = {
@@ -1238,6 +1250,9 @@ export let et: Translation = {
     completed: "Lõpetatud",
     markAsComplete: "Märgi lõpetatuks",
     markAsIncomplete: "Märgi lõpetamata",
+    cardStatus: "Kaardi olek",
+    complete: "Lõpetatud",
+    incomplete: "Lõpetamata",
 };
 
 export let fr: Translation = {
@@ -1486,6 +1501,9 @@ export let fr: Translation = {
     completed: "Terminé",
     markAsComplete: "Marquer comme terminé",
     markAsIncomplete: "Marquer comme inachevé",
+    cardStatus: "Statut de la carte",
+    complete: "Complet",
+    incomplete: "Incomplet",
 };
 
 export let hi: Translation = {
@@ -1734,6 +1752,9 @@ export let hi: Translation = {
     completed: "पूरा हुआ",
     markAsComplete: "पूर्ण के रूप में चिह्नित करें",
     markAsIncomplete: "अपूर्ण के रूप में चिह्नित करें",
+    cardStatus: "कार्ड स्थिति",
+    complete: "पूर्ण",
+    incomplete: "अपूर्ण",
 };
 
 export let id: Translation = {
@@ -1982,6 +2003,9 @@ export let id: Translation = {
     completed: "Selesai",
     markAsComplete: "Tandai sebagai selesai",
     markAsIncomplete: "Tandai sebagai belum selesai",
+    cardStatus: "Status kartu",
+    complete: "Selesai",
+    incomplete: "Belum selesai",
 };
 
 export let ja: Translation = {
@@ -2230,6 +2254,9 @@ export let ja: Translation = {
     completed: "完了",
     markAsComplete: "完了としてマーク",
     markAsIncomplete: "未完了としてマーク",
+    cardStatus: "カードのステータス",
+    complete: "完了",
+    incomplete: "未完了",
 };
 
 export let ko: Translation = {
@@ -2478,6 +2505,9 @@ export let ko: Translation = {
     completed: "완료됨",
     markAsComplete: "완료로 표시",
     markAsIncomplete: "미완료로 표시",
+    cardStatus: "카드 상태",
+    complete: "완료",
+    incomplete: "미완료",
 };
 
 export let nl: Translation = {
@@ -2726,6 +2756,9 @@ export let nl: Translation = {
     completed: "Voltooid",
     markAsComplete: "Markeren als voltooid",
     markAsIncomplete: "Markeren als niet voltooid",
+    cardStatus: "Kaartstatus",
+    complete: "Voltooid",
+    incomplete: "Onvolledig",
 };
 
 export let pt: Translation = {
@@ -2974,6 +3007,9 @@ export let pt: Translation = {
     completed: "Concluído",
     markAsComplete: "Marcar como concluído",
     markAsIncomplete: "Marcar como incompleto",
+    cardStatus: "Status do cartão",
+    complete: "Completo",
+    incomplete: "Incompleto",
 };
 
 export let ru: Translation = {
@@ -3222,6 +3258,9 @@ export let ru: Translation = {
     completed: "Завершено",
     markAsComplete: "Пометить как завершённое",
     markAsIncomplete: "Пометить как незавершённое",
+    cardStatus: "Статус карты",
+    complete: "Завершено",
+    incomplete: "Незавершено",
 };
 
 export let tr: Translation = {
@@ -3470,6 +3509,9 @@ export let tr: Translation = {
     completed: "Tamamlandı",
     markAsComplete: "Tamamlandı olarak işaretle",
     markAsIncomplete: "Tamamlanmadı olarak işaretle",
+    cardStatus: "Kart durumu",
+    complete: "Tamamlandı",
+    incomplete: "Tamamlanmadı",
 };
 
 export let zh: Translation = {
@@ -3718,4 +3760,7 @@ export let zh: Translation = {
     completed: "完成",
     markAsComplete: "标记为完成",
     markAsIncomplete: "标记为未完成",
+    cardStatus: "卡片状态",
+    complete: "完成",
+    incomplete: "未完成",
 };

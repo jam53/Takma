@@ -163,7 +163,7 @@
         </svg>
     </div>
     {#key searchBarValue.value}
-        {#if searchBarValue.value !== "" || cardFilters.labelIds.length > 0 || cardFilters.dueDates.length > 0}
+        {#if searchBarValue.value !== "" || cardFilters.labelIds.length > 0 || cardFilters.dueDate !== Number.MAX_SAFE_INTEGER || cardFilters.complete || cardFilters.incomplete}
             <span class="amountOfCardsMatchedFilter">
                 {cards.filter(card => !shouldCardBeHidden(card)).length + " " + (cards.filter(card => !shouldCardBeHidden(card)).length === 1 ? I18n.t("cardMatchedFilters") : I18n.t("cardsMatchedFilters"))}
             </span>

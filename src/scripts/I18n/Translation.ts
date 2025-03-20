@@ -206,4 +206,7 @@ export default interface Translation
     completed: string;
     markAsComplete: string;
     markAsIncomplete: string;
+    cardStatus: string;
+    complete: string;
+    incomplete: string;
 }

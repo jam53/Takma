@@ -164,10 +164,9 @@
 
     function filterCards(cardsToFilter: Card[]): Card[]
     {
-        for (let dueDate of cardFilters.dueDates)
-        {
-            cardsToFilter = cardsToFilter.filter(card => card.dueDate !== null && parseInt(card.dueDate) - Date.now() < dueDate);
-        }
+        cardsToFilter = cardsToFilter
+            .filter(card => card.dueDate !== null && card.dueDate - Date.now() < cardFilters.dueDate)
+            .filter(card => !cardFilters.complete && !cardFilters.incomplete || cardFilters.complete && card.complete || cardFilters.incomplete && !card.complete);
 
         for (let labelId of cardFilters.labelIds)
         {

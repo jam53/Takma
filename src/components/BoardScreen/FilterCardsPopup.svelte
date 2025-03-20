@@ -98,23 +98,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         cardFilters.labelIds = cardFilters.labelIds; //We do this so that when we select/unselect a label by clicking on the colored div bar, rather than the checkbox. That the checkbox would also update to reflect the new state and so that the boarscreen rerenders the list with the filtered cards.
     }
 
-    /**
-     * When we click on a due date, this function adds/removes the due date from the cardfilters depending on whether or not the label was/wasn't assigned to the cardfilters before clicking.
-     */
-    function handleDueDateClick(dueDateValue: number)
-    {
-        if (cardFilters.dueDates.includes(dueDateValue))
-        {
-            cardFilters.dueDates = cardFilters.dueDates.filter(dueDate => dueDate != dueDateValue); //Removes the due date from the cardfilters
-        }
-        else //The clicked label wasn't assigned to the card yet, so we add it here
-        {
-            cardFilters.dueDates = [dueDateValue];
-        }
-
-        cardFilters.labelIds = cardFilters.labelIds; //We do this so that when we select/unselect a due date by clicking on the div, rather than the checkbox. That the checkbox would also update to reflect the new state and so that the boarscreen rerenders the list with the filtered cards.
-    }
-
     let navElement: HTMLElement | null = $state(null);
     $effect(() => {
         navElement?.focus();
@@ -140,55 +123,13 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     ];
 </script>
 
-<nav use:getContextMenuDimension style="visibility: hidden; position: absolute;"
->
-    <div class="navbar">
-        <h3 class="title">
-            {I18n.t("filterCards")}
-        </h3>
-        <br>
-        <h4>{I18n.t("dueDate")}</h4>
-        <div class="dueDatesHolder">
-            {#each dueDateValues as dueDate}
-                <div class="dueDate"
-                     onclick={() => handleDueDateClick(dueDate.value)}
-                >
-                    <input type="checkbox" checked={cardFilters.dueDates.includes(dueDate.value)}>
-                    <svg stroke="currentColor" class:danger={dueDate.value === 0} class:warning={dueDate.value === 24 * 60 * 60 * 1000} stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
-                    <span>
-                            {dueDate.title}
-                        </span>
-                </div>
-            {/each}
-        </div>
-        {#if SaveLoadManager.getData().getBoard(selectedBoardId.value)?.labels.length > 0}
-            <hr>
-            <h4>{I18n.t("labels")}</h4>
-            <div class="labelsHolder">
-                {#if selectedBoardId.value !== ""}
-                    {#each SaveLoadManager.getData().getBoard(selectedBoardId.value).labels as label}
-                        <div class="labelOption"
-                             onclick={() => handleLabelClick(label.id)}
-                        >
-                            <input type="checkbox" checked={cardFilters.labelIds.includes(label.id)}/>
-                            <div style="background-color: {label.color}">
-                                <span style="color: {label.titleColor}">
-                                    {label.title}
-                                </span>
-                            </div>
-                        </div>
-                    {/each}
-                {/if}
-            </div>
-        {/if}
-    </div>
-</nav>
 {#if showMenu}
     <nav style="position: absolute; top:{pos.y}px; left:{pos.x}px; z-index: 1; box-shadow: none"
          use:clickOutside
          onclick_outside={closeContextMenu}
          bind:this={navElement}
          onkeydown={handleKeyDown} tabindex="1"
+         use:getContextMenuDimension
     >
         <div class="navbar" id="navbar" transition:slide|global>
             <h3 class="title">
@@ -199,9 +140,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
             <div class="dueDatesHolder">
                 {#each dueDateValues as dueDate}
                     <div class="dueDate"
-                         onclick={() => handleDueDateClick(dueDate.value)}
+                         onclick={() => cardFilters.dueDate = cardFilters.dueDate === dueDate.value ? Number.MAX_SAFE_INTEGER : dueDate.value}
                     >
-                        <input type="checkbox" checked={cardFilters.dueDates.includes(dueDate.value)}>
+                        <input type="checkbox" checked={cardFilters.dueDate === dueDate.value}>
                         <svg stroke="currentColor" class:danger={dueDate.value === 0} class:warning={dueDate.value === 24 * 60 * 60 * 1000} stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                         <span>
                             {dueDate.title}
@@ -229,6 +170,32 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                     {/if}
                 </div>
             {/if}
+            <hr>
+            <h4>{I18n.t("cardStatus")}</h4>
+            <div class="cardStatusHoler">
+                <div class="cardStatus"
+                     onclick={() => {
+                         cardFilters.complete = !cardFilters.complete;
+                         cardFilters.incomplete = false;
+                     }}
+                >
+                    <input type="checkbox" checked={cardFilters.complete}>
+                    <span>
+                        {I18n.t("complete")}
+                    </span>
+                </div>
+                <div class="cardStatus"
+                     onclick={() => {
+                          cardFilters.incomplete = !cardFilters.incomplete;
+                          cardFilters.complete = false;
+                     }}
+                >
+                    <input type="checkbox" checked={cardFilters.incomplete}>
+                    <span>
+                        {I18n.t("incomplete")}
+                    </span>
+                </div>
+            </div>
         </div>
     </nav>
 {/if}
@@ -256,7 +223,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         text-align: center;
     }
 
-    .labelsHolder, .dueDatesHolder {
+    .labelsHolder, .dueDatesHolder, .cardStatusHoler {
         display: flex;
         flex-direction: column;
         gap: 0.5em;
@@ -265,7 +232,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         padding: 0 0.5em;
     }
 
-    .labelOption, .dueDate {
+    .labelOption, .dueDate, .cardStatus {
         display: flex;
         align-items: center;
         gap: 1em;
