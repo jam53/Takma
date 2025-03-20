@@ -165,7 +165,7 @@
     function filterCards(cardsToFilter: Card[]): Card[]
     {
         cardsToFilter = cardsToFilter
-            .filter(card => card.dueDate !== null && card.dueDate - Date.now() < cardFilters.dueDate)
+            .filter(card => card.dueDate === null && cardFilters.dueDate === Number.MAX_SAFE_INTEGER || card.dueDate !== null && card.dueDate - Date.now() < cardFilters.dueDate)
             .filter(card => !cardFilters.complete && !cardFilters.incomplete || cardFilters.complete && card.complete || cardFilters.incomplete && !card.complete);
 
         for (let labelId of cardFilters.labelIds)
