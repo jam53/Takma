@@ -4,14 +4,17 @@
             --dueDateItemBorder: var(--border);
             --dueDateItemBorderDanger: #4d0408;
             --dueDateItemBorderWarning: #814c00;
+            --dueDateItemBorderSuccess: #004d26;
 
             --dueDateItemBackground: #2d2d2d;
             --dueDateItemBackgroundDanger: #2d0607;
             --dueDateItemBackgroundWarning: #4b3305;
+            --dueDateItemBackgroundSuccess: #002d16;
 
             --dueDateItemColor: var(--main-text);
             --dueDateItemColorDanger: #ff9ea1;
             --dueDateItemColorWarning: #ffb84d;
+            --dueDateItemColorSuccess: #98ffb4;
 
             --brightnessOnHover: 130%;
         }
@@ -20,14 +23,17 @@
             --dueDateItemBorder: var(--border);
             --dueDateItemBorderDanger: #ff4d52;
             --dueDateItemBorderWarning: #e69500;
+            --dueDateItemBorderSuccess: #00a651;
 
             --dueDateItemBackground: #ffffff;
             --dueDateItemBackgroundDanger: #ffdddd;
             --dueDateItemBackgroundWarning: #fff5e0;
+            --dueDateItemBackgroundSuccess: #e0ffe8;
 
             --dueDateItemColor: rgba(var(--main-text-rgb-values), 0.8);
             --dueDateItemColorDanger: #e55259;
             --dueDateItemColorWarning: #eaa336;
+            --dueDateItemColorSuccess: #228b22;
 
             --brightnessOnHover: 90%;
         }
@@ -70,18 +76,33 @@
         removeKeyDownListeners();
     }
 
-    function getAllCardsWithDueDates()
+    interface CardWithDueDate
+    {
+        titleWithBoardName: string,
+        titleWithListName: string,
+        dueDate: number,
+        boardId: string,
+        cardId: string,
+        complete: boolean,
+    }
+
+    function getAllCardsWithDueDates(): CardWithDueDate[]
     {
         info("Fetching all cards with due dates");
-        let allDueDates = [];
-        SaveLoadManager.getData().boards.forEach(board => {
-            board.lists.forEach(list => {
+        let allDueDates: CardWithDueDate[] = [];
+        SaveLoadManager.getData().boards.forEach(board =>
+            board.lists.forEach(list =>
                 list.cards.filter(card => card.dueDate !== null).forEach(card =>
-                {
-                    allDueDates.push({titleWithBoardName: "<b>" + board.title + "</b> | " + card.title, titleWithListName: "<b>" + list.title + "</b> | " + card.title, dueDate: parseInt(card.dueDate), boardId: board.id, cardId: card.id})
-                });
-            });
-        });
+                    allDueDates.push({
+                        titleWithBoardName: "<b>" + board.title + "</b> | " + card.title,
+                        titleWithListName: "<b>" + list.title + "</b> | " + card.title,
+                        dueDate: parseInt(card.dueDate!),
+                        boardId: board.id,
+                        cardId: card.id,
+                        complete: card.complete
+                    }))
+            )
+        );
 
         if (selectedBoardId.value !== "")
         {//This will be true in the case that the DueDatesOverviewPopup is opened on the boardscreen. In that case we only want to show the due dates of that board
@@ -102,7 +123,7 @@
             }
         }
 
-        let allDueDates = getAllCardsWithDueDates();
+        let allCardsWithDueDate = getAllCardsWithDueDates();
 
         return [
             {value: 0, title: I18n.t("overdue"), color: "danger"},
@@ -112,24 +133,24 @@
             {value: 365 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextYear"), color: "normal"},
             {value: 10 * 365 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextDecade"), color: "normal"},
             {value: 100 * 365 * 24 * 60 * 60 * 1000, title: I18n.t("dueNextCentury"), color: "normal"},
+            {value: Number.MIN_SAFE_INTEGER, title: I18n.t("completed"), color: "success"},
         ].map(dueDateValue =>
         {
-            let dueDates = [];
+            let cardsWithDueDate: CardWithDueDate[] = [];
 
-            allDueDates.sort((a,b) => a.dueDate - b.dueDate).forEach(dueDate =>
+            allCardsWithDueDate.sort((a,b) => a.dueDate - b.dueDate).forEach(card =>
             {
-
-                if (dueDate.dueDate - Date.now() < dueDateValue.value)
+                if (!card.complete && card.dueDate - Date.now() < dueDateValue.value || card.complete && dueDateValue.value === Number.MIN_SAFE_INTEGER)
                 {
-                    dueDates.push(dueDate);
+                    cardsWithDueDate.push(card);
                 }
             });
 
-            dueDates.forEach(dueDate => removeValueFromArray(allDueDates, dueDate));
+            cardsWithDueDate.forEach(card => removeValueFromArray(allCardsWithDueDate, card));
 
             return {
                 ...dueDateValue,
-                dueDates: dueDates,
+                dueDates: cardsWithDueDate,
             }
         });
     }
@@ -160,7 +181,7 @@
                     <h2>{dueDateValue.title}</h2>
                 {/if}
                 {#each dueDateValue.dueDates as dueDateItem}
-                    <div class="dueDateItem" class:danger={dueDateValue.color === "danger"} class:warning={dueDateValue.color === "warning"}
+                    <div class="dueDateItem" class:danger={dueDateValue.color === "danger"} class:warning={dueDateValue.color === "warning"} class:success={dueDateValue.color === "success"}
                          onclick={() => {
                              selectedBoardId.value = dueDateItem.boardId;
                              selectedCardId.value = dueDateItem.cardId;
@@ -269,6 +290,12 @@
         border-color: var(--dueDateItemBorderWarning);
         background-color: var(--dueDateItemBackgroundWarning);
         color: var(--dueDateItemColorWarning);
+    }
+
+    .success {
+        border-color: var(--dueDateItemBorderSuccess);
+        background-color: var(--dueDateItemBackgroundSuccess);
+        color: var(--dueDateItemColorSuccess);
     }
 
     .dueDateItem h4 {
