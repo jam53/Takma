@@ -684,7 +684,7 @@
                     </button>
                     <button title={I18n.t("checklist")}
                             onclick={() => {
-                                const newChecklist = {id: crypto.randomUUID(), title: "", todos: []};
+                                const newChecklist = {id: crypto.randomUUID(), title: "", todos: [], creationDate: Date.now()};
 
                                 card?.checklists.push(newChecklist);
 

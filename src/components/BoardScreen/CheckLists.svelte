@@ -8,6 +8,7 @@
     import {mount} from "svelte";
     import {flip} from "svelte/animate";
     import type {Checklist} from "../../scripts/Board";
+    import OrderChecklistsMenu from "./OrderChecklistsMenu.svelte";
 
 
     interface Props {
@@ -126,6 +127,20 @@
                                 onclick={() => moveChecklist(i, 1)}
                         >
                             <svg stroke="currentColor" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z"></path></svg>
+                        </button>
+                    {/if}
+                    {#if checklists.length >= 2}
+                        <button title={I18n.t("sortChecklists")}
+                                onclick={e => mount(OrderChecklistsMenu, {
+                                    props: {
+                                        clickEvent: e,
+                                        checklists,
+                                        focusOnCardDetailsFunction
+                                    },
+                                    target: document.body, intro: true
+                                })}
+                        >
+                            <svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" /></svg>
                         </button>
                     {/if}
                     <button title={I18n.t("delete")} onclick={async () => {

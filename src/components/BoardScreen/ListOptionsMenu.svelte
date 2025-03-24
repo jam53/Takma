@@ -24,7 +24,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
-        clickEvent: MouseEvent,
+        clickEvent: MouseEvent;
         list: List;
         setList: (list: List) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
         setLists: (lists: List[]) => void;

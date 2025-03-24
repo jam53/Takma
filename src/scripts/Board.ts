@@ -53,6 +53,7 @@ export interface Label
 export interface Checklist
 {
     id: string,
+    creationDate: number, // In milliseconds unix time
     title: string,
     todos: TodoItem[]
 }

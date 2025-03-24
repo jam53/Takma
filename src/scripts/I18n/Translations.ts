@@ -249,6 +249,7 @@ export let en: Translation = {
     cardStatus: "Card status",
     complete: "Complete",
     incomplete: "Incomplete",
+    sortChecklists: "Sort checklists",
 };
 
 export let ar: Translation = {
@@ -500,6 +501,7 @@ export let ar: Translation = {
     cardStatus: "حالة البطاقة",
     complete: "مكتمل",
     incomplete: "غير مكتمل",
+    sortChecklists: "ترتيب قوائم التحقق",
 };
 
 export let de: Translation = {
@@ -751,6 +753,7 @@ export let de: Translation = {
     cardStatus: "Kartenstatus",
     complete: "Abgeschlossen",
     incomplete: "Unvollständig",
+    sortChecklists: "Checklisten sortieren",
 };
 
 export let es: Translation = {
@@ -1002,6 +1005,7 @@ export let es: Translation = {
     cardStatus: "Estado de la tarjeta",
     complete: "Completo",
     incomplete: "Incompleto",
+    sortChecklists: "Ordenar listas de verificación",
 };
 
 export let et: Translation = {
@@ -1253,6 +1257,7 @@ export let et: Translation = {
     cardStatus: "Kaardi olek",
     complete: "Lõpetatud",
     incomplete: "Lõpetamata",
+    sortChecklists: "Sorteeri kontrollnimekirjad",
 };
 
 export let fr: Translation = {
@@ -1504,6 +1509,7 @@ export let fr: Translation = {
     cardStatus: "Statut de la carte",
     complete: "Complet",
     incomplete: "Incomplet",
+    sortChecklists: "Trier les listes de contrôle",
 };
 
 export let hi: Translation = {
@@ -1755,6 +1761,7 @@ export let hi: Translation = {
     cardStatus: "कार्ड स्थिति",
     complete: "पूर्ण",
     incomplete: "अपूर्ण",
+    sortChecklists: "चेकलिस्ट क्रमबद्ध करें",
 };
 
 export let id: Translation = {
@@ -2006,6 +2013,7 @@ export let id: Translation = {
     cardStatus: "Status kartu",
     complete: "Selesai",
     incomplete: "Belum selesai",
+    sortChecklists: "Urutkan daftar periksa",
 };
 
 export let ja: Translation = {
@@ -2257,6 +2265,7 @@ export let ja: Translation = {
     cardStatus: "カードのステータス",
     complete: "完了",
     incomplete: "未完了",
+    sortChecklists: "チェックリストを並べ替える",
 };
 
 export let ko: Translation = {
@@ -2508,6 +2517,7 @@ export let ko: Translation = {
     cardStatus: "카드 상태",
     complete: "완료",
     incomplete: "미완료",
+    sortChecklists: "체크리스트 정렬",
 };
 
 export let nl: Translation = {
@@ -2759,6 +2769,7 @@ export let nl: Translation = {
     cardStatus: "Kaartstatus",
     complete: "Voltooid",
     incomplete: "Onvolledig",
+    sortChecklists: "Sorteer checklists",
 };
 
 export let pt: Translation = {
@@ -3010,6 +3021,7 @@ export let pt: Translation = {
     cardStatus: "Status do cartão",
     complete: "Completo",
     incomplete: "Incompleto",
+    sortChecklists: "Ordenar checklists",
 };
 
 export let ru: Translation = {
@@ -3261,6 +3273,7 @@ export let ru: Translation = {
     cardStatus: "Статус карты",
     complete: "Завершено",
     incomplete: "Незавершено",
+    sortChecklists: "Сортировать чек-листы",
 };
 
 export let tr: Translation = {
@@ -3512,6 +3525,7 @@ export let tr: Translation = {
     cardStatus: "Kart durumu",
     complete: "Tamamlandı",
     incomplete: "Tamamlanmadı",
+    sortChecklists: "Checklisteleri sırala",
 };
 
 export let zh: Translation = {
@@ -3763,4 +3777,5 @@ export let zh: Translation = {
     cardStatus: "卡片状态",
     complete: "完成",
     incomplete: "未完成",
+    sortChecklists: "排序检查项",
 };

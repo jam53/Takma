@@ -209,4 +209,5 @@ export default interface Translation
     cardStatus: string;
     complete: string;
     incomplete: string;
+    sortChecklists: string;
 }
