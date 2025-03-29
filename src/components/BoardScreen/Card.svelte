@@ -144,7 +144,7 @@
         </span>
         {#await amountOfExistingAttachments(card.attachments)}
         {:then amountOfExistingAttachments}
-        {#if card.dueDate !== null || card.description !== "" || amountOfExistingAttachments > 0 || amountOfTodosInCard(card) > 0}
+        {#if card.dueDate !== null || card.description !== "" || amountOfExistingAttachments > 0 || amountOfTodosInCard(card) > 0 || card.complete}
             <div class="icons">
                 {#if card.dueDate !== null}
                     <div class="dueDate"
