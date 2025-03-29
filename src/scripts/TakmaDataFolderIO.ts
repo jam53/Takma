@@ -79,6 +79,24 @@ export async function saveAbsoluteFilePathToTempFile(pathToFile: string, filenam
 }
 
 /**
+ * Saves an ArrayBuffer to a temporary file. Returns the absolute path to the saved file.
+ *
+ * @param arrayBuffer - The ArrayBuffer to save.
+ * @param filename - (Optional) The desired filename. A random UUID will be prepended to the filename to ensure uniqueness. If not provided a default name is given.
+ * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
+ */
+export async function saveArrayBufferToTempFile(arrayBuffer: ArrayBuffer, filename?: string): Promise<string> {
+    filename = crypto.randomUUID() + (filename ?? ".bin");
+    const absoluteSavePath = await join(await SaveLoadManager.getTempDirectoryPath(), filename);
+
+    debug(`Writing ${arrayBuffer.byteLength} bytes to "${absoluteSavePath}"`);
+
+    await mkdir(absoluteSavePath.getDirectoryPath(), {recursive: true});
+    await writeFile(absoluteSavePath, new Uint8Array(arrayBuffer));
+    return absoluteSavePath;
+}
+
+/**
  * Copies a file from an absolute path to the specified save directory.
  * Returns the absolute path to the saved file.
  *

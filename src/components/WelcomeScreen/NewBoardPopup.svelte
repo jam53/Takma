@@ -4,18 +4,20 @@
     import {onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/Stores.svelte.js";
-    import {exists, readDir} from "@tauri-apps/plugin-fs";
+    import {BaseDirectory, exists, readDir} from "@tauri-apps/plugin-fs";
     import {open} from "@tauri-apps/plugin-dialog"
     import {
         imageExtensions,
         removeFileFromSaveDirectory,
         saveAbsoluteFilePathToSaveDirectory,
+        saveArrayBufferToTempFile,
     } from "../../scripts/TakmaDataFolderIO";
     import {join, resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {info} from "@tauri-apps/plugin-log";
+    import {info, warn} from "@tauri-apps/plugin-log";
+    import paintDrops from "../../images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
 
     let showPopup = $state(true);
     let selectedImg: string = $state(""); //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -77,12 +79,24 @@
     async function loadImagesIncludedInTakma()
     {
         info("Loading images included with Takma for new board popup");
-        let includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
+
+        const BACKGROUND_IMAGES_DIR = "resources/backgrounds/";
+        let includedImagesPaths: string[];
+
+        if (await exists(BACKGROUND_IMAGES_DIR, {baseDir: BaseDirectory.Resource}) && (await readDir(BACKGROUND_IMAGES_DIR, {baseDir: BaseDirectory.Resource})).length > 0) {
+            includedImagesPaths = await Promise.all((await readDir((await resolveResource(BACKGROUND_IMAGES_DIR)))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
+        }
+        else {
+            warn("Couldn't load any background images included with Takma for new board popup. Falling back to default included image: " + paintDrops);
+            let defaultImageBlob = await (await fetch(paintDrops)).blob();
+
+            let savedImage = await saveArrayBufferToTempFile(new Uint8Array(await defaultImageBlob.arrayBuffer()));
+            includedImagesPaths = [savedImage];
+        }
 
         shuffle(includedImagesPaths);
 
         selectedImg = includedImagesPaths[0];
-
         return includedImagesPaths;
     }
 
