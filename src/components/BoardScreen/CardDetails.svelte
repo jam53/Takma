@@ -3,7 +3,7 @@
     import {onDestroy, mount, untrack} from "svelte";
     import {invalidateLabels, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Card, Checklist, List} from "../../scripts/Board";
+    import type {Card, List} from "../../scripts/Board";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {marked} from "marked";
     import DOMPurify from "dompurify";
@@ -32,11 +32,13 @@
     interface Props {
         refreshList: (listToRefresh: List) => void;
         refreshCard: (cardToRefresh: Card) => void;
+        reloadLists: () => void;
     }
 
     let {
         refreshList,
         refreshCard,
+        reloadLists,
     }: Props = $props();
 
     let card: Card|null = $state(null);
@@ -357,9 +359,26 @@
     {
         if (card.coverImage !== "")
         {
-            await removeFileFromSaveDirectory(card.coverImage);
-            card.coverImage = "";
-            toast(I18n.t("removeCardCoverImage"));
+            const deleteCoverImageFunction = async () => {
+                await removeFileFromSaveDirectory(card.coverImage);
+                card.coverImage = "";
+                toast(I18n.t("removeCardCoverImage"));
+            }
+
+            if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCoverImage)
+            {
+                await deleteCoverImageFunction();
+            }
+            else
+            {
+                const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCoverImageRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+                if (await popup.getAnswer() === true)
+                {
+                    await SaveLoadManager.getData().updateConfirmationPreference("deleteCoverImage", popup.getShowConfirmationAgain());
+                    await deleteCoverImageFunction();
+                }
+            }
         }
         else
         {
@@ -380,13 +399,30 @@
         }
     }
 
-    function deleteCard()
+    async function deleteCard()
     {
-        const listIdCardIsIn = SaveLoadManager.getData().getListContainingCard(selectedBoardId.value, selectedCardId.value).id; // Store the ID of the list that contains the card *before* the card is deleted. This is essential because after deletion, `getListContainingCard()` will no longer return the list the card was in, as it uses the deleted card's ID to find the list. But as the deleted card no longer exists in the list, `getListContainingCard()` won't be able to find the list.
+        const deleteCardFunction = () => {
+            const listIdCardIsIn = SaveLoadManager.getData().getListContainingCard(selectedBoardId.value, selectedCardId.value).id; // Store the ID of the list that contains the card *before* the card is deleted. This is essential because after deletion, `getListContainingCard()` will no longer return the list the card was in, as it uses the deleted card's ID to find the list. But as the deleted card no longer exists in the list, `getListContainingCard()` won't be able to find the list.
 
-        SaveLoadManager.getData().deleteCard(selectedBoardId.value, selectedCardId.value);
-        refreshList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
-        selectedCardId.value = "";
+            SaveLoadManager.getData().deleteCard(selectedBoardId.value, selectedCardId.value);
+            refreshList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
+            selectedCardId.value = "";
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCard)
+        {
+            deleteCardFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCardRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteCard", popup.getShowConfirmationAgain());
+                deleteCardFunction();
+            }
+        }
     }
 
     let isCardFullscreen = $state(SaveLoadManager.getData().cardsFullscreen);
@@ -572,6 +608,19 @@
             }
         });
     }
+
+    function mountLabelsPopup(e: MouseEvent)
+    {
+         mount(LabelsPopup, {props: {
+            clickEvent: e,
+            labelIds: card.labelIds,
+            setLabelIds: newLabelIds => {
+                card.labelIds = newLabelIds;
+            },
+            focusOnCardDetailsFunction: focusOnCardDetailsFunction,
+            reloadLists
+        }, target: document.body, intro: true})
+    }
 </script>
 
 {#if card !== null}
@@ -608,14 +657,7 @@
                         {#key invalidateLabels.value}
                             {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
                                 <div style="background-color: {label.color}"
-                                     onclick={e => mount(LabelsPopup, {props: {
-                                         clickEvent: e,
-                                         labelIds: card.labelIds,
-                                         setLabelIds: newLabelIds => {
-                                             card.labelIds = newLabelIds;
-                                         },
-                                         focusOnCardDetailsFunction: focusOnCardDetailsFunction,
-                                     }, target: document.body, intro: true})}
+                                     onclick={mountLabelsPopup}
                                 >
                                     <span style="color: {label.titleColor}">
                                         {label.title}
@@ -668,14 +710,7 @@
                         {I18n.t("addToCard")}
                     </span>
                     <button title={I18n.t("labels")}
-                            onclick={e => mount(LabelsPopup, {props: {
-                                 clickEvent: e,
-                                 labelIds: card.labelIds,
-                                 setLabelIds: newLabelIds => {
-                                     card.labelIds = newLabelIds;
-                                 },
-                                 focusOnCardDetailsFunction: focusOnCardDetailsFunction,
-                            }, target: document.body, intro: true})}
+                            onclick={mountLabelsPopup}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         <span>

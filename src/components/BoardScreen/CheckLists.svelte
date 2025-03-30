@@ -9,6 +9,7 @@
     import {flip} from "svelte/animate";
     import type {Checklist} from "../../scripts/Board";
     import OrderChecklistsMenu from "./OrderChecklistsMenu.svelte";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
 
 
     interface Props {
@@ -144,14 +145,25 @@
                         </button>
                     {/if}
                     <button title={I18n.t("delete")} onclick={async () => {
-                        const popup = mount(PopupWindow, {props: {description: I18n.t("confirmChecklistRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
-
-                        if (await popup.getAnswer() === true)
-                        {
-                            checklists = checklists.filter(checklistt => checklistt.id !== checklist.id)
+                        const deleteChecklistFunction = () => {
+                            checklists = checklists.filter(checklistt => checklistt.id !== checklist.id);
+                            focusOnCardDetailsFunction(); // If we don't focus on the CardDetails component after the user clicked on a button of this CheckLists component. The CardDetails component won't register any keyboard shortcuts like "Esc", since it wouldn\'t be focussed.
                         }
 
-                        focusOnCardDetailsFunction(); // If we don't focus on the CardDetails component after the user clicked on a button of this CheckLists component. The CardDetails component won't register any keyboard shortcuts like "Esc", since it wouldn\'t be focussed.
+                        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteChecklist)
+                        {
+                            deleteChecklistFunction();
+                        }
+                        else
+                        {
+                            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmChecklistRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+                            if (await popup.getAnswer() === true)
+                            {
+                                await SaveLoadManager.getData().updateConfirmationPreference("deleteChecklist", popup.getShowConfirmationAgain())
+                                deleteChecklistFunction();
+                            }
+                        }
                     }}>
                         {I18n.t("delete")}
                     </button>

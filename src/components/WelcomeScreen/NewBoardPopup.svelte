@@ -1,7 +1,7 @@
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
     import boardPreview from "../../images/BoardPreview.svg"
-    import {onMount} from "svelte";
+    import {mount, onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {BaseDirectory, exists, readDir} from "@tauri-apps/plugin-fs";
@@ -18,6 +18,7 @@
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {info, warn} from "@tauri-apps/plugin-log";
     import paintDrops from "../../images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
+    import PopupWindow from "../PopupWindow.svelte";
 
     let showPopup = $state(true);
     let selectedImg: string = $state(""); //Dit is een url/pad naar de geselecteerde foto. I.e. wat de gebruiker momenteel heeft gekozen als achtergrond foto van het nieuwe bord. By default is dit de eerste foto van de lijst van foto's die default bij Takma zit
@@ -210,17 +211,34 @@
                                     <div class="customBackgroundImageAndDeleteButtonContainer">
                                         <svg class="deleteCustomBackgroundButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                              onclick={async e => {
-                                                 await removeFileFromSaveDirectory(await join(SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds", imgPath.getFilename()));
+                                                 const deleteCustomBackgroundFunction = async () => {
+                                                     await removeFileFromSaveDirectory(await join(SaveLoadManager.getBoardFilesDirectory(), "CustomBoardBackgrounds", imgPath.getFilename()));
 
-                                                 if (!includedImagesInTakma.includes(selectedImg))
-                                                 {
-                                                     selectedImg = includedImagesInTakma[0];
-                                                     selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720, true));
+                                                     if (!includedImagesInTakma.includes(selectedImg))
+                                                     {
+                                                         selectedImg = includedImagesInTakma[0];
+                                                         selectedImgObject.setAttribute('src', await getThumbnail(selectedImg, 720, true));
+                                                     }
+
+                                                     e.target.tagName === "svg" ? e.target.parentNode.remove() : e.target.parentNode.parentNode.remove();
+                                                     //If the parent node isn\'t the div containing this delete button and the image, then it means the user clicked on the path, so we need to go parent.parent to get to the div
+                                                     //The error below this line saying "unexpected token" for the second `}` is shown because we wrote a comment here. If we would remove the comment, the error message would go away as well. But even though it gives an error message, at runtime everything works fine
                                                  }
 
-                                                 e.target.tagName === "svg" ? e.target.parentNode.remove() : e.target.parentNode.parentNode.remove();
-                                                 //If the parent node isn't the div containing this delete button and the image, then it means the user clicked on the path, so we need to go parent.parent to get to the div
-                                                 //The error below this line saying "unexpected token" for the second `}` is shown because we wrote a comment here. If we would remove the comment, the error message would go away as well. But even though it gives an error message, at runtime everything works fine
+                                                 if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCustomBoardBackground)
+                                                 {
+                                                     await deleteCustomBackgroundFunction();
+                                                 }
+                                                 else
+                                                 {
+                                                     const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCustomBackgroundRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+                                                     if (await popup.getAnswer() === true)
+                                                     {
+                                                         await SaveLoadManager.getData().updateConfirmationPreference("deleteCustomBoardBackground", popup.getShowConfirmationAgain());
+                                                         await deleteCustomBackgroundFunction();
+                                                     }
+                                                 }
                                              }}
                                         >
                                             <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />

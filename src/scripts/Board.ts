@@ -65,15 +65,27 @@ export interface TodoItem
     content: string
 }
 
-export type sortBoardsFunctionName = "sortByCreationDateAscending" | "sortByCreationDateDescending" | "sortByMostRecentlyOpened" | "sortByLeastRecentlyOpened" | "sortAlphabeticallyAscending" | "sortAlphabeticallyDescending" | "dontSort";
+export type SortBoardsFunctionName = "sortByCreationDateAscending" | "sortByCreationDateDescending" | "sortByMostRecentlyOpened" | "sortByLeastRecentlyOpened" | "sortAlphabeticallyAscending" | "sortAlphabeticallyDescending" | "dontSort";
 
-export interface windowState
+export interface WindowState
 {
     width: number,
     height: number,
     fullscreen: boolean,
     x: number, //The X-coordinate of the left upper corner of the Takma window
     y: number, //The Y-coordinate of the left upper corner of the Takma window
+}
+
+export interface ShowConfirmationPreferences
+{
+    deleteCustomBoardBackground: boolean;
+    deleteBoard: boolean;
+    deleteList: boolean;
+    deleteCard: boolean;
+    deleteLabel: boolean;
+    deleteChecklist: boolean;
+    deleteAttachment: boolean;
+    deleteCoverImage: boolean;
 }
 
 /**

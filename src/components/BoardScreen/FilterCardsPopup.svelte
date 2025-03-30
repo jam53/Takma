@@ -156,7 +156,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                 <div class="labelsHolder">
                     {#if selectedBoardId.value !== ""}
                     {#each SaveLoadManager.getData().getBoard(selectedBoardId.value).labels as label}
-                        <div id={`labelOptionDiv${label.id}`} class="labelOption"
+                        <div class="labelOption"
                              onclick={() => handleLabelClick(label.id)}
                         >
                             <input type="checkbox" checked={cardFilters.labelIds.includes(label.id)}/>

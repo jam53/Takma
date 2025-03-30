@@ -4,6 +4,8 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {type Card, duplicateCard as duplicateCardObject, type List} from "../../scripts/Board";
     import OptionsMenu from "../OptionsMenu.svelte";
+    import {mount} from "svelte";
+    import PopupWindow from "../PopupWindow.svelte";
 
     interface Props {
         clickEvent: MouseEvent;
@@ -27,9 +29,27 @@
 
     async function deleteCard()
     {
-        SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
-        setList(SaveLoadManager.getData().getList(selectedBoardId.value, list.id));
         optionsMenu.closeContextMenu();
+
+        const deleteCardFunction = async () => {
+            SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
+            setList(SaveLoadManager.getData().getList(selectedBoardId.value, list.id));
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCard)
+        {
+            await deleteCardFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCardRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteCard", popup.getShowConfirmationAgain());
+                await deleteCardFunction();
+            }
+        }
     }
 
     async function copyCard()

@@ -25,7 +25,7 @@
 
         if (await popupWindow.getAnswer() === true)
         {
-            duplicatedBoard.title = await popupWindow.getInputFieldAnswer();
+            duplicatedBoard.title = popupWindow.getInputFieldAnswer();
 
             await SaveLoadManager.getData().createNewBoard(duplicatedBoard.title, duplicatedBoard.backgroundImagePath, false, duplicatedBoard.id, duplicatedBoard.labels, duplicatedBoard.lists, duplicatedBoard.favourite, thisBoardIndex);
             setBoards(SaveLoadManager.getData().boards);
@@ -39,12 +39,25 @@
     async function deleteBoard()
     {
         optionsMenu.closeContextMenu();
-        const popup = mount(PopupWindow, {props: {description: I18n.t("confirmBoardRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
 
-        if (await popup.getAnswer() === true)
-        {
+        const deleteBoardFunction = async () => {
             await SaveLoadManager.getData().deleteBoard(board.id);
             setBoards(SaveLoadManager.getData().boards);
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteBoard)
+        {
+            await deleteBoardFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmBoardRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteBoard", popup.getShowConfirmationAgain());
+                await deleteBoardFunction();
+            }
         }
     }
 
@@ -65,7 +78,7 @@
 
         if (await popupWindow.getAnswer() === true)
         {
-            boardToPaste.title = await popupWindow.getInputFieldAnswer();
+            boardToPaste.title = popupWindow.getInputFieldAnswer();
 
             await SaveLoadManager.getData().createNewBoard(boardToPaste.title, boardToPaste.backgroundImagePath, false, boardToPaste.id, boardToPaste.labels, boardToPaste.lists, boardToPaste.favourite, thisBoardIndex)
 

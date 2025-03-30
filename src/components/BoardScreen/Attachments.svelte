@@ -9,6 +9,8 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {join} from "@tauri-apps/api/path";
+    import {mount} from "svelte";
+    import PopupWindow from "../PopupWindow.svelte";
 
     interface Props {
         attachments: string[];
@@ -67,10 +69,27 @@
 
     async function deleteAttachment(pathToFile: string)
     {
-        await remove(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
-        attachments = attachments.filter(attachment => attachment !== pathToFile);
+        const deleteAttachmentFunction = async () => {
+            await remove(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
+            attachments = attachments.filter(attachment => attachment !== pathToFile);
 
-        focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
+            focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteAttachment)
+        {
+            await deleteAttachmentFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmAttachmentRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteAttachment", popup.getShowConfirmationAgain());
+                await deleteAttachmentFunction();
+            }
+        }
     }
 
     async function getExistingAttachments(): Promise<string[]>

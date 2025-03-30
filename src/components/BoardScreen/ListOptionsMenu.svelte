@@ -37,12 +37,29 @@
     async function deleteList()
     {
         optionsMenu.closeContextMenu();
-        const popup = mount(PopupWindow, {props: {description: I18n.t("confirmListRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
 
-        if (await popup.getAnswer() === true)
-        {
+        const deleteListFunction = async () => {
             SaveLoadManager.getData().deleteList(selectedBoardId.value, list.id);
             setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteList)
+        {
+            await deleteListFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {
+                props: {description: I18n.t("confirmListRemoval"), buttonType: "yesno", showConfirmation: true},
+                target: document.body,
+                intro: true
+            });
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteList", popup.getShowConfirmationAgain());
+                await deleteListFunction();
+            }
         }
     }
 

@@ -8,31 +8,31 @@
      * ```
      * import PopupWindow from "./PopupWindow.svelte";
      *
-     * const popup = new PopupWindow({props: {title: "Popup title", description: "Popup description", buttonType: "yesno"}, target: document.body, intro: true});
-     * new PopupWindow({props: {description: "Popup description", buttonType: "ok"}, target: document.body, intro: true});
-     * new PopupWindow({props: {description: "Popup description", inputValue: "Lorem ipsum", buttonType: "input"}, target: document.body, intro: true});
-     *
+     * const popup = mount(PopupWindow, {props: {title: "Popup title", description: "Popup description", buttonType: "yesno"}, target: document.body, intro: true});
      *
      * await popup.getAnswer();
      * ```
      */
 
     interface Props {
-        title: string | null;
+        title?: string;
         description: string;
-        inputValue: string | null;
+        inputValue?: string;
+        showConfirmation?: boolean
         buttonType: "yesno" | "ok" | "input";
     }
 
     let {
-        title = $bindable(),
+        title,
         description,
-        inputValue = $bindable(),
-        buttonType
+        inputValue,
+        showConfirmation,
+        buttonType,
     }: Props = $props();
 
     let showPopup = $state(true);
     let answer: boolean | null = $state(null);
+    let showConfirmationAgain = $state(true);
 
     onMount(() =>
     {
@@ -77,14 +77,18 @@
     /**
      * Returns the user's answer to the popup's input field
      */
-    export async function getInputFieldAnswer(): Promise<string>
+    export function getInputFieldAnswer(): string
     {
-        while (answer === null)
-        {
-            await new Promise(resolve => setTimeout(resolve, 100)); // Wait for 100ms
-        }
-
         return inputValue ?? "";
+    }
+
+    /**
+     * Retrieves the user's preference for showing this confirmation popup on future occurrences.
+     * @returns {boolean} `true` to show again, `false` to hide in the future.
+     */
+    export function getShowConfirmationAgain(): boolean
+    {
+        return showConfirmationAgain;
     }
 
     let overlayElement: HTMLElement | null = $state(null);
@@ -123,6 +127,19 @@
             {#if buttonType === "input"}
                 <div class="inputHolderDiv">
                     <input class="titleInput" bind:value={inputValue}>
+                </div>
+            {/if}
+            {#if showConfirmation}
+                <div class="dontAskAgainContainer"
+                     onclick={() => showConfirmationAgain = !showConfirmationAgain}
+                >
+                    <input
+                        type="checkbox"
+                        bind:checked={() => !showConfirmationAgain, checked => showConfirmationAgain = !checked}
+                    />
+                    <span>
+                        {I18n.t("dontAskAgain")}
+                    </span>
                 </div>
             {/if}
             <div class="buttonsHolder">
@@ -281,5 +298,70 @@
     .titleInput:focus, .titleInput:hover {
         border: 2px solid var(--accent);
         box-shadow: 0 0 0 0;
+    }
+
+    [type=checkbox] {
+        width: 1.5em;
+        height: 1.5em;
+        color: var(--accent);
+        vertical-align: middle;
+        -webkit-appearance: none;
+        background: none;
+        outline: 0;
+        flex-grow: 0;
+        border-radius: 0.25em;
+        transition: background 300ms;
+        cursor: pointer;
+    }
+
+    [type=checkbox]::before {
+        content: "";
+        color: transparent;
+        display: block;
+        width: inherit;
+        height: inherit;
+        border-radius: inherit;
+        border: 0;
+        background-color: transparent;
+        background-size: contain;
+        box-shadow: inset 0 0 0 2px var(--border);
+        transition: 0.3s;
+    }
+
+    [type=checkbox]:hover::before {
+        box-shadow: inset 0 0 0 2px var(--unselected-button);
+    }
+
+    [type=checkbox]:checked {
+        background-color: currentcolor;
+    }
+
+    [type=checkbox]:checked::before {
+        box-shadow: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='2 2 20 20'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+    }
+
+    [type=checkbox]:disabled {
+        background-color: #CCD3D8;
+        opacity: 0.84;
+        cursor: not-allowed;
+    }
+
+    .dontAskAgainContainer {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+        align-content: space-around;
+        cursor: pointer;
+        margin-bottom: 1em;
+    }
+
+    .dontAskAgainContainer span {
+        width: 100%;
+        transition: 0.2s;
+        border-radius: 0.25em;
+        padding: 0.25em;
+        word-break: break-word;
+        user-select: none;
     }
 </style>

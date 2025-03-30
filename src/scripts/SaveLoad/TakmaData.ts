@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
+import type {Board, Card, Label, List, ShowConfirmationPreferences, SortBoardsFunctionName, WindowState} from "../Board";
 import {remove} from "@tauri-apps/plugin-fs";
 import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
 import {join} from "@tauri-apps/api/path";
@@ -17,18 +17,28 @@ export class TakmaData
     private _totalBoardsCreated: number = 0; //The total amount of boards the user has created
     private _totalListsCreated: number = 0; //The total amount of lists the user has created
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
-    private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
+    private _sortBoardsFunctionName: SortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
     private _displayLanguage: string = localStorage.getItem("displayLanguage") ?? navigator.language.substring(0,2); //The language Takma should be displayed in
     private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
     private _easterEggBoardAdded: boolean = false; //Whether or not the easteregg board has been added to the user's savefile yet
     private _showLabelsText: boolean = true; //Whether or not the labels of cards on the boardscreen should display their text. When false only the color will be shown
-    private _windowState: windowState = {
+    private _windowState: WindowState = {
         width: 1200,
         height: 700,
         fullscreen: true,
         x: 200,
         y: 200,
     }; //Used to save and restore the state of the Takma window. E.g. whether or not it was full screen, the window size and so on
+    private _showConfirmationPreferences: ShowConfirmationPreferences = {
+        deleteCustomBoardBackground: true,
+        deleteBoard: true,
+        deleteList: true,
+        deleteCard: true,
+        deleteLabel: true,
+        deleteChecklist: true,
+        deleteAttachment: true,
+        deleteCoverImage: true,
+    }; // Tracks user preference to show or hide specific confirmation popups. `true` (default) means show the popup. `false` means the user has opted out e.g. when the user checked "Don't show this again"
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -104,7 +114,7 @@ export class TakmaData
     /**
      * Returns the name of the function that is used to sort the boards
      */
-    get sortBoardsFunctionName(): sortBoardsFunctionName
+    get sortBoardsFunctionName(): SortBoardsFunctionName
     {
         return this._sortBoardsFunctionName;
     }
@@ -112,7 +122,7 @@ export class TakmaData
     /**
      * Sets the name of the function that is used to sort the boards
      */
-    set sortBoardsFunctionName(sortBoardsFunctionName: sortBoardsFunctionName)
+    set sortBoardsFunctionName(sortBoardsFunctionName: SortBoardsFunctionName)
     {
         debug("Change boards sort order to: " + sortBoardsFunctionName);
         this._sortBoardsFunctionName = sortBoardsFunctionName;
@@ -192,7 +202,7 @@ export class TakmaData
     /**
      * Returns the last saved window state
      */
-    get windowState(): windowState
+    get windowState(): WindowState
     {
         return this._windowState ;
     }
@@ -760,6 +770,24 @@ export class TakmaData
             [...card.description.matchAll(markdownImageLinkRegex)]
                 .map(match => match.groups?.imgSrc).filter(imgSrc => imgSrc !== undefined)
         )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()) || imgSrc.startsWith(tempDirPath)); //We only want to retain images that are stored in locations managed by Takma. I.e. Takma's save directory or Takma's temporary folder, not paths to image files somewhere else on disk nor http/https urls to images
+    }
+
+    /**
+     * Get the user's preferences for showing confirmation popups before destructive actions
+     */
+    get showConfirmationPreferences(): ShowConfirmationPreferences
+    {
+        return this._showConfirmationPreferences;
+    }
+
+    /**
+     * Updates a specific confirmation preference and saves the changes.
+     * @param key - The preference key to update (e.g., "deleteBoard").
+     * @param value - The new boolean value for the preference.
+     */
+    public async updateConfirmationPreference(key: keyof ShowConfirmationPreferences, value: boolean): Promise<void> {
+        this._showConfirmationPreferences[key] = value;
+        await SaveLoadManager.saveToDisk();
     }
     //endregion
 }

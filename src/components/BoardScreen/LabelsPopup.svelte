@@ -34,12 +34,15 @@
     import type {Label} from "../../scripts/Board";
     import {I18n} from "../../scripts/I18n/I18n";
     import {info} from "@tauri-apps/plugin-log";
+    import {mount} from "svelte";
+    import PopupWindow from "../PopupWindow.svelte";
 
     interface Props {
         clickEvent: MouseEvent;
         labelIds: string[];
         setLabelIds: (labelIds: string[]) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
         focusOnCardDetailsFunction: Function;
+        reloadLists: () => void;
     }
 
     let {
@@ -47,6 +50,7 @@
         labelIds,
         setLabelIds,
         focusOnCardDetailsFunction,
+        reloadLists,
     }: Props = $props();
 
     let lastPickedColor: string;  //The last color that was selected using the color picker. Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
@@ -237,12 +241,32 @@
      * Deletes a label from the board and from all the cards to which the label has been assigned
      * @param labelId
      */
-    function deleteLabel(labelId: string)
+    async function deleteLabel(labelId: string)
     {
-        SaveLoadManager.getData().removeLabel(selectedBoardId.value, labelId);
-        cardFilters.labelIds = cardFilters.labelIds.filter(id => id != labelId);
+        const deleteLabelFunction = () => {
+            SaveLoadManager.getData().removeLabel(selectedBoardId.value, labelId);
+            cardFilters.labelIds = cardFilters.labelIds.filter(id => id !== labelId);
+            labelIds = labelIds.filter(id => id !== labelId);
+            setLabelIds(labelIds);
+            reloadLists(); // Otherwise changes won't be reflected in other cards that had the label that we deleted.
+        }
 
-        document.getElementById(`labelOptionDiv${labelId}`).remove();
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteLabel)
+        {
+            deleteLabelFunction();
+        }
+        else
+        {
+            closeContextMenu();
+
+            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmLabelRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteLabel", popup.getShowConfirmationAgain());
+                deleteLabelFunction();
+            }
+        }
     }
 
     let navElement: HTMLElement | null = $state(null);
@@ -273,27 +297,29 @@
             </h3>
             <br>
             <div class="labelsHolder">
-                {#each SaveLoadManager.getData().getBoard(selectedBoardId.value).labels as label}
-                    <div id={`labelOptionDiv${label.id}`} class="labelOption">
-                        <input type="checkbox" checked={labelIds.includes(label.id)}
-                             onclick={() => handleLabelClick(label.id)}/>
-                        <input id={`colorInput${label.id}`} style="color: {label.titleColor}; background-color: {label.color}" class="label" placeholder={I18n.t("enterTitle")}
-                            bind:value={label.title} oninput={_ => {
-                                SaveLoadManager.getData().setLabelTitle(selectedBoardId.value, label.id, label.title);
-                                invalidateLabels.value = !invalidateLabels.value;
-                            }}/>
-                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"
-                             onclick={() => document.getElementById(label.id).click()}
-                        ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                        <input id={label.id} value={label.color} onchange={() => editLabelColor(label.id)} class="coloris instance1" style="width: 0; height: 0; border: none; position: absolute"/>
-<!--When we add the `coloris instance1` styleclasses to an `input` or `button`, the color picker will be shown when we click on them. Unfortunately when they contain an svg, the color picker doesn't show up. That's why we have an invisible input here. When we click on the svg, we will programmatically click the input field, thus showing the color picker-->
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                             onclick={() => deleteLabel(label.id)}
-                        >
-                            <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                {/each}
+                {#key labelIds}
+                    {#each SaveLoadManager.getData().getBoard(selectedBoardId.value).labels as label}
+                        <div class="labelOption">
+                            <input type="checkbox" checked={labelIds.includes(label.id)}
+                                 onclick={() => handleLabelClick(label.id)}/>
+                            <input id={`colorInput${label.id}`} style="color: {label.titleColor}; background-color: {label.color}" class="label" placeholder={I18n.t("enterTitle")}
+                                bind:value={label.title} oninput={_ => {
+                                    SaveLoadManager.getData().setLabelTitle(selectedBoardId.value, label.id, label.title);
+                                    invalidateLabels.value = !invalidateLabels.value;
+                                }}/>
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"
+                                 onclick={() => document.getElementById(label.id).click()}
+                            ><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            <input id={label.id} value={label.color} onchange={() => editLabelColor(label.id)} class="coloris instance1" style="width: 0; height: 0; border: none; position: absolute"/>
+    <!--When we add the `coloris instance1` styleclasses to an `input` or `button`, the color picker will be shown when we click on them. Unfortunately when they contain an svg, the color picker doesn't show up. That's why we have an invisible input here. When we click on the svg, we will programmatically click the input field, thus showing the color picker-->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                 onclick={() => deleteLabel(label.id)}
+                            >
+                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    {/each}
+                {/key}
             </div>
             <br>
             <button class="createNewLabelButton coloris instance1"

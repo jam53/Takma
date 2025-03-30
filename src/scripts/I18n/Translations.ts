@@ -250,6 +250,12 @@ export let en: Translation = {
     complete: "Complete",
     incomplete: "Incomplete",
     sortChecklists: "Sort checklists",
+    dontAskAgain: "Don't ask again",
+    confirmCustomBackgroundRemoval: "Are you sure you want to remove this custom background image?",
+    confirmCardRemoval: "Are you sure you want to remove this card?",
+    confirmLabelRemoval: "Are you sure you want to remove this label?",
+    confirmAttachmentRemoval: "Are you sure you want to remove this attachment?",
+    confirmCoverImageRemoval: "Are you sure you want to remove this cover image?",
 };
 
 export let ar: Translation = {
@@ -502,6 +508,12 @@ export let ar: Translation = {
     complete: "مكتمل",
     incomplete: "غير مكتمل",
     sortChecklists: "ترتيب قوائم التحقق",
+    dontAskAgain: "لا تظهر هذا مرة أخرى",
+    confirmCustomBackgroundRemoval: "هل أنت متأكد أنك تريد إزالة صورة الخلفية المخصصة هذه؟",
+    confirmCardRemoval: "هل أنت متأكد أنك تريد إزالة هذه البطاقة؟",
+    confirmLabelRemoval: "هل أنت متأكد أنك تريد إزالة هذا التصنيف؟",
+    confirmAttachmentRemoval: "هل أنت متأكد أنك تريد إزالة هذا المرفق؟",
+    confirmCoverImageRemoval: "هل أنت متأكد أنك تريد إزالة صورة الغلاف هذه؟",
 };
 
 export let de: Translation = {
@@ -754,6 +766,12 @@ export let de: Translation = {
     complete: "Abgeschlossen",
     incomplete: "Unvollständig",
     sortChecklists: "Checklisten sortieren",
+    dontAskAgain: "Nicht erneut fragen",
+    confirmCustomBackgroundRemoval: "Sind Sie sicher, dass Sie dieses benutzerdefinierte Hintergrundbild entfernen möchten?",
+    confirmCardRemoval: "Sind Sie sicher, dass Sie diese Karte entfernen möchten?",
+    confirmLabelRemoval: "Sind Sie sicher, dass Sie dieses Label entfernen möchten?",
+    confirmAttachmentRemoval: "Sind Sie sicher, dass Sie diesen Anhang entfernen möchten?",
+    confirmCoverImageRemoval: "Sind Sie sicher, dass Sie dieses Titelbild entfernen möchten?",
 };
 
 export let es: Translation = {
@@ -1006,6 +1024,12 @@ export let es: Translation = {
     complete: "Completo",
     incomplete: "Incompleto",
     sortChecklists: "Ordenar listas de verificación",
+    dontAskAgain: "No volver a preguntar",
+    confirmCustomBackgroundRemoval: "¿Está seguro de que quiere eliminar esta imagen de fondo personalizada?",
+    confirmCardRemoval: "¿Está seguro de que quiere eliminar esta tarjeta?",
+    confirmLabelRemoval: "¿Está seguro de que quiere eliminar esta etiqueta?",
+    confirmAttachmentRemoval: "¿Está seguro de que quiere eliminar este archivo adjunto?",
+    confirmCoverImageRemoval: "¿Está seguro de que quiere eliminar esta imagen de portada?",
 };
 
 export let et: Translation = {
@@ -1258,6 +1282,12 @@ export let et: Translation = {
     complete: "Lõpetatud",
     incomplete: "Lõpetamata",
     sortChecklists: "Sorteeri kontrollnimekirjad",
+    dontAskAgain: "Ära küsi uuesti",
+    confirmCustomBackgroundRemoval: "Kas olete kindel, et soovite eemaldada selle kohandatud taustapildi?",
+    confirmCardRemoval: "Kas olete kindel, et soovite eemaldada selle kaardi?",
+    confirmLabelRemoval: "Kas olete kindel, et soovite eemaldada selle sildi?",
+    confirmAttachmentRemoval: "Kas olete kindel, et soovite eemaldada selle manuse?",
+    confirmCoverImageRemoval: "Kas olete kindel, et soovite eemaldada selle kaanepildi?",
 };
 
 export let fr: Translation = {
@@ -1510,6 +1540,12 @@ export let fr: Translation = {
     complete: "Complet",
     incomplete: "Incomplet",
     sortChecklists: "Trier les listes de contrôle",
+    dontAskAgain: "Ne plus demander",
+    confirmCustomBackgroundRemoval: "Êtes-vous sûr de vouloir supprimer cette image d'arrière-plan personnalisée ?",
+    confirmCardRemoval: "Êtes-vous sûr de vouloir supprimer cette carte ?",
+    confirmLabelRemoval: "Êtes-vous sûr de vouloir supprimer cette étiquette ?",
+    confirmAttachmentRemoval: "Êtes-vous sûr de vouloir supprimer cette pièce jointe ?",
+    confirmCoverImageRemoval: "Êtes-vous sûr de vouloir supprimer cette image de couverture ?",
 };
 
 export let hi: Translation = {
@@ -1762,6 +1798,12 @@ export let hi: Translation = {
     complete: "पूर्ण",
     incomplete: "अपूर्ण",
     sortChecklists: "चेकलिस्ट क्रमबद्ध करें",
+    dontAskAgain: "दोबारा मत पूछो",
+    confirmCustomBackgroundRemoval: "क्या आप वाकई यह कस्टम पृष्ठभूमि छवि हटाना चाहते हैं?",
+    confirmCardRemoval: "क्या आप वाकई यह कार्ड हटाना चाहते हैं?",
+    confirmLabelRemoval: "क्या आप वाकई यह लेबल हटाना चाहते हैं?",
+    confirmAttachmentRemoval: "क्या आप वाकई यह अनुलग्नक हटाना चाहते हैं?",
+    confirmCoverImageRemoval: "क्या आप वाकई यह कवर छवि हटाना चाहते हैं?",
 };
 
 export let id: Translation = {
@@ -2014,6 +2056,12 @@ export let id: Translation = {
     complete: "Selesai",
     incomplete: "Belum selesai",
     sortChecklists: "Urutkan daftar periksa",
+    dontAskAgain: "Jangan tanya lagi",
+    confirmCustomBackgroundRemoval: "Apakah Anda yakin ingin menghapus gambar latar belakang kustom ini?",
+    confirmCardRemoval: "Apakah Anda yakin ingin menghapus kartu ini?",
+    confirmLabelRemoval: "Apakah Anda yakin ingin menghapus label ini?",
+    confirmAttachmentRemoval: "Apakah Anda yakin ingin menghapus lampiran ini?",
+    confirmCoverImageRemoval: "Apakah Anda yakin ingin menghapus gambar sampul ini?",
 };
 
 export let ja: Translation = {
@@ -2266,6 +2314,12 @@ export let ja: Translation = {
     complete: "完了",
     incomplete: "未完了",
     sortChecklists: "チェックリストを並べ替える",
+    dontAskAgain: "今後表示しない",
+    confirmCustomBackgroundRemoval: "このカスタム背景画像を削除してもよろしいですか？",
+    confirmCardRemoval: "このカードを削除してもよろしいですか？",
+    confirmLabelRemoval: "このラベルを削除してもよろしいですか？",
+    confirmAttachmentRemoval: "この添付ファイルを削除してもよろしいですか？",
+    confirmCoverImageRemoval: "このカバー画像を削除してもよろしいですか？",
 };
 
 export let ko: Translation = {
@@ -2518,6 +2572,12 @@ export let ko: Translation = {
     complete: "완료",
     incomplete: "미완료",
     sortChecklists: "체크리스트 정렬",
+    dontAskAgain: "다시 묻지 않기",
+    confirmCustomBackgroundRemoval: "이 사용자 지정 배경 이미지를 정말 삭제하시겠습니까?",
+    confirmCardRemoval: "이 카드를 정말 삭제하시겠습니까?",
+    confirmLabelRemoval: "이 라벨을 정말 삭제하시겠습니까?",
+    confirmAttachmentRemoval: "이 첨부 파일을 정말 삭제하시겠습니까?",
+    confirmCoverImageRemoval: "이 커버 이미지를 정말 삭제하시겠습니까?",
 };
 
 export let nl: Translation = {
@@ -2770,6 +2830,12 @@ export let nl: Translation = {
     complete: "Voltooid",
     incomplete: "Onvolledig",
     sortChecklists: "Sorteer checklists",
+    dontAskAgain: "Niet opnieuw vragen",
+    confirmCustomBackgroundRemoval: "Weet u zeker dat u deze aangepaste achtergrondafbeelding wilt verwijderen?",
+    confirmCardRemoval: "Weet u zeker dat u deze kaart wilt verwijderen?",
+    confirmLabelRemoval: "Weet u zeker dat u dit label wilt verwijderen?",
+    confirmAttachmentRemoval: "Weet u zeker dat u deze bijlage wilt verwijderen?",
+    confirmCoverImageRemoval: "Weet u zeker dat u deze omslagfoto wilt verwijderen?",
 };
 
 export let pt: Translation = {
@@ -3022,6 +3088,12 @@ export let pt: Translation = {
     complete: "Completo",
     incomplete: "Incompleto",
     sortChecklists: "Ordenar checklists",
+    dontAskAgain: "Não perguntar novamente",
+    confirmCustomBackgroundRemoval: "Tem a certeza que pretende remover esta imagem de fundo personalizada?",
+    confirmCardRemoval: "Tem a certeza que pretende remover este cartão?",
+    confirmLabelRemoval: "Tem a certeza que pretende remover esta etiqueta?",
+    confirmAttachmentRemoval: "Tem a certeza que pretende remover este anexo?",
+    confirmCoverImageRemoval: "Tem a certeza que pretende remover esta imagem de capa?",
 };
 
 export let ru: Translation = {
@@ -3274,6 +3346,12 @@ export let ru: Translation = {
     complete: "Завершено",
     incomplete: "Незавершено",
     sortChecklists: "Сортировать чек-листы",
+    dontAskAgain: "Больше не спрашивать",
+    confirmCustomBackgroundRemoval: "Вы уверены, что хотите удалить это пользовательское фоновое изображение?",
+    confirmCardRemoval: "Вы уверены, что хотите удалить эту карточку?",
+    confirmLabelRemoval: "Вы уверены, что хотите удалить эту метку?",
+    confirmAttachmentRemoval: "Вы уверены, что хотите удалить это вложение?",
+    confirmCoverImageRemoval: "Вы уверены, что хотите удалить это изображение обложки?",
 };
 
 export let tr: Translation = {
@@ -3526,6 +3604,12 @@ export let tr: Translation = {
     complete: "Tamamlandı",
     incomplete: "Tamamlanmadı",
     sortChecklists: "Checklisteleri sırala",
+    dontAskAgain: "Bir daha sorma",
+    confirmCustomBackgroundRemoval: "Bu özel arka plan resmini kaldırmak istediğinizden emin misiniz?",
+    confirmCardRemoval: "Bu kartı kaldırmak istediğinizden emin misiniz?",
+    confirmLabelRemoval: "Bu etiketi kaldırmak istediğinizden emin misiniz?",
+    confirmAttachmentRemoval: "Bu eki kaldırmak istediğinizden emin misiniz?",
+    confirmCoverImageRemoval: "Bu kapak resmini kaldırmak istediğinizden emin misiniz?",
 };
 
 export let zh: Translation = {
@@ -3778,4 +3862,10 @@ export let zh: Translation = {
     complete: "完成",
     incomplete: "未完成",
     sortChecklists: "排序检查项",
+    dontAskAgain: "不再询问",
+    confirmCustomBackgroundRemoval: "您确定要移除此自定义背景图片吗？",
+    confirmCardRemoval: "您确定要移除此卡片吗？",
+    confirmLabelRemoval: "您确定要移除此标签吗？",
+    confirmAttachmentRemoval: "您确定要移除此附件吗？",
+    confirmCoverImageRemoval: "您确定要移除此封面图片吗？",
 };

@@ -237,6 +237,7 @@
                 }
             }
         }}
+        reloadLists={() => lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists}
 />
 
 <style>

@@ -210,4 +210,10 @@ export default interface Translation
     complete: string;
     incomplete: string;
     sortChecklists: string;
+    dontAskAgain: string;
+    confirmCustomBackgroundRemoval: string;
+    confirmCardRemoval: string;
+    confirmLabelRemoval: string;
+    confirmAttachmentRemoval: string;
+    confirmCoverImageRemoval: string;
 }
