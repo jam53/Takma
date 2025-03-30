@@ -38,7 +38,7 @@ export class I18n
      * @param wordsToInsert the strings passed to this variable will be inserted into the translation in the order that they were passed to the function.
      * @return Can return any type, most often a string but an object is also possible for example. To see all the types that can be returned check the interface defined in Translation.ts
      */
-    public static t(key: string, ...wordsToInsert: string[]): any
+    public static t(key: keyof Translation, ...wordsToInsert: string[]): any
     {
         let displayLanguage = SaveLoadManager.getData().displayLanguage;
         displayLanguage = this.translations.has(displayLanguage) ? displayLanguage : "en"; //Default display language to "en" in case the user has a display language set that isn't supported/translated by Takma
