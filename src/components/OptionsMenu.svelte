@@ -31,6 +31,9 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         name: string;
         onClick?: () => void;
         displayText?: string;
+        // Optional function to control visibility.
+        // Item is visible by default unless this function is provided and returns `false`.
+        isVisibleFunction?: () => boolean;
         svg?: string;
     }
 
@@ -118,7 +121,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
                 {#each menuItems as item}
                     {#if item.name === "hr"}
                         <hr>
-                    {:else if item.name !== "pasteBoard" || (item.name === "pasteBoard" && copiedBoard.value !== null)}
+                    {:else if item.isVisibleFunction === undefined || (item.isVisibleFunction && item.isVisibleFunction())}
                         <li>
                             <button onclick={item.onClick}>
                                 {@html item.svg}
