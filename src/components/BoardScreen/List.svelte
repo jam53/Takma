@@ -113,19 +113,24 @@
     let titleHolderElement: HTMLElement;
     $effect(() =>
     {
+        list.title; // Ensures the effect reruns to recalculate the list's maxHeight when the user changes its title
+
+        /*
+            Calculate the maximum height for the outer wrapper element (i.e. the list).
+            This is derived by subtracting various UI element heights and paddings from the total viewport height (100vh).
+
+            100vh        - screen height
+            4px          - the border width in the `.bodyNotMaximized` style class in `index.html`
+            30px         - height title bar in the `.titlebar` style class in `index.html`
+            2em          - navbar height in the `.containingDiv` style class in `NavBar.svelte`
+            (2 * 8px)    - (2 * height of the scrollbar at the bottom)
+            (2 * 0.5em)  - padding bottom and top of .listHolder in BoardScreen
+            (2 * 1px)    - (2 * width of the border of the lists)
+            5.5em        - the amount of space we want at the bottom, so some sort of a "padding"
+            ${...}       - height of the list title
+            0.25em       - margin-top of .container in BoardScreen.svelte
+         */
         titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px + 0.25em)`);
-    /*
-        100vh        - hoogte scherm
-        4px          - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html`
-        30px         - height title bar in the `.titlebar` styleclass in `index.html`
-        2em          - navbar height in the `.containingDiv` styleclass in `NavBar.svelte`
-        (2 * 8px)    - (2 * height of the scrollbar at the bottom)
-        (2 * 0.5em)  - padding bottom en top van .listHolder in BoardScreen
-        (2 * 1px)    - (2 * breedte van de border van de lists)
-        5.5em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
-        ${...}       - hoogte van de titel van de lijst
-        0.25em       - margin-top of .container in BoardScreen.svelte
-     */
 
         applyOverFlowedStyleClasses();
     });
