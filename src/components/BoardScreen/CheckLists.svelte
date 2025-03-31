@@ -204,7 +204,7 @@
                               style={`text-decoration: ${todo.completed ? "line-through" : "none"}`}
                               bind:value={todo.content}
                               onkeydown={e => {
-                                  if (e.key === "Enter")
+                                  if (e.key === "Enter" && !e.shiftKey)
                                   {
                                       e.preventDefault();
                                       addTodoItem(checklist.id);
