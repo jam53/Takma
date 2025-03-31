@@ -279,14 +279,15 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     .dueDate svg {
         width: 1.5em;
         margin-left: 0.65em;
+        fill: var(--main-text);
     }
 
     .danger {
-        fill: var(--danger);
+        fill: var(--danger) !important;
     }
 
     .warning {
-        fill: var(--warning)
+        fill: var(--warning) !important;
     }
 
     [type=checkbox] {
