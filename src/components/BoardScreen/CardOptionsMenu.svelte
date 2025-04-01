@@ -52,18 +52,54 @@
         }
     }
 
+    /**
+     * Copies the current card data to the `copiedCard` store.
+     * This prepares the card for pasting elsewhere.
+     */
     async function copyCard()
     {
-        copiedCard.value = await duplicateCardObject($state.snapshot(card), "", false, true);
+        // Create a deep copy of the card structure
+        copiedCard.card = await duplicateCardObject($state.snapshot(card), "", false, true);
+
+        // Fetch the full Label objects corresponding to this card's label IDs from the current (source) board.
+        // These original label definitions are stored alongside the copied card data.
+        copiedCard.referencedLabels = $state.snapshot(card).labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId));
+
         optionsMenu.closeContextMenu();
     }
 
+    /**
+     * Pastes the card from the `copiedCard` store into the current list,
+     * inserting it after the card where the paste action was triggered.
+     * Handles label reconciliation between the source and target boards.
+     */
     async function pasteCard()
     {
+        // Determine the insertion index for the new card (paste after the current card)
         let thisCardIndex = list.cards.findIndex(c => c.id === card.id);
 
-        let cardToPaste = await duplicateCardObject($state.snapshot(copiedCard.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedCard.value` variable can't be null. Hadn't there been a card copied i.e. should `copiedCard.value` have been null, then the button on which this function gets called wouldn't have been visible
+        // Create a new, independent instance of the copied card, generating a fresh ID.
+        // We will set the list ID association when adding it to the list.
+        // Note: `copiedCard.card!` is safe due to the visibility check on the paste button.
+        let cardToPaste = await duplicateCardObject($state.snapshot(copiedCard.card!), selectedBoardId.value, true, false);
 
+        // Reconcile the labels from the original copied card (`copiedCard.referencedLabels`)
+        // with the labels existing on the *target* board (`selectedBoardId.value`).
+        // This function adds missing labels to the target board and returns a map
+        // indicating which original label IDs need to be replaced with new IDs on the target board.
+        // Map format: { originalLabelId: newLabelIdOnTargetBoard }
+        const labelIdUpdates = SaveLoadManager.getData().createMissingLabelsInBoard(selectedBoardId.value, $state.snapshot(copiedCard.referencedLabels));
+
+        // If any label IDs were updated during reconciliation, update the label references
+        // in the card we are about to paste.
+        if (labelIdUpdates.size > 0)
+        {
+            // Replace any old label IDs with their corresponding new IDs.
+            // `?? labelId` keeps the ID if it wasn't in the update map (meaning it was okay).
+            cardToPaste.labelIds = cardToPaste.labelIds.map(labelId => labelIdUpdates.get(labelId) ?? labelId);
+        }
+
+        // Add the fully prepared card (with potentially updated label IDs) to the target list
         SaveLoadManager.getData().addCardToList(cardToPaste, selectedBoardId.value, list.id, thisCardIndex);
 
         setList(SaveLoadManager.getData().getList(selectedBoardId.value, list.id));

@@ -789,5 +789,63 @@ export class TakmaData
         this._showConfirmationPreferences[key] = value;
         await SaveLoadManager.saveToDisk();
     }
+
+    /**
+     * Reconciles a list of incoming labels (`newLabels`, typically from a copied item)
+     * with the existing labels on a target board (`boardId`). Adds labels to the target
+     * board if necessary, handling duplicates and conflicts based on both ID and content
+     * (title, titleColor, color).
+     *
+     * Priority Logic:
+     * 1. Content Match (Different ID): Reuse existing label, map incoming ID -> existing ID. **Do NOT add.**
+     * 2. ID Match (Different Content): Conflict. Add incoming label with a NEW unique ID, map incoming ID -> new unique ID. **DO add.**
+     * 3. No Match (Different ID, Different Content): New label. Add incoming label with its original ID. **DO add.**
+     * 4. Exact Match (Same ID, Same Content): Do nothing.
+     *
+     * @param boardId The ID of the target board where labels should be checked/added.
+     * @param newLabels An array of Label objects representing the labels associated with the item being pasted.
+     * @returns A Map where keys are the *original* label IDs from `newLabels` that needed remapping,
+     *          and values are the *new* label IDs they should map to on the target board.
+     *          This map contains entries for cases 1 and 2 above.
+     */
+    public createMissingLabelsInBoard(boardId: string, newLabels: Label[]): Map<string, string>
+    {
+        // Map to store required ID updates: { originalId => targetBoardId }
+        const updatedLabelIds = new Map<string, string>();
+        const existingLabels = SaveLoadManager.getData().getBoard(boardId).labels;
+
+        newLabels.forEach(newLabel => {
+            const existingLabelById = existingLabels.find(el => el.id === newLabel.id);
+            const existingLabelByContent = existingLabels.find(el =>
+                el.title === newLabel.title &&
+                el.titleColor === newLabel.titleColor &&
+                el.color === newLabel.color
+            );
+
+            // Case 1: Content Match exists, AND it's either a different ID or no ID match was found.
+            if (existingLabelByContent && (!existingLabelById || existingLabelById.id !== existingLabelByContent.id))
+            {
+                updatedLabelIds.set(newLabel.id, existingLabelByContent.id); // Use the existing label's ID. DO NOT add the newLabel.
+            }
+            // Case 2: ID Match exists, AND the content is different (or no exact content match found).
+            else if (existingLabelById && (!existingLabelByContent || existingLabelById.id !== existingLabelByContent.id))
+            {
+                const generatedId = crypto.randomUUID();
+                updatedLabelIds.set(newLabel.id, generatedId);
+
+                SaveLoadManager.getData().addLabelToBoard(boardId, { ...newLabel, id: generatedId }); // Add the label with a new ID
+            }
+            // Case 3: No match by ID, no match by content. Truly new label.
+            else if (!existingLabelById && !existingLabelByContent)
+            {
+                SaveLoadManager.getData().addLabelToBoard(boardId, newLabel); // Add the label with its original ID
+            }
+            // Implicit Else: Case 4 (existingLabelById && existingLabelByContent && existingLabelById.id === existingLabelByContent.id)
+            // Action: Exact match exists (same ID, same content). Do nothing.
+        });
+
+        SaveLoadManager.saveToDisk();
+        return updatedLabelIds;
+    }
     //endregion
 }

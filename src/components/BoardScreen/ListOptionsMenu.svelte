@@ -63,19 +63,61 @@
         }
     }
 
+    /**
+     * Copies the current list data to the `copiedList` store.
+     * This prepares the list for pasting elsewhere.
+     */
     async function copyList()
     {
-        copiedList.value = await duplicateListObject($state.snapshot(list), "", false, true);
+        // Create a deep copy of the list structure
+        copiedList.list = await duplicateListObject($state.snapshot(list), "", false, true);
+
+        // Collect all unique label IDs used by cards within this list.
+        const uniqueLabelIds = [...new Set($state.snapshot(list).cards.map(card => card.labelIds).flat())];
+
+        // Fetch the full Label objects corresponding to these IDs from the current (source) board.
+        // These original label definitions are stored alongside the copied list data.
+        copiedList.referencedLabels = uniqueLabelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId));
+
         optionsMenu.closeContextMenu();
     }
 
+    /**
+     * Pastes the list from the `copiedList` store into the current board,
+     * inserting it after the list where the paste action was triggered.
+     * Handles label reconciliation between the source and target boards.
+     */
     async function pasteList()
     {
+        // Determine the insertion index for the new list (paste after the current list)
         let thisListIndex = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists.findIndex(l => l.id === list.id);
 
-        let listToPaste = await duplicateListObject($state.snapshot(copiedList.value!), selectedBoardId.value, true, false); //Since this function was called, it means the `copiedList` variable can't be null. Hadn't there been a list copied i.e. should `copiedList.value` have been null, then the button on which this function gets called wouldn't have been visible
+        // Create a new, independent instance of the copied list, generating fresh IDs for the list and its cards.
+        // Note: `copiedList.list!` is safe due to the visibility check on the paste button.
+        let listToPaste = await duplicateListObject($state.snapshot(copiedList.list!), selectedBoardId.value, true, false);
 
+        // Reconcile the labels from the original copied list (`copiedList.referencedLabels`)
+        // with the labels existing on the *target* board (`selectedBoardId.value`).
+        // This function adds missing labels to the target board and returns a map
+        // indicating which original label IDs need to be replaced with new IDs on the target board.
+        // Map format: { originalLabelId: newLabelIdOnTargetBoard }
+        const labelIdUpdates = SaveLoadManager.getData().createMissingLabelsInBoard(selectedBoardId.value, $state.snapshot(copiedList.referencedLabels));
+
+        // If any label IDs were updated during reconciliation, update the label references
+        // in the cards within the list we are about to paste.
+        if (labelIdUpdates.size > 0)
+        {
+            listToPaste.cards = listToPaste.cards.map(card => {
+                // For each card, replace any old label IDs with their corresponding new IDs.
+                // `?? labelId` keeps the ID if it wasn't in the update map (meaning it was okay).
+                card.labelIds = card.labelIds.map(labelId => labelIdUpdates.get(labelId) ?? labelId);
+                return card;
+            });
+        }
+
+        // Add the fully prepared list (with potentially updated label IDs) to the board
         SaveLoadManager.getData().createNewList(selectedBoardId.value, listToPaste.title, listToPaste.cards, thisListIndex);
+
         setLists(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
         optionsMenu.closeContextMenu();
     }
