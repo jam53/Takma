@@ -216,4 +216,6 @@ export default interface Translation
     confirmLabelRemoval: string;
     confirmAttachmentRemoval: string;
     confirmCoverImageRemoval: string;
+    showArchivedBoards: string;
+    hideArchivedBoards: string;
 }

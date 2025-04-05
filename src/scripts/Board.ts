@@ -10,28 +10,29 @@ import {debug} from "@tauri-apps/plugin-log";
 
 export interface Board
 {
-    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
-    creationDate: number, //in milliseconds unix time
-    lastOpened: number, //in milliseconds unix tim
+    id: string, // Unique identifier (UUID) - https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, // Unix timestamp in milliseconds
+    lastOpened: number, // Unix timestamp in milliseconds
     title: string,
-    backgroundImagePath: string, //path to the background image
-    lists: List[], //The lists in this board,
-    labels: Label[], //The labels in this board, which can be assigned to/are visible on cards
-    favourite: boolean //True if this board has been favourited by the user, else false
+    backgroundImagePath: string, // Path to the background image
+    lists: List[],
+    labels: Label[], // The labels in this board, which can be assigned to/are visible on cards
+    favourite: boolean,
+    archived: boolean,
 }
 
 export interface List
 {
-    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
-    creationDate: number, //in milliseconds unix time
+    id: string, // Unique identifier (UUID) - https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, // Unix timestamp in milliseconds
     title: string,
     cards: Card[]
 }
 
 export interface Card
 {
-    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
-    creationDate: number, //in milliseconds unix time
+    id: string, // Unique identifier (UUID) - https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, // Unix timestamp in milliseconds
     title: string,
     description: string,
     attachments: string[],
@@ -53,7 +54,7 @@ export interface Label
 export interface Checklist
 {
     id: string,
-    creationDate: number, // In milliseconds unix time
+    creationDate: number, // Unix timestamp in milliseconds
     title: string,
     todos: TodoItem[]
 }

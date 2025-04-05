@@ -256,6 +256,8 @@ export let en: Translation = {
     confirmLabelRemoval: "Are you sure you want to remove this label?",
     confirmAttachmentRemoval: "Are you sure you want to remove this attachment?",
     confirmCoverImageRemoval: "Are you sure you want to remove this cover image?",
+    showArchivedBoards: "Show archived boards",
+    hideArchivedBoards: "Hide archived boards",
 };
 
 export let ar: Translation = {
@@ -514,6 +516,8 @@ export let ar: Translation = {
     confirmLabelRemoval: "هل أنت متأكد أنك تريد إزالة هذا التصنيف؟",
     confirmAttachmentRemoval: "هل أنت متأكد أنك تريد إزالة هذا المرفق؟",
     confirmCoverImageRemoval: "هل أنت متأكد أنك تريد إزالة صورة الغلاف هذه؟",
+    showArchivedBoards: "إظهار اللوحات المؤرشفة",
+    hideArchivedBoards: "إخفاء اللوحات المؤرشفة",
 };
 
 export let de: Translation = {
@@ -772,6 +776,8 @@ export let de: Translation = {
     confirmLabelRemoval: "Sind Sie sicher, dass Sie dieses Label entfernen möchten?",
     confirmAttachmentRemoval: "Sind Sie sicher, dass Sie diesen Anhang entfernen möchten?",
     confirmCoverImageRemoval: "Sind Sie sicher, dass Sie dieses Titelbild entfernen möchten?",
+    showArchivedBoards: "Archivierte Boards anzeigen",
+    hideArchivedBoards: "Archivierte Boards ausblenden",
 };
 
 export let es: Translation = {
@@ -1030,6 +1036,8 @@ export let es: Translation = {
     confirmLabelRemoval: "¿Está seguro de que quiere eliminar esta etiqueta?",
     confirmAttachmentRemoval: "¿Está seguro de que quiere eliminar este archivo adjunto?",
     confirmCoverImageRemoval: "¿Está seguro de que quiere eliminar esta imagen de portada?",
+    showArchivedBoards: "Mostrar tableros archivados",
+    hideArchivedBoards: "Ocultar tableros archivados",
 };
 
 export let et: Translation = {
@@ -1288,6 +1296,8 @@ export let et: Translation = {
     confirmLabelRemoval: "Kas olete kindel, et soovite eemaldada selle sildi?",
     confirmAttachmentRemoval: "Kas olete kindel, et soovite eemaldada selle manuse?",
     confirmCoverImageRemoval: "Kas olete kindel, et soovite eemaldada selle kaanepildi?",
+    showArchivedBoards: "Kuva arhiveeritud tahvlid",
+    hideArchivedBoards: "Peida arhiveeritud tahvlid",
 };
 
 export let fr: Translation = {
@@ -1546,6 +1556,8 @@ export let fr: Translation = {
     confirmLabelRemoval: "Êtes-vous sûr de vouloir supprimer cette étiquette ?",
     confirmAttachmentRemoval: "Êtes-vous sûr de vouloir supprimer cette pièce jointe ?",
     confirmCoverImageRemoval: "Êtes-vous sûr de vouloir supprimer cette image de couverture ?",
+    showArchivedBoards: "Afficher les tableaux archivés",
+    hideArchivedBoards: "Masquer les tableaux archivés",
 };
 
 export let hi: Translation = {
@@ -1804,6 +1816,8 @@ export let hi: Translation = {
     confirmLabelRemoval: "क्या आप वाकई यह लेबल हटाना चाहते हैं?",
     confirmAttachmentRemoval: "क्या आप वाकई यह अनुलग्नक हटाना चाहते हैं?",
     confirmCoverImageRemoval: "क्या आप वाकई यह कवर छवि हटाना चाहते हैं?",
+    showArchivedBoards: "संग्रहीत बोर्ड दिखाएँ",
+    hideArchivedBoards: "संग्रहीत बोर्ड छिपाएँ",
 };
 
 export let id: Translation = {
@@ -2062,6 +2076,8 @@ export let id: Translation = {
     confirmLabelRemoval: "Apakah Anda yakin ingin menghapus label ini?",
     confirmAttachmentRemoval: "Apakah Anda yakin ingin menghapus lampiran ini?",
     confirmCoverImageRemoval: "Apakah Anda yakin ingin menghapus gambar sampul ini?",
+    showArchivedBoards: "Tampilkan papan yang diarsipkan",
+    hideArchivedBoards: "Sembunyikan papan yang diarsipkan",
 };
 
 export let ja: Translation = {
@@ -2320,6 +2336,8 @@ export let ja: Translation = {
     confirmLabelRemoval: "このラベルを削除してもよろしいですか？",
     confirmAttachmentRemoval: "この添付ファイルを削除してもよろしいですか？",
     confirmCoverImageRemoval: "このカバー画像を削除してもよろしいですか？",
+    showArchivedBoards: "アーカイブ済みのボードを表示",
+    hideArchivedBoards: "アーカイブ済みのボードを非表示",
 };
 
 export let ko: Translation = {
@@ -2578,6 +2596,8 @@ export let ko: Translation = {
     confirmLabelRemoval: "이 라벨을 정말 삭제하시겠습니까?",
     confirmAttachmentRemoval: "이 첨부 파일을 정말 삭제하시겠습니까?",
     confirmCoverImageRemoval: "이 커버 이미지를 정말 삭제하시겠습니까?",
+    showArchivedBoards: "아카이브된 보드 보이기",
+    hideArchivedBoards: "아카이브된 보드 숨기기",
 };
 
 export let nl: Translation = {
@@ -2836,6 +2856,8 @@ export let nl: Translation = {
     confirmLabelRemoval: "Weet u zeker dat u dit label wilt verwijderen?",
     confirmAttachmentRemoval: "Weet u zeker dat u deze bijlage wilt verwijderen?",
     confirmCoverImageRemoval: "Weet u zeker dat u deze omslagfoto wilt verwijderen?",
+    showArchivedBoards: "Gearchiveerde borden tonen",
+    hideArchivedBoards: "Gearchiveerde borden verbergen",
 };
 
 export let pt: Translation = {
@@ -3094,6 +3116,8 @@ export let pt: Translation = {
     confirmLabelRemoval: "Tem a certeza que pretende remover esta etiqueta?",
     confirmAttachmentRemoval: "Tem a certeza que pretende remover este anexo?",
     confirmCoverImageRemoval: "Tem a certeza que pretende remover esta imagem de capa?",
+    showArchivedBoards: "Mostrar quadros arquivados",
+    hideArchivedBoards: "Ocultar quadros arquivados",
 };
 
 export let ru: Translation = {
@@ -3352,6 +3376,8 @@ export let ru: Translation = {
     confirmLabelRemoval: "Вы уверены, что хотите удалить эту метку?",
     confirmAttachmentRemoval: "Вы уверены, что хотите удалить это вложение?",
     confirmCoverImageRemoval: "Вы уверены, что хотите удалить это изображение обложки?",
+    showArchivedBoards: "Показать архивные доски",
+    hideArchivedBoards: "Скрыть архивные доски",
 };
 
 export let tr: Translation = {
@@ -3610,6 +3636,8 @@ export let tr: Translation = {
     confirmLabelRemoval: "Bu etiketi kaldırmak istediğinizden emin misiniz?",
     confirmAttachmentRemoval: "Bu eki kaldırmak istediğinizden emin misiniz?",
     confirmCoverImageRemoval: "Bu kapak resmini kaldırmak istediğinizden emin misiniz?",
+    showArchivedBoards: "Arşivlenmiş panoları göster",
+    hideArchivedBoards: "Arşivlenmiş panoları gizle",
 };
 
 export let zh: Translation = {
@@ -3868,4 +3896,6 @@ export let zh: Translation = {
     confirmLabelRemoval: "您确定要移除此标签吗？",
     confirmAttachmentRemoval: "您确定要移除此附件吗？",
     confirmCoverImageRemoval: "您确定要移除此封面图片吗？",
+    showArchivedBoards: "显示已归档看板",
+    hideArchivedBoards: "隐藏已归档看板",
 };
