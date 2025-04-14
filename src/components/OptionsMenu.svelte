@@ -16,8 +16,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 <script lang="ts">
     import {clickOutside} from "../scripts/ClickOutside";
     import {slide} from "svelte/transition";
-    import {info} from "@tauri-apps/plugin-log";
-    import {copiedBoard} from "../scripts/Stores.svelte";
 
     interface Props {
         clickEvent: MouseEvent;
@@ -48,7 +46,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     function openContextMenu(e: MouseEvent)
     {
-        info(logMessage);
         showMenu = true
         browser = {
             w: window.innerWidth,
