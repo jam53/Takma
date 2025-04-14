@@ -210,4 +210,20 @@ export default interface Translation
     shortcutNotAvailableDuringOnboarding: string;
     takmaPWAExplanation: string;
     searchBarShortcutsExplanation: string;
+    orderLists: string;
+    completed: string;
+    markAsComplete: string;
+    markAsIncomplete: string;
+    cardStatus: string;
+    complete: string;
+    incomplete: string;
+    sortChecklists: string;
+    dontAskAgain: string;
+    confirmCustomBackgroundRemoval: string;
+    confirmCardRemoval: string;
+    confirmLabelRemoval: string;
+    confirmAttachmentRemoval: string;
+    confirmCoverImageRemoval: string;
+    showArchivedBoards: string;
+    hideArchivedBoards: string;
 }

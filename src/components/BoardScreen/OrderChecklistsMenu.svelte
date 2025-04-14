@@ -1,85 +1,34 @@
 <script lang="ts">
-    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
+    import type {Checklist} from "../../scripts/Board";
     import OptionsMenu from "../OptionsMenu.svelte";
 
     interface Props {
-        clickEvent: MouseEvent,
+        clickEvent: MouseEvent;
+        checklists: Checklist[]; // Since the checklists object being passed to this prop is a `$state()` object, any changes we make by modifying the properties of this object will be reflected in the parent component, which is why we don't need a separate `setChecklists()` function. Should we however reassign the variable using `checklists = ...` this wouldn't be reflected in the parent component. In such cases we would need a `setChecklists()` function. Furthermore, any changes will also automatically be persisted and saved to disk, as the CardDetails component monitors for any changes made with an `$effect()` and saves them subsequently (`checklists` is a part of a `card` which is held in CardDetails)
+        focusOnCardDetailsFunction: Function;
     }
 
-    let { clickEvent }: Props = $props();
-
-    /**
-     * Once we reordered the boards, we need to refresh the UI in order to reflect the changes
-     */
-    function refreshWelcomeScreen()
-    {
-        closeContextMenu();
-    }
-
-    function sortByCreationDateAscending()
-    {
-        SaveLoadManager.getData().sortBoardsFunctionName = "sortByCreationDateAscending";
-
-        refreshWelcomeScreen();
-    }
-
-    function sortByCreationDateDescending()
-    {
-        SaveLoadManager.getData().sortBoardsFunctionName = "sortByCreationDateDescending";
-
-        refreshWelcomeScreen();
-    }
-
-    function sortByMostRecentlyOpened()
-    {
-        SaveLoadManager.getData().sortBoardsFunctionName = "sortByMostRecentlyOpened";
-
-        refreshWelcomeScreen();
-    }
-
-    function sortByLeastRecentlyOpened()
-    {
-        SaveLoadManager.getData().sortBoardsFunctionName = "sortByLeastRecentlyOpened";
-
-        refreshWelcomeScreen();
-    }
-
-    function sortAlphabeticallyAscending()
-    {
-        SaveLoadManager.getData().sortBoardsFunctionName = "sortAlphabeticallyAscending";
-
-        refreshWelcomeScreen();
-    }
-
-    function sortAlphabeticallyDescending()
-    {
-        SaveLoadManager.getData().sortBoardsFunctionName = "sortAlphabeticallyDescending";
-
-        refreshWelcomeScreen();
-    }
-
-    function sortShuffle()
-    {
-        let boards = SaveLoadManager.getData().boards;
-        SaveLoadManager.getData().boards = shuffle(boards);
-
-        SaveLoadManager.getData().sortBoardsFunctionName = "dontSort";
-
-        refreshWelcomeScreen();
-    }
+    let { clickEvent, checklists, focusOnCardDetailsFunction }: Props = $props();
 
     let menuItems = [
         {
             'name': 'sortByCreationDate(Ascending)',
-            'onClick': sortByCreationDateAscending,
+            'onClick': () => {
+                checklists.sort((a, b) => a.creationDate - b.creationDate);
+                optionsMenu.closeContextMenu();
+            },
             'displayText': I18n.t("sortByCreationDateAscending"),
             'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0l-3.75-3.75M17.25 21L21 17.25"/></svg>'
         },
         {
             'name': 'sortByCreationDate(Descending)',
-            'onClick': sortByCreationDateDescending,
+            'onClick': () => {
+                checklists.sort((a, b) => b.creationDate - a.creationDate);
+                optionsMenu.closeContextMenu();
+            },
             'displayText': I18n.t("sortByCreationDateDescending"),
             'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"/></svg>'
         },
@@ -87,29 +36,20 @@
             'name': 'hr'
         },
         {
-            'name': 'sortByMostRecentlyOpened',
-            'onClick': sortByMostRecentlyOpened,
-            'displayText': I18n.t("sortByMostRecentlyOpened"),
-            'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0l-3.75-3.75M17.25 21L21 17.25"/></svg>'
-        },
-        {
-            'name': 'sortByLeastRecentlyOpened',
-            'onClick': sortByLeastRecentlyOpened,
-            'displayText': I18n.t("sortByLeastRecentlyOpened"),
-            'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"/></svg>'
-        },
-        {
-            'name': 'hr'
-        },
-        {
             'name': 'sortAlphabetically(Ascending)',
-            'onClick': sortAlphabeticallyAscending,
+            'onClick': () => {
+                checklists.sort((a, b) => a.title.localeCompare(b.title));
+                optionsMenu.closeContextMenu();
+            },
             'displayText': I18n.t("sortAlphabeticallyAscending"),
             'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0l-3.75-3.75M17.25 21L21 17.25"/></svg>'
         },
         {
             'name': 'sortAlphabetically(Descending)',
-            'onClick': sortAlphabeticallyDescending,
+            'onClick': () => {
+                checklists.sort((a, b) => b.title.localeCompare(a.title));
+                optionsMenu.closeContextMenu();
+            },
             'displayText': I18n.t("sortAlphabeticallyDescending"),
             'svg': '<svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"/></svg>'
         },
@@ -118,15 +58,21 @@
         },
         {
             'name': 'sortShuffle',
-            'onClick': sortShuffle,
+            'onClick': () => {
+                shuffle(checklists);
+                optionsMenu.closeContextMenu();
+            },
             'displayText': I18n.t("shuffle"),
             'svg': '<svg class="listOptionsMenuIcons" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M237.66,178.34a8,8,0,0,1,0,11.32l-24,24A8,8,0,0,1,200,208V192a72.15,72.15,0,0,1-57.65-30.14l-41.72-58.4A56.1,56.1,0,0,0,55.06,80H32a8,8,0,0,1,0-16H55.06a72.12,72.12,0,0,1,58.59,30.15l41.72,58.4A56.08,56.08,0,0,0,200,176V160a8,8,0,0,1,13.66-5.66ZM143,107a8,8,0,0,0,11.16-1.86l1.2-1.67A56.08,56.08,0,0,1,200,80V96a8,8,0,0,0,13.66,5.66l24-24a8,8,0,0,0,0-11.32l-24-24A8,8,0,0,0,200,48V64a72.15,72.15,0,0,0-57.65,30.14l-1.2,1.67A8,8,0,0,0,143,107Zm-30,42a8,8,0,0,0-11.16,1.86l-1.2,1.67A56.1,56.1,0,0,1,55.06,176H32a8,8,0,0,0,0,16H55.06a72.12,72.12,0,0,0,58.59-30.15l1.2-1.67A8,8,0,0,0,113,149Z"></path></svg>'
         },
     ];
+
+    let optionsMenu: ReturnType<typeof OptionsMenu>;
 </script>
 
 <OptionsMenu
+        bind:this={optionsMenu}
         {clickEvent}
-        logMessage={"Opening order boards menu"}
+        logMessage={`Opening order checklists menu in card: ${selectedCardId.value} within board: ${selectedBoardId.value}`}
         {menuItems}
 />

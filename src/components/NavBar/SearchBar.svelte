@@ -5,7 +5,7 @@
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
 
-    let searchBar: HTMLElement = $state();
+    let searchBar: HTMLInputElement = $state();
     let containingDiv: HTMLElement = $state();
     let searchBarIcon: HTMLElement = $state();
 
@@ -25,6 +25,7 @@
         searchBarIcon.classList.add("active");
 
         searchBar.focus();
+        searchBar.select();
     }
 
     $effect(() => {

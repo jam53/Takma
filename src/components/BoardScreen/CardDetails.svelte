@@ -1,9 +1,9 @@
 <script lang="ts">
     import {blur, slide} from "svelte/transition";
     import {onDestroy, mount, untrack} from "svelte";
-    import {selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
+    import {invalidateLabels, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Card, Checklist} from "../../scripts/Board";
+    import type {Card, List} from "../../scripts/Board";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {marked} from "marked";
     import DOMPurify from "dompurify";
@@ -24,45 +24,43 @@
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     interface Props {
-        refreshSelectedCardFunction: Function;
-        refreshListsFunction: Function;
+        refreshList: (listToRefresh: List) => void;
+        refreshCard: (cardToRefresh: Card) => void;
+        reloadLists: () => void;
     }
 
     let {
-        refreshSelectedCardFunction,
-        refreshListsFunction
+        refreshList,
+        refreshCard,
+        reloadLists,
     }: Props = $props();
+
+    let card: Card|null = $state(null);
+    $effect(() => {
+        card = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value);
+    });
 
     let editingDescription: boolean = $state(false); //We use this to know whether or not we should display the rendered html of the description, or display the <pre> so that the user can edit the description
 
-    let cardToSave: Card = $state(null!); //Rather than saving every single time for every change, we will keep track of the current card in this variable, and once we close the CardDetails window, only then will we save the card to disk.
-
     $effect(() => {
         // Since we modify `editingDescription` within this effect,
-        // running this block unconditionally would trigger an infinite loop. (Same goes for `cardToSave`)
+        // running this block unconditionally would trigger an infinite loop.
         // Therefore we add an if `!editingDescription` check,
         // this ensures the effect only proceeds when `editingDescription` hasn't been set to true yet.
         // If it is true, it means this effect already ran and this prevents the effect from continuously re-triggering itself.
-        if (selectedCardId.value !== "" && untrack(() => !editingDescription) && (untrack(() => cardToSave?.id !== selectedCardId.value) || !showPopup))
+        if (selectedCardId.value !== "" && untrack(() => !editingDescription) && untrack(() => card?.id !== selectedCardId.value))
         {
-            showPopup = true;
-            cardToSave = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value)!;
-
             // In some cases we want to enter the "card description editing mode" by default, without requiring the user to enter the "card description editing mode" manually. We only do this when the card doesn't have a description yet and doesn't have any checklists nor attachments.
-            if (cardToSave.description === "" && cardToSave.checklists.length === 0 && cardToSave.attachments.length === 0)
+            if (card.description === "" && card.checklists.length === 0 && card.attachments.length === 0)
             {
                 editingDescription = true;
             }
-        }
-        else if (selectedCardId.value === "")
-        {
-            showPopup = false;
         }
     });
 
     $effect(() =>
     {
-        if (!editingDescription && showPopup)
+        if (!editingDescription)
         {
             overlayElement?.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
 
@@ -82,19 +80,19 @@
 
     function closeCard()
     {
-        saveCard();
-        refreshSelectedCardFunction();
         selectedCardId.value = "";
         document.activeElement.blur(); //This should or could help preventing the issue where cards can't be dragged at times.
-        clearTimeout(typingTimer);
     }
 
-    function saveCard()
-    {
-        SaveLoadManager.getData().updateCard($state.snapshot(cardToSave), selectedBoardId.value, selectedCardId.value);
-    }
+    // Automatically save the selected card when any changes are made
+    $effect(() => {
+        if (card)
+        {
+            SaveLoadManager.getData().updateCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
+            refreshCard(card);
+        }
+    })
 
-    let showPopup = $state(false);
     let overlayElement: HTMLElement | null = $state(null);
 
     //region markedjs custom renderer
@@ -255,8 +253,6 @@
                     selectedBoardId.value = boardId;
                     selectedCardId.value = "";
                 }
-
-                refreshListsFunction();
             }
         }
         else if (e.target.tagName === "A")
@@ -272,25 +268,13 @@
         }
     }
 
-    let refreshLabels = $state(false);
-    function refreshLabelsFunction()
-    {
-        refreshLabels = !refreshLabels;
-    }
-
     function focusOnCardDetailsFunction()
     {
         overlayElement?.focus();
     }
 
-    function amountOfTodosInChecklist(checklist: Checklist, completedOnly = false)
-    {
-        return completedOnly ? (checklist.todos.filter(todo => todo.completed)).length : checklist.todos.length;
-    }
+    let checkListComponent: CheckLists;
 
-    let checkListComponent;
-
-    let attachmentsComponent;
     async function addAttachment()
     {
 
@@ -304,12 +288,8 @@
         for (let droppedFile of droppedFiles)
         {
             let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, selectedBoardId.value);
-            cardToSave.attachments.push(savedPath);
+            card.attachments.push(savedPath);
         }
-
-        cardToSave = cardToSave; //If we don't do this, the function below `attachmentsComponent.refreshComponent()` will cause the component to refresh but it will still use the "old" values of the cardToSave variable because it would think it hasn't changed. So the component would refresh but nothing would visibly change because the old value of cardToSave would still be used
-        saveCard();
-        attachmentsComponent.refreshComponent()
     }
 
     /**
@@ -317,61 +297,64 @@
      */
     async function setCoverImage()
     {
-        if (cardToSave.coverImage !== "")
+        if (card.coverImage !== "")
         {
-            await removeFileFromSaveDirectory(cardToSave.coverImage);
-            cardToSave.coverImage = "";
-            toast(I18n.t("removeCardCoverImage"));
+            const deleteCoverImageFunction = async () => {
+                await removeFileFromSaveDirectory(card.coverImage);
+                card.coverImage = "";
+                toast(I18n.t("removeCardCoverImage"));
+            }
+
+            if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCoverImage)
+            {
+                await deleteCoverImageFunction();
+            }
+            else
+            {
+                const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCoverImageRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+                if (await popup.getAnswer() === true)
+                {
+                    await SaveLoadManager.getData().updateConfirmationPreference("deleteCoverImage", popup.getShowConfirmationAgain());
+                    await deleteCoverImageFunction();
+                }
+            }
         }
         saveCard();
     }
 
-    function deleteCard()
+    async function deleteCard()
     {
-        SaveLoadManager.getData().deleteCard(selectedBoardId.value, selectedCardId.value);
-        refreshListsFunction();
-        selectedCardId.value = "";
+        const deleteCardFunction = () => {
+            const listIdCardIsIn = SaveLoadManager.getData().getListContainingCard(selectedBoardId.value, selectedCardId.value).id; // Store the ID of the list that contains the card *before* the card is deleted. This is essential because after deletion, `getListContainingCard()` will no longer return the list the card was in, as it uses the deleted card's ID to find the list. But as the deleted card no longer exists in the list, `getListContainingCard()` won't be able to find the list.
+
+            SaveLoadManager.getData().deleteCard(selectedBoardId.value, selectedCardId.value);
+            refreshList(SaveLoadManager.getData().getList(selectedBoardId.value, listIdCardIsIn));
+            selectedCardId.value = "";
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCard)
+        {
+            deleteCardFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCardRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteCard", popup.getShowConfirmationAgain());
+                deleteCardFunction();
+            }
+        }
     }
 
-    let isCardFullscreen = SaveLoadManager.getData().cardsFullscreen;
-    let popupElement;
+    let isCardFullscreen = $state(SaveLoadManager.getData().cardsFullscreen);
     function toggleFullscreen(e?: MouseEvent)
     {
         e?.stopPropagation();
         isCardFullscreen = !isCardFullscreen;
-
-        if (isCardFullscreen)
-        {
-            overlayElement.classList.add("overlayCardFullscreen");
-            popupElement.classList.add("popupCardFullscreen");
-
-            Array.from(document.getElementsByClassName("titleAndActionsHolder")).forEach(attachment => attachment.classList.add("titleAndActionsHolderCardFullscreen"));
-        }
-        else
-        {
-            overlayElement.classList.remove("overlayCardFullscreen");
-            popupElement.classList.remove("popupCardFullscreen");
-
-            Array.from(document.getElementsByClassName("titleAndActionsHolder")).forEach(attachment => attachment.classList.remove("titleAndActionsHolderCardFullscreen"));
-        }
-
         SaveLoadManager.getData().cardsFullscreen = isCardFullscreen;
-    }
-    $effect(() => {
-        if (overlayElement)
-        {
-            toggleFullscreen(); //When we open the card, we wait until the overlayElement AKA the UI is loaded. Then we proceed to call the toggleFullscreen() function twice. This way the necessary styleclasses get applied/removed. Should we call it just once, then we would toggle the fullscreen state. Which is not what we want, we just want to apply/remove the necessary styleclasses. So we call the function a second time to toggle back the original fullscreen state of the card.
-            toggleFullscreen();
-        }
-    });
-
-    let typingTimer;                //timer identifier
-    let doneTypingInterval = 2000;  //time in ms
-    //This function should be added as a "keyup" event listener to whatever element that should be used to check whether or not the user stopped typing
-    function waitUntilUserStoppedTyping(callback)
-    {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(callback, doneTypingInterval);
     }
 
     let markdownTextArea: HTMLElement | null = $state(null);
@@ -534,8 +517,7 @@
             ],
         });
 
-        easyMDE.codemirror.on("change", () => cardToSave.description = easyMDE.value().trim());
-        easyMDE.codemirror.on("keyup", () => waitUntilUserStoppedTyping(saveCard));
+        easyMDE.codemirror.on("change", () => card.description = easyMDE.value().trim());
 
         //Remove the EasyMDE element from the DOM once we show the rendered markdown AKA click outside the EasyMDEContainer
         let easyMDEContainer = document.getElementsByClassName("EasyMDEContainer")[0];
@@ -550,22 +532,35 @@
             }
         });
     }
+
+    function mountLabelsPopup(e: MouseEvent)
+    {
+         mount(LabelsPopup, {props: {
+            clickEvent: e,
+            labelIds: card.labelIds,
+            setLabelIds: newLabelIds => {
+                card.labelIds = newLabelIds;
+            },
+            focusOnCardDetailsFunction: focusOnCardDetailsFunction,
+            reloadLists
+        }, target: document.body, intro: true})
+    }
 </script>
 
-{#if showPopup}
-    <div transition:blur|global bind:this={overlayElement} class="overlay" onclick={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" onkeydown={handleKeyDown}
+{#if card !== null}
+    <div transition:blur|global bind:this={overlayElement} class="overlay {isCardFullscreen ? 'overlayCardFullscreen': ''}" onclick={() => (window.getSelection().toString().length === 0) && closeCard()} tabindex="1" onkeydown={handleKeyDown}
     >
         <!--Before the `(window.getSelection().toString().length === 0)` check, if we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the card. This would be considered as a click outside the card, therefore closing the card. With this check we only close the card if we aren't selecting anything-->
 
-        <div bind:this={popupElement} transition:slide|global class="popup" onclick={(e) => e.stopPropagation()}>
+        <div transition:slide|global class="popup {isCardFullscreen ? 'popupCardFullscreen': ''}" onclick={(e) => e.stopPropagation()}>
             <!-- When the user clicks outside the popup, the popup should close. However, when the user clicks on the popup itself, the click event should not be captured by the containing/overlay div. In order to prevent the click event from propagating up to the overlay and triggering the closure of the popup, e.stopPropagation() is called-->
             <div class="titleDiv">
                 <textarea
-                      bind:value={cardToSave.title}
-                      placeholder={I18n.t("enterACardTitle")}
-                      spellcheck="false"
-                      onkeydown={e => (e.key === "Enter") && e.preventDefault()}
-                      onkeyup={() => waitUntilUserStoppedTyping(saveCard)}
+                        bind:value={() => card.title, (newTitle) => card.title = newTitle}
+                        placeholder={I18n.t("enterACardTitle")}
+                        spellcheck="false"
+                        onkeydown={e => (e.key === "Enter") && e.preventDefault()}
+                        style={`text-decoration: ${card.complete ? "line-through" : "none"}`}
                 ></textarea>
                 <!--This `e.key === Enter` check and e.preventDefault if it was true; prevents the user from typing newlines. If they would copy in new lines, they will be visible while editing the textarea.-->
                 <svg onclick={closeCard} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" >
@@ -574,7 +569,7 @@
             </div>
             <div class="separator"
             >
-                {I18n.t("createdOn") + (new Date(cardToSave.creationDate)).toLocaleDateString(SaveLoadManager.getData().displayLanguage, {
+                {I18n.t("createdOn") + (new Date(card.creationDate)).toLocaleDateString(SaveLoadManager.getData().displayLanguage, {
                     year: "numeric",
                     month: "long",
                     day: "numeric"
@@ -583,10 +578,10 @@
             <div class="bottomPart" class:bottomPartOnMobile={SaveLoadManager.getData().isUserOnMobile()}>
                 <div class="cardMainAreaHolder">
                     <div class="labels">
-                        {#key refreshLabels}
-                            {#each cardToSave.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
+                        {#key invalidateLabels.value}
+                            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
                                 <div style="background-color: {label.color}"
-                                     onclick={e => mount(LabelsPopup, {props: {clickEvent: e, cardToSave: cardToSave, refreshLabelsFunction: refreshLabelsFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                                     onclick={mountLabelsPopup}
                                 >
                                     <span style="color: {label.titleColor}">
                                         {label.title}
@@ -595,39 +590,51 @@
                             {/each}
                         {/key}
                     </div>
-                    {#if cardToSave.dueDate !== null}
+                    {#if card.dueDate !== null}
                         <button class="dueDate"
                                 title={I18n.t("dueDate")}
-                                class:dueDateOrange={parseInt(cardToSave.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(cardToSave.dueDate)}
-                                class:dueDateRed={Date.now() > parseInt(cardToSave.dueDate)}
-                                onclick={e => mount(DueDatePopup, {props: {clickEvent: e, cardToSave: cardToSave, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                                class:dueDateOrange={parseInt(card.dueDate) - Date.now() < 86400000 && Date.now() <= parseInt(card.dueDate)}
+                                class:dueDateRed={Date.now() > parseInt(card.dueDate)}
+                                style={`background-color: ${card.complete ? "var(--success)" : ""}`}
+                                onclick={e => mount(DueDatePopup, {props: {clickEvent: e, dueDate: card.dueDate, setDueDate: newDueDate => card.dueDate = newDueDate, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                         >
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                             <span>
-                                    {`${(new Date(parseInt(cardToSave.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}`}
+                                    {`${(new Date(parseInt(card.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}`}
+                            </span>
+                        </button>
+                    {:else if card.dueDate === null && card.complete}
+                        <button class="completed"
+                                in:slide
+                                out:slide
+                                title={I18n.t("completed")}
+                                style="background-color: var(--success)"
+                                onclick={e => card.complete = !card.complete}
+                        >
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
+                            <span>
+                                {I18n.t("completed")}
                             </span>
                         </button>
                     {/if}
                     {#if editingDescription}
-                        <textarea bind:this={markdownTextArea}>{cardToSave.description}</textarea>
+                        <textarea bind:this={markdownTextArea}>{card.description}</textarea>
                     {:else}
                         <div class="renderedDescriptionHolder markdown-body"
                              onclick={handleDescriptionHolderClick}
                         >
-                            {@html parseMarkdown(cardToSave.description)}
+                            {@html parseMarkdown(card.description)}
                         </div>
-                        {void saveCard() ?? ""}
-                        <!-- The void operator evaluates the given expression and then returns undefined. Then with the nullish operator we return an empty string when it's undefined, which will always be the case. This way we can execute some code in our html, without displaying anything in the UI-->
                     {/if}
-                    <CheckLists bind:this={checkListComponent} cardToSave={cardToSave} amountOfTodosInChecklistFunction={amountOfTodosInChecklist} saveCardFunction={saveCard} focusOnCardDetailsFunction={focusOnCardDetailsFunction}/>
-                    <Attachments bind:this={attachmentsComponent} cardToSave={cardToSave} addAttachmentFunction={addAttachment} saveCardFunction={saveCard} focusOnCardDetailsFunction={focusOnCardDetailsFunction}/>
+                    <CheckLists bind:this={checkListComponent} bind:checklists={card.checklists} {focusOnCardDetailsFunction}/>
+                    <Attachments bind:attachments={card.attachments} addAttachmentFunction={addAttachment} {focusOnCardDetailsFunction} {isCardFullscreen}/>
                 </div>
                 <div class="cardActionsHolder">
                     <span>
                         {I18n.t("addToCard")}
                     </span>
                     <button title={I18n.t("labels")}
-                            onclick={e => mount(LabelsPopup, {props: {clickEvent: e, cardToSave: cardToSave, refreshLabelsFunction: refreshLabelsFunction, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                            onclick={mountLabelsPopup}
                     >
                         <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><path d="M7 7h.01"></path></svg>
                         <span>
@@ -636,12 +643,11 @@
                     </button>
                     <button title={I18n.t("checklist")}
                             onclick={() => {
-                                const newChecklist = {id: crypto.randomUUID(), title: "", todos: []};
+                                const newChecklist = {id: crypto.randomUUID(), title: "", todos: [], creationDate: Date.now()};
 
-                                cardToSave.checklists.push(newChecklist);
-                                cardToSave = cardToSave;
+                                card?.checklists.push(newChecklist);
 
-                                checkListComponent.addTodoItem(newChecklist); //Dit zorgt ervoor dat wanneer de checklist eenmaal toegevoegd is aan de DOM, er direct een nieuw todo item wordt aangemaakt waarvan de titel/content direct wordt gefocused/geselecteerd. Hierdoor kan een gebruiker direct een todo toevoegen aan de checklist
+                                checkListComponent.addTodoItem(newChecklist.id); // This ensures that once the checklist is added to the DOM, a new todo item is created immediately, and the todo item\'s title is focused/selected. This allows a user to type a todo right away, rather than having to create a todo item first after creating the checklist.
                             }}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="12 12 488 488" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
@@ -650,7 +656,7 @@
                         </span>
                     </button>
                     <button title={I18n.t("dueDate")}
-                            onclick={e => mount(DueDatePopup, {props: {clickEvent: e, cardToSave: cardToSave, focusOnCardDetailsFunction: focusOnCardDetailsFunction, saveCardFunction: saveCard}, target: document.body, intro: true})}
+                            onclick={e => mount(DueDatePopup, {props: {clickEvent: e, dueDate: card.dueDate, setDueDate: newDueDate => card.dueDate = newDueDate, focusOnCardDetailsFunction: focusOnCardDetailsFunction}, target: document.body, intro: true})}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
                         <span>
@@ -677,9 +683,17 @@
                     <span>
                         {I18n.t("actions")}
                     </span>
+                    <button title={card.complete ? I18n.t("markAsIncomplete") : I18n.t("markAsComplete")}
+                            onclick={() => card.complete = !card.complete}
+                    >
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
+                        <span>
+                            {card.complete ? I18n.t("markAsIncomplete") : I18n.t("markAsComplete")}
+                        </span>
+                    </button>
                     <button title={I18n.t("link")} id="cardDetailsCopyLinkButton"
                             onclick={async () => {
-                                let linkToThisCard = `takma://${selectedBoardId.value}/${cardToSave.id}`
+                                let linkToThisCard = `takma://${selectedBoardId.value}/${card.id}`
 
                                 toast(linkToThisCard);
                             }}
@@ -897,7 +911,7 @@
 
     .cardActionsHolder button {
         width: 100%;
-        height: 2.5em;
+        min-height: 2.5em;
         border: none;
         font-size: medium;
         display: flex;
@@ -910,13 +924,15 @@
     }
 
     .cardActionsHolder button svg {
-        min-width: 1em;
+        min-width: 1.25em;
         height: 1.25em;
     }
 
     .cardActionsHolder button span {
         overflow: hidden;
         text-overflow: ellipsis;
+        text-align: left;
+        margin: 0.25em 0;
     }
 
     .cardActionsHolder button:hover {
@@ -998,7 +1014,7 @@
         max-width: 30em;
     }
 
-    .dueDate {
+    .dueDate, .completed {
         display: flex;
         background-color: var(--border);
         border-radius: 4px;
@@ -1024,13 +1040,18 @@
         color: white;
     }
 
-    .dueDate:hover {
+    .dueDate:hover, .completed:hover {
         filter: brightness(70%);
     }
 
     .dueDate svg {
         width: 1.5em;
         height: 1.5em;
+    }
+
+    .completed svg {
+        width: 1.25em;
+        height: 1.25em;
     }
 
     .fullScreenButton {

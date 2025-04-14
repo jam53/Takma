@@ -177,7 +177,8 @@ export let en: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -249,6 +250,22 @@ export let en: Translation = {
     shortcutNotAvailableDuringOnboarding: "This keyboard shortcut will become available once you complete the onboarding process.",
     takmaPWAExplanation: "Install the Takma Web Preview on your device using this button!\n\nBy installing this previewer as an app, you'll have quick, offline access whenever you need it — perfect if you plan to use the Takma Web Preview regularly.",
     searchBarShortcutsExplanation: "You can open the search bar by clicking on it or by using the keyboard shortcut CTRL + SHIFT + F. To close it, simply press ESC.",
+    orderLists: "Order lists",
+    completed: "Completed",
+    markAsComplete: "Mark as complete", 
+    markAsIncomplete: "Mark as incomplete",
+    cardStatus: "Card status",
+    complete: "Complete",
+    incomplete: "Incomplete",
+    sortChecklists: "Sort checklists",
+    dontAskAgain: "Don't ask again",
+    confirmCustomBackgroundRemoval: "Are you sure you want to remove this custom background image?",
+    confirmCardRemoval: "Are you sure you want to remove this card?",
+    confirmLabelRemoval: "Are you sure you want to remove this label?",
+    confirmAttachmentRemoval: "Are you sure you want to remove this attachment?",
+    confirmCoverImageRemoval: "Are you sure you want to remove this cover image?",
+    showArchivedBoards: "Show archived boards",
+    hideArchivedBoards: "Hide archived boards",
 };
 
 export let ar: Translation = {
@@ -428,7 +445,8 @@ export let ar: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -500,6 +518,22 @@ export let ar: Translation = {
     shortcutNotAvailableDuringOnboarding: "سيكون هذا اختصار لوحة المفاتيح متاحًا بمجرد إكمال عملية التعريف.",
     takmaPWAExplanation: "قم بتثبيت معاينة Takma على جهازك باستخدام هذا الزر!\n\nعن طريق تثبيت هذه المعاينة كتطبيق، ستحصل على وصول سريع وغير متصل كلما احتجت لذلك — مثالي إذا كنت تخطط لاستخدام معاينة Takma بانتظام.",
     searchBarShortcutsExplanation: "يمكنك فتح شريط البحث بالنقر عليه أو باستخدام اختصار لوحة المفاتيح CTRL + SHIFT + F. لإغلاقه، ما عليك سوى الضغط على ESC.",
+    orderLists: "ترتيب القوائم",
+    completed: "مكتمل",
+    markAsComplete: "وضع علامة كمكتمل",
+    markAsIncomplete: "وضع علامة كغير مكتمل",
+    cardStatus: "حالة البطاقة",
+    complete: "مكتمل",
+    incomplete: "غير مكتمل",
+    sortChecklists: "ترتيب قوائم التحقق",
+    dontAskAgain: "لا تظهر هذا مرة أخرى",
+    confirmCustomBackgroundRemoval: "هل أنت متأكد أنك تريد إزالة صورة الخلفية المخصصة هذه؟",
+    confirmCardRemoval: "هل أنت متأكد أنك تريد إزالة هذه البطاقة؟",
+    confirmLabelRemoval: "هل أنت متأكد أنك تريد إزالة هذا التصنيف؟",
+    confirmAttachmentRemoval: "هل أنت متأكد أنك تريد إزالة هذا المرفق؟",
+    confirmCoverImageRemoval: "هل أنت متأكد أنك تريد إزالة صورة الغلاف هذه؟",
+    showArchivedBoards: "إظهار اللوحات المؤرشفة",
+    hideArchivedBoards: "إخفاء اللوحات المؤرشفة",
 };
 
 export let de: Translation = {
@@ -679,7 +713,8 @@ export let de: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -751,6 +786,22 @@ export let de: Translation = {
     shortcutNotAvailableDuringOnboarding: "Diese Tastenkombination wird verfügbar sein, sobald Sie den Onboarding-Prozess abgeschlossen haben.",
     takmaPWAExplanation: "Installiere die Takma Web-Vorschau auf deinem Gerät mit diesem Button!\n\nWenn du diesen Vorschau-Viewer als App installierst, hast du jederzeit schnellen, offline Zugriff — perfekt, wenn du die Takma Web-Vorschau regelmäßig nutzen möchtest.",
     searchBarShortcutsExplanation: "Sie können die Suchleiste öffnen, indem Sie darauf klicken oder die Tastenkombination STRG + UMSCHALT + F verwenden. Zum Schließen drücken Sie einfach ESC.",
+    orderLists: "Listen anordnen",
+    completed: "Abgeschlossen",
+    markAsComplete: "Als abgeschlossen markieren",
+    markAsIncomplete: "Als nicht abgeschlossen markieren",
+    cardStatus: "Kartenstatus",
+    complete: "Abgeschlossen",
+    incomplete: "Unvollständig",
+    sortChecklists: "Checklisten sortieren",
+    dontAskAgain: "Nicht erneut fragen",
+    confirmCustomBackgroundRemoval: "Sind Sie sicher, dass Sie dieses benutzerdefinierte Hintergrundbild entfernen möchten?",
+    confirmCardRemoval: "Sind Sie sicher, dass Sie diese Karte entfernen möchten?",
+    confirmLabelRemoval: "Sind Sie sicher, dass Sie dieses Label entfernen möchten?",
+    confirmAttachmentRemoval: "Sind Sie sicher, dass Sie diesen Anhang entfernen möchten?",
+    confirmCoverImageRemoval: "Sind Sie sicher, dass Sie dieses Titelbild entfernen möchten?",
+    showArchivedBoards: "Archivierte Boards anzeigen",
+    hideArchivedBoards: "Archivierte Boards ausblenden",
 };
 
 export let es: Translation = {
@@ -930,7 +981,8 @@ export let es: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1002,6 +1054,22 @@ export let es: Translation = {
     shortcutNotAvailableDuringOnboarding: "Este atajo de teclado estará disponible una vez que completes el proceso de incorporación.",
     takmaPWAExplanation: "¡Instala la Vista Previa de Takma en tu dispositivo usando este botón!\n\nAl instalar esta vista previa como una aplicación, tendrás acceso rápido y sin conexión siempre que lo necesites, perfecto si planeas usar la Vista Previa de Takma regularmente.",
     searchBarShortcutsExplanation: "Puedes abrir la barra de búsqueda haciendo clic en ella o usando el atajo de teclado CTRL + SHIFT + F. Para cerrarla, simplemente presiona ESC.",
+    orderLists: "Ordenar listas",
+    completed: "Completado",
+    markAsComplete: "Marcar como completado",
+    markAsIncomplete: "Marcar como incompleto",
+    cardStatus: "Estado de la tarjeta",
+    complete: "Completo",
+    incomplete: "Incompleto",
+    sortChecklists: "Ordenar listas de verificación",
+    dontAskAgain: "No volver a preguntar",
+    confirmCustomBackgroundRemoval: "¿Está seguro de que quiere eliminar esta imagen de fondo personalizada?",
+    confirmCardRemoval: "¿Está seguro de que quiere eliminar esta tarjeta?",
+    confirmLabelRemoval: "¿Está seguro de que quiere eliminar esta etiqueta?",
+    confirmAttachmentRemoval: "¿Está seguro de que quiere eliminar este archivo adjunto?",
+    confirmCoverImageRemoval: "¿Está seguro de que quiere eliminar esta imagen de portada?",
+    showArchivedBoards: "Mostrar tableros archivados",
+    hideArchivedBoards: "Ocultar tableros archivados",
 };
 
 export let et: Translation = {
@@ -1181,7 +1249,8 @@ export let et: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1253,6 +1322,22 @@ export let et: Translation = {
     shortcutNotAvailableDuringOnboarding: "See klahvikombinatsioon on saadaval pärast seda, kui oled koolitusprotsessi lõpetanud.",
     takmaPWAExplanation: "Installige Takma veebieelsevaade oma seadmesse, kasutades seda nuppu!\n\nKui installite selle eelvaate rakenduse, saate igal ajal kiire ja offline-juurdepääsu — ideaalne, kui plaanite Takma veebieelsevaadet regulaarselt kasutada.",
     searchBarShortcutsExplanation: "Saate otsinguriba avada, klõpsates sellel või kasutades klaviatuuri otseteed CTRL + SHIFT + F. Sulgemiseks vajutage lihtsalt ESC.",
+    orderLists: "Korrasta loendeid",
+    completed: "Lõpetatud",
+    markAsComplete: "Märgi lõpetatuks",
+    markAsIncomplete: "Märgi lõpetamata",
+    cardStatus: "Kaardi olek",
+    complete: "Lõpetatud",
+    incomplete: "Lõpetamata",
+    sortChecklists: "Sorteeri kontrollnimekirjad",
+    dontAskAgain: "Ära küsi uuesti",
+    confirmCustomBackgroundRemoval: "Kas olete kindel, et soovite eemaldada selle kohandatud taustapildi?",
+    confirmCardRemoval: "Kas olete kindel, et soovite eemaldada selle kaardi?",
+    confirmLabelRemoval: "Kas olete kindel, et soovite eemaldada selle sildi?",
+    confirmAttachmentRemoval: "Kas olete kindel, et soovite eemaldada selle manuse?",
+    confirmCoverImageRemoval: "Kas olete kindel, et soovite eemaldada selle kaanepildi?",
+    showArchivedBoards: "Kuva arhiveeritud tahvlid",
+    hideArchivedBoards: "Peida arhiveeritud tahvlid",
 };
 
 export let fr: Translation = {
@@ -1432,7 +1517,8 @@ export let fr: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1504,6 +1590,22 @@ export let fr: Translation = {
     shortcutNotAvailableDuringOnboarding: "Ce raccourci clavier sera disponible une fois que vous aurez terminé le processus d'intégration.",
     takmaPWAExplanation: "Installez l'aperçu Web de Takma sur votre appareil en utilisant ce bouton !\n\nEn installant cet aperçu en tant qu'application, vous aurez un accès rapide et hors ligne chaque fois que vous en aurez besoin — parfait si vous prévoyez d'utiliser régulièrement l'aperçu Web de Takma.",
     searchBarShortcutsExplanation: "Vous pouvez ouvrir la barre de recherche en cliquant dessus ou en utilisant le raccourci clavier CTRL + SHIFT + F. Pour la fermer, appuyez simplement sur ESC.",
+    orderLists: "Ordre des listes",
+    completed: "Terminé",
+    markAsComplete: "Marquer comme terminé",
+    markAsIncomplete: "Marquer comme inachevé",
+    cardStatus: "Statut de la carte",
+    complete: "Complet",
+    incomplete: "Incomplet",
+    sortChecklists: "Trier les listes de contrôle",
+    dontAskAgain: "Ne plus demander",
+    confirmCustomBackgroundRemoval: "Êtes-vous sûr de vouloir supprimer cette image d'arrière-plan personnalisée ?",
+    confirmCardRemoval: "Êtes-vous sûr de vouloir supprimer cette carte ?",
+    confirmLabelRemoval: "Êtes-vous sûr de vouloir supprimer cette étiquette ?",
+    confirmAttachmentRemoval: "Êtes-vous sûr de vouloir supprimer cette pièce jointe ?",
+    confirmCoverImageRemoval: "Êtes-vous sûr de vouloir supprimer cette image de couverture ?",
+    showArchivedBoards: "Afficher les tableaux archivés",
+    hideArchivedBoards: "Masquer les tableaux archivés",
 };
 
 export let hi: Translation = {
@@ -1683,7 +1785,8 @@ export let hi: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -1755,6 +1858,22 @@ export let hi: Translation = {
     shortcutNotAvailableDuringOnboarding: "यह कीबोर्ड शॉर्टकट उस समय उपलब्ध होगा जब आप ऑनबोर्डिंग प्रक्रिया को पूरा कर लेंगे।",
     takmaPWAExplanation: "इस बटन का उपयोग करके अपने डिवाइस पर Takma वेब पूर्वावलोकन इंस्टॉल करें!\n\nइस पूर्वावलोकन को एक ऐप के रूप में इंस्टॉल करने पर, आपके पास जब भी जरूरत हो, त्वरित, ऑफ़लाइन पहुंच होगी — यदि आप नियमित रूप से Takma वेब पूर्वावलोकन का उपयोग करने की योजना बना रहे हैं, तो यह सही है।",
     searchBarShortcutsExplanation: "आप सर्च बार को उस पर क्लिक करके या कीबोर्ड शॉर्टकट CTRL + SHIFT + F का उपयोग करके खोल सकते हैं। इसे बंद करने के लिए, बस ESC दबाएं।",
+    orderLists: "सूचियाँ क्रमबद्ध करें",
+    completed: "पूरा हुआ",
+    markAsComplete: "पूर्ण के रूप में चिह्नित करें",
+    markAsIncomplete: "अपूर्ण के रूप में चिह्नित करें",
+    cardStatus: "कार्ड स्थिति",
+    complete: "पूर्ण",
+    incomplete: "अपूर्ण",
+    sortChecklists: "चेकलिस्ट क्रमबद्ध करें",
+    dontAskAgain: "दोबारा मत पूछो",
+    confirmCustomBackgroundRemoval: "क्या आप वाकई यह कस्टम पृष्ठभूमि छवि हटाना चाहते हैं?",
+    confirmCardRemoval: "क्या आप वाकई यह कार्ड हटाना चाहते हैं?",
+    confirmLabelRemoval: "क्या आप वाकई यह लेबल हटाना चाहते हैं?",
+    confirmAttachmentRemoval: "क्या आप वाकई यह अनुलग्नक हटाना चाहते हैं?",
+    confirmCoverImageRemoval: "क्या आप वाकई यह कवर छवि हटाना चाहते हैं?",
+    showArchivedBoards: "संग्रहीत बोर्ड दिखाएँ",
+    hideArchivedBoards: "संग्रहीत बोर्ड छिपाएँ",
 };
 
 export let id: Translation = {
@@ -1934,7 +2053,8 @@ export let id: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2006,6 +2126,22 @@ export let id: Translation = {
     shortcutNotAvailableDuringOnboarding: "Pintasan keyboard ini akan tersedia setelah Anda menyelesaikan proses onboarding.",
     takmaPWAExplanation: "Instal Prabala Web Takma di perangkat Anda menggunakan tombol ini!\n\nDengan menginstal prabala ini sebagai aplikasi, Anda akan memiliki akses cepat dan offline kapan pun Anda membutuhkannya — sempurna jika Anda berencana untuk menggunakan Prabala Web Takma secara teratur.",
     searchBarShortcutsExplanation: "Anda dapat membuka bilah pencarian dengan mengkliknya atau menggunakan pintasan keyboard CTRL + SHIFT + F. Untuk menutupnya, cukup tekan ESC.",
+    orderLists: "Urutkan daftar",
+    completed: "Selesai",
+    markAsComplete: "Tandai sebagai selesai",
+    markAsIncomplete: "Tandai sebagai belum selesai",
+    cardStatus: "Status kartu",
+    complete: "Selesai",
+    incomplete: "Belum selesai",
+    sortChecklists: "Urutkan daftar periksa",
+    dontAskAgain: "Jangan tanya lagi",
+    confirmCustomBackgroundRemoval: "Apakah Anda yakin ingin menghapus gambar latar belakang kustom ini?",
+    confirmCardRemoval: "Apakah Anda yakin ingin menghapus kartu ini?",
+    confirmLabelRemoval: "Apakah Anda yakin ingin menghapus label ini?",
+    confirmAttachmentRemoval: "Apakah Anda yakin ingin menghapus lampiran ini?",
+    confirmCoverImageRemoval: "Apakah Anda yakin ingin menghapus gambar sampul ini?",
+    showArchivedBoards: "Tampilkan papan yang diarsipkan",
+    hideArchivedBoards: "Sembunyikan papan yang diarsipkan",
 };
 
 export let ja: Translation = {
@@ -2185,7 +2321,8 @@ export let ja: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2257,6 +2394,22 @@ export let ja: Translation = {
     shortcutNotAvailableDuringOnboarding: "このキーボードショートカットは、オンボーディングプロセスを完了すると利用可能になります。",
     takmaPWAExplanation: "このボタンを使用して、デバイスにTakma Webプレビューをインストールしてください！\n\nこのプレビューをアプリとしてインストールすることで、必要なときにすぐにオフラインでアクセスできるようになります。Takma Webプレビューを定期的に使用する予定がある場合に最適です。",
     searchBarShortcutsExplanation: "検索バーはクリックするか、キーボードショートカットのCTRL + SHIFT + Fを使用して開くことができます。閉じるには、ESCキーを押してください。",
+    orderLists: "リストを並べ替える",
+    completed: "完了",
+    markAsComplete: "完了としてマーク",
+    markAsIncomplete: "未完了としてマーク",
+    cardStatus: "カードのステータス",
+    complete: "完了",
+    incomplete: "未完了",
+    sortChecklists: "チェックリストを並べ替える",
+    dontAskAgain: "今後表示しない",
+    confirmCustomBackgroundRemoval: "このカスタム背景画像を削除してもよろしいですか？",
+    confirmCardRemoval: "このカードを削除してもよろしいですか？",
+    confirmLabelRemoval: "このラベルを削除してもよろしいですか？",
+    confirmAttachmentRemoval: "この添付ファイルを削除してもよろしいですか？",
+    confirmCoverImageRemoval: "このカバー画像を削除してもよろしいですか？",
+    showArchivedBoards: "アーカイブ済みのボードを表示",
+    hideArchivedBoards: "アーカイブ済みのボードを非表示",
 };
 
 export let ko: Translation = {
@@ -2436,7 +2589,8 @@ export let ko: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2508,6 +2662,22 @@ export let ko: Translation = {
     shortcutNotAvailableDuringOnboarding: "이 키보드 단축키는 온보딩 프로세스를 완료하면 사용 가능합니다.",
     takmaPWAExplanation: "이 버튼을 사용하여 기기에 Takma 웹 미리보기를 설치하세요!\n\n이 미리보기를 앱으로 설치하면 필요할 때마다 빠르고 오프라인으로 접근할 수 있습니다. Takma 웹 미리보기를 자주 사용할 계획이라면 완벽합니다.",
     searchBarShortcutsExplanation: "검색창은 클릭하거나 키보드 단축키 CTRL + SHIFT + F를 사용하여 열 수 있습니다. 닫으려면 ESC를 누르세요.",
+    orderLists: "목록 정렬",
+    completed: "완료됨",
+    markAsComplete: "완료로 표시",
+    markAsIncomplete: "미완료로 표시",
+    cardStatus: "카드 상태",
+    complete: "완료",
+    incomplete: "미완료",
+    sortChecklists: "체크리스트 정렬",
+    dontAskAgain: "다시 묻지 않기",
+    confirmCustomBackgroundRemoval: "이 사용자 지정 배경 이미지를 정말 삭제하시겠습니까?",
+    confirmCardRemoval: "이 카드를 정말 삭제하시겠습니까?",
+    confirmLabelRemoval: "이 라벨을 정말 삭제하시겠습니까?",
+    confirmAttachmentRemoval: "이 첨부 파일을 정말 삭제하시겠습니까?",
+    confirmCoverImageRemoval: "이 커버 이미지를 정말 삭제하시겠습니까?",
+    showArchivedBoards: "아카이브된 보드 보이기",
+    hideArchivedBoards: "아카이브된 보드 숨기기",
 };
 
 export let nl: Translation = {
@@ -2687,7 +2857,8 @@ export let nl: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -2758,7 +2929,23 @@ export let nl: Translation = {
     closeWithCtrlShiftWExplanation: "Je kunt Takma snel sluiten met de toetsencombinatie CTRL + SHIFT + W. Hiermee kun je het programma afsluiten zonder op de sluitknop te klikken.",
     shortcutNotAvailableDuringOnboarding: "Deze toetsencombinatie is beschikbaar zodra je het onboardingproces hebt voltooid.",
     takmaPWAExplanation: "Installeer de Takma Web Preview op je apparaat met deze knop!\n\nDoor deze previewer als app te installeren, heb je altijd snelle offline toegang wanneer je dat nodig hebt — perfect als je van plan bent om de Takma Web Preview regelmatig te gebruiken.",
-    searchBarShortcutsExplanation: "Je kunt de zoekbalk openen door erop te klikken of de sneltoets CTRL + SHIFT + F te gebruiken. Om het te sluiten, druk je gewoon op ESC."
+    searchBarShortcutsExplanation: "Je kunt de zoekbalk openen door erop te klikken of de sneltoets CTRL + SHIFT + F te gebruiken. Om het te sluiten, druk je gewoon op ESC.",
+    orderLists: "Lijsten ordenen",
+    completed: "Voltooid",
+    markAsComplete: "Markeren als voltooid",
+    markAsIncomplete: "Markeren als niet voltooid",
+    cardStatus: "Kaartstatus",
+    complete: "Voltooid",
+    incomplete: "Onvolledig",
+    sortChecklists: "Sorteer checklists",
+    dontAskAgain: "Niet opnieuw vragen",
+    confirmCustomBackgroundRemoval: "Weet u zeker dat u deze aangepaste achtergrondafbeelding wilt verwijderen?",
+    confirmCardRemoval: "Weet u zeker dat u deze kaart wilt verwijderen?",
+    confirmLabelRemoval: "Weet u zeker dat u dit label wilt verwijderen?",
+    confirmAttachmentRemoval: "Weet u zeker dat u deze bijlage wilt verwijderen?",
+    confirmCoverImageRemoval: "Weet u zeker dat u deze omslagfoto wilt verwijderen?",
+    showArchivedBoards: "Gearchiveerde borden tonen",
+    hideArchivedBoards: "Gearchiveerde borden verbergen",
 };
 
 export let pt: Translation = {
@@ -2938,7 +3125,8 @@ export let pt: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3010,6 +3198,22 @@ export let pt: Translation = {
     shortcutNotAvailableDuringOnboarding: "Esse atalho de teclado estará disponível assim que você completar o processo de integração.",
     takmaPWAExplanation: "Instale a Pré-visualização da Web do Takma no seu dispositivo usando este botão!\n\nAo instalar este visualizador como um aplicativo, você terá acesso rápido e offline sempre que precisar — perfeito se você planeja usar a Pré-visualização da Web do Takma regularmente.",
     searchBarShortcutsExplanation: "Você pode abrir a barra de pesquisa clicando nela ou usando o atalho de teclado CTRL + SHIFT + F. Para fechá-la, basta pressionar ESC.",
+    orderLists: "Ordenar listas",
+    completed: "Concluído",
+    markAsComplete: "Marcar como concluído",
+    markAsIncomplete: "Marcar como incompleto",
+    cardStatus: "Status do cartão",
+    complete: "Completo",
+    incomplete: "Incompleto",
+    sortChecklists: "Ordenar checklists",
+    dontAskAgain: "Não perguntar novamente",
+    confirmCustomBackgroundRemoval: "Tem a certeza que pretende remover esta imagem de fundo personalizada?",
+    confirmCardRemoval: "Tem a certeza que pretende remover este cartão?",
+    confirmLabelRemoval: "Tem a certeza que pretende remover esta etiqueta?",
+    confirmAttachmentRemoval: "Tem a certeza que pretende remover este anexo?",
+    confirmCoverImageRemoval: "Tem a certeza que pretende remover esta imagem de capa?",
+    showArchivedBoards: "Mostrar quadros arquivados",
+    hideArchivedBoards: "Ocultar quadros arquivados",
 };
 
 export let ru: Translation = {
@@ -3189,7 +3393,8 @@ export let ru: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3261,6 +3466,22 @@ export let ru: Translation = {
     shortcutNotAvailableDuringOnboarding: "Это сочетание клавиш станет доступным после завершения процесса onboarding.",
     takmaPWAExplanation: "Установите веб-просмотр Takma на свое устройство, используя эту кнопку!\n\nУстановив этот просмотрщик в качестве приложения, вы получите быстрый доступ в оффлайн в любое время, когда это необходимо — идеально, если вы планируете регулярно использовать веб-просмотр Takma.",
     searchBarShortcutsExplanation: "Вы можете открыть строку поиска, кликнув по ней или используя сочетание клавиш CTRL + SHIFT + F. Чтобы закрыть её, просто нажмите ESC.",
+    orderLists: "Упорядочить списки",
+    completed: "Завершено",
+    markAsComplete: "Пометить как завершённое",
+    markAsIncomplete: "Пометить как незавершённое",
+    cardStatus: "Статус карты",
+    complete: "Завершено",
+    incomplete: "Незавершено",
+    sortChecklists: "Сортировать чек-листы",
+    dontAskAgain: "Больше не спрашивать",
+    confirmCustomBackgroundRemoval: "Вы уверены, что хотите удалить это пользовательское фоновое изображение?",
+    confirmCardRemoval: "Вы уверены, что хотите удалить эту карточку?",
+    confirmLabelRemoval: "Вы уверены, что хотите удалить эту метку?",
+    confirmAttachmentRemoval: "Вы уверены, что хотите удалить это вложение?",
+    confirmCoverImageRemoval: "Вы уверены, что хотите удалить это изображение обложки?",
+    showArchivedBoards: "Показать архивные доски",
+    hideArchivedBoards: "Скрыть архивные доски",
 };
 
 export let tr: Translation = {
@@ -3440,7 +3661,8 @@ export let tr: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3512,6 +3734,22 @@ export let tr: Translation = {
     shortcutNotAvailableDuringOnboarding: "Bu klavye kısayolu, onboarding sürecini tamamladıktan sonra kullanılabilir hale gelecektir.",
     takmaPWAExplanation: "Bu butonu kullanarak Takma Web Önizlemesini cihazınıza yükleyebilirsiniz!\n\nBu önizlemeyi bir uygulama olarak yükleyerek ihtiyaç duyduğunuzda hızlı ve çevrimdışı erişime sahip olacaksınız — Takma Web Önizlemesini düzenli olarak kullanmayı planlıyorsanız mükemmel.",
     searchBarShortcutsExplanation: "Arama çubuğunun üzerine tıklayarak veya CTRL + SHIFT + F klavye kısayolunu kullanarak açabilirsiniz. Kapatmak için ESC tuşuna basın.",
+    orderLists: "Listeleri sırala",
+    completed: "Tamamlandı",
+    markAsComplete: "Tamamlandı olarak işaretle",
+    markAsIncomplete: "Tamamlanmadı olarak işaretle",
+    cardStatus: "Kart durumu",
+    complete: "Tamamlandı",
+    incomplete: "Tamamlanmadı",
+    sortChecklists: "Checklisteleri sırala",
+    dontAskAgain: "Bir daha sorma",
+    confirmCustomBackgroundRemoval: "Bu özel arka plan resmini kaldırmak istediğinizden emin misiniz?",
+    confirmCardRemoval: "Bu kartı kaldırmak istediğinizden emin misiniz?",
+    confirmLabelRemoval: "Bu etiketi kaldırmak istediğinizden emin misiniz?",
+    confirmAttachmentRemoval: "Bu eki kaldırmak istediğinizden emin misiniz?",
+    confirmCoverImageRemoval: "Bu kapak resmini kaldırmak istediğinizden emin misiniz?",
+    showArchivedBoards: "Arşivlenmiş panoları göster",
+    hideArchivedBoards: "Arşivlenmiş panoları gizle",
 };
 
 export let zh: Translation = {
@@ -3691,7 +3929,8 @@ export let zh: Translation = {
                     coverImage: "",
                     checklists: [],
                     labelIds: [],
-                    dueDate: null
+                    dueDate: null,
+                    complete: false,
                 }
             ]
         }],
@@ -3762,5 +4001,21 @@ export let zh: Translation = {
     closeWithCtrlShiftWExplanation: "您可以通过使用键盘快捷键 CTRL + SHIFT + W 快速关闭 Takma。这允许您在不点击关闭按钮的情况下退出程序。",
     shortcutNotAvailableDuringOnboarding: "此键盘快捷键将在您完成入职培训后可用。",
     takmaPWAExplanation: "使用此按钮将Takma网页预览安装到您的设备上！\n\n通过将此预览安装为应用程序，您将能够随时快速离线访问，非常适合您计划定期使用Takma网页预览。",
-    searchBarShortcutsExplanation: "您可以通过点击搜索栏或使用键盘快捷键 CTRL + SHIFT + F 来打开它。要关闭它，只需按 ESC 键。"
+    searchBarShortcutsExplanation: "您可以通过点击搜索栏或使用键盘快捷键 CTRL + SHIFT + F 来打开它。要关闭它，只需按 ESC 键。",
+    orderLists: "排序列表",
+    completed: "完成",
+    markAsComplete: "标记为完成",
+    markAsIncomplete: "标记为未完成",
+    cardStatus: "卡片状态",
+    complete: "完成",
+    incomplete: "未完成",
+    sortChecklists: "排序检查项",
+    dontAskAgain: "不再询问",
+    confirmCustomBackgroundRemoval: "您确定要移除此自定义背景图片吗？",
+    confirmCardRemoval: "您确定要移除此卡片吗？",
+    confirmLabelRemoval: "您确定要移除此标签吗？",
+    confirmAttachmentRemoval: "您确定要移除此附件吗？",
+    confirmCoverImageRemoval: "您确定要移除此封面图片吗？",
+    showArchivedBoards: "显示已归档看板",
+    hideArchivedBoards: "隐藏已归档看板",
 };

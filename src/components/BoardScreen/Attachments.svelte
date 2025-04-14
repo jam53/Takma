@@ -1,20 +1,19 @@
 <script lang="ts">
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
-    import type {Card} from "../../scripts/Board";
 
     interface Props {
-        cardToSave: Card;
+        attachments: string[];
         addAttachmentFunction: Function;
-        saveCardFunction: Function;
         focusOnCardDetailsFunction: Function;
+        isCardFullscreen: boolean;
     }
 
     let {
-        cardToSave = $bindable(),
+        attachments = $bindable(),
         addAttachmentFunction,
-        saveCardFunction,
-        focusOnCardDetailsFunction
+        focusOnCardDetailsFunction,
+        isCardFullscreen
     }: Props = $props();
 
     /**
@@ -27,11 +26,6 @@
         const uuidRemoved = filename.substring(36);
 
         return uuidRemoved;
-    }
-
-    function getFileExtension(pathToFile: string)
-    {
-        return pathToFile.split(".").pop();
     }
 
     async function openWithDefaultApp(pathToFile: string)
@@ -49,26 +43,16 @@
 
     async function deleteAttachment(pathToFile: string)
     {
-        cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
-        saveCardFunction();
-
-        refreshComponent();
+        attachments = attachments.filter(attachment => attachment !== pathToFile);
         focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
     }
 
     async function getExistingAttachments(): Promise<string[]>
     {
-        return cardToSave.attachments;
-    }
-
-    let refreshComponentToggle = $state(false);
-    export function refreshComponent()
-    {
-        refreshComponentToggle = !refreshComponentToggle;
+        return attachments;
     }
 </script>
 
-{#key refreshComponentToggle}
 {#await getExistingAttachments() then attachments}
 {#if attachments.length > 0}
     <hr>
@@ -82,9 +66,9 @@
                 <div class="preview"
                      onclick={() => openWithDefaultApp(attachment)}
                 >
-                    {getFileExtension(attachment)}
+                    {attachment.getFileExtension()}
                 </div>
-                <div class="titleAndActionsHolder">
+                <div class="titleAndActionsHolder {isCardFullscreen ? 'titleAndActionsHolderCardFullscreen' : ''}">
                     <p
                             title={getFilename(attachment)}
                             onclick={() => openWithDefaultApp(attachment)}
@@ -126,7 +110,6 @@
     </button>
 {/if}
 {/await}
-{/key}
 
 <style>
     hr {

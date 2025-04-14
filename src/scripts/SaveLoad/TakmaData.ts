@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
+import type {Board, Card, Label, List, ShowConfirmationPreferences, SortBoardsFunctionName, WindowState} from "../Board";
 import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
 
 /**
@@ -14,18 +14,28 @@ export class TakmaData
     private _totalBoardsCreated: number = 0; //The total amount of boards the user has created
     private _totalListsCreated: number = 0; //The total amount of lists the user has created
     private _totalCardsCreated: number = 0; //The total amount of cards the user has created
-    private _sortBoardsFunctionName: sortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
+    private _sortBoardsFunctionName: SortBoardsFunctionName = "sortByMostRecentlyOpened"; //Name of the function to be used to sort boards
     private _displayLanguage: string = localStorage.getItem("displayLanguage") ?? navigator.language.substring(0,2); //The language Takma should be displayed in
     private _onboardingCompleted: boolean = false; //Whether or not the user has completed the onboarding process (i.e. the onboarding of the welcome screen, board screen and card details screen)
     private _easterEggBoardAdded: boolean = false; //Whether or not the easteregg board has been added to the user's savefile yet
     private _showLabelsText: boolean = true; //Whether or not the labels of cards on the boardscreen should display their text. When false only the color will be shown
-    private _windowState: windowState = {
+    private _windowState: WindowState = {
         width: 1200,
         height: 700,
         fullscreen: true,
         x: 200,
         y: 200,
     }; //Used to save and restore the state of the Takma window. E.g. whether or not it was full screen, the window size and so on
+    private _showConfirmationPreferences: ShowConfirmationPreferences = {
+        deleteCustomBoardBackground: true,
+        deleteBoard: true,
+        deleteList: true,
+        deleteCard: true,
+        deleteLabel: true,
+        deleteChecklist: true,
+        deleteAttachment: true,
+        deleteCoverImage: true,
+    }; // Tracks user preference to show or hide specific confirmation popups. `true` (default) means show the popup. `false` means the user has opted out e.g. when the user checked "Don't show this again"
     private _boards: Board[] = []; //The boards the user has, empty or no boards by default
     //endregion
 
@@ -99,7 +109,7 @@ export class TakmaData
     /**
      * Returns the name of the function that is used to sort the boards
      */
-    get sortBoardsFunctionName(): sortBoardsFunctionName
+    get sortBoardsFunctionName(): SortBoardsFunctionName
     {
         return this._sortBoardsFunctionName;
     }
@@ -107,7 +117,7 @@ export class TakmaData
     /**
      * Sets the name of the function that is used to sort the boards
      */
-    set sortBoardsFunctionName(sortBoardsFunctionName: sortBoardsFunctionName)
+    set sortBoardsFunctionName(sortBoardsFunctionName: SortBoardsFunctionName)
     {
         this._sortBoardsFunctionName = sortBoardsFunctionName;
         SaveLoadManager.saveToDisk();
@@ -184,7 +194,7 @@ export class TakmaData
     /**
      * Returns the last saved window state
      */
-    get windowState(): windowState
+    get windowState(): WindowState
     {
         return this._windowState ;
     }
@@ -340,6 +350,21 @@ export class TakmaData
     }
 
     /**
+     * Returns a list given an id of a card that is in the list and the id of the board that contains the list.
+     */
+    public getListContainingCard(boardId: string, cardId: string): List
+    {
+        let emptyList: List = {
+            id: "empty list",
+            creationDate: 0,
+            title: "",
+            cards: []
+        };
+
+        return this.getBoard(boardId).lists.find(list => list.cards.some(card => card.id === cardId)) ?? emptyList;
+    }
+
+    /**
      * Given an id of a board and a list of `List`'s this function sets a board's lists
      */
     public setLists(boardId: string, lists: List[]): void
@@ -370,7 +395,8 @@ export class TakmaData
             coverImage: "",
             checklists: [],
             labelIds: [],
-            dueDate: null
+            dueDate: null,
+            complete: false,
         };
 
         this._boards[indexOfBoard].lists[indexOfList].cards.push(card);
@@ -508,38 +534,6 @@ export class TakmaData
     }
 
     /**
-     * Given a labelId, returns the color matching that labelId
-     * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
-     */
-    public getLabelColor(boardId: string, labelId: string): string
-    {
-        let board: Board = this._boards.find(board => board.id === boardId);
-
-        return board.labels.find(label => label.id === labelId).color;
-    }
-
-    /**
-     * Given a labelId, returns the color that should be used for the title of that label
-     * @return Represents a color value which can be used in css, could be a hexidecimal color value including #, "red", rgba(100, 1, 1, 1), etc.
-     */
-    public getLabelTitleColor(boardId: string, labelId: string): string
-    {
-        let board: Board = this._boards.find(board => board.id === boardId);
-
-        return board.labels.find(label => label.id === labelId).titleColor;
-    }
-
-    /**
-     * Given a labelId, returns the title of that labelId
-     */
-    public getLabelTitle(boardId: string, labelId: string): string
-    {
-        let board: Board = this._boards.find(board => board.id === boardId);
-
-        return board.labels.find(label => label.id === labelId).title;
-    }
-
-    /**
      * Adds a label to a board
      */
     public addLabelToBoard(boardId: string, label: Label)
@@ -547,6 +541,19 @@ export class TakmaData
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].labels.push(label)
+
+        SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Sets the title of a label in a board
+     */
+    public setLabelTitle(boardId: string, labelId: string, title: string)
+    {
+        const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
+        const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
+
+        this._boards[indexOfBoard].labels[indexOfLabel].title = title;
 
         SaveLoadManager.saveToDisk();
     }
@@ -717,6 +724,82 @@ export class TakmaData
 
         // Regular expression to match various mobile devices from http://detectmobilebrowsers.com/
         return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(userAgent) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(userAgent.substr(0, 4));
+    }
+
+    /**
+     * Get the user's preferences for showing confirmation popups before destructive actions
+     */
+    get showConfirmationPreferences(): ShowConfirmationPreferences
+    {
+        return this._showConfirmationPreferences;
+    }
+
+    /**
+     * Updates a specific confirmation preference and saves the changes.
+     * @param key - The preference key to update (e.g., "deleteBoard").
+     * @param value - The new boolean value for the preference.
+     */
+    public async updateConfirmationPreference(key: keyof ShowConfirmationPreferences, value: boolean): Promise<void> {
+        this._showConfirmationPreferences[key] = value;
+        await SaveLoadManager.saveToDisk();
+    }
+
+    /**
+     * Reconciles a list of incoming labels (`newLabels`, typically from a copied item)
+     * with the existing labels on a target board (`boardId`). Adds labels to the target
+     * board if necessary, handling duplicates and conflicts based on both ID and content
+     * (title, titleColor, color).
+     *
+     * Priority Logic:
+     * 1. Content Match (Different ID): Reuse existing label, map incoming ID -> existing ID. **Do NOT add.**
+     * 2. ID Match (Different Content): Conflict. Add incoming label with a NEW unique ID, map incoming ID -> new unique ID. **DO add.**
+     * 3. No Match (Different ID, Different Content): New label. Add incoming label with its original ID. **DO add.**
+     * 4. Exact Match (Same ID, Same Content): Do nothing.
+     *
+     * @param boardId The ID of the target board where labels should be checked/added.
+     * @param newLabels An array of Label objects representing the labels associated with the item being pasted.
+     * @returns A Map where keys are the *original* label IDs from `newLabels` that needed remapping,
+     *          and values are the *new* label IDs they should map to on the target board.
+     *          This map contains entries for cases 1 and 2 above.
+     */
+    public createMissingLabelsInBoard(boardId: string, newLabels: Label[]): Map<string, string>
+    {
+        // Map to store required ID updates: { originalId => targetBoardId }
+        const updatedLabelIds = new Map<string, string>();
+        const existingLabels = SaveLoadManager.getData().getBoard(boardId).labels;
+
+        newLabels.forEach(newLabel => {
+            const existingLabelById = existingLabels.find(el => el.id === newLabel.id);
+            const existingLabelByContent = existingLabels.find(el =>
+                el.title === newLabel.title &&
+                el.titleColor === newLabel.titleColor &&
+                el.color === newLabel.color
+            );
+
+            // Case 1: Content Match exists, AND it's either a different ID or no ID match was found.
+            if (existingLabelByContent && (!existingLabelById || existingLabelById.id !== existingLabelByContent.id))
+            {
+                updatedLabelIds.set(newLabel.id, existingLabelByContent.id); // Use the existing label's ID. DO NOT add the newLabel.
+            }
+            // Case 2: ID Match exists, AND the content is different (or no exact content match found).
+            else if (existingLabelById && (!existingLabelByContent || existingLabelById.id !== existingLabelByContent.id))
+            {
+                const generatedId = crypto.randomUUID();
+                updatedLabelIds.set(newLabel.id, generatedId);
+
+                SaveLoadManager.getData().addLabelToBoard(boardId, { ...newLabel, id: generatedId }); // Add the label with a new ID
+            }
+            // Case 3: No match by ID, no match by content. Truly new label.
+            else if (!existingLabelById && !existingLabelByContent)
+            {
+                SaveLoadManager.getData().addLabelToBoard(boardId, newLabel); // Add the label with its original ID
+            }
+            // Implicit Else: Case 4 (existingLabelById && existingLabelByContent && existingLabelById.id === existingLabelByContent.id)
+            // Action: Exact match exists (same ID, same content). Do nothing.
+        });
+
+        SaveLoadManager.saveToDisk();
+        return updatedLabelIds;
     }
     //endregion
 }

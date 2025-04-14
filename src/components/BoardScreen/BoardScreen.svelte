@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
         cardFilters,
-        dueDatesOverviewPopupIsVisible,
+        dueDatesOverviewPopupIsVisible, listsSortOrder,
         selectedBoardId, selectedCardId
     } from "../../scripts/Stores.svelte.js";
     import type {Card, List as ListInterface} from "../../scripts/Board";
@@ -15,13 +15,13 @@
     import List from "./List.svelte";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
-    import {onDestroy, onMount} from "svelte";
+    import {onDestroy, onMount, untrack} from "svelte";
     import CardDetails from "./CardDetails.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
     import {toast} from "svelte-sonner";
 
     let createNewCardElements;
-    let createNewListElement
+    let createNewListElement;
     onMount(() =>
     {
         createNewCardElements = Array.from(document.querySelectorAll('.newCard'));
@@ -67,16 +67,11 @@
     async function handleContainerFileDrop(droppedFile: String)
     {
 
-        if (imageExtensions.includes(getFileExtension(droppedFile).toLowerCase()))
+        if (imageExtensions.includes(droppedFile.getFileExtension().toLowerCase()))
         {
             let savedPath = await saveAbsoluteFilePathToSaveDirectory(droppedFile, selectedBoardId.value);
             await setBoardBackgroundImage(savedPath);
         }
-    }
-
-    function getFileExtension(pathToFile: string): string
-    {
-        return pathToFile.split(".").pop();
     }
 
     async function setBoardBackgroundImage(pathToImage: string)
@@ -90,11 +85,24 @@
             SaveLoadManager.getData().setBoardBackgroundImage(selectedBoardId.value, pathToImage);
 
             const imgUrl: string = convertFileSrc(await join(SaveLoadManager.getSaveDirectoryPath(), pathToImage));
-            document.body.style.backgroundImage = `url('${imgUrl}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
+            document.body.style.backgroundImage = `url('${imgUrl.replace(/'/g, "\\'")}')`; //Tauri can't display the absolute path to the image, so the convertFileSrc() function returns an url that we can then use here to display the image.
         }
     }
 
-    let lists: ListInterface[] = $state(SaveLoadManager.getData().getBoard(selectedBoardId.value).lists);
+    let lists: ListInterface[] = $state([]); // The actual data is loaded via the $effect below.
+    // This $effect ensures that the 'lists' variable is automatically updated whenever the 'selectedBoardId' changes.
+    // This is crucial for scenarios where the board screen is already open, but the user navigates to a different board (e.g., by clicking a Takma link).
+    // In such cases, the $effect will re-run, fetching the correct lists for the newly selected board and triggering a re-render of the component.
+    $effect(() => {
+        lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
+    });
+
+    // Gets called when the value of `listsSortOrder` changes.
+    $effect(() => {
+        lists = untrack(() => lists).sort(listsSortOrder.value);
+        SaveLoadManager.getData().setLists(selectedBoardId.value, untrack(() => $state.snapshot(lists)));
+    })
+
     let dragDisabled = $state(SaveLoadManager.getData().isUserOnMobile() ? true : false);
     let setDragDisabled = (bool) => {
         if (SaveLoadManager.getData().isUserOnMobile())
@@ -132,41 +140,11 @@
         onFinalDragUpdate([...lists]);
     }
 
-    function refreshSelectedCardFunction()
-    {
-        let currentList;
-
-        for (let indexOfList = 0; indexOfList < lists.length; indexOfList++)
-        {
-            currentList = lists[indexOfList];
-
-            for (let indexOfCard = 0; indexOfCard < currentList.cards.length; indexOfCard++)
-            {
-                if (currentList.cards[indexOfCard].id === selectedCardId.value)
-                {
-                    lists[indexOfList].cards[indexOfCard] = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value) ?? lists[indexOfList].cards[indexOfCard];
-                    return;
-                }
-            }
-        }
-    }
-
-    function refreshListFunction(listIndex: number)
-    {
-        lists[listIndex] = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists[listIndex];
-    }
-
-    function refreshListsFunction()
-    {
-        lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
-    }
-
     function filterCards(cardsToFilter: Card[]): Card[]
     {
-        for (let dueDate of cardFilters.dueDates)
-        {
-            cardsToFilter = cardsToFilter.filter(card => card.dueDate !== null && parseInt(card.dueDate) - Date.now() < dueDate);
-        }
+        cardsToFilter = cardsToFilter
+            .filter(card => card.dueDate === null && cardFilters.dueDate === Number.MAX_SAFE_INTEGER || card.dueDate !== null && card.dueDate - Date.now() < cardFilters.dueDate)
+            .filter(card => !cardFilters.complete && !cardFilters.incomplete || cardFilters.complete && card.complete || cardFilters.incomplete && !card.complete);
 
         for (let labelId of cardFilters.labelIds)
         {
@@ -197,18 +175,46 @@
 <div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
     <div title="" class="listsHolder" use:dndzone={{items: lists, type:"list", dropTargetStyle: {}, dragDisabled: dragDisabled}} onconsider={handleDndConsiderLists} onfinalize={handleDndFinalizeLists}>
         {#each lists as list, listIndex (list.id)}
-            <div animate:flip={{duration: 300}}>
+            <div animate:flip={{duration: 300}} style="height: 1em">
+            <!-- Setting any non-zero height (e.g. `height: 1em`) prevents a quirky visual bug where lists "jump" downwards when dragged. This happens due to incorrect y-position calculations in svelte-dnd-action when the height is dynamic. Any height value other than 0 will fix the issue. -->
                 {#key cardFilters}
-                    <List listId={list.id} cards={filterCards(list.cards)} onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)} dragDisabled={dragDisabled} setDragDisabled={setDragDisabled} inTransitionDelay={listIndex} refreshListFunction={() => refreshListFunction(listIndex)} refreshListsFunction={refreshListsFunction}/>
+                    <List
+                        cards={filterCards(list.cards)}
+                        onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)}
+                        dragDisabled={dragDisabled}
+                        setDragDisabled={setDragDisabled}
+                        inTransitionDelay={listIndex}
+                        bind:list={() => lists[listIndex], newList => lists[listIndex] = newList}
+                        bind:lists
+                    />
                 {/key}
             </div>
         {/each}
         <div onmouseenter={() => setDragDisabled(true)}>
-            <CreateNewList refreshListsFunction={refreshListsFunction}/>
+            <CreateNewList bind:lists/>
         </div>
     </div>
 </div>
-<CardDetails refreshSelectedCardFunction={refreshSelectedCardFunction} refreshListsFunction={refreshListsFunction}/>
+<CardDetails
+        refreshList={(newList) => {
+            const listIndex = lists.findIndex(list => list.id === newList.id);
+            lists[listIndex] = newList;
+        }}
+        refreshCard={(cardToRefresh) => {
+            for (let list of lists)
+            {
+                for (let [cardIndex, card] of list.cards.entries())
+                {
+                    if (card.id === cardToRefresh?.id)
+                    {
+                        list.cards[cardIndex] = cardToRefresh ?? list.cards[cardIndex];
+                        return;
+                    }
+                }
+            }
+        }}
+        reloadLists={() => lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists}
+/>
 
 <style>
     .container {

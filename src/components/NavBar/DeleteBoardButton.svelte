@@ -7,14 +7,30 @@
 
     async function handleClick()
     {
-        const popup = mount(PopupWindow, {props: {description: I18n.t("confirmBoardRemoval"), buttonType: "yesno"}, target: document.body, intro: true});
-
-        if (await popup.getAnswer() === true)
-        {
-            SaveLoadManager.getData().deleteBoard(selectedBoardId.value);
+        const deleteBoardFunction = async () => {
+            await SaveLoadManager.getData().deleteBoard(selectedBoardId.value);
 
             selectedBoardId.value = "";
             selectedCardId.value = "";
+        }
+
+        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteBoard)
+        {
+            await deleteBoardFunction();
+        }
+        else
+        {
+            const popup = mount(PopupWindow, {
+                props: {description: I18n.t("confirmBoardRemoval"), buttonType: "yesno", showConfirmation: true},
+                target: document.body,
+                intro: true
+            });
+
+            if (await popup.getAnswer() === true)
+            {
+                await SaveLoadManager.getData().updateConfirmationPreference("deleteBoard", popup.getShowConfirmationAgain());
+                await deleteBoardFunction();
+            }
         }
     }
 </script>

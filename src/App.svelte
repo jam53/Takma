@@ -13,7 +13,7 @@
     $effect(() => {
         if (!savefileSet.value)
         {
-            document.body.style.backgroundImage = `url('${paintDrops}')`;
+            document.body.style.backgroundImage = `url('${paintDrops.replace(/'/g, "\\'")}')`;
             document.body.style.backgroundColor = `transparent`;
         }
         else

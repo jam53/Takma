@@ -7,35 +7,37 @@ import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 
 export interface Board
 {
-    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
-    creationDate: number, //in milliseconds unix time
-    lastOpened: number, //in milliseconds unix tim
+    id: string, // Unique identifier (UUID) - https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, // Unix timestamp in milliseconds
+    lastOpened: number, // Unix timestamp in milliseconds
     title: string,
-    backgroundImagePath: string, //path to the background image
-    lists: List[], //The lists in this board,
-    labels: Label[], //The labels in this board, which can be assigned to/are visible on cards
-    favourite: boolean //True if this board has been favourited by the user, else false
+    backgroundImagePath: string, // Path to the background image
+    lists: List[],
+    labels: Label[], // The labels in this board, which can be assigned to/are visible on cards
+    favourite: boolean,
+    archived: boolean,
 }
 
 export interface List
 {
-    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
-    creationDate: number, //in milliseconds unix time
+    id: string, // Unique identifier (UUID) - https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, // Unix timestamp in milliseconds
     title: string,
     cards: Card[]
 }
 
 export interface Card
 {
-    id: string, //This is actually a UUID https://developer.mozilla.org/en-US/docs/Glossary/UUID
-    creationDate: number, //in milliseconds unix time
+    id: string, // Unique identifier (UUID) - https://developer.mozilla.org/en-US/docs/Glossary/UUID
+    creationDate: number, // Unix timestamp in milliseconds
     title: string,
     description: string,
     attachments: string[],
     coverImage: string, //The path to the cover image of this card. An empty string means this card has no cover image
     checklists: Checklist[],
     labelIds: string[], //The label ids in this array refer to ids of the labels in the board to which this card belongs to
-    dueDate: string | null //The due date of this card in unix milliseconds, null if there is no due date
+    dueDate: string | null, //The due date of this card in unix milliseconds, null if there is no due date
+    complete: boolean,
 }
 
 export interface Label
@@ -49,6 +51,7 @@ export interface Label
 export interface Checklist
 {
     id: string,
+    creationDate: number, // Unix timestamp in milliseconds
     title: string,
     todos: TodoItem[]
 }
@@ -60,15 +63,27 @@ export interface TodoItem
     content: string
 }
 
-export type sortBoardsFunctionName = "sortByCreationDateAscending" | "sortByCreationDateDescending" | "sortByMostRecentlyOpened" | "sortByLeastRecentlyOpened" | "sortAlphabeticallyAscending" | "sortAlphabeticallyDescending" | "dontSort";
+export type SortBoardsFunctionName = "sortByCreationDateAscending" | "sortByCreationDateDescending" | "sortByMostRecentlyOpened" | "sortByLeastRecentlyOpened" | "sortAlphabeticallyAscending" | "sortAlphabeticallyDescending" | "dontSort";
 
-export interface windowState
+export interface WindowState
 {
     width: number,
     height: number,
     fullscreen: boolean,
     x: number, //The X-coordinate of the left upper corner of the Takma window
     y: number, //The Y-coordinate of the left upper corner of the Takma window
+}
+
+export interface ShowConfirmationPreferences
+{
+    deleteCustomBoardBackground: boolean;
+    deleteBoard: boolean;
+    deleteList: boolean;
+    deleteCard: boolean;
+    deleteLabel: boolean;
+    deleteChecklist: boolean;
+    deleteAttachment: boolean;
+    deleteCoverImage: boolean;
 }
 
 /**

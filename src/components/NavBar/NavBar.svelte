@@ -15,6 +15,7 @@
     import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
     import PopupWindow from "../PopupWindow.svelte";
     import {mount} from "svelte";
+    import OrderListsMenu from "./OrderListsMenu.svelte";
 
     interface Props {
         saveLocationSet: boolean;
@@ -76,6 +77,11 @@
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="40" d="M160 164s1.44-33 33.54-59.46C212.6 88.83 235.49 84.28 256 84c18.73-.23 35.47 2.94 45.48 7.82C318.59 100.2 352 120.6 352 164c0 45.67-29.18 66.37-62.35 89.18S248 298.36 248 324"></path><circle cx="248" cy="399.99" r="32"></circle></svg>
                 </button>
             {:else}
+                <button class="orderListsButton" title={I18n.t("orderLists")}
+                        onclick={e => mount(OrderListsMenu, {props: {clickEvent: e}, target: document.body, intro: true })}
+                >
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
+                </button>
                 <button class="filterButton" title={I18n.t("filterCards")}
                         onclick={e => mount(FilterCardsPopup, {props: {clickEvent: e}, target: document.body, intro: true})}
                 >
@@ -157,7 +163,7 @@
         padding: 1em 0.5em;
     }
 
-    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton {
+    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton, .webPreviewButton, .orderListsButton {
         height: inherit;
         width: auto;
         margin: 0;
@@ -166,7 +172,7 @@
         border: none;
     }
 
-    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg, .dueDatesOverviewButton svg {
+    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg, .dueDatesOverviewButton svg, .webPreviewButton svg, .orderListsButton svg {
         transition: 0.5s;
         height: inherit;
         cursor: pointer;
@@ -174,7 +180,7 @@
         -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 
-    .copyLinkButton svg, .orderBoardsButton svg {
+    .copyLinkButton svg, .orderBoardsButton svg, .webPreviewButton svg, .orderListsButton svg {
         fill: none;
         color: var(--unselected-button);
     }
@@ -187,7 +193,7 @@
         fill: var(--selected-button);
     }
 
-    .copyLinkButton:hover svg, .orderBoardsButton:hover svg, .startOnboarding:hover svg {
+    .copyLinkButton:hover svg, .orderBoardsButton:hover svg, .startOnboarding:hover svg, .webPreviewButton:hover svg, .orderListsButton:hover svg {
         color: var(--selected-button);
     }
 

@@ -1,36 +1,34 @@
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Card as CardInterface} from "../../scripts/Board";
+    import type {Card as CardInterface, List} from "../../scripts/Board";
     import {cardFilters, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
     import Card from "./Card.svelte";
     import ListOptionsMenu from "./ListOptionsMenu.svelte";
     import CreateNewCard from "./CreateNewCard.svelte";
-    import {mount} from "svelte";
+    import {mount, untrack} from "svelte";
     import {I18n} from "../../scripts/I18n/I18n";
 
     interface Props {
-        listId: string;
         cards: CardInterface[];
         onDrop: Event;
         dragDisabled: boolean;
         setDragDisabled: Function;
         inTransitionDelay: number;
-        refreshListFunction: Function;
-        refreshListsFunction: Function;
+        list: List;
+        lists: List[];
     }
 
     let {
-        listId,
         cards,
         onDrop,
         dragDisabled,
         setDragDisabled,
         inTransitionDelay,
-        refreshListFunction,
-        refreshListsFunction
+        list = $bindable(),
+        lists = $bindable(),
     }: Props = $props();
 
 
@@ -113,21 +111,32 @@
     let titleHolderElement: HTMLElement;
     $effect(() =>
     {
-        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 3em - ${titleHolderElement.clientHeight}px + 0.25em)`);
-    /*
-        100vh        - hoogte scherm
-        4px          - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html`
-        30px         - height title bar in the `.titlebar` styleclass in `index.html`
-        2em          - navbar height in the `.containingDiv` styleclass in `NavBar.svelte`
-        (2 * 8px)    - (2 * height of the scrollbar at the bottom)
-        (2 * 0.5em)  - padding bottom en top van .listHolder in BoardScreen
-        (2 * 1px)    - (2 * breedte van de border van de lists)
-        3em        - de hoeveelheid plaats die we vanonder willen, soort van "padding" dus
-        ${...}       - hoogte van de titel van de lijst
-        0.25em       - margin-top of .container in BoardScreen.svelte
-     */
+        list.title; // Ensures the effect reruns to recalculate the list's maxHeight when the user changes its title
+
+        /*
+            Calculate the maximum height for the outer wrapper element (i.e. the list).
+            This is derived by subtracting various UI element heights and paddings from the total viewport height (100vh).
+
+            100vh        - screen height
+            4px          - the border width in the `.bodyNotMaximized` style class in `index.html`
+            30px         - height title bar in the `.titlebar` style class in `index.html`
+            2em          - navbar height in the `.containingDiv` style class in `NavBar.svelte`
+            (2 * 8px)    - (2 * height of the scrollbar at the bottom)
+            (2 * 0.5em)  - padding bottom and top of .listHolder in BoardScreen
+            (2 * 1px)    - (2 * width of the border of the lists)
+            5.5em        - the amount of space we want at the bottom, so some sort of a "padding"
+            ${...}       - height of the list title
+            0.25em       - margin-top of .container in BoardScreen.svelte
+         */
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px + 0.25em)`);
 
         applyOverFlowedStyleClasses();
+    });
+
+    // Automatically save the list object when any changes are made except to it's cards property, as changes to those are tracked and saved elsewhere
+    let {cards: _, ...listWithoutCards} = $derived(list);
+    $effect(() => {
+        SaveLoadManager.getData().updateList(selectedBoardId.value, listWithoutCards.id, untrack(() => $state.snapshot(list)));
     });
 </script>
 
@@ -136,25 +145,27 @@
     <div class="titleHolder" bind:this={titleHolderElement}>
         {#if !editingTitle}
             <span class="listTitle" onclick={() => editingTitle = true} style="height: 100%; min-height: 1em">
-                {SaveLoadManager.getData().getList(selectedBoardId.value, listId).title}
+                {list.title}
             </span>
         {:else}
             <textarea class="listTitle" bind:this={titleTextAreaElement} id="titleTextAreaElement"
-                onfocusout={e => {editingTitle = false; SaveLoadManager.getData().setListTitle(e.target.value.trim(), selectedBoardId.value, listId)}}
+                onfocusout={_ => editingTitle = false}
+                bind:value={list.title}
                 onmouseover={() => titleTextAreaElement.focus()}
                 oninput={autoHeightTextArea}
                 use:autoHeightTextArea
                 onkeydown={e => (e.key === "Enter") && (editingTitle = false)}
-            >{SaveLoadManager.getData().getList(selectedBoardId.value, listId).title}</textarea>
+                spellcheck="false"
+            >{list.title}</textarea>
         {/if}
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="listOptionsMenu"
-             onclick={e => mount(ListOptionsMenu, {props: {clickEvent: e, listId: listId, refreshListsFunction: refreshListsFunction}, target: document.body, intro: true})}
+             onclick={e => mount(ListOptionsMenu, {props: {clickEvent: e, list, setList: newList => list = newList, setLists: newLists => lists = newLists}, target: document.body, intro: true})}
         >
             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
     </div>
     {#key searchBarValue.value}
-        {#if searchBarValue.value !== "" || cardFilters.labelIds.length > 0 || cardFilters.dueDates.length > 0}
+        {#if searchBarValue.value !== "" || cardFilters.labelIds.length > 0 || cardFilters.dueDate !== Number.MAX_SAFE_INTEGER || cardFilters.complete || cardFilters.incomplete}
             <span class="amountOfCardsMatchedFilter">
                 {cards.filter(card => !shouldCardBeHidden(card)).length + " " + (cards.filter(card => !shouldCardBeHidden(card)).length === 1 ? I18n.t("cardMatchedFilters") : I18n.t("cardsMatchedFilters"))}
             </span>
@@ -166,7 +177,7 @@
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#if !shouldCardBeHidden(card)}
-                        <Card card={card} refreshListsFunction={refreshListsFunction} refreshListFunction={refreshListFunction} listIdCardIsIn={listId}/>
+                        <Card {card} bind:list/>
                     {/if}
                 </div>
             {/each}
@@ -178,7 +189,7 @@
         </div>
     </div>
     <div onmouseenter={() => setDragDisabled(true)} onmouseleave={() => setDragDisabled(false)}>
-        <CreateNewCard refreshListFunction={refreshListFunction} listId={listId} outerWrapperElement={outerWrapperElement}/>
+        <CreateNewCard bind:list {outerWrapperElement}/>
     </div>
 </div>
 
