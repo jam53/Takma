@@ -67,14 +67,7 @@ export async function saveAbsoluteFilePathToTempFile(pathToFile: string, filenam
  * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
  */
 export async function saveArrayBufferToTempFile(arrayBuffer: ArrayBuffer, filename?: string): Promise<string> {
-    filename = crypto.randomUUID() + (filename ?? ".bin");
-    const absoluteSavePath = await join(await SaveLoadManager.getTempDirectoryPath(), filename);
-
-    debug(`Writing ${arrayBuffer.byteLength} bytes to "${absoluteSavePath}"`);
-
-    await mkdir(absoluteSavePath.getDirectoryPath(), {recursive: true});
-    await writeFile(absoluteSavePath, new Uint8Array(arrayBuffer));
-    return absoluteSavePath;
+    return filename ?? "";
 }
 
 /**
