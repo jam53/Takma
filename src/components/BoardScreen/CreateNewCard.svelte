@@ -133,7 +133,7 @@
     .newCard:hover {
         cursor: pointer;
         background-color: rgba(var(--background-color-rgb-values), 0.6);
-        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5);
+        box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5);
     }
 
     .newCard svg {
@@ -147,7 +147,7 @@
 
     :global(.newCardCreating) { /* If we don't add the :global() then this styleclass gets stripped from the build because "it isn't used" */
         background-color: var(--background-color) !important;
-        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5) !important;
+        box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5) !important;
         text-decoration: none !important;
         display: flex !important;
         flex-flow: column !important;

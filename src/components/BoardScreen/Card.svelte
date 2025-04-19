@@ -199,7 +199,7 @@
 
     .cardContainer:hover {
         background: var(--background-color);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.5);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.5);
     }
 
     :global(.deleteCard):hover {

@@ -121,7 +121,7 @@
         cursor: pointer;
         border: 3px solid var(--accent);
         --transparency:30%;
-        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     ::-webkit-scrollbar-track {

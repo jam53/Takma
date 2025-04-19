@@ -149,7 +149,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         overflow: hidden;
         flex-direction: column;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     .navbar ul {
@@ -181,7 +181,7 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         text-align: left;
         border-radius: 5px;
         background-color: rgba(var(--background-color-rgb-values), 0.8);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     hr {

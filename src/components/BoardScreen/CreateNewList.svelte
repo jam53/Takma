@@ -87,13 +87,13 @@
         width: 16em;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
         display: flex;
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     .newList:hover {
         cursor: pointer;
         background-color: rgba(var(--background-color-rgb-values), 0.6);
-        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5);
+        box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.5);
     }
 
     .newList svg {

@@ -130,7 +130,7 @@
         overflow: hidden;
         flex-direction: column;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         width: 18em;
         padding: 1em 0.5em 0.5em 0.5em;
     }
