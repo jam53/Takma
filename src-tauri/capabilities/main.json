@@ -60,6 +60,7 @@
     "notification:default",
     "os:default",
     "deep-link:default",
-    "log:default"
+    "log:default",
+    "opener:default"
   ]
 }

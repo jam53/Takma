@@ -218,4 +218,22 @@ export default interface Translation
     confirmCoverImageRemoval: string;
     showArchivedBoards: string;
     hideArchivedBoards: string;
+    plainTextEditor: string;
+    copyMarkdown: string;
+    copyText: string;
+    copiedCardDescriptionToClipboard: string;
+    failedToCopyToClipboard: string;
+    codeBlock: string;
+    setImageUsingUrl: string;
+    setImageUsingFile: string;
+    collapsibleSection: string;
+    setLink: string;
+    unsetLink: string;
+    setTextColor: string;
+    unsetTextColor: string;
+    row: string;
+    column: string;
+    deleteRow: string;
+    deleteColumn: string;
+    deleteTable: string;
 }

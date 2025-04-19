@@ -1,0 +1,1 @@
+import{Node as t,mergeAttributes as e}from"@tiptap/core";const r=t.create({name:"detailsSummary",content:"text*",defining:!0,selectable:!1,isolating:!0,addOptions:()=>({HTMLAttributes:{}}),parseHTML:()=>[{tag:"summary"}],renderHTML({HTMLAttributes:t}){return["summary",e(this.options.HTMLAttributes,t),0]}});export{r as DetailsSummary,r as default};

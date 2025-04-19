@@ -5,11 +5,7 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import type {Card, List} from "../../scripts/Board";
     import {clickOutside} from "../../scripts/ClickOutside";
-    import {marked} from "marked";
-    import DOMPurify from "dompurify";
-    import {open} from "@tauri-apps/plugin-shell"
     import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
-    import hljs from "highlight.js";
     import LabelsPopup from "./LabelsPopup.svelte";
     import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
     import {toast, Toaster} from "svelte-sonner";
@@ -28,6 +24,7 @@
     import {listen} from "@tauri-apps/api/event";
     import {convertFileSrc} from "@tauri-apps/api/core";
     import {debug, info} from "@tauri-apps/plugin-log";
+    import TipTap from "./Tiptap/Tiptap.svelte";
 
     interface Props {
         refreshList: (listToRefresh: List) => void;
@@ -46,35 +43,25 @@
         card = SaveLoadManager.getData().getCard(selectedBoardId.value, selectedCardId.value);
     });
 
-    let editingDescription: boolean = $state(false); //We use this to know whether or not we should display the rendered html of the description, or display the <pre> so that the user can edit the description
-
-    $effect(() => {
-        // Since we modify `editingDescription` within this effect,
-        // running this block unconditionally would trigger an infinite loop.
-        // Therefore we add an if `!editingDescription` check,
-        // this ensures the effect only proceeds when `editingDescription` hasn't been set to true yet.
-        // If it is true, it means this effect already ran and this prevents the effect from continuously re-triggering itself.
-        if (selectedCardId.value !== "" && untrack(() => !editingDescription) && untrack(() => card?.id !== selectedCardId.value))
-        {
-            info("Opening card: " + selectedCardId.value);
-
-            // In some cases we want to enter the "card description editing mode" by default, without requiring the user to enter the "card description editing mode" manually. We only do this when the card doesn't have a description yet and doesn't have any checklists nor attachments.
-            if (card.description === "" && card.checklists.length === 0 && card.attachments.length === 0)
-            {
-                editingDescription = true;
-            }
-        }
-    });
+    let showPlainTextEditor: boolean = $state(false); // Used to define if the rendered Markdown editor should be displayed or the plain text editor for the card's description
 
     $effect(() =>
     {
-        if (!editingDescription)
+        if (!showPlainTextEditor)
         {
-            overlayElement?.focus(); //If we don't focus on the containing div, which is this `overlayElement`. Then we wont be able to listen to the on:keydown events
-
-            hljs.highlightAll(); //Applies syntax highlighting to codeblocks. We don't need to do this after every update when we are editing the description, only when we are viewing the "rendered" Markdown version of the description. Hence the if.
+            focusOnCardDetailsFunction(); //If we don't focus on this component, we won't be able to listen to the on:keydown events such as ESC and Ctrl + W which are used to close this component/card details popup
         }
     });
+
+    // Focus on this component when the value of `selectedCardId` changes to a value that isn't empty. This ensures that when the user clicked on a Takma link in the description of a card and thus opened another card, we can still listen to keyboard events to detect shortcuts like ESC and CTRL + W to close the card.
+    // Should we not do this, this component would no longer be focussed after the user clicked on a Takma link causing the ESC and CTRL + W shortcuts to not register
+    $effect(() => {
+        if (selectedCardId.value !== "")
+        {
+            info("Opening card: " + selectedCardId.value);
+            focusOnCardDetailsFunction();
+        }
+    })
 
 
     function handleKeyDown(e: KeyboardEvent)
@@ -104,69 +91,6 @@
 
     let overlayElement: HTMLElement | null = $state(null);
 
-    //region markedjs custom renderer
-    const takmaLinkPatternGlobal = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/ig;
-    const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
-    // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
-    // `([\w-]+)` - This is the first capturing group (`(...)`) and it matches one or more word characters `(\w)` or hyphens (`-`). The hyphen is included within the character set `[\w-]`. Word characters include uppercase and lowercase letters, digits, and underscores. This capturing group captures the board ID.
-    // `(?:\/([\w-]+))?` - This is a non-capturing group (`(?:...)`) followed by a question mark ?, which makes it optional. It matches a forward slash (`\/`) followed by one or more word characters or hyphens. The hyphen is included within the character set `[\w-]`. This capturing group captures the card ID, which is also allowed to contain hyphens. The non-capturing group is used because we're not interested in capturing the forward slash itself.
-    // `/i` - This is a flag indicating case-insensitive matching. It allows the pattern to match both uppercase and lowercase characters.
-
-    // Create a custom renderer
-    const markedCustomRenderer = new marked.Renderer();
-
-    // Override the link rendering function
-    markedCustomRenderer.link = function(token) {
-        // Check if the link matches your custom pattern
-        const match = token.href.match(takmaLinkPattern);
-
-        if (match)
-        {
-            const boardId = match[1];
-            const cardId = match[2];
-
-            let boardTitle;
-            let cardTitle;
-
-            let styledLink;
-
-            try
-            {
-                boardTitle = SaveLoadManager.getData().getBoard(boardId).title;
-                cardTitle = SaveLoadManager.getData().getCard(boardId, cardId).title;
-            }
-            catch (e)
-            {
-                console.log(e);
-
-                boardTitle = boardTitle ?? I18n.t("boardNotFound");
-                cardTitle = cardId === undefined ? "" : I18n.t("cardNotFound");
-            }
-            finally
-            {
-                styledLink = `
-                <span data-takmalink="${token.href}" class="takma-link">
-                    <span data-takmalink="${token.href}" class="takma-linkBoardTitle">${boardTitle}</span>
-                    <span data-takmalink="${token.href}" class="takma-linkCardTitle">${cardTitle}</span>
-                </span>`;
-            }
-
-            return styledLink;
-        } else
-        {
-            // Use the default link rendering for other links
-            return marked.Renderer.prototype.link.call(this, token);
-        }
-    };
-
-    // This function modifies the behavior of how images are rendered by the marked library:
-    // - If the image source (href) is an HTTP or HTTPS URL, it remains unchanged.
-    // - If the image source is a local file path, it is converted to a URL using the `getImageUrl()` function.
-    markedCustomRenderer.image = function(token) {
-        token.href = getImageUrl(token.href);
-        return marked.Renderer.prototype.image.call(this, token);
-    };
-
     /**
      * Returns an URL for an image.
      *
@@ -195,94 +119,6 @@
         }
     }
     //endregion
-
-    const markedJsOptions = {
-        mangle: false,
-        headerIds: false,
-        breaks: true,
-        renderer: markedCustomRenderer
-    };
-
-    function parseMarkdown(textToParse: string): string
-    {
-        textToParse = textToParse.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/,""); // remove the most common zerowidth characters from the start of the file
-
-        textToParse = textToParse.replace(/__(.*?)__/g, '<u>$1</u>'); //Add support for underlining with __ __
-
-        let preprocessed = preprocessMarkdown(textToParse);
-        let parsedText = marked.parse(preprocessed, markedJsOptions);
-        let sanitized = DOMPurify.sanitize(parsedText);
-
-        return sanitized;
-    }
-
-    /**
-     * Custom preprocessing function to convert custom takmaLink format to valid Markdown links
-     * In our custom renderer, we overwrite the link function `markedCustomRenderer.link`. But since takma://, unlike http:// and https:// isn't considered a link; that `markedCustomRenderer.link` wouldn't "catch" our takmaLinks. So here we make a markdown link from the takma links `[takmaLink](takmaLink)`. This way the parser considers it a link
-     */
-    function preprocessMarkdown(markdown)
-    {
-        return markdown.replaceAll(takmaLinkPatternGlobal, '[$&]($&)');
-    }
-
-    function handleDescriptionHolderClick(e)
-    {
-        if (e.target.dataset.takmalink)
-        {//Our custom takmaLinks get turned in a SPAN tag which has 2 child SPAN elements, all of which have `takmalink` as a custom data attribute. So if the target contains a `takmalink` data attribute, it means we clicked on a takmaLink
-            e.stopPropagation(); //Otherwise we start editing the description when we click on this button
-
-            let takmaLink = e.target.dataset.takmalink;
-
-            let match = takmaLink.match(takmaLinkPattern);
-            let boardId = match[1];
-            let cardId = match[2];
-
-            let boardTitle;
-            let cardTitle;
-
-            try
-            {
-                boardTitle = SaveLoadManager.getData().getBoard(boardId).title;
-                cardTitle = SaveLoadManager.getData().getCard(boardId, cardId).title;
-            }
-            catch (e)
-            {
-                if (boardTitle === undefined)
-                {
-                    mount(PopupWindow, {props: {description: I18n.t("boardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
-                }
-                else if (boardTitle !== undefined && cardId !== undefined && cardTitle === undefined)
-                {
-                    mount(PopupWindow, {props: {description: I18n.t("cardIdNotFound", takmaLink.toString()), buttonType: "ok"}, target: document.body, intro: true});
-                }
-            }
-            finally
-            {
-                info(`Opening Takma link with board:${boardId} and card:${cardId}`);
-                if (boardTitle != undefined && cardTitle != undefined)
-                {
-                    selectedBoardId.value = boardId;
-                    selectedCardId.value = cardId;
-                }
-                else if (boardTitle != undefined)
-                {
-                    selectedBoardId.value = boardId;
-                    selectedCardId.value = "";
-                }
-            }
-        }
-        else if (e.target.tagName === "A")
-        {
-            e.stopPropagation(); //Otherwise we start editing the description when we click on a link
-
-            open(e.target.href); //Op deze manier wordt de link in de default browser van de gebruiker geopend. Als we dit niet doen wordt de link geopend in het Tauri venster
-            e.preventDefault(); //Als we dit niet doen, wordt de links alsnog in het Tauri venster geopend, nadat het is geopend geweest in de default browser.
-        }
-        else
-        {
-            editingDescription = true;
-        }
-    }
 
     $effect(() => overlayElement && applyMaximizedNotMaximizedStyleClasses());
     const appWindow = getCurrentWebviewWindow()
@@ -602,7 +438,7 @@
             //The `(window.getSelection().toString().length === 0)` check ensures that selecting text won't fire a `click_outside` event. If we were to press and hold the mouse button to select a part of the description. And then release the mouse button somewhere outside the element. This would be considered as a click outside the element, therefore removing this element. With this check we only remove the element if we aren't selecting anything
             if (window.getSelection().toString().length === 0)
             {
-                editingDescription = false;
+                showPlainTextEditor = false;
                 easyMDEContainer.remove();
                 clickOutsideAction.destroy();
             }
@@ -693,14 +529,19 @@
                             </span>
                         </button>
                     {/if}
-                    {#if editingDescription}
+                    {#if showPlainTextEditor}
                         <textarea bind:this={markdownTextArea}>{card.description}</textarea>
                     {:else}
-                        <div class="renderedDescriptionHolder markdown-body"
-                             onclick={handleDescriptionHolderClick}
-                        >
-                            {@html parseMarkdown(card.description)}
-                        </div>
+                        <!-- Without this key, the description of the card wouldn't update when we clicked on a Takma link in the description of a card. All other aspects of the card except for the description would be updated, checklists, title etc. But the description would still show the description of the original card where the user clicked on the Takma link. -->
+                        {#key card}
+                            <div class="markdown-body">
+                                <TipTap
+                                        bind:cardDescription={card.description}
+                                        {getImageUrl}
+                                        switchToPlainTextEditor={() => showPlainTextEditor = true}
+                                />
+                            </div>
+                        {/key}
                     {/if}
                     <CheckLists bind:this={checkListComponent} bind:checklists={card.checklists} {focusOnCardDetailsFunction}/>
                     <Attachments bind:attachments={card.attachments} addAttachmentFunction={addAttachment} {focusOnCardDetailsFunction} {isCardFullscreen}/>
@@ -769,13 +610,13 @@
                     </button>
                     <button title={I18n.t("link")} id="cardDetailsCopyLinkButton"
                             onclick={async () => {
-                                let linkToThisCard = `takma://${selectedBoardId.value}/${card.id}`
+                                let linkToThisCard = `takma://${selectedBoardId.value}/${card.id}`;
                                 await writeText(linkToThisCard);
 
                                 let textInClipboard = await readText();
                                 if (textInClipboard === linkToThisCard)
                                 {
-                                    toast(I18n.t("cardLinkCopiedToClipboard"))
+                                    toast(I18n.t("cardLinkCopiedToClipboard"));
                                 }
                                 else
                                 {
@@ -957,28 +798,6 @@
         width: 100%;
     }
 
-    .renderedDescriptionHolder {
-        transition: 0.3s;
-        border: 2px solid transparent;
-        border-radius: 0.5em;
-        min-height: 3em;
-        padding: 0.5em 0.25em;
-    }
-
-    .renderedDescriptionHolder:hover {
-        border: 2px solid var(--accent);
-        box-shadow: 0 0 0 0;
-        cursor: pointer;
-    }
-
-    :global(.renderedDescriptionHolder *:first-child) {
-        margin-top: 0;
-    }
-
-    :global(.renderedDescriptionHolder *) {
-        word-break: break-word;
-    }
-
     .cardActionsHolder {
         width: 11em;
         display: flex;
@@ -1026,38 +845,6 @@
 
     :global(code > *) {
         font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
-    }
-
-    :global(.markdown-body .takma-link) {
-        background: transparent;
-        border: 2px solid var(--border);
-        border-radius: 4px;
-        align-items: center;
-        padding: 0 0 1px 0;
-        cursor: pointer;
-        min-height: 1em;
-        margin-right: 0.3em;
-    }
-
-    :global(.markdown-body .takma-linkBoardTitle) {
-        background: var(--border);
-        padding: 0.25em;
-        text-transform: uppercase;
-        margin: 0;
-        font-size: small;
-        font-weight: bold;
-        min-height: 1em;
-        height: 100%;
-        word-break: break-all;
-    }
-
-    :global(.markdown-body .takma-linkCardTitle) {
-        color: var(--accent);
-        font-style: italic;
-        min-height: 1em;
-        min-width: 2em;
-        word-break: break-all;
-        padding: 0 0.5em 0 0.25em;
     }
 
     .labels {
@@ -1108,16 +895,15 @@
         width: 100%;
         justify-content: center;
         margin-bottom: 0.5em;
+        color: white;
     }
 
     .dueDateRed {
         background-color: var(--danger);
-        color: white;
     }
 
     .dueDateOrange {
         background-color: var(--warning);
-        color: white;
     }
 
     .dueDate:hover, .completed:hover {
