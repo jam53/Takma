@@ -35,7 +35,8 @@
                 "height": 800,
                 "decorations": false,
                 "transparent": true,
-                "dragDropEnabled": true
+                "dragDropEnabled": true,
+                "zoomHotkeysEnabled": true
             }
         ],
         "security": {
