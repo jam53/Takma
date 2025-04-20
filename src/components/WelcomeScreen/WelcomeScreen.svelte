@@ -6,6 +6,7 @@
     import {onMount} from "svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {slide} from "svelte/transition";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     let sortBoardFunctions = new Map<string, (board1: Board, board2: Board) => number>([
         ["sortByCreationDateAscending", (a, b) => a.creationDate - b.creationDate],
