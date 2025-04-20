@@ -21,37 +21,12 @@
         if (await popup.getAnswer() === true)
         {
             let savefileURL = (await popup.getInputFieldAnswer()).trim();
-            savefileURL = savefileURL.startsWith("https://1drv.ms/u/s!") ? getOneDriveDirectDownloadLink(savefileURL) : savefileURL;
 
             let response = await fetch(savefileURL);
 
             localStorage.setItem("savefileURL", savefileURL)
             setSavefile(await response.text());
         }
-    }
-
-    /**
-     * Converts a OneDrive sharing URL into a direct download link using the Microsoft Graph API.
-     *
-     * The function first encodes the sharing URL to create a sharing token, which is then used to generate the direct download link. For more details on how to transform a sharing URL into a sharing token visit:
-     * https://learn.microsoft.com/en-us/graph/api/shares-get?view=graph-rest-1.0&tabs=http#encoding-sharing-urls
-     *
-     * @param {string} url - The original OneDrive sharing URL.
-     * @returns {string} - The direct download link for the shared file.
-     */
-    function getOneDriveDirectDownloadLink(url: string): string
-    {
-        let base64Url = btoa(unescape(encodeURIComponent(url)))
-            .replace(/=/g, '')
-            .replace(/\//g, "_")
-            .replace(/\+/g, "-");
-
-        if (base64Url.endsWith("="))
-        {
-            base64Url = base64Url.slice(0, -1);
-        }
-
-        return `https://api.onedrive.com/v1.0/shares/u!${base64Url}/root/content`;
     }
 
     async function handleFileSelection(e)
