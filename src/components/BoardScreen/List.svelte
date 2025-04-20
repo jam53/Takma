@@ -140,8 +140,7 @@
     });
 </script>
 
-<!--After the first few lists we don't want to show the intro animation so we put its duration to 0. Otherwise if we add a 20th list for example, we would have to wait for 20*100 = 2 seconds until it becomes visible. Usually no more than 7 lists will fit on the screen side by side, hence why we limit the time to 700 milliseconds-->
-<div class="list" in:slide|global={{delay: inTransitionDelay*100 <= 700 ? inTransitionDelay*100 : 0}} onintrostart={scrollToCreateNewListDiv} onmouseenter={() => setDragDisabled(false)} oncontextmenu={e => e.stopPropagation()}>
+<div class="list" in:slide|global={{delay: inTransitionDelay * 100}} onintrostart={scrollToCreateNewListDiv} onmouseenter={() => setDragDisabled(false)} oncontextmenu={e => e.stopPropagation()}>
     <div class="titleHolder" bind:this={titleHolderElement}>
         {#if !editingTitle}
             <span class="listTitle" onclick={() => editingTitle = true} style="height: 100%; min-height: 1em">
@@ -172,7 +171,7 @@
         {/if}
     {/key}
     <div class="outerWrapper" bind:this={outerWrapperElement} onscroll={applyOverFlowedStyleClasses}>
-<!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the -webkit-box-shadow doesn't appear cut off when hovering over a card-->
+<!--This outerWrapper has `overflow:auto` allowing us to scroll. Whilst this cardsHolder has `overflow:visible` which makes it so the box-shadow doesn't appear cut off when hovering over a card-->
         <div class="cardsHolder" use:dndzone={{items: cards, type:"card", dropTargetStyle: {}, dragDisabled: dragDisabled, zoneTabIndex: -1, transformDraggedElement: handleDraggedElement}} onconsider={handleDndConsiderCards} onfinalize={handleDndFinalizeCards} onscroll={() => setDragDisabled(true)}>
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
@@ -203,7 +202,7 @@
         color: var(--main-text);
         width: 17.25em;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         cursor: pointer;
     }
 
@@ -237,7 +236,7 @@
         justify-content: center;
         flex-direction: column;
         text-align: center;
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         cursor: auto;
     }
 
@@ -285,7 +284,7 @@
 
     .titleHolder svg:hover {
         background-color: rgba(var(--main-text-rgb-values), 0.3);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     .amountOfCardsMatchedFilter {

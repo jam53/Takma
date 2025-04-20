@@ -94,6 +94,7 @@
     // This is crucial for scenarios where the board screen is already open, but the user navigates to a different board (e.g., by clicking a Takma link).
     // In such cases, the $effect will re-run, fetching the correct lists for the newly selected board and triggering a re-render of the component.
     $effect(() => {
+        listsSortOrder.value = (a, b) => 0; // Clear sort order of lists when opening a new board
         lists = SaveLoadManager.getData().getBoard(selectedBoardId.value).lists;
     });
 
@@ -170,6 +171,11 @@
         }
     };
     window.addEventListener("popstate", backToBoardOrWelcomeScreen);
+
+    let initialAmountOfLists = 0;
+    $effect(() => {
+        initialAmountOfLists = initialAmountOfLists === 0 ? lists.length : initialAmountOfLists;
+    });
 </script>
 
 <div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
@@ -183,7 +189,7 @@
                         onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)}
                         dragDisabled={dragDisabled}
                         setDragDisabled={setDragDisabled}
-                        inTransitionDelay={listIndex}
+                        inTransitionDelay={listIndex < initialAmountOfLists ? listIndex : 0}
                         bind:list={() => lists[listIndex], newList => lists[listIndex] = newList}
                         bind:lists
                     />

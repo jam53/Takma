@@ -81,7 +81,7 @@
         border-radius: 0.75em;
         background-color: rgba(var(--background-color-rgb-values), 0.5);
         backdrop-filter: blur(5px);
-        -webkit-box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
+        box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
     }
 
     .searchBar {
