@@ -3,7 +3,6 @@
     import {I18n} from "../../../scripts/I18n/I18n";
     import {mount} from "svelte";
     import PopupWindow from "../../PopupWindow.svelte";
-    import {info} from "@tauri-apps/plugin-log";
     import {selectedBoardId, selectedCardId} from "../../../scripts/Stores.svelte.js";
 
     interface Props {
@@ -50,7 +49,6 @@
             return;
         }
 
-        info(`Opening Takma link with board: ${boardId} and card: ${cardId}`);
         if (boardTitle !== BOARD_NOT_FOUND_TRANSLATION && cardTitle !== CARD_NOT_FOUND_TRANSLATION)
         {
             selectedBoardId.value = boardId;
