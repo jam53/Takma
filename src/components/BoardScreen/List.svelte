@@ -143,8 +143,7 @@
     });
 </script>
 
-<!--After the first few lists we don't want to show the intro animation so we put its duration to 0. Otherwise if we add a 20th list for example, we would have to wait for 20*100 = 2 seconds until it becomes visible. Usually no more than 7 lists will fit on the screen side by side, hence why we limit the time to 700 milliseconds-->
-<div class="list" in:slide|global={{delay: inTransitionDelay*100 <= 700 ? inTransitionDelay*100 : 0}} onintrostart={scrollToCreateNewListDiv} onmouseenter={() => setDragDisabled(false)} oncontextmenu={e => e.stopPropagation()}>
+<div class="list" in:slide|global={{delay: inTransitionDelay * 100}} onintrostart={scrollToCreateNewListDiv} onmouseenter={() => setDragDisabled(false)} oncontextmenu={e => e.stopPropagation()}>
     <div class="titleHolder" bind:this={titleHolderElement}>
         {#if !editingTitle}
             <span class="listTitle" onclick={() => editingTitle = true} style="height: 100%; min-height: 1em">

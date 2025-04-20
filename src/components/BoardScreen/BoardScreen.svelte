@@ -194,6 +194,11 @@
         }
     }
     removeDanglingAttachments();
+
+    let initialAmountOfLists = 0;
+    $effect(() => {
+        initialAmountOfLists = initialAmountOfLists === 0 ? lists.length : initialAmountOfLists;
+    });
 </script>
 
 <div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
@@ -207,7 +212,7 @@
                         onDrop={(newCardsData) => handleCardsFinalize(listIndex, newCardsData)}
                         dragDisabled={dragDisabled}
                         setDragDisabled={setDragDisabled}
-                        inTransitionDelay={listIndex}
+                        inTransitionDelay={listIndex < initialAmountOfLists ? listIndex : 0}
                         bind:list={() => lists[listIndex], newList => lists[listIndex] = newList}
                         bind:lists
                     />
