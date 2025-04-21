@@ -138,15 +138,17 @@
                 }).extend({
                     addKeyboardShortcuts() {
                         return {
-                            // Insert spaces when hitting the tab key while in a code block, rather than selecting/jumping to the next element in the DOM
                             Tab: () => {
-                                const { state, dispatch } = this.editor.view
-                                const { from, to } = state.selection
+                                // Insert spaces when hitting the tab key while in a code block, rather than selecting/jumping to the next element in the DOM
+                                if (editor?.isActive("codeBlock"))
+                                {
+                                    const { state, dispatch } = this.editor.view;
+                                    const { from, to } = state.selection;
 
-                                dispatch(
-                                    state.tr.insertText('    ', from, to)
-                                )
-                                return true
+                                    dispatch(state.tr.insertText('    ', from, to));
+                                    return true;
+                                }
+                                return false;
                             },
                         }
                     },
