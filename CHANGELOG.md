@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2025-04-21
+### Fixed
+- (tiptap): Fix issue where the tab key wouldn't indent lists but instead add spaces. Previously, the Tab key shortcut always inserted spaces, breaking list indentation. This change ensures the shortcut only applies when inside a code block. ([0ae308f1](https://github.com/jam53/Takma/commit/0ae308f1f6290f3da3118b256cbc71a8e7aadb13))
+
 ## [1.7.0] - 2025-04-20
 ### Added
 - Enable browser zoom controls (standard zoom functionality). ([895be77b](https://github.com/jam53/Takma/commit/895be77b1e0fe388aee24ed6feeff46664544078))
@@ -586,6 +590,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit. ([b28d9a78](https://github.com/jam53/Takma/commit/b28d9a783ffcb7ff30e67e8a11677c66f28667e4))
 
 <!-- Link Definitions -->
+[1.7.1]: https://github.com/jam53/Takma/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/jam53/Takma/compare/v1.6.8...v1.7.0
 [1.6.8]: https://github.com/jam53/Takma/compare/v1.6.7...v1.6.8
 [1.6.7]: https://github.com/jam53/Takma/compare/v1.6.6...v1.6.7
