@@ -74,8 +74,8 @@
                 handleClickOn(view, pos, node, nodePos, event, direct) {
                     const targetElement = event.target as HTMLElement;
 
-                    // Handle regular http/https links using Tauri's `openUrl()` to ensure it opens in the user's default browser rather than in a new Tauri window
-                    if(targetElement.tagName === 'A' && targetElement.hasAttribute('href'))
+                    // Handle LMB clicks on regular http/https links using Tauri's `openUrl()` to ensure it opens in the user's default browser rather than in a new Tauri window
+                    if(event.button === 0 && targetElement.tagName === 'A' && targetElement.hasAttribute('href'))
                     {
                         event.preventDefault();
                         event.stopPropagation();
