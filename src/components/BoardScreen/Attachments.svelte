@@ -2,7 +2,6 @@
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {exists, remove} from "@tauri-apps/plugin-fs";
-    import {open} from "@tauri-apps/plugin-shell"
     import {invoke} from "@tauri-apps/api/core";
     import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast} from "svelte-sonner";
@@ -11,6 +10,7 @@
     import {join} from "@tauri-apps/api/path";
     import {mount} from "svelte";
     import PopupWindow from "../PopupWindow.svelte";
+    import {openPath} from "@tauri-apps/plugin-opener";
 
     interface Props {
         attachments: string[];
@@ -40,7 +40,7 @@
 
     async function openWithDefaultApp(pathToFile: string)
     {
-        await open(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
+        await openPath(await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile));
     }
 
     async function showInFolder(pathToFile: string)

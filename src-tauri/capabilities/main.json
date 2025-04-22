@@ -61,6 +61,14 @@
     "os:default",
     "deep-link:default",
     "log:default",
-    "opener:default"
+    "opener:default",
+    {
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        {
+          "path": "**"
+        }
+      ]
+    }
   ]
 }

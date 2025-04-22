@@ -1,9 +1,9 @@
 <script lang="ts">
-    import {open} from "@tauri-apps/plugin-shell";
     import {open as openDialog} from "@tauri-apps/plugin-dialog"
     import {appLocalDataDir, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
     import {debug} from "@tauri-apps/plugin-log";
+    import {openPath} from "@tauri-apps/plugin-opener";
 
     async function setSaveLocation(saveDirectoryPath: string)
     {
@@ -64,7 +64,7 @@
 </div>
 <div class="licenseAgreement">
     <span>
-        {I18n.t("acceptTermsAndConditions")}<a onclick={async () => open(await resolveResource("resources/LICENSE.txt"))}>{I18n.t("licenseAgreement")}</a>
+        {I18n.t("acceptTermsAndConditions")}<a onclick={async () => openPath(await resolveResource("resources/LICENSE.txt"))}>{I18n.t("licenseAgreement")}</a>
     </span>
 </div>
 
