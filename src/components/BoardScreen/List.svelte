@@ -20,6 +20,7 @@
         inTransitionDelay: number;
         list: List;
         lists: List[];
+        showLabelsText: boolean;
     }
 
     let {
@@ -30,6 +31,7 @@
         inTransitionDelay,
         list = $bindable(),
         lists = $bindable(),
+        showLabelsText = $bindable(),
     }: Props = $props();
 
 
@@ -179,7 +181,7 @@
             {#each cards as card (card.id)}
                 <div class="card" animate:flip="{{duration: 500}}">
                     {#if !shouldCardBeHidden(card)}
-                        <Card {card} bind:list/>
+                        <Card {card} bind:list bind:showLabelsText/>
                     {/if}
                 </div>
             {/each}
