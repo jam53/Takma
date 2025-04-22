@@ -5,7 +5,6 @@
         invalidateLabels,
         selectedBoardId,
         selectedCardId,
-        showLabelsText
     } from "../../scripts/Stores.svelte.js";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
@@ -14,11 +13,13 @@
     interface Props {
         card: Card;
         list: List;
+        showLabelsText: boolean;
     }
 
     let {
         card,
         list = $bindable(),
+        showLabelsText = $bindable(),
     }: Props = $props();
 
     function displayCardDetails()
@@ -113,14 +114,14 @@
             {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
                 {#key invalidateLabels.value}
                     <span style="color: {label.titleColor}; background-color: {label.color}"
-                          class="{showLabelsText.value ? 'labelsWithText' : 'labelsWithoutText'}"
+                          class="{showLabelsText ? 'labelsWithText' : 'labelsWithoutText'}"
                           onclick={e => {
                               e.stopPropagation();
                               SaveLoadManager.getData().showLabelsText = !SaveLoadManager.getData().showLabelsText;
-                              showLabelsText.value = SaveLoadManager.getData().showLabelsText;
+                              showLabelsText = SaveLoadManager.getData().showLabelsText;
                           }}
                     >
-                        {#if showLabelsText.value}
+                        {#if showLabelsText}
                             {label.title}
                         {/if}
                     </span>

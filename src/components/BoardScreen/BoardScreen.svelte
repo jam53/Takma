@@ -176,6 +176,11 @@
     $effect(() => {
         initialAmountOfLists = initialAmountOfLists === 0 ? lists.length : initialAmountOfLists;
     });
+
+    let showLabelsText = $state(false); // Defines whether or not the labels on cards on the board screen should show their text. When `false`, only the color will be shown.
+    onMount(() => {
+        showLabelsText = SaveLoadManager.getData().showLabelsText;
+    });
 </script>
 
 <div class="container" title={I18n.t("changeBackgroundImage")} oncontextmenu={handleContainerRightClick}>
@@ -192,6 +197,7 @@
                         inTransitionDelay={listIndex < initialAmountOfLists ? listIndex : 0}
                         bind:list={() => lists[listIndex], newList => lists[listIndex] = newList}
                         bind:lists
+                        bind:showLabelsText
                     />
                 {/key}
             </div>
