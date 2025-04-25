@@ -69,8 +69,11 @@
 
         editor = new Editor({
             element: editorElement,
-            content: cardDescription,
+            content: parseTakmaLinks(cardDescription),
             editorProps: {
+                attributes: {
+                    spellcheck: "false"
+                },
                 handleClickOn(view, pos, node, nodePos, event, direct) {
                     const targetElement = event.target as HTMLElement;
 
@@ -253,43 +256,39 @@
                 isHeading = editor?.isActive('heading') ?? false;
                 isTextStyle = editor?.isActive('textStyle') ?? false;
             },
-            onCreate: ({ editor }) => {
-                editor.view.dom.setAttribute("spellcheck", "false");
-
-                // This code solves the problem where custom "takma://" links aren't recognized as links when the editor is initially loaded. Causing them to be displayed as a plain text string, rather than being displayed as the TakmaLink.svelte component. We solve this by parsing any Takma links and wrapping them with angle brackets, which will allow Tiptap's Markdown processor to recognize the Takma links as actual links.
-
-                // Regex to find takma:// links that are not already inside angle brackets (<...>)
-                // - (?<!<) : Negative lookbehind assertion. Ensures the match doesn't start immediately after '<'.
-                //             This prevents modifying links that are already formatted as autolinks.
-                // - (takma:\/\/[\w-]+(?:\/[\w-]+)?) : Capturing group 1. Matches and captures the actual Takma link string.
-                const takmaRegex = /(?<!<)(takma:\/\/[\w-]+(?:\/[\w-]+)?)/g;
-
-                let markdownContent = editor.storage.markdown.getMarkdown();
-
-                // Replace plain "takma://..." strings with the Markdown autolink format "<takma://...>"
-                markdownContent = markdownContent.replace(takmaRegex, (match, p1_link) => {
-                    // Angle brackets `<...>` around a URL (like `<https://google.com>` or `<takma://board/card>`)
-                    // represent the Markdown autolink syntax.
-                    // By wrapping the plain `takma://` string in these brackets, we are formatting it
-                    // in a way that Markdown parsers (like the one used by tiptap-markdown with the `linkify: true` option)
-                    // are supposed to recognize as a link during the Markdown-to-HTML conversion phase.
-                    // The goal is that the Markdown parser will then convert `<takma://...>`
-                    // into an HTML anchor tag (`<a href="takma://...">...</a>`). This intermediate HTML tag can then
-                    // be correctly interpreted by your `TakmaLink` extension's `parseHTML` rule
-                    // during Tiptap's subsequent internal HTML parsing phase, allowing the creation of the desired custom TakmaLink.svelte node.
-                    return `<${p1_link}>`; // Return the link wrapped in angle brackets.
-                });
-
-                // Replace the editor's content entirely with the modified Markdown string.
-                // This forces Tiptap and tiptap-markdown to re-parse the content from scratch,
-                // now recognizing the `<takma://...>` autolinks we just created.
-                editor.commands.setContent(markdownContent);
-            },
             onUpdate: ({editor}) => {
                 cardDescription = editor.storage.markdown.getMarkdown();
             },
         });
     });
+
+    /**
+     * This function solves the problem where custom "takma://" links aren't recognized as links when the editor is initially loaded. Causing them to be displayed as a plain text string, rather than being displayed as the TakmaLink.svelte component. We solve this by parsing any Takma links and wrapping them with angle brackets, which will allow Tiptap's Markdown processor to recognize the Takma links as actual links.
+      */
+    function parseTakmaLinks(markdownContent: string): string
+    {
+        // Regex to find takma:// links that are not already inside angle brackets (<...>)
+        // - (?<!<) : Negative lookbehind assertion. Ensures the match doesn't start immediately after '<'.
+        //             This prevents modifying links that are already formatted as autolinks.
+        // - (takma:\/\/[\w-]+(?:\/[\w-]+)?) : Capturing group 1. Matches and captures the actual Takma link string.
+        const takmaRegex = /(?<!<)(takma:\/\/[\w-]+(?:\/[\w-]+)?)/g;
+
+        // Replace plain "takma://..." strings with the Markdown autolink format "<takma://...>"
+        markdownContent = markdownContent.replace(takmaRegex, (match, p1_link) => {
+            // Angle brackets `<...>` around a URL (like `<https://google.com>` or `<takma://board/card>`)
+            // represent the Markdown autolink syntax.
+            // By wrapping the plain `takma://` string in these brackets, we are formatting it
+            // in a way that Markdown parsers (like the one used by tiptap-markdown with the `linkify: true` option)
+            // are supposed to recognize as a link during the Markdown-to-HTML conversion phase.
+            // The goal is that the Markdown parser will then convert `<takma://...>`
+            // into an HTML anchor tag (`<a href="takma://...">...</a>`). This intermediate HTML tag can then
+            // be correctly interpreted by your `TakmaLink` extension's `parseHTML` rule
+            // during Tiptap's subsequent internal HTML parsing phase, allowing the creation of the desired custom TakmaLink.svelte node.
+            return `<${p1_link}>`; // Return the link wrapped in angle brackets.
+        });
+
+        return markdownContent;
+    }
 
     onDestroy(() => {
         if (editor)
