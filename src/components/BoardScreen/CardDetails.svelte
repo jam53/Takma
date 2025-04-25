@@ -534,13 +534,11 @@
                     {:else}
                         <!-- Without this key, the description of the card wouldn't update when we clicked on a Takma link in the description of a card. All other aspects of the card except for the description would be updated, checklists, title etc. But the description would still show the description of the original card where the user clicked on the Takma link. -->
                         {#key card}
-                            <div class="markdown-body">
-                                <TipTap
-                                        bind:cardDescription={card.description}
-                                        {getImageUrl}
-                                        switchToPlainTextEditor={() => showPlainTextEditor = true}
-                                />
-                            </div>
+                            <TipTap
+                                    bind:cardDescription={card.description}
+                                    {getImageUrl}
+                                    switchToPlainTextEditor={() => showPlainTextEditor = true}
+                            />
                         {/key}
                     {/if}
                     <CheckLists bind:this={checkListComponent} bind:checklists={card.checklists} {focusOnCardDetailsFunction}/>
