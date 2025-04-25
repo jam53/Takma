@@ -822,6 +822,7 @@
         border: none;
         border-radius: 0.5em;
         transition: 0.2s;
+        cursor: pointer;
     }
 
     :global(.details > button:hover) {
@@ -853,7 +854,7 @@
     }
 
     :global(summary::marker) {
-        color: transparent;
+        content: none;
     }
 
     .menu-color-picker {
