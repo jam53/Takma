@@ -108,7 +108,10 @@
                 // Floating menu, for actions on empty lines
                 FloatingMenu.configure({
                     element: floatingMenuElement,
-                    tippyOptions: { duration: 100, placement: 'left-start' },
+                    tippyOptions: {
+                        duration: 100,
+                        placement: 'top-start',
+                    },
                     shouldShow: ({ editor, state }) => {
                         const { selection } = state;
                         const { $from: from, empty } = selection;
