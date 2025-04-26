@@ -26,6 +26,7 @@
     import {debug, info} from "@tauri-apps/plugin-log";
     import TipTap from "./Tiptap/Tiptap.svelte";
     import {debounce} from "../../scripts/Debounce";
+    import TextEditorActionButtons from "./Tiptap/TextEditorActionButtons.svelte";
 
     interface Props {
         refreshList: (listToRefresh: List) => void;
@@ -533,6 +534,7 @@
                     {/if}
                     {#if showPlainTextEditor}
                         <textarea bind:this={markdownTextArea}>{card.description}</textarea>
+                        <TextEditorActionButtons cardDescription={card.description} otherEditorName={I18n.t("wysiwygEditor")} switchToOtherTextEditor={() => showPlainTextEditor = false}/>
                     {:else}
                         <!-- Without this key, the description of the card wouldn't update when we clicked on a Takma link in the description of a card. All other aspects of the card except for the description would be updated, checklists, title etc. But the description would still show the description of the original card where the user clicked on the Takma link. -->
                         {#key card}

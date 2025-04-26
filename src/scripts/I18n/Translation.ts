@@ -219,6 +219,7 @@ export default interface Translation
     showArchivedBoards: string;
     hideArchivedBoards: string;
     plainTextEditor: string;
+    wysiwygEditor: string;
     copyMarkdown: string;
     copyText: string;
     copiedCardDescriptionToClipboard: string;
