@@ -20,6 +20,8 @@
     import PopupWindow from "../PopupWindow.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import TipTap from "./Tiptap/Tiptap.svelte";
+    import {debounce} from "../../scripts/Debounce";
+    import TextEditorActionButtons from "./Tiptap/TextEditorActionButtons.svelte";
 
     interface Props {
         refreshList: (listToRefresh: List) => void;
@@ -74,10 +76,11 @@
     }
 
     // Automatically save the selected card when any changes are made
+    let debouncedSaveCard = debounce((cardToSave: Card, boardId: string, cardId: string) => SaveLoadManager.getData().updateCard(cardToSave, boardId, cardId));
     $effect(() => {
         if (card)
         {
-            SaveLoadManager.getData().updateCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
+            debouncedSaveCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
             refreshCard(card);
         }
     })
@@ -458,16 +461,15 @@
                     {/if}
                     {#if showPlainTextEditor}
                         <textarea bind:this={markdownTextArea}>{card.description}</textarea>
+                        <TextEditorActionButtons cardDescription={card.description} otherEditorName={I18n.t("wysiwygEditor")} switchToOtherTextEditor={() => showPlainTextEditor = false}/>
                     {:else}
                         <!-- Without this key, the description of the card wouldn't update when we clicked on a Takma link in the description of a card. All other aspects of the card except for the description would be updated, checklists, title etc. But the description would still show the description of the original card where the user clicked on the Takma link. -->
                         {#key card}
-                            <div class="markdown-body">
-                                <TipTap
-                                        bind:cardDescription={card.description}
-                                        {getImageUrl}
-                                        switchToPlainTextEditor={() => showPlainTextEditor = true}
-                                />
-                            </div>
+                            <TipTap
+                                    bind:cardDescription={card.description}
+                                    {getImageUrl}
+                                    switchToPlainTextEditor={() => showPlainTextEditor = true}
+                            />
                         {/key}
                     {/if}
                     <CheckLists bind:this={checkListComponent} bind:checklists={card.checklists} {focusOnCardDetailsFunction}/>

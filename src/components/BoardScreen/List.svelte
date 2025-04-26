@@ -10,6 +10,7 @@
     import CreateNewCard from "./CreateNewCard.svelte";
     import {mount, untrack} from "svelte";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {debounce} from "../../scripts/Debounce";
 
     interface Props {
         cards: CardInterface[];
@@ -137,8 +138,9 @@
 
     // Automatically save the list object when any changes are made except to it's cards property, as changes to those are tracked and saved elsewhere
     let {cards: _, ...listWithoutCards} = $derived(list);
+    let debouncedSaveList = debounce((boardId: string, listId: string, list: List) => SaveLoadManager.getData().updateList(boardId, listId, list));
     $effect(() => {
-        SaveLoadManager.getData().updateList(selectedBoardId.value, listWithoutCards.id, untrack(() => $state.snapshot(list)));
+        debouncedSaveList(selectedBoardId.value, listWithoutCards.id, untrack(() => $state.snapshot(list)));
     });
 </script>
 

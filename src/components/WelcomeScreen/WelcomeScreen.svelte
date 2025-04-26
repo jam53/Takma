@@ -7,6 +7,7 @@
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {slide} from "svelte/transition";
     import {I18n} from "../../scripts/I18n/I18n";
+    import {debounce} from "../../scripts/Debounce";
 
     let sortBoardFunctions = new Map<string, (board1: Board, board2: Board) => number>([
         ["sortByCreationDateAscending", (a, b) => a.creationDate - b.creationDate],
@@ -20,8 +21,9 @@
 
     let boards: Board[] = $state(SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
     // Automatically saves the boards when any changes are made + ensures they are in the correct order
+    let debouncedSaveBoards = debounce((boardsToSave: Board[]) => SaveLoadManager.getData().boards = boardsToSave);
     $effect(() => {
-        SaveLoadManager.getData().boards = $state.snapshot(boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
+        debouncedSaveBoards($state.snapshot(boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName))));
     })
 
     onMount(async () =>

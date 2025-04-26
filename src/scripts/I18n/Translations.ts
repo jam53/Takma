@@ -182,7 +182,8 @@ export let en: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Due dates overview",
     addCover: "You can set a card's cover image here.",
@@ -267,6 +268,7 @@ export let en: Translation = {
     showArchivedBoards: "Show archived boards",
     hideArchivedBoards: "Hide archived boards",
     plainTextEditor: "Plain text editor",
+    wysiwygEditor: "WYSIWYG editor",
     copyMarkdown: "Copy Markdown",
     copyText: "Copy text",
     copiedCardDescriptionToClipboard: "Copied card description to clipboard",
@@ -468,7 +470,8 @@ export let ar: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "نظرة عامة على المواعيد النهائية",
     addCover: "يمكنك تعيين صورة غلاف للبطاقة هنا.",
@@ -553,6 +556,7 @@ export let ar: Translation = {
     showArchivedBoards: "إظهار اللوحات المؤرشفة",
     hideArchivedBoards: "إخفاء اللوحات المؤرشفة",
     plainTextEditor: "محرر نص عادي",
+    wysiwygEditor: "محرر WYSIWYG",
     copyMarkdown: "نسخ ماركداون",
     copyText: "نسخ النص",
     copiedCardDescriptionToClipboard: "تم نسخ وصف البطاقة إلى الحافظة",
@@ -754,7 +758,8 @@ export let de: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Fälligkeitsdaten Übersicht",
     addCover: "Hier können Sie das Titelbild einer Karte festlegen.",
@@ -839,6 +844,7 @@ export let de: Translation = {
     showArchivedBoards: "Archivierte Boards anzeigen",
     hideArchivedBoards: "Archivierte Boards ausblenden",
     plainTextEditor: "Nur-Text-Editor",
+    wysiwygEditor: "WYSIWYG-Editor",
     copyMarkdown: "Markdown kopieren",
     copyText: "Text kopieren",
     copiedCardDescriptionToClipboard: "Kartenbeschreibung in die Zwischenablage kopiert",
@@ -1040,7 +1046,8 @@ export let es: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Resumen de fechas de vencimiento",
     addCover: "Aquí puedes establecer la imagen de portada de una tarjeta.",
@@ -1125,6 +1132,7 @@ export let es: Translation = {
     showArchivedBoards: "Mostrar tableros archivados",
     hideArchivedBoards: "Ocultar tableros archivados",
     plainTextEditor: "Editor de texto plano",
+    wysiwygEditor: "Editor WYSIWYG",
     copyMarkdown: "Copiar Markdown",
     copyText: "Copiar texto",
     copiedCardDescriptionToClipboard: "Descripción de la tarjeta copiada al portapapeles",
@@ -1326,7 +1334,8 @@ export let et: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Käimasolevate tähtaegade ülevaade",
     addCover: "Siin saate määrata kaardi kaane pildi.",
@@ -1411,6 +1420,7 @@ export let et: Translation = {
     showArchivedBoards: "Kuva arhiveeritud tahvlid",
     hideArchivedBoards: "Peida arhiveeritud tahvlid",
     plainTextEditor: "Lihttekstiredaktor",
+    wysiwygEditor: "WYSIWYG redaktor",
     copyMarkdown: "Kopeeri Markdown",
     copyText: "Kopeeri tekst",
     copiedCardDescriptionToClipboard: "Kaardi kirjeldus lõikelauale kopeeritud",
@@ -1612,7 +1622,8 @@ export let fr: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Vue d'ensemble des dates d'échéanc",
     addCover: "Vous pouvez définir l'image de couverture de la carte ici.",
@@ -1697,6 +1708,7 @@ export let fr: Translation = {
     showArchivedBoards: "Afficher les tableaux archivés",
     hideArchivedBoards: "Masquer les tableaux archivés",
     plainTextEditor: "Éditeur de texte brut",
+    wysiwygEditor: "Éditeur WYSIWYG",
     copyMarkdown: "Copier le Markdown",
     copyText: "Copier le texte",
     copiedCardDescriptionToClipboard: "Description de la carte copiée dans le presse-papiers",
@@ -1898,7 +1910,8 @@ export let hi: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "नियत तिथियों का अवलोकन",
     addCover: "आप यहाँ पर कार्ड की कवर छवि सेट कर सकते हैं।",
@@ -1983,6 +1996,7 @@ export let hi: Translation = {
     showArchivedBoards: "संग्रहीत बोर्ड दिखाएँ",
     hideArchivedBoards: "संग्रहीत बोर्ड छिपाएँ",
     plainTextEditor: "सादा पाठ संपादक",
+    wysiwygEditor: "WYSIWYG संपादक",
     copyMarkdown: "मार्कडाउन कॉपी करें",
     copyText: "पाठ कॉपी करें",
     copiedCardDescriptionToClipboard: "कार्ड विवरण क्लिपबोर्ड पर कॉपी किया गया",
@@ -2184,7 +2198,8 @@ export let id: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Ringkasan Tanggal Jatuh Tempo",
     addCover: "Anda dapat mengatur gambar sampul kartu di sini.",
@@ -2269,6 +2284,7 @@ export let id: Translation = {
     showArchivedBoards: "Tampilkan papan yang diarsipkan",
     hideArchivedBoards: "Sembunyikan papan yang diarsipkan",
     plainTextEditor: "Editor teks biasa",
+    wysiwygEditor: "Editor WYSIWYG",
     copyMarkdown: "Salin Markdown",
     copyText: "Salin teks",
     copiedCardDescriptionToClipboard: "Deskripsi kartu disalin ke clipboard",
@@ -2470,7 +2486,8 @@ export let ja: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "期限日の概要",
     addCover: "ここでカードのカバー画像を設定できます。",
@@ -2555,6 +2572,7 @@ export let ja: Translation = {
     showArchivedBoards: "アーカイブ済みのボードを表示",
     hideArchivedBoards: "アーカイブ済みのボードを非表示",
     plainTextEditor: "プレーンテキストエディタ",
+    wysiwygEditor: "WYSIWYGエディタ",
     copyMarkdown: "Markdownをコピー",
     copyText: "テキストをコピー",
     copiedCardDescriptionToClipboard: "カードの説明をクリップボードにコピーしました",
@@ -2756,7 +2774,8 @@ export let ko: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "마감일 개요",
     addCover: "여기에서 카드의 커버 이미지를 설정할 수 있습니다.",
@@ -2841,6 +2860,7 @@ export let ko: Translation = {
     showArchivedBoards: "아카이브된 보드 보이기",
     hideArchivedBoards: "아카이브된 보드 숨기기",
     plainTextEditor: "일반 텍스트 편집기",
+    wysiwygEditor: "WYSIWYG 에디터",
     copyMarkdown: "마크다운 복사",
     copyText: "텍스트 복사",
     copiedCardDescriptionToClipboard: "카드 설명을 클립보드에 복사했습니다",
@@ -3042,7 +3062,8 @@ export let nl: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Overzicht van vervaldatums",
     addCover: "Hier kunt u de omslagafbeelding van een kaart instellen.",
@@ -3127,6 +3148,7 @@ export let nl: Translation = {
     showArchivedBoards: "Gearchiveerde borden tonen",
     hideArchivedBoards: "Gearchiveerde borden verbergen",
     plainTextEditor: "Platte tekst editor",
+    wysiwygEditor: "WYSIWYG-editor",
     copyMarkdown: "Markdown kopiëren",
     copyText: "Tekst kopiëren",
     copiedCardDescriptionToClipboard: "Kaartbeschrijving gekopieerd naar klembord",
@@ -3328,7 +3350,8 @@ export let pt: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Visão geral de prazos",
     addCover: "Você pode definir a imagem de capa do cartão aqui.",
@@ -3413,6 +3436,7 @@ export let pt: Translation = {
     showArchivedBoards: "Mostrar quadros arquivados",
     hideArchivedBoards: "Ocultar quadros arquivados",
     plainTextEditor: "Editor de texto simples",
+    wysiwygEditor: "Editor WYSIWYG",
     copyMarkdown: "Copiar Markdown",
     copyText: "Copiar texto",
     copiedCardDescriptionToClipboard: "Descrição do cartão copiada para a área de transferência",
@@ -3614,7 +3638,8 @@ export let ru: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Обзор сроков выполнения",
     addCover: "Здесь вы можете установить обложку карточки.",
@@ -3699,6 +3724,7 @@ export let ru: Translation = {
     showArchivedBoards: "Показать архивные доски",
     hideArchivedBoards: "Скрыть архивные доски",
     plainTextEditor: "Редактор обычного текста",
+    wysiwygEditor: "WYSIWYG-редактор",
     copyMarkdown: "Копировать Markdown",
     copyText: "Копировать текст",
     copiedCardDescriptionToClipboard: "Описание карточки скопировано в буфер обмена",
@@ -3900,7 +3926,8 @@ export let tr: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "Son teslim tarihleri genel bakış",
     addCover: "Bir kartın kapak resmini buradan ayarlayabilirsiniz.",
@@ -3985,6 +4012,7 @@ export let tr: Translation = {
     showArchivedBoards: "Arşivlenmiş panoları göster",
     hideArchivedBoards: "Arşivlenmiş panoları gizle",
     plainTextEditor: "Düz metin düzenleyici",
+    wysiwygEditor: "WYSIWYG düzenleyici",
     copyMarkdown: "Markdown'ı Kopyala",
     copyText: "Metni Kopyala",
     copiedCardDescriptionToClipboard: "Kart açıklaması panoya kopyalandı",
@@ -4186,7 +4214,8 @@ export let zh: Translation = {
                 }
             ]
         }],
-        favourite: true
+        favourite: true,
+        archived: false,
     },
     dueDatesOverview: "截止日期概览",
     addCover: "您可以在此设置卡片的封面图片。",
@@ -4271,6 +4300,7 @@ export let zh: Translation = {
     showArchivedBoards: "显示已归档看板",
     hideArchivedBoards: "隐藏已归档看板",
     plainTextEditor: "纯文本编辑器",
+    wysiwygEditor: "WYSIWYG 编辑器",
     copyMarkdown: "复制Markdown",
     copyText: "复制文本",
     copiedCardDescriptionToClipboard: "已将卡片描述复制到剪贴板",
