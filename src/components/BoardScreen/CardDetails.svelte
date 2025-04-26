@@ -25,6 +25,7 @@
     import {convertFileSrc} from "@tauri-apps/api/core";
     import {debug, info} from "@tauri-apps/plugin-log";
     import TipTap from "./Tiptap/Tiptap.svelte";
+    import {debounce} from "../../scripts/Debounce";
 
     interface Props {
         refreshList: (listToRefresh: List) => void;
@@ -80,11 +81,12 @@
     }
 
     // Automatically save the selected card when any changes are made
+    let debouncedSaveCard = debounce((cardToSave: Card, boardId: string, cardId: string) => SaveLoadManager.getData().updateCard(cardToSave, boardId, cardId));
     $effect(() => {
         if (card)
         {
             debug("Saving card: " + card.id);
-            SaveLoadManager.getData().updateCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
+            debouncedSaveCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
             refreshCard(card);
         }
     })

@@ -11,6 +11,7 @@
     import {join, resolveResource} from "@tauri-apps/api/path";
     import {debug, info} from "@tauri-apps/plugin-log";
     import {slide} from "svelte/transition";
+    import {debounce} from "../../scripts/Debounce";
 
     let lazyLoaded = $state(false); //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -26,9 +27,10 @@
 
     let boards: Board[] = $state(SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
     // Automatically saves the boards when any changes are made + ensures they are in the correct order
+    let debouncedSaveBoards = debounce((boardsToSave: Board[]) => SaveLoadManager.getData().boards = boardsToSave);
     $effect(() => {
         debug("Saving boards");
-        SaveLoadManager.getData().boards = $state.snapshot(boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
+        debouncedSaveBoards($state.snapshot(boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName))));
     })
 
     onMount(async () =>
