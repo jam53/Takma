@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.3] - 2025-04-26
+### Added
+- Add action buttons below the plain text editor. ([4646b871](https://github.com/jam53/Takma/commit/4646b8717371188f8cc33986ed26f4393282f64b))
+- (tiptap): Allow headings and other block elements within Details/Summary blocks. ([5dd466f6](https://github.com/jam53/Takma/commit/5dd466f6c993a7cd62abf8c66eff7158ebdb4f91))
+
+### Changed
+- Improve performance by debouncing `SaveLoadManager` persistence calls, reducing disk I/O frequency during rapid saves. ([ef9128e6](https://github.com/jam53/Takma/commit/ef9128e6338cbd4f047d15618380c390ce5e4fb1))
+- (tiptap): Improve editor initialization performance by removing a redundant `setContent` call, reducing UI hangs with large descriptions. ([97008c5a](https://github.com/jam53/Takma/commit/97008c5a13e9036ea90153705af99932ffae7f82))
+
+### Fixed
+- (tiptap): Fix issue where the marker on Details/Summary blocks could block clicks on the unfold/fold button. ([d52bfd0c](https://github.com/jam53/Takma/commit/d52bfd0c6caf9e49b27f7ee853bbae0be0a65838))
+- (tiptap): Position the floating menu above the current line instead of after the cursor. ([f88fe22f](https://github.com/jam53/Takma/commit/f88fe22fc5a802bc7451dd8e0b5c31a49c64b37a))
+
 ## [1.7.2] - 2025-04-22
 ### Fixed
 - Fix file opening issue. Using Tauri's `open()` caused problems with local files (attachments, license). Switched to `openPath()` for correct handling. ([15efed03](https://github.com/jam53/Takma/commit/15efed03e3c9632f471babc837749ee31dd9c718))
@@ -596,6 +609,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit. ([b28d9a78](https://github.com/jam53/Takma/commit/b28d9a783ffcb7ff30e67e8a11677c66f28667e4))
 
 <!-- Link Definitions -->
+[1.7.3]: https://github.com/jam53/Takma/compare/v1.7.2...v1.7.3
 [1.7.2]: https://github.com/jam53/Takma/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/jam53/Takma/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/jam53/Takma/compare/v1.6.8...v1.7.0
