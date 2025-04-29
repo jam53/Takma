@@ -538,11 +538,18 @@
                     {:else}
                         <!-- Without this key, the description of the card wouldn't update when we clicked on a Takma link in the description of a card. All other aspects of the card except for the description would be updated, checklists, title etc. But the description would still show the description of the original card where the user clicked on the Takma link. -->
                         {#key card}
-                            <TipTap
-                                    bind:cardDescription={card.description}
-                                    {getImageUrl}
-                                    switchToPlainTextEditor={() => showPlainTextEditor = true}
-                            />
+                            <!--
+                                Do not remove this wrapper div to move the 'markdown-body' class directly to the <TipTap> component below.
+
+                                Attempting to do so (as done in commit b991a20) caused a regression bug that only manifested in production/release builds. Where clicking on a Takma link within a card description, caused only the title of the new card to be displayed, while the description, checklists, ... wouldn't be displayed at all.
+                            -->
+                            <div class="markdown-body">
+                                <TipTap
+                                        bind:cardDescription={card.description}
+                                        {getImageUrl}
+                                        switchToPlainTextEditor={() => showPlainTextEditor = true}
+                                />
+                            </div>
                         {/key}
                     {/if}
                     <CheckLists bind:this={checkListComponent} bind:checklists={card.checklists} {focusOnCardDetailsFunction}/>

@@ -398,7 +398,7 @@
 </script>
 
 <!-- Tiptap text editor component -->
-<div bind:this={editorElement} class="editor-content markdown-body"/>
+<div bind:this={editorElement} class="editor-content" />
 
 <!-- Buttons to switch to the plain text editor, copy the description as Markdown or to copy the description as plain text -->
 {#if cardDescription && editor}
