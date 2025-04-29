@@ -1,6 +1,6 @@
 [package]
 name = "Takma"
-version = "1.7.3"
+version = "1.7.4"
 description = "Takma is a Kanban-style productivity tool that empowers you to effectively manage your tasks and projects with ease."
 authors = ["jam54"]
 license = ""
