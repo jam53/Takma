@@ -146,7 +146,8 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
         background-color: rgba(var(--background-color-rgb-values), 0.5);
         backdrop-filter: blur(10px);
         border-radius: 5px;
-        overflow: hidden;
+        max-height: max(40vh, 15em);
+        overflow: auto;
         flex-direction: column;
         border: 1px solid rgba(var(--background-color-rgb-values), 0.4);
         box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
