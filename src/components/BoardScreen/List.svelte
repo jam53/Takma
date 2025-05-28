@@ -254,6 +254,7 @@
     /* Handle */
     ::-webkit-scrollbar-thumb {
         background-color: rgba(var(--background-color-rgb-values), 0.3);
+        cursor: default;
     }
 
     /* Handle on hover */
