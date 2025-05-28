@@ -32,8 +32,6 @@
     import {DetailsContent} from "../../../scripts/Tiptap/DetailsContent";
     import {DetailsSummary} from "../../../scripts/Tiptap/DetailsSummary";
     import {Details} from "../../../scripts/Tiptap/Details";
-    import {toast} from "svelte-sonner";
-    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {Placeholder} from "@tiptap/extension-placeholder";
     import {openUrl} from "@tauri-apps/plugin-opener";
     import TextEditorActionButtons from "./TextEditorActionButtons.svelte";
@@ -79,11 +77,11 @@
                     const targetElement = event.target as HTMLElement;
 
                     // Handle LMB clicks on regular http/https links using Tauri's `openUrl()` to ensure it opens in the user's default browser rather than in a new Tauri window
-                    if(event.button === 0 && targetElement.tagName === 'A' && targetElement.hasAttribute('href'))
+                    if(event.button === 0 && targetElement.closest("a")?.hasAttribute('href'))
                     {
                         event.preventDefault();
                         event.stopPropagation();
-                        openUrl(targetElement.getAttribute('href')!);
+                        openUrl(targetElement.closest("a")!.getAttribute('href')!);
                         return true; // Signals that the "click" was handled
                     }
 
