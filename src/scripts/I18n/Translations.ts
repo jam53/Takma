@@ -283,6 +283,7 @@ export let en: Translation = {
     confirmChangeSaveLocationDescription: "<p>This will move Takma's current save file and any associated files from: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>to the new location you select.</p><p>Takma will then use this new location for all future saves. Are you sure you want to proceed?</p>",
     folderExistsTitle: "Cannot move save data",
     folderExistsDescription: "<div class='markdown-body'><p>Takma cannot move the save data because a folder named <code>Takma</code> already exists in the chosen directory: <pre><code>$|00|$</code></pre></p><p>To proceed, please select a new location or ensure the target directory does not already contain a folder named <code>Takma</code>.</p></div>",
+    showAllButtons: "Show all buttons",
 };
 
 export let ar: Translation = {
@@ -568,6 +569,7 @@ export let ar: Translation = {
     confirmChangeSaveLocationDescription: "<p>سيؤدي هذا إلى نقل ملف الحفظ الحالي لـ Takma وأي ملفات مرتبطة به من: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>إلى الموقع الجديد الذي تحدده.</p><p>سيستخدم Takma بعد ذلك هذا الموقع الجديد لجميع عمليات الحفظ المستقبلية. هل أنت متأكد أنك تريد المتابعة؟</p>",
     folderExistsTitle: "لا يمكن نقل بيانات الحفظ",
     folderExistsDescription: "<div class='markdown-body'><p>لا يمكن لـ Takma نقل بيانات الحفظ لأن مجلدًا باسم <code>Takma</code> موجود بالفعل في الدليل المختار: <pre><code>$|00|$</code></pre></p><p>للمتابعة، يرجى تحديد موقع جديد أو التأكد من أن الدليل الهدف لا يحتوي بالفعل على مجلد باسم <code>Takma</code>.</p></div>",
+    showAllButtons: "إظهار جميع الأزرار",
 };
 
 export let de: Translation = {
@@ -853,6 +855,7 @@ export let de: Translation = {
     confirmChangeSaveLocationDescription: "<p>Dadurch werden Takmas aktuelle Speicherdatei und alle zugehörigen Dateien von: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>an den neu ausgewählten Ort verschoben.</p><p>Takma wird diesen neuen Ort für alle zukünftigen Speicherungen verwenden. Sind Sie sicher, dass Sie fortfahren möchten?</p>",
     folderExistsTitle: "Speicherdaten können nicht verschoben werden",
     folderExistsDescription: "<div class='markdown-body'><p>Takma kann die Speicherdaten nicht verschieben, da im ausgewählten Verzeichnis bereits ein Ordner mit dem Namen <code>Takma</code> existiert: <pre><code>$|00|$</code></pre></p><p>Um fortzufahren, wählen Sie bitte einen neuen Ort aus oder stellen Sie sicher, dass das Zielverzeichnis nicht bereits einen Ordner mit dem Namen <code>Takma</code> enthält.</p></div>",
+    showAllButtons: "Alle Schaltflächen anzeigen",
 };
 
 export let es: Translation = {
@@ -1138,6 +1141,7 @@ export let es: Translation = {
     confirmChangeSaveLocationDescription: "<p>Esto moverá el archivo de guardado actual de Takma y cualquier archivo asociado desde: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>a la nueva ubicación que selecciones.</p><p>Takma usará esta nueva ubicación para todas las futuras operaciones de guardado. ¿Estás seguro de que quieres continuar?</p>",
     folderExistsTitle: "No se pueden mover los datos de guardado",
     folderExistsDescription: "<div class='markdown-body'><p>Takma no puede mover los datos de guardado porque ya existe una carpeta llamada <code>Takma</code> en el directorio elegido: <pre><code>$|00|$</code></pre></p><p>Para continuar, selecciona una nueva ubicación o asegúrate de que el directorio de destino no contenga ya una carpeta llamada <code>Takma</code>.</p></div>",
+    showAllButtons: "Mostrar todos los botones",
 };
 
 export let et: Translation = {
@@ -1423,6 +1427,7 @@ export let et: Translation = {
     confirmChangeSaveLocationDescription: "<p>See teisaldab Takma praeguse salvestusfaili ja kõik seotud failid asukohast: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>sinu valitud uude asukohta.</p><p>Takma kasutab seejärel seda uut asukohta kõigi tulevaste salvestuste jaoks. Kas oled kindel, et soovid jätkata?</p>",
     folderExistsTitle: "Salvestusandmete teisaldamine nurjus",
     folderExistsDescription: "<div class='markdown-body'><p>Takma ei saa salvestusandmeid teisaldada, kuna valitud kataloogis on juba olemas kaust nimega <code>Takma</code>: <pre><code>$|00|$</code></pre></p><p>Jätkamiseks vali palun uus asukoht või veendu, et sihtkataloogis ei oleks juba kausta nimega <code>Takma</code>.</p></div>",
+    showAllButtons: "Kuva kõik nupud",
 };
 
 export let fr: Translation = {
@@ -1708,6 +1713,7 @@ export let fr: Translation = {
     confirmChangeSaveLocationDescription: "<p>Cela déplacera le fichier de sauvegarde actuel de Takma et tous les fichiers associés de : <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>vers le nouvel emplacement que vous sélectionnez.</p><p>Takma utilisera ensuite ce nouvel emplacement pour toutes les sauvegardes futures. Êtes-vous sûr de vouloir continuer ?</p>",
     folderExistsTitle: "Impossible de déplacer les données de sauvegarde",
     folderExistsDescription: "<div class='markdown-body'><p>Takma ne peut pas déplacer les données de sauvegarde car un dossier nommé <code>Takma</code> existe déjà dans le répertoire choisi : <pre><code>$|00|$</code></pre></p><p>Pour continuer, veuillez sélectionner un nouvel emplacement ou vous assurer que le répertoire cible ne contient pas déjà un dossier nommé <code>Takma</code>.</p></div>",
+    showAllButtons: "Afficher tous les boutons",
 };
 
 export let hi: Translation = {
@@ -1993,6 +1999,7 @@ export let hi: Translation = {
     confirmChangeSaveLocationDescription: "<p>यह Takma की वर्तमान सेव फ़ाइल और किसी भी संबंधित फ़ाइल को यहाँ से: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>आपके द्वारा चुनी गई नई लोकेशन पर ले जाएगा।</p><p>Takma फिर भविष्य के सभी सेव के लिए इस नई लोकेशन का उपयोग करेगा। क्या आप निश्चित रूप से आगे बढ़ना चाहते हैं?</p>",
     folderExistsTitle: "सेव डेटा को मूव नहीं किया जा सका",
     folderExistsDescription: "<div class='markdown-body'><p>Takma सेव डेटा को मूव नहीं कर सकता क्योंकि चुनी गई डायरेक्टरी में <code>Takma</code> नामक एक फ़ोल्डर पहले से मौजूद है: <pre><code>$|00|$</code></pre></p><p>आगे बढ़ने के लिए, कृपया एक नई लोकेशन चुनें या सुनिश्चित करें कि टारगेट डायरेक्टरी में पहले से <code>Takma</code> नामक कोई फ़ोल्डर न हो।</p></div>",
+    showAllButtons: "सभी बटन दिखाएँ",
 };
 
 export let id: Translation = {
@@ -2278,6 +2285,7 @@ export let id: Translation = {
     confirmChangeSaveLocationDescription: "<p>Ini akan memindahkan file simpanan Takma saat ini dan file terkait dari: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>ke lokasi baru yang Anda pilih.</p><p>Takma kemudian akan menggunakan lokasi baru ini untuk semua penyimpanan di masa mendatang. Apakah Anda yakin ingin melanjutkan?</p>",
     folderExistsTitle: "Tidak dapat memindahkan data simpanan",
     folderExistsDescription: "<div class='markdown-body'><p>Takma tidak dapat memindahkan data simpanan karena folder bernama <code>Takma</code> sudah ada di direktori yang dipilih: <pre><code>$|00|$</code></pre></p><p>Untuk melanjutkan, silakan pilih lokasi baru atau pastikan direktori target tidak berisi folder bernama <code>Takma</code>.</p></div>",
+    showAllButtons: "Tampilkan semua tombol",
 };
 
 export let ja: Translation = {
@@ -2563,6 +2571,7 @@ export let ja: Translation = {
     confirmChangeSaveLocationDescription: "<p>これにより、Takmaの現在の保存ファイルおよび関連ファイルが次の場所から：<div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>選択した新しい場所に移動されます。</p><p>Takmaは今後、すべての保存にこの新しい場所を使用します。続行してもよろしいですか？</p>",
     folderExistsTitle: "保存データを移動できません",
     folderExistsDescription: "<div class='markdown-body'><p>選択したディレクトリに<code>Takma</code>という名前のフォルダが既に存在するため、Takmaは保存データを移動できません：<pre><code>$|00|$</code></pre></p><p>続行するには、新しい場所を選択するか、ターゲットディレクトリに<code>Takma</code>という名前のフォルダが含まれていないことを確認してください。</p></div>",
+    showAllButtons: "すべてのボタンを表示",
 };
 
 export let ko: Translation = {
@@ -2848,6 +2857,7 @@ export let ko: Translation = {
     confirmChangeSaveLocationDescription: "<p>Takma의 현재 저장 파일 및 관련 파일이 다음 위치에서: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>선택한 새 위치로 이동됩니다.</p><p>이후 Takma는 모든 저장에 이 새 위치를 사용합니다. 계속하시겠습니까?</p>",
     folderExistsTitle: "저장 데이터를 이동할 수 없습니다",
     folderExistsDescription: "<div class='markdown-body'><p>선택한 디렉토리에 <code>Takma</code>라는 이름의 폴더가 이미 존재하여 Takma가 저장 데이터를 이동할 수 없습니다: <pre><code>$|00|$</code></pre></p><p>계속하려면 새 위치를 선택하거나 대상 디렉토리에 <code>Takma</code>라는 이름의 폴더가 없는지 확인하십시오.</p></div>",
+    showAllButtons: "모든 버튼 표시",
 };
 
 export let nl: Translation = {
@@ -3133,6 +3143,7 @@ export let nl: Translation = {
     confirmChangeSaveLocationDescription: "<p>Dit verplaatst het huidige opslagbestand van Takma en alle bijbehorende bestanden van: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>naar de nieuwe locatie die u selecteert.</p><p>Takma zal dan deze nieuwe locatie gebruiken voor alle toekomstige opslagacties. Weet u zeker dat u wilt doorgaan?</p>",
     folderExistsTitle: "Kan opslaggegevens niet verplaatsen",
     folderExistsDescription: "<div class='markdown-body'><p>Takma kan de opslaggegevens niet verplaatsen omdat er al een map met de naam <code>Takma</code> bestaat in de gekozen map: <pre><code>$|00|$</code></pre></p><p>Selecteer een nieuwe locatie of zorg ervoor dat de doelmap nog geen map met de naam <code>Takma</code> bevat om door te gaan.</p></div>",
+    showAllButtons: "Toon alle knoppen",
 };
 
 export let pt: Translation = {
@@ -3418,6 +3429,7 @@ export let pt: Translation = {
     confirmChangeSaveLocationDescription: "<p>Isso moverá o arquivo de salvamento atual do Takma e quaisquer arquivos associados de: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>para o novo local que você selecionar.</p><p>O Takma usará este novo local para todos os salvamentos futuros. Tem certeza de que deseja continuar?</p>",
     folderExistsTitle: "Não é possível mover os dados salvos",
     folderExistsDescription: "<div class='markdown-body'><p>O Takma não pode mover os dados salvos porque já existe uma pasta chamada <code>Takma</code> no diretório escolhido: <pre><code>$|00|$</code></pre></p><p>Para prosseguir, selecione um novo local ou certifique-se de que o diretório de destino ainda não contenha uma pasta chamada <code>Takma</code>.</p></div>",
+    showAllButtons: "Mostrar todos os botões",
 };
 
 export let ru: Translation = {
@@ -3703,6 +3715,7 @@ export let ru: Translation = {
     confirmChangeSaveLocationDescription: "<p>Это переместит текущий файл сохранения Takma и все связанные файлы из: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>в новое выбранное вами место.</p><p>Затем Takma будет использовать это новое место для всех будущих сохранений. Вы уверены, что хотите продолжить?</p>",
     folderExistsTitle: "Не удалось переместить данные сохранения",
     folderExistsDescription: "<div class='markdown-body'><p>Takma не может переместить данные сохранения, так как в выбранном каталоге уже существует папка с именем <code>Takma</code>: <pre><code>$|00|$</code></pre></p><p>Чтобы продолжить, выберите новое место или убедитесь, что в целевом каталоге еще нет папки с именем <code>Takma</code>.</p></div>",
+    showAllButtons: "Показать все кнопки",
 };
 
 export let tr: Translation = {
@@ -3988,6 +4001,7 @@ export let tr: Translation = {
     confirmChangeSaveLocationDescription: "<p>Bu, Takma'nın mevcut kayıt dosyasını ve ilişkili tüm dosyaları şuradan: <div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>seçtiğiniz yeni konuma taşıyacaktır.</p><p>Takma daha sonra tüm gelecekteki kayıtlar için bu yeni konumu kullanacaktır. Devam etmek istediğinizden emin misiniz?</p>",
     folderExistsTitle: "Kayıt verileri taşınamıyor",
     folderExistsDescription: "<div class='markdown-body'><p>Takma, seçilen dizinde zaten <code>Takma</code> adında bir klasör bulunduğu için kayıt verilerini taşıyamıyor: <pre><code>$|00|$</code></pre></p><p>Devam etmek için lütfen yeni bir konum seçin veya hedef dizinde <code>Takma</code> adında bir klasör bulunmadığından emin olun.</p></div>",
+    showAllButtons: "Tüm düğmeleri göster",
 };
 
 export let zh: Translation = {
@@ -4273,4 +4287,5 @@ export let zh: Translation = {
     confirmChangeSaveLocationDescription: "<p>这将把 Takma 当前的保存文件及任何相关文件从：<div class='markdown-body'><pre><code>$|00|$</code></pre></div><br>移动到您选择的新位置。</p><p>Takma 随后将使用此新位置进行所有未来的保存。您确定要继续吗？</p>",
     folderExistsTitle: "无法移动保存数据",
     folderExistsDescription: "<div class='markdown-body'><p>Takma 无法移动保存数据，因为所选目录中已存在名为 <code>Takma</code> 的文件夹：<pre><code>$|00|$</code></pre></p><p>要继续，请选择一个新位置，或确保目标目录中尚不存在名为 <code>Takma</code> 的文件夹。</p></div>",
+    showAllButtons: "显示所有按钮",
 };
