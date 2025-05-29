@@ -2,7 +2,6 @@
     import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {exists, remove} from "@tauri-apps/plugin-fs";
-    import {invoke} from "@tauri-apps/api/core";
     import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
@@ -10,7 +9,7 @@
     import {join} from "@tauri-apps/api/path";
     import {mount} from "svelte";
     import PopupWindow from "../PopupWindow.svelte";
-    import {openPath} from "@tauri-apps/plugin-opener";
+    import {openPath, revealItemInDir} from "@tauri-apps/plugin-opener";
 
     interface Props {
         attachments: string[];
@@ -47,7 +46,7 @@
     {
         const path = await join(SaveLoadManager.getSaveDirectoryPath(), pathToFile);
 
-        await invoke('show_in_folder', {path});
+        await revealItemInDir(path);
     }
 
     async function copyFilePathToClipboard(pathToFile: string)
