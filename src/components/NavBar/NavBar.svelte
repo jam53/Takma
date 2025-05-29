@@ -27,7 +27,12 @@
 
     let { saveLocationSet }: Props = $props();
 
-    let showNonEssentialButtons = $state(!SaveLoadManager.getData().onboardingCompleted); // Certain non-essential buttons are part of the onboarding process, therefore in case the onboarding hasn't been completed yet we should show all buttons. Otherwise if the user already completed the onboarding, hide non-essential buttons by default
+    let showNonEssentialButtons = $state(false); // Set through `$effect` below
+    $effect(() => {
+        selectedBoardId.value; // Runs this $effect when the value of this variable changes
+
+        showNonEssentialButtons = !SaveLoadManager.getData().onboardingCompleted; // Certain non-essential buttons are part of the onboarding process, therefore in case the onboarding hasn't been completed yet we should show all buttons. Otherwise if the user already completed the onboarding, hide non-essential buttons by default
+    })
 </script>
 
 <div class="containingDiv">
@@ -54,24 +59,28 @@
     <div class="rightSideContainer">
         {#if saveLocationSet}
             <SearchBar/>
-            <button class="dueDatesOverviewButton" title={I18n.t("dueDatesOverview")}
+            <!-- Due dates overview button -->
+            <button class="navbarButton filledButton" title={I18n.t("dueDatesOverview")}
                     onclick={() => mount(DueDatesOverviewPopup, {target: document.body, intro: true})}
             >
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M686.7 638.6L544.1 535.5V288c0-4.4-3.6-8-8-8H488c-4.4 0-8 3.6-8 8v275.4c0 2.6 1.2 5 3.3 6.5l165.4 120.6c3.6 2.6 8.6 1.8 11.2-1.7l28.6-39c2.6-3.7 1.8-8.7-1.8-11.2z"></path></svg>
             </button>
             {#if selectedBoardId.value === ""}
-                <button class="orderBoardsButton" title={I18n.t("orderBoards")}
+                <!-- Order boards button -->
+                <button class="navbarButton unfilledButton" title={I18n.t("orderBoards")}
                     onclick={e => mount(OrderBoardsMenu, {props: {clickEvent: e}, target: document.body, intro: true })}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
                 </button>
                 {#if showNonEssentialButtons}
-                    <button class="webPreviewButton" id="takmaWebPreviewButton" title={I18n.t("takmaWebPreview")} transition:scale
+                    <!-- Web preview button -->
+                    <button class="navbarButton unfilledButton" id="takmaWebPreviewButton" title={I18n.t("takmaWebPreview")} in:scale
                         onclick={() => open("https://takma.jam54.com")}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" style="fill: currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2zm0 16H5V7h14v12zm-5.5-6c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM12 9c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4zm0 6.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path></svg>
                     </button>
-                    <button class="changeSaveLocationButton" title={I18n.t("changeSaveLocation")} transition:scale
+                    <!-- Change save location button -->
+                    <button class="navbarButton filledButton" title={I18n.t("changeSaveLocation")} in:scale
                             onclick={async () => {
                                 const popup = mount(PopupWindow, {props: {title: I18n.t("confirmChangeSaveLocationTitle"), description: I18n.t("confirmChangeSaveLocationDescription", await SaveLoadManager.getSaveFilePath()), buttonType: "yesno"}, target: document.body, intro: true});
 
@@ -84,7 +93,8 @@
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="-63 -51.2 537.6 614.4" xmlns="http://www.w3.org/2000/svg"><path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"></path></svg>
                     </button>
-                    <button class="startOnboarding" title={I18n.t("beginOnboarding")} transition:scale
+                    <!-- Start onboarding button -->
+                    <button class="navbarButton unfilledButton filledButton" title={I18n.t("beginOnboarding")} in:scale
                             onclick={async () => {
                                 const popup = mount(PopupWindow, {props: {description: I18n.t("confirmRestartOnboarding"), buttonType: "yesno"}, target: document.body, intro: true});
 
@@ -95,27 +105,31 @@
                                 }
                             }}
                     >
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="40" d="M160 164s1.44-33 33.54-59.46C212.6 88.83 235.49 84.28 256 84c18.73-.23 35.47 2.94 45.48 7.82C318.59 100.2 352 120.6 352 164c0 45.67-29.18 66.37-62.35 89.18S248 298.36 248 324"></path><circle cx="248" cy="399.99" r="32"></circle></svg>
+                        <svg style="fill: currentColor" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-linecap="round" stroke-miterlimit="10" stroke-width="40" d="M160 164s1.44-33 33.54-59.46C212.6 88.83 235.49 84.28 256 84c18.73-.23 35.47 2.94 45.48 7.82C318.59 100.2 352 120.6 352 164c0 45.67-29.18 66.37-62.35 89.18S248 298.36 248 324"></path><circle cx="248" cy="399.99" r="32"></circle></svg>
                     </button>
                 {:else}
-                    <button class="showNonEssentialButtonsButton" title={I18n.t("showAllButtons")}
+                    <!-- Show non-essential buttons button -->
+                    <button class="navbarButton filledButton" title={I18n.t("showAllButtons")}
                             onclick={() => showNonEssentialButtons = true}
                     >
                         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="2em" width="2em" xmlns="http://www.w3.org/2000/svg"><path d="M899.4 638.2h-27.198c-2.2-.6-4.2-1.6-6.4-2-57.2-8.8-102.4-56.4-106.2-112.199-4.401-62.4 31.199-115.2 89.199-132.4 7.6-2.2 15.6-3.8 23.399-5.8h27.2c1.8.6 3.4 1.6 5.4 1.8 52.8 8.6 93 46.6 104.4 98.6.8 4 2 8 3 12v27.2c-.6 1.8-1.6 3.6-1.8 5.4-8.4 52-45.4 91.599-96.801 103.6-5 1.2-9.6 2.6-14.2 3.8zM130.603 385.8l27.202.001c2.2.6 4.2 1.6 6.4 1.8 57.6 9 102.6 56.8 106.2 113.2 4 62.2-32 114.8-90.2 131.8-7.401 2.2-15 3.8-22.401 5.6h-27.2c-1.8-.6-3.4-1.6-5.2-2-52-9.6-86-39.8-102.2-90.2-2.2-6.6-3.4-13.6-5.2-20.4v-27.2c.6-1.8 1.6-3.6 1.8-5.4 8.6-52.2 45.4-91.6 96.8-103.6 4.8-1.201 9.4-2.401 13.999-3.601zm370.801.001h27.2c2.2.6 4.2 1.6 6.4 2 57.4 9 103.6 58.6 106 114.6 2.8 63-35.2 116.4-93.8 131.4-6.2 1.6-12.4 3-18.6 4.4h-27.2c-2.2-.6-4.2-1.6-6.4-2-57.4-8.8-103.601-58.6-106.2-114.6-3-63 35.2-116.4 93.8-131.4 6.4-1.6 12.6-3 18.8-4.4z"></path></svg>
                     </button>
                 {/if}
             {:else}
-                <button class="orderListsButton" title={I18n.t("orderLists")} transition:scale
+                <!-- Order lists button -->
+                <button class="navbarButton unfilledButton" title={I18n.t("orderLists")}
                         onclick={e => mount(OrderListsMenu, {props: {clickEvent: e}, target: document.body, intro: true })}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
                 </button>
-                <button class="filterButton" title={I18n.t("filterCards")}
+                <!-- Filters button -->
+                <button class="navbarButton filledButton" title={I18n.t("filterCards")}
                         onclick={e => mount(FilterCardsPopup, {props: {clickEvent: e}, target: document.body, intro: true})}
                 >
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M472 168H40a24 24 0 010-48h432a24 24 0 010 48zm-80 112H120a24 24 0 010-48h272a24 24 0 010 48zm-96 112h-80a24 24 0 010-48h80a24 24 0 010 48z"></path></svg>
                 </button>
-                <button class="copyLinkButton" title={I18n.t("copyThisBoardLink")}
+                <!-- Copy link button -->
+                <button class="navbarButton unfilledButton" title={I18n.t("copyThisBoardLink")}
                         onclick={async () => {
                          let linkToThisBoard = `takma://${selectedBoardId.value}`
                          await writeText(linkToThisBoard);
@@ -137,7 +151,8 @@
             {/if}
         {/if}
         {#if selectedBoardId.value === "" && (showNonEssentialButtons || !isSaveLocationSet.value)}
-            <button class="i18nButton" title={I18n.t("changeDisplayLanguage")} transition:scale
+            <!-- I18n button -->
+            <button class="navbarButton filledButton" title={I18n.t("changeDisplayLanguage")} in:scale
                     onclick={e => mount(ChangeDisplayLanguageMenu, {props: {clickEvent: e}, target: document.body, intro: true})}
             >
                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M478.33 433.6l-90-218a22 22 0 00-40.67 0l-90 218a22 22 0 1040.67 16.79L316.66 406h102.67l18.33 44.39A22 22 0 00458 464a22 22 0 0020.32-30.4zM334.83 362L368 281.65 401.17 362zm-66.99-19.08a22 22 0 00-4.89-30.7c-.2-.15-15-11.13-36.49-34.73 39.65-53.68 62.11-114.75 71.27-143.49H330a22 22 0 000-44H214V70a22 22 0 00-44 0v20H54a22 22 0 000 44h197.25c-9.52 26.95-27.05 69.5-53.79 108.36-31.41-41.68-43.08-68.65-43.17-68.87a22 22 0 00-40.58 17c.58 1.38 14.55 34.23 52.86 83.93.92 1.19 1.83 2.35 2.74 3.51-39.24 44.35-77.74 71.86-93.85 80.74a22 22 0 1021.07 38.63c2.16-1.18 48.6-26.89 101.63-85.59 22.52 24.08 38 35.44 38.93 36.1a22 22 0 0030.75-4.9z"></path></svg>
@@ -200,7 +215,7 @@
         padding: 1em 0.5em;
     }
 
-    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton, .webPreviewButton, .orderListsButton, .changeSaveLocationButton, .showNonEssentialButtonsButton {
+    .navbarButton {
         height: inherit;
         width: auto;
         margin: 0;
@@ -209,7 +224,7 @@
         border: none;
     }
 
-    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg, .dueDatesOverviewButton svg, .webPreviewButton svg, .orderListsButton svg, .changeSaveLocationButton svg, .showNonEssentialButtonsButton svg {
+    .navbarButton svg {
         transition: 0.5s;
         height: inherit;
         cursor: pointer;
@@ -217,21 +232,17 @@
         -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .35));
     }
 
-    .copyLinkButton svg, .orderBoardsButton svg, .webPreviewButton svg, .orderListsButton svg {
+    .unfilledButton svg {
         fill: none;
         color: var(--unselected-button);
     }
 
-    .startOnboarding svg {
-        color: var(--unselected-button);
-    }
-
-    .i18nButton:hover svg, .filterButton:hover svg, .startOnboarding:hover svg, .dueDatesOverviewButton:hover svg, .changeSaveLocationButton:hover svg, .showNonEssentialButtonsButton:hover svg {
-        fill: var(--selected-button);
-    }
-
-    .copyLinkButton:hover svg, .orderBoardsButton:hover svg, .startOnboarding:hover svg, .webPreviewButton:hover svg, .orderListsButton:hover svg {
+    .unfilledButton:hover svg {
         color: var(--selected-button);
+    }
+
+    .filledButton:hover svg {
+        fill: var(--selected-button);
     }
 
     .boardTitle {
