@@ -20,7 +20,6 @@
     import {error, info, warn} from "@tauri-apps/plugin-log";
 
     const appWindow = getCurrentWebviewWindow();
-    isSaveLocationSet.value = !(localStorage.getItem("saveDirectoryPath") === null);
 
     /**
      * Sets the background image of the body to the image of the selected board
@@ -210,27 +209,43 @@
         error(`Uncaught (in promise): ${event.reason}`);
     });
     //endregion
+
+    /**
+     * Loads a save file from disk if a save location is set.
+     * @returns Returns true if the save file was loaded, false otherwise.
+     */
+    async function loadSaveFile(): Promise<Boolean>
+    {
+        if (!isSaveLocationSet.value)
+        {
+            return false;
+        }
+        else
+        {
+            await SaveLoadManager.loadSaveFileFromDisk();
+            return true;
+        }
+    }
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
-{#if !isSaveLocationSet.value}
-    <NavBar bind:this={navBarElement} saveLocationSet={false}/>
-    <ChooseSaveLocationScreen/>
-{:else}
-    {#await SaveLoadManager.loadSaveFileFromDisk()}
-        <h1>{I18n.t("loadSaveFile")}</h1>
-    {:then _}
-        <NavBar bind:this={navBarElement} saveLocationSet={true}/>
-            {#if selectedBoardId.value === ""}
-                <div class="scroll-container">
+{#await loadSaveFile()}
+    <h1>{I18n.t("loadSaveFile")}</h1>
+{:then isSaveFileLoaded}
+    <NavBar bind:this={navBarElement}/>
+    {#if !isSaveFileLoaded}
+        <ChooseSaveLocationScreen/>
+    {:else}
+        {#if selectedBoardId.value === ""}
+            <div class="scroll-container">
                 <!--If we also want to be able to scroll on the board screen, we should ideally place it in this div. But we don't want that; we only want to be able to scroll in the lists, not the entire board screen itself.-->
-                    <WelcomeScreen/>
-                </div>
-            {:else}
-                <BoardScreen/>
-            {/if}
-    {/await}
-{/if}
+                <WelcomeScreen/>
+            </div>
+        {:else}
+            <BoardScreen/>
+        {/if}
+    {/if}
+{/await}
 </main>
 
 <style>
