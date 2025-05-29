@@ -254,12 +254,13 @@
 
 <style>
     .container {
-        height: calc(100vh - 4px - 30px - 2em - (2 * 8px) + 0.25em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) + margin-top of this style class */
+        height: calc(100vh - 4px - 30px - 2em - (2 * 8px) + 0.5em); /* 100vh - the borderwidth in the `.bodyNotMaximized` styleclass in `index.html` - height title bar in the `.titlebar` styleclass in `index.html` - navbar height in the `.containingDiv` styleclass in `NavBar.svelte` - (2 * height of the scrollbar at the bottom) + extra padding */
         display: flex;
         overflow-x: scroll;
         overflow-y: hidden;
+        /* Adjust spacing so the drop shadow doesn't get cut off: Adding padding-top creates space inside the element, while a negative margin-top pulls the element up visually without clipping the shadow. */
         padding-top: 0.75em;
-        margin-top: -0.25em;
+        margin-top: -0.75em;
     }
 
     /* Handle */

@@ -129,11 +129,10 @@
             (2 * 8px)    - (2 * height of the scrollbar at the bottom)
             (2 * 0.5em)  - padding bottom and top of .listHolder in BoardScreen
             (2 * 1px)    - (2 * width of the border of the lists)
-            5.5em        - the amount of space we want at the bottom, so some sort of a "padding"
+            5.25em        - the amount of space we want at the bottom, so some sort of a "padding"
             ${...}       - height of the list title
-            0.25em       - margin-top of .container in BoardScreen.svelte
          */
-        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.5em - ${titleHolderElement.clientHeight}px + 0.25em)`);
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.25em - ${titleHolderElement.clientHeight}px)`);
 
         applyOverFlowedStyleClasses();
     });

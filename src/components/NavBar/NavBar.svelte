@@ -148,7 +148,7 @@
         justify-content: space-between;
         height: 2em;
 
-        padding-top: 0.25em;
+        padding: 0.25em 0 0.5em 0;
         transition: 0.4s;
 
         background: transparent;
@@ -160,7 +160,7 @@
         align-items: center;
         gap: 0.5em;
         flex-grow: 1;
-        padding: 1em 0.5em;
+        padding: 0 0.5em;
     }
 
     h1 {

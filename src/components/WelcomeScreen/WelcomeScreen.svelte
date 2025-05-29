@@ -78,49 +78,56 @@
     />
 {/snippet}
 
-<!--Favourited boards-->
-{#if boards.some(isFavouriteBoard)}
-    <div>
-        {#each boards as board, i}
-            {#if isFavouriteBoard(board)}
-                {@render boardButton(board, i)}
-            {/if}
-        {/each}
-    </div>
-    <hr>
-{/if}
-<!--Non favourited boards-->
-<div>
-    {#each boards as board, i}
-        {#if isRegularBoard(board)}
-            {@render boardButton(board, i)}
-        {/if}
-    {/each}
-    <button onclick={() => {mount(NewBoardPopup, {props: {lazyLoaded: lazyLoaded}, target: document.body, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
-</div>
-<!--Archived boards-->
-{#if boards.some(isArchivedBoard)}
-    <div class="separator"
-         onclick={_ => showArchivedBoards = !showArchivedBoards}
-    >
-        <svg height="1em" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z"></path></svg>
-        <span>
-            {showArchivedBoards ? I18n.t("hideArchivedBoards") : I18n.t("showArchivedBoards")}
-        </span>
-        <svg class={{rotated: showArchivedBoards}} stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
-    </div>
-    {#if showArchivedBoards}
-        <div out:slide>
+<div class="container">
+    <!--Favourited boards-->
+    {#if boards.some(isFavouriteBoard)}
+        <div>
             {#each boards as board, i}
-                {#if isArchivedBoard(board)}
+                {#if isFavouriteBoard(board)}
                     {@render boardButton(board, i)}
                 {/if}
             {/each}
         </div>
+        <hr>
     {/if}
-{/if}
+    <!--Non favourited boards-->
+    <div>
+        {#each boards as board, i}
+            {#if isRegularBoard(board)}
+                {@render boardButton(board, i)}
+            {/if}
+        {/each}
+        <button onclick={() => {mount(NewBoardPopup, {props: {lazyLoaded: lazyLoaded}, target: document.body, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
+    </div>
+    <!--Archived boards-->
+    {#if boards.some(isArchivedBoard)}
+        <div class="separator"
+             onclick={_ => showArchivedBoards = !showArchivedBoards}
+        >
+            <svg height="1em" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z"></path></svg>
+            <span>
+                {showArchivedBoards ? I18n.t("hideArchivedBoards") : I18n.t("showArchivedBoards")}
+            </span>
+            <svg class={{rotated: showArchivedBoards}} stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
+        </div>
+        {#if showArchivedBoards}
+            <div out:slide>
+                {#each boards as board, i}
+                    {#if isArchivedBoard(board)}
+                        {@render boardButton(board, i)}
+                    {/if}
+                {/each}
+            </div>
+        {/if}
+    {/if}
+</div>
 
 <style>
+    .container {
+        margin-top: -0.5em;
+        display: block;
+    }
+
     div {
         display: flex;
         flex-flow: wrap;
