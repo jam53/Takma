@@ -9,6 +9,7 @@ import {mount} from "svelte";
  */
 export class SaveLoadManager
 {
+    private static saveDirectoryName: string;
     private static saveFilename: string;
     private static boardFilesDirectory: string;
     private static saveDirectoryPath: string;
@@ -16,8 +17,9 @@ export class SaveLoadManager
 
     static
     {
-        this.saveFilename = "./Takma/Takma.json";
-        this.boardFilesDirectory = "./Takma/Files/";
+        this.saveDirectoryName = "Takma";
+        this.saveFilename = `./${this.getSaveDirectoryName()}/Takma.json`;
+        this.boardFilesDirectory = `./${this.getSaveDirectoryName()}/Files/`;
         this.saveDirectoryPath = localStorage.getItem("saveDirectoryPath")!; // In App.svelte (i.e. Takma's entry point) we only create an SaveLoadManager instance once the `localStorage.getItem("saveDirectoryPath")` has been set. If not and it's null, we show a screen to the user where they can set their save location. Therefore we can be sure that this will never be null
 
         this.data = new TakmaData();
@@ -107,5 +109,13 @@ export class SaveLoadManager
     public static getBoardFilesDirectory(): string
     {
         return this.boardFilesDirectory;
+    }
+
+    /**
+     * Returns the name of the directory in which the user's data is saved
+     */
+    public static getSaveDirectoryName(): string
+    {
+        return this.saveDirectoryName;
     }
 }

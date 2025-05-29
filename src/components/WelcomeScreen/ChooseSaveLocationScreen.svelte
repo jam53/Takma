@@ -2,13 +2,13 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {savefileSet} from "../../scripts/Stores.svelte";
+    import {isSaveLocationSet} from "../../scripts/Stores.svelte";
     import {mount} from "svelte";
 
     function setSavefile(fileContents: string)
     {
         SaveLoadManager.loadSaveFile(fileContents, () => {
-            savefileSet.value = true;
+            isSaveLocationSet.value = true;
             document.body.style.backgroundImage = "";
             document.body.style.backgroundColor = `var(--background-color)`;
         });

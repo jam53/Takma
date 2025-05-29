@@ -68,6 +68,11 @@
         editor = new Editor({
             element: editorElement,
             content: parseTakmaLinks(cardDescription),
+            editorProps: {
+                attributes: {
+                    spellcheck: "false"
+                },
+            },
             extensions: [
                 StarterKit.configure({
                     codeBlock: false,

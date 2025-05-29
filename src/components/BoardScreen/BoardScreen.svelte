@@ -235,8 +235,9 @@
         display: flex;
         overflow-x: scroll;
         overflow-y: hidden;
+        /* Adjust spacing so the drop shadow doesn't get cut off: Adding padding-top creates space inside the element, while a negative margin-top pulls the element up visually without clipping the shadow. */
         padding-top: 0.75em;
-        margin-top: -0.25em;
+        margin-top: -0.75em;
     }
 
     /* Handle */
