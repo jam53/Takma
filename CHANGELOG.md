@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.5] - 2025-05-29
+### Added
+- (navbar): Consolidate non-essential buttons under a "Show More" button. ([b8b97115](https://github.com/jam53/Takma/commit/b8b971156228b918828d56bfa4be630ace400f4f))
+- (navbar): Add button to change save location. ([a3f49a5b](https://github.com/jam53/Takma/commit/a3f49a5b0af150b7870d36f56a4b918007099e06))
+
+### Changed
+- Update dependencies. ([2fc60bb2](https://github.com/jam53/Takma/commit/2fc60bb20d9d8a9fdf0bf5667cfa46634846cb26))
+- Use `isSaveLocationSet` store directly in components, instead of passing `saveLocationSet` prop. ([fe235a57](https://github.com/jam53/Takma/commit/fe235a5795f7d3deaa6a025e20174b8eb079d437))
+- (attachments): Remove custom "show_in_folder" Rust logic in favor of Tauri's `revealItemInDir()` JS binding. ([74f86d9d](https://github.com/jam53/Takma/commit/74f86d9db2d52a120fd776671c6efcda40552531))
+- (navbar): Replace individual button style classes with shared style classes. ([ca6041b8](https://github.com/jam53/Takma/commit/ca6041b83fd203fcc5f2c7f90b569f25d031c5f7))
+
+### Fixed
+- (welcome-screen): Prevent content sticking to navbar on scroll by adding padding below navbar. ([15b8b6de](https://github.com/jam53/Takma/commit/15b8b6de48de718939fe1e5d6cfd75f86e70714c))
+- (options-menu): Prevent menu from opening outside screen bounds. ([a59ba75e](https://github.com/jam53/Takma/commit/a59ba75e1ded93c71c052641f93604921efa3f70))
+- (list): Change cursor from pointer to default on scrollbars. ([3a279001](https://github.com/jam53/Takma/commit/3a279001b82a801ff9890c67d301da9f803f06fc))
+- (tiptap): Open links in default browser even with nested formatting. Previously, only plain links would open as expected. Links with nested formatting like bold, italic or underline were opened in another Tauri window rather than in the user's default browser. ([ddc92b91](https://github.com/jam53/Takma/commit/ddc92b910f1a4e4308230ecb2884f4c2a5d67284))
+
 ## [1.7.4] - 2025-04-29
 ### Fixed
 - (tiptap): Resolve regression in production builds where clicking on a Takma link within a card's description only updated the card title, failing to load the rest of the card details. ([ea34c384](https://github.com/jam53/Takma/commit/ea34c3847e30b69ed6c3185126fb1ffeea2319b0))
@@ -613,6 +630,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit. ([b28d9a78](https://github.com/jam53/Takma/commit/b28d9a783ffcb7ff30e67e8a11677c66f28667e4))
 
 <!-- Link Definitions -->
+[1.7.5]: https://github.com/jam53/Takma/compare/v1.7.4...v1.7.5
 [1.7.4]: https://github.com/jam53/Takma/compare/v1.7.3...v1.7.4
 [1.7.3]: https://github.com/jam53/Takma/compare/v1.7.2...v1.7.3
 [1.7.2]: https://github.com/jam53/Takma/compare/v1.7.1...v1.7.2
