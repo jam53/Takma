@@ -242,4 +242,5 @@ export default interface Translation
     confirmChangeSaveLocationDescription: string;
     folderExistsTitle: string;
     folderExistsDescription: string;
+    showAllButtons: string;
 }
