@@ -237,4 +237,9 @@ export default interface Translation
     deleteRow: string;
     deleteColumn: string;
     deleteTable: string;
+    changeSaveLocation: string;
+    confirmChangeSaveLocationTitle: string;
+    confirmChangeSaveLocationDescription: string;
+    folderExistsTitle: string;
+    folderExistsDescription: string;
 }

@@ -1,13 +1,35 @@
 <script lang="ts">
     import {open as openDialog} from "@tauri-apps/plugin-dialog"
-    import {appLocalDataDir, normalize, resolveResource} from "@tauri-apps/api/path";
+    import {appLocalDataDir, join, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {debug} from "@tauri-apps/plugin-log";
+    import {info} from "@tauri-apps/plugin-log";
     import {openPath} from "@tauri-apps/plugin-opener";
+    import {invoke} from "@tauri-apps/api/core";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import {mount} from "svelte";
+    import PopupWindow from "../PopupWindow.svelte";
 
     async function setSaveLocation(saveDirectoryPath: string)
     {
-        debug(`Setting save directory path to: "${saveDirectoryPath}"`);
+        // If true this means the user already has a save file but wants to change its location, meaning we should move it from the previous location to the new one
+        if (!(localStorage.getItem("saveDirectoryPath") === null)) {
+            const from = await join(localStorage.getItem("saveDirectoryPath")!, SaveLoadManager.getSaveDirectoryName());
+            const to = await join(saveDirectoryPath, SaveLoadManager.getSaveDirectoryName());
+
+            try
+            {
+                info(`Moving save directory from "${from}" to "${to}"`)
+                await invoke('move_directory', {from, to});
+            }
+            catch
+            {
+                const popup = mount(PopupWindow, {props: {title: I18n.t("folderExistsTitle"), description: I18n.t("folderExistsDescription", saveDirectoryPath), buttonType: "ok"}, target: document.body, intro: true});
+                await popup.getAnswer();
+                return;
+            }
+        }
+
+        info(`Setting save directory path to: "${saveDirectoryPath}"`);
         localStorage.setItem("saveDirectoryPath", await normalize(saveDirectoryPath));
         location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
     }

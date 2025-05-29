@@ -8,6 +8,8 @@ use std::process::Command;
 use std::{fs::metadata, path::PathBuf};
 use tauri::Emitter;
 use tauri_plugin_deep_link::DeepLinkExt;
+use std::fs;
+use std::path::Path;
 
 fn main() {
     let mut builder = tauri::Builder::default().plugin(tauri_plugin_opener::init());
@@ -49,6 +51,7 @@ fn main() {
                 .build(),
         )
         .invoke_handler(tauri::generate_handler![show_in_folder])
+        .invoke_handler(tauri::generate_handler![move_directory])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -98,4 +101,12 @@ fn show_in_folder(path: String) {
     {
         Command::new("open").args(["-R", &path]).spawn().unwrap();
     }
+}
+
+#[tauri::command]
+fn move_directory(from: String, to: String) -> Result<(), String> {
+    let from_path = Path::new(&from);
+    let to_path = Path::new(&to);
+
+    fs::rename(from_path, to_path).map_err(|e| e.to_string())
 }

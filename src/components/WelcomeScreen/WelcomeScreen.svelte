@@ -8,7 +8,7 @@
     import {mount, onMount} from "svelte";
     import startWelcomeScreenOnBoarding from "../../scripts/Onboarding";
     import {saveAbsoluteFilePathToSaveDirectory} from "../../scripts/TakmaDataFolderIO";
-    import {join, resolveResource} from "@tauri-apps/api/path";
+    import {resolveResource} from "@tauri-apps/api/path";
     import {debug, info} from "@tauri-apps/plugin-log";
     import {slide} from "svelte/transition";
     import {debounce} from "../../scripts/Debounce";
@@ -47,7 +47,7 @@
 
             const easterEggBoard = I18n.t("easterEggBoard");
             easterEggBoard.backgroundImagePath = await saveAbsoluteFilePathToSaveDirectory(await resolveResource("resources/EasterEggBoardBg.webp"), easterEggBoard.id);
-            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|00|$", await join(SaveLoadManager.getSaveDirectoryPath(), "Takma", "Takma.json"));
+            easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|00|$", await SaveLoadManager.getSaveFilePath());
             easterEggBoard.lists[0].cards[0].description = easterEggBoard.lists[0].cards[0].description.replace("$|01|$", await resolveResource("resources/backgrounds"));
 
 

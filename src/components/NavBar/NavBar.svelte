@@ -1,7 +1,7 @@
 <script lang="ts">
     import takmaIcon from "../../images/Takma.svg"
     import ThemeToggleButton from "./ThemeToggleButton.svelte";
-    import {cardFilters, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
+    import {cardFilters, isSaveLocationSet, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import SearchBar from "./SearchBar.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
@@ -18,6 +18,7 @@
     import {open} from "@tauri-apps/plugin-shell"
     import {mount} from "svelte";
     import OrderListsMenu from "./OrderListsMenu.svelte";
+    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         saveLocationSet: boolean;
@@ -64,7 +65,20 @@
                 <button class="webPreviewButton" id="takmaWebPreviewButton" title={I18n.t("takmaWebPreview")}
                     onclick={() => open("https://takma.jam54.com")}
                 >
-                    <svg stroke="red" fill="red" stroke-width="0" style="fill: currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2zm0 16H5V7h14v12zm-5.5-6c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM12 9c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4zm0 6.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path></svg>
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" style="fill: currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2zm0 16H5V7h14v12zm-5.5-6c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM12 9c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4zm0 6.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path></svg>
+                </button>
+                <button class="changeSaveLocationButton" title={I18n.t("changeSaveLocation")}
+                        onclick={async () => {
+                            const popup = mount(PopupWindow, {props: {title: I18n.t("confirmChangeSaveLocationTitle"), description: I18n.t("confirmChangeSaveLocationDescription", await SaveLoadManager.getSaveFilePath()), buttonType: "yesno"}, target: document.body, intro: true});
+
+                            if (await popup.getAnswer() === true)
+                            {
+                                info("Showing user 'choose save location' screen to select new save location.")
+                                isSaveLocationSet.value = false;
+                            }
+                        }}
+                >
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="-63 -51.2 537.6 614.4" xmlns="http://www.w3.org/2000/svg"><path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304.52V212c0 6.627-5.373 12-12 12H76c-6.627 0-12-5.373-12-12V108c0-6.627 5.373-12 12-12h228.52c3.183 0 6.235 1.264 8.485 3.515l3.48 3.48A11.996 11.996 0 0 1 320 111.48z"></path></svg>
                 </button>
                 <button class="startOnboarding" title={I18n.t("beginOnboarding")}
                         onclick={async () => {
@@ -175,7 +189,7 @@
         padding: 1em 0.5em;
     }
 
-    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton, .webPreviewButton, .orderListsButton {
+    .i18nButton, .copyLinkButton, .orderBoardsButton, .filterButton, .startOnboarding, .dueDatesOverviewButton, .webPreviewButton, .orderListsButton, .changeSaveLocationButton {
         height: inherit;
         width: auto;
         margin: 0;
@@ -184,7 +198,7 @@
         border: none;
     }
 
-    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg, .dueDatesOverviewButton svg, .webPreviewButton svg, .orderListsButton svg {
+    .i18nButton svg, .copyLinkButton svg, .orderBoardsButton svg, .filterButton svg, .startOnboarding svg, .dueDatesOverviewButton svg, .webPreviewButton svg, .orderListsButton svg, .changeSaveLocationButton svg {
         transition: 0.5s;
         height: inherit;
         cursor: pointer;
@@ -201,7 +215,7 @@
         color: var(--unselected-button);
     }
 
-    .i18nButton:hover svg, .filterButton:hover svg, .startOnboarding:hover svg, .dueDatesOverviewButton:hover svg {
+    .i18nButton:hover svg, .filterButton:hover svg, .startOnboarding:hover svg, .dueDatesOverviewButton:hover svg, .changeSaveLocationButton:hover svg {
         fill: var(--selected-button);
     }
 

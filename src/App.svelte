@@ -3,7 +3,7 @@
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
     import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
-    import {selectedBoardId, selectedCardId} from "./scripts/Stores.svelte.js";
+    import {isSaveLocationSet, selectedBoardId, selectedCardId} from "./scripts/Stores.svelte.js";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
     import type {Board} from "./scripts/Board";
     import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
@@ -20,12 +20,13 @@
     import {error, info, warn} from "@tauri-apps/plugin-log";
 
     const appWindow = getCurrentWebviewWindow();
+    isSaveLocationSet.value = !(localStorage.getItem("saveDirectoryPath") === null);
 
     /**
      * Sets the background image of the body to the image of the selected board
      */
     $effect(async () => {
-        if (localStorage.getItem("saveDirectoryPath") === null)
+        if (!isSaveLocationSet.value)
         {
             await info("No save file has been set");
             document.body.style.backgroundImage = `url('${paintDrops.replace(/'/g, "\\'")}')`;
@@ -212,7 +213,7 @@
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
-{#if localStorage.getItem("saveDirectoryPath") === null}
+{#if !isSaveLocationSet.value}
     <NavBar bind:this={navBarElement} saveLocationSet={false}/>
     <ChooseSaveLocationScreen/>
 {:else}

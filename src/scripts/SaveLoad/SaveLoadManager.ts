@@ -12,6 +12,7 @@ import {debug, info, warn} from "@tauri-apps/plugin-log";
  */
 export class SaveLoadManager
 {
+    private static saveDirectoryName: string;
     private static saveFilename: string;
     private static boardFilesDirectory: string;
     private static saveDirectoryPath: string;
@@ -19,8 +20,9 @@ export class SaveLoadManager
 
     static
     {
-        this.saveFilename = "./Takma/Takma.json";
-        this.boardFilesDirectory = "./Takma/Files/";
+        this.saveDirectoryName = "Takma";
+        this.saveFilename = `./${this.getSaveDirectoryName()}/Takma.json`;
+        this.boardFilesDirectory = `./${this.getSaveDirectoryName()}/Files/`;
         this.saveDirectoryPath = localStorage.getItem("saveDirectoryPath")!; // In App.svelte (i.e. Takma's entry point) we only create an SaveLoadManager instance once the `localStorage.getItem("saveDirectoryPath")` has been set. If not and it's null, we show a screen to the user where they can set their save location. Therefore we can be sure that this will never be null
 
         this.data = new TakmaData();
@@ -36,7 +38,7 @@ export class SaveLoadManager
      */
     public static async loadSaveFileFromDisk(): Promise<void>
     {
-        const pathToSavefile = await join(this.getSaveDirectoryPath(), this.saveFilename);
+        const pathToSavefile = await this.getSaveFilePath();
         await mkdir(pathToSavefile.getDirectoryPath(), {recursive: true}); //Should the folder not exist and we don't create it here, the next if where we check if the savefile exists with `exists(...)` will throw an error.
 
         if (await exists(pathToSavefile)) //Check if the save file exists, before trying to use it to overwrite the default values
@@ -123,6 +125,22 @@ export class SaveLoadManager
      */
     public static async getTempDirectoryPath(): Promise<string>
     {
-        return await join(await tempDir(), "Takma");
+        return await join(await tempDir(), this.getSaveDirectoryName());
+    }
+
+    /**
+     * Returns the absolute path to the save file used for saving the user's data
+     */
+    public static async getSaveFilePath(): Promise<string>
+    {
+        return await join(this.getSaveDirectoryPath(), this.saveFilename);
+    }
+
+    /**
+     * Returns the name of the directory in which the user's data is saved
+     */
+    public static getSaveDirectoryName(): string
+    {
+        return this.saveDirectoryName;
     }
 }
