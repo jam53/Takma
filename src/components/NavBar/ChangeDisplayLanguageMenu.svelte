@@ -22,7 +22,7 @@
         // This means the savefile has been loaded in, if we would refresh the website using `location.reload()`, we would lose the selected savefile. Which is why we only close the context menu, in this case only on the next screen change/UI update will the correct language be displayed.
         else
         {
-            closeContextMenu();
+            optionsMenu.closeContextMenu();
         }
     }
 
@@ -135,9 +135,12 @@
             'svg': ''
         },
     ].sort((a, b) => a.displayText.localeCompare(b.displayText));
+
+    let optionsMenu: ReturnType<typeof OptionsMenu>;
 </script>
 
 <OptionsMenu
+        bind:this={optionsMenu}
         {clickEvent}
         logMessage={"Opening change display language menu"}
         {menuItems}
