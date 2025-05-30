@@ -74,7 +74,6 @@
                 {@render boardButton(board, i)}
             {/if}
         {/each}
-        <button onclick={() => {mount(NewBoardPopup, {props: {lazyLoaded: lazyLoaded}, target: document.body, intro: true}); lazyLoaded = true;}} class="createButton boardButtons">{I18n.t("createBoard")}</button>
     </div>
     <!--Archived boards-->
     {#if boards.some(isArchivedBoard)}
@@ -102,6 +101,7 @@
 <style>
     .container {
         margin-top: -0.5em;
+        display: block;
     }
 
     div {

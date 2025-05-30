@@ -5,19 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.5] - 2025-05-29
+## [1.7.5] - 2025-05-30
 ### Added
-- (navbar): Consolidate non-essential buttons under a "Show More" button. ([b8b97115](https://github.com/jam53/Takma/commit/b8b971156228b918828d56bfa4be630ace400f4f))
+- (navbar): Consolidate non-essential buttons under a "Show More" button. ([469525b1](https://github.com/jam53/Takma/commit/469525b1f39013eeca3f09c3fd9db9b9d04844fd))
 - (navbar): Add button to change save location. ([a3f49a5b](https://github.com/jam53/Takma/commit/a3f49a5b0af150b7870d36f56a4b918007099e06))
 
 ### Changed
-- Update dependencies. ([2fc60bb2](https://github.com/jam53/Takma/commit/2fc60bb20d9d8a9fdf0bf5667cfa46634846cb26))
-- Use `isSaveLocationSet` store directly in components, instead of passing `saveLocationSet` prop. ([fe235a57](https://github.com/jam53/Takma/commit/fe235a5795f7d3deaa6a025e20174b8eb079d437))
-- (attachments): Remove custom "show_in_folder" Rust logic in favor of Tauri's `revealItemInDir()` JS binding. ([74f86d9d](https://github.com/jam53/Takma/commit/74f86d9db2d52a120fd776671c6efcda40552531))
-- (navbar): Replace individual button style classes with shared style classes. ([ca6041b8](https://github.com/jam53/Takma/commit/ca6041b83fd203fcc5f2c7f90b569f25d031c5f7))
+- Update dependencies. ([33e6f472](https://github.com/jam53/Takma/commit/33e6f47261f4a167acfd67ec9a4bb518101474be))
+- Use `isSaveLocationSet` store directly in components, instead of passing `saveLocationSet` prop. ([0280fa4a](https://github.com/jam53/Takma/commit/0280fa4af3f89b06417c35b09d11680d97a79d45))
+- (attachments): Remove custom "show_in_folder" Rust logic in favor of Tauri's `revealItemInDir()` JS binding. ([736ec8d1](https://github.com/jam53/Takma/commit/736ec8d1b63b3ecf2fdcb30c21742486d11431c2))
+- (navbar): Replace individual button style classes with shared style classes. ([f65ece9c](https://github.com/jam53/Takma/commit/f65ece9cb942740cd71565ed27fe227e30d237e7))
 
 ### Fixed
-- (welcome-screen): Prevent content sticking to navbar on scroll by adding padding below navbar. ([15b8b6de](https://github.com/jam53/Takma/commit/15b8b6de48de718939fe1e5d6cfd75f86e70714c))
+- (welcome-screen): Prevent content sticking to navbar on scroll by adding padding below navbar. ([319002ac](https://github.com/jam53/Takma/commit/319002ac49aaf18e69769fb4a0c36fef2ea31481))
 - (options-menu): Prevent menu from opening outside screen bounds. ([a59ba75e](https://github.com/jam53/Takma/commit/a59ba75e1ded93c71c052641f93604921efa3f70))
 - (list): Change cursor from pointer to default on scrollbars. ([3a279001](https://github.com/jam53/Takma/commit/3a279001b82a801ff9890c67d301da9f803f06fc))
 - (tiptap): Open links in default browser even with nested formatting. Previously, only plain links would open as expected. Links with nested formatting like bold, italic or underline were opened in another Tauri window rather than in the user's default browser. ([ddc92b91](https://github.com/jam53/Takma/commit/ddc92b910f1a4e4308230ecb2884f4c2a5d67284))
