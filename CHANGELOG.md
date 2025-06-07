@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.6] - 2025-06-07
+### Changed
+- (backgrounds): Replace two default background images with higher-resolution versions. ([65be1e36](https://github.com/jam53/Takma/commit/65be1e361104bd4ecb5d33df353af76a8064c37a))
+- Update dependencies. ([5f6091db](https://github.com/jam53/Takma/commit/5f6091db90271b5cdcd7c581d16717eef3bc6060))
+
 ## [1.7.5] - 2025-05-30
 ### Added
 - (navbar): Consolidate non-essential buttons under a "Show More" button. ([469525b1](https://github.com/jam53/Takma/commit/469525b1f39013eeca3f09c3fd9db9b9d04844fd))
@@ -630,6 +635,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit. ([b28d9a78](https://github.com/jam53/Takma/commit/b28d9a783ffcb7ff30e67e8a11677c66f28667e4))
 
 <!-- Link Definitions -->
+[1.7.6]: https://github.com/jam53/Takma/compare/v1.7.5...v1.7.6
 [1.7.5]: https://github.com/jam53/Takma/compare/v1.7.4...v1.7.5
 [1.7.4]: https://github.com/jam53/Takma/compare/v1.7.3...v1.7.4
 [1.7.3]: https://github.com/jam53/Takma/compare/v1.7.2...v1.7.3
