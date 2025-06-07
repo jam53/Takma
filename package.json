@@ -1,8 +1,8 @@
 {
     "name": "Takma",
     "private": true,
-    "version": "1.7.5",
-    "build": 724,
+    "version": "1.7.6",
+    "build": 725,
     "type": "module",
     "scripts": {
         "dev": "vite",
