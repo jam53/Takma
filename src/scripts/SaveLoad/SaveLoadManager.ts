@@ -2,6 +2,7 @@ import {TakmaData} from "./TakmaData";
 import {I18n} from "../I18n/I18n";
 import "../StringExtensions.ts";
 import PopupWindow from "../../components/PopupWindow.svelte";
+import {mount} from "svelte";
 
 /**
  * This class is used to save/load data within Takma
@@ -59,7 +60,7 @@ export class SaveLoadManager
         }
         catch (error)
         {
-            const popup = new PopupWindow({props: {description: I18n.t("saveFileNotValid"), buttonType: "ok"}, target: document.body, intro: true});
+            const popup = mount(PopupWindow, {props: {description: I18n.t("saveFileNotValid"), buttonType: "ok"}, target: document.body, intro: true});
 
             await popup.getAnswer();
             location.reload();
@@ -108,5 +109,13 @@ export class SaveLoadManager
     public static getBoardFilesDirectory(): string
     {
         return this.boardFilesDirectory;
+    }
+
+    /**
+     * Returns the name of the directory in which the user's data is saved
+     */
+    public static getSaveDirectoryName(): string
+    {
+        return this.saveDirectoryName;
     }
 }

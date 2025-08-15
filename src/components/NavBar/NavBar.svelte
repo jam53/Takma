@@ -5,7 +5,6 @@
     import SearchBar from "./SearchBar.svelte";
     import DeleteBoardButton from "./DeleteBoardButton.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {readText, writeText} from "@tauri-apps/plugin-clipboard-manager";
     import {toast, Toaster} from "svelte-sonner";
     import OrderBoardsMenu from "./OrderBoardsMenu.svelte";
     import FilterCardsPopup from "../BoardScreen/FilterCardsPopup.svelte";
@@ -15,24 +14,24 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import DueDatesOverviewPopup from "../WelcomeScreen/DueDatesOverviewPopup.svelte";
     import PopupWindow from "../PopupWindow.svelte";
-    import {open} from "@tauri-apps/plugin-shell"
     import {mount} from "svelte";
     import OrderListsMenu from "./OrderListsMenu.svelte";
-    import {info} from "@tauri-apps/plugin-log";
     import {scale} from "svelte/transition";
 
     let showNonEssentialButtons = $state(false); // Set through `$effect` below
     $effect(() => {
         selectedBoardId.value; // Runs this $effect when the value of this variable changes
 
-        showNonEssentialButtons = !SaveLoadManager.getData().onboardingCompleted; // Certain non-essential buttons are part of the onboarding process, therefore in case the onboarding hasn't been completed yet we should show all buttons. Otherwise if the user already completed the onboarding, hide non-essential buttons by default
+        showNonEssentialButtons = false;
     })
 </script>
 
 <div class="containingDiv">
     <div class="leftSideContainer">
         {#if !isSaveLocationSet.value}
-            <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em"/>
+            <a href="https://jam54.com">
+                <img src={jam54LogoMonochrome} alt="Jam54 Logo" style="height: 2.5em; padding-top: 0.5em"/>
+            </a>
         {:else}
             <img onclick={() => {
                     selectedBoardId.value = "";
@@ -43,7 +42,9 @@
             <!--        We zetten de $boardSelected store op een lege string. Dit betekent dat ons programma dan zal teruggaan naar het welcomeScreen. Hierop klikken heeft dus een soort van back to home effect-->
         {/if}
         {#if !isSaveLocationSet.value}
-            <h1 style="color: white; font-family: Inter">Jam54</h1>
+            <a style="text-decoration: none" href="https://jam54.com">
+                <h1 style="color: white; font-family: Inter">Jam54</h1>
+            </a>
         {:else if selectedBoardId.value === ""}
             <h1>Takma</h1>
         {:else}
@@ -67,20 +68,13 @@
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 5m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M5 14m0 .5a.5 .5 0 0 1 .5 -.5h4a.5 .5 0 0 1 .5 .5v4a.5 .5 0 0 1 -.5 .5h-4a.5 .5 0 0 1 -.5 -.5z"></path><path d="M14 15l3 3l3 -3"></path><path d="M17 18v-12"></path></svg>
                 </button>
                 {#if showNonEssentialButtons}
-                    <!-- Web preview button -->
-                    <button id="takmaWebPreviewButton" class="navbarButton unfilledButton" title={I18n.t("takmaWebPreview")} in:scale
-                        onclick={() => open("https://takma.jam54.com")}
-                    >
-                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" style="fill: currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5a2 2 0 0 0-2-2zm0 16H5V7h14v12zm-5.5-6c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM12 9c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4zm0 6.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"></path></svg>
-                    </button>
                     <!-- Change save location button -->
                     <button class="navbarButton filledButton" title={I18n.t("changeSaveLocation")} in:scale
                             onclick={async () => {
-                                const popup = mount(PopupWindow, {props: {title: I18n.t("confirmChangeSaveLocationTitle"), description: I18n.t("confirmChangeSaveLocationDescription", await SaveLoadManager.getSaveFilePath()), buttonType: "yesno"}, target: document.body, intro: true});
+                                const popup = mount(PopupWindow, {props: {title: I18n.t("confirmChangeSaveLocationTitle"), description: I18n.t("confirmChangeSaveLocationDescription", ""), buttonType: "yesno"}, target: document.body, intro: true});
 
                                 if (await popup.getAnswer() === true)
                                 {
-                                    info("Showing user 'choose save location' screen to select new save location.")
                                     isSaveLocationSet.value = false;
                                 }
                             }}
@@ -126,17 +120,8 @@
                 <button id="copyLinkButton" class="navbarButton unfilledButton" title={I18n.t("copyThisBoardLink")}
                         onclick={async () => {
                          let linkToThisBoard = `takma://${selectedBoardId.value}`
-                         await writeText(linkToThisBoard);
 
-                         let textInClipboard = await readText();
-                         if (textInClipboard === linkToThisBoard)
-                         {
-                             toast(I18n.t("boardLinkCopiedToClipboard"))
-                         }
-                         else
-                         {
-                             toast.error(I18n.t("clipboardCopyBoardErrorLink") + linkToThisBoard);
-                         }
+                         toast(linkToThisBoard);
                     }}
                 >
                     <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -168,7 +153,7 @@
         justify-content: space-between;
         height: 2em;
 
-        padding: 0.25em 0 0.5em 0;
+        padding: 0.5em 0;
         transition: 0.4s;
 
         background: transparent;
@@ -248,8 +233,13 @@
         font-weight: bold;
         padding: 0;
         flex-grow: 1;
+        width: 10%;
         -webkit-filter: drop-shadow( 0 0 10px rgba(var(--background-color-rgb-values), .75));
         height: 1.25em;
         text-overflow: ellipsis;
+    }
+
+    ::-webkit-scrollbar {
+        height: 0;
     }
 </style>

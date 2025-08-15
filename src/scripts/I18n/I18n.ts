@@ -1,7 +1,6 @@
 import type Translation from "./Translation";
 import {ar, de, en, es, et, fr, hi, id, ja, ko, nl, pt, ru, tr, zh} from "./Translations";
 import {SaveLoadManager} from "../SaveLoad/SaveLoadManager";
-import {warn} from "@tauri-apps/plugin-log";
 
 /**
  * This class handles anything and everything related to i18n
@@ -47,7 +46,6 @@ export class I18n
 
         if (!this.translations.get(displayLanguage)[key])
         {
-            warn(`Translation for "${displayLanguage}:${key}" couldn't be found`);
         }
 
         for (let i = 0; i < wordsToInsert.length; i++)

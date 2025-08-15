@@ -6,7 +6,6 @@
     import PopupWindow from "../PopupWindow.svelte";
     import {duplicateList as duplicateListObject, type List} from "../../scripts/Board";
     import {mount} from "svelte";
-    import {info} from "@tauri-apps/plugin-log";
     import OptionsMenu from "../OptionsMenu.svelte";
 
     interface Props {
@@ -30,7 +29,6 @@
 
     function sortList()
     {
-        info("Displaying list sort options within the list options menu")
         menuItems = menuItemsSort;
     }
 

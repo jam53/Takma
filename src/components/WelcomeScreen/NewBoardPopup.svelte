@@ -4,19 +4,15 @@
     import {mount, onMount} from "svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {selectedBoardId} from "../../scripts/Stores.svelte.js";
-    import {BaseDirectory, exists, readDir} from "@tauri-apps/plugin-fs";
-    import {open} from "@tauri-apps/plugin-dialog"
     import {
         imageExtensions,
         removeFileFromSaveDirectory,
         saveAbsoluteFilePathToSaveDirectory,
         saveArrayBufferToTempFile,
     } from "../../scripts/TakmaDataFolderIO";
-    import {join, resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
     import {shuffle} from "../../scripts/KnuthShuffle";
     import {I18n} from "../../scripts/I18n/I18n";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {info, warn} from "@tauri-apps/plugin-log";
     import paintDrops from "../../images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
     import PopupWindow from "../PopupWindow.svelte";
 
@@ -29,7 +25,6 @@
 
     onMount(() =>
     {
-        info("Opening new board popup");
         window.addEventListener("keydown", listenToKeyDown);
     });
 
@@ -79,8 +74,6 @@
 
     async function loadImagesIncludedInTakma()
     {
-        info("Loading images included with Takma for new board popup");
-
         const BACKGROUND_IMAGES_DIR = "resources/backgrounds/";
         let includedImagesPaths: string[];
 
@@ -132,7 +125,6 @@
 
     async function handleFileSelection()
     {
-        info("Opening file picker to select custom board background image");
         const selected = await open({
             multiple: false,
             filters: [{

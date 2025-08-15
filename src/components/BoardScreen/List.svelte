@@ -10,7 +10,6 @@
     import CreateNewCard from "./CreateNewCard.svelte";
     import {mount, untrack} from "svelte";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {debug, info} from "@tauri-apps/plugin-log";
     import {debounce} from "../../scripts/Debounce";
 
     interface Props {
@@ -71,7 +70,6 @@
 
     function handleDndFinalizeCards(e)
     {
-        info("Dragged card from/to list:" + list.id);
         onDrop(e.detail.items);
     }
 
@@ -122,10 +120,10 @@
             (2 * 8px)    - (2 * height of the scrollbar at the bottom)
             (2 * 0.5em)  - padding bottom and top of .listHolder in BoardScreen
             (2 * 1px)    - (2 * width of the border of the lists)
-            5.25em        - the amount of space we want at the bottom, so some sort of a "padding"
+            2.75em        - the amount of space we want at the bottom, so some sort of a "padding"
             ${...}       - height of the list title
          */
-        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 5.25em - ${titleHolderElement.clientHeight}px)`);
+        titleHolderElement && outerWrapperElement && (outerWrapperElement.style.maxHeight = `calc(100vh - 4px - 30px - 2em - (2 * 8px) - (2 * 0.5em) - (2 * 1px) - 2.75em - ${titleHolderElement.clientHeight}px)`);
 
         applyOverFlowedStyleClasses();
     });
@@ -134,7 +132,6 @@
     let {cards: _, ...listWithoutCards} = $derived(list);
     let debouncedSaveList = debounce((boardId: string, listId: string, list: List) => SaveLoadManager.getData().updateList(boardId, listId, list));
     $effect(() => {
-        debug("Saving list: " + listWithoutCards.id);
         debouncedSaveList(selectedBoardId.value, listWithoutCards.id, untrack(() => $state.snapshot(list)));
     });
 </script>
@@ -245,7 +242,7 @@
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background-color: rgba(var(--background-color-rgb-values), 0.3);
+        background-color: rgba(var(--main-text-rgb-values), 0.1);
         cursor: default;
     }
 

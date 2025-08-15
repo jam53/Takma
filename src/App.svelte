@@ -1,24 +1,20 @@
 <script lang="ts">
     import "./stylesheets/fonts.css";
     import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen.svelte";
-    import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
     import NavBar from "./components/NavBar/NavBar.svelte";
-    import {savefileSet, selectedBoardId, selectedCardId} from "./scripts/stores";
+    import {isSaveLocationSet, selectedBoardId, selectedCardId} from "./scripts/Stores.svelte.js";
     import BoardScreen from "./components/BoardScreen/BoardScreen.svelte";
-    import type {Board} from "./scripts/Board";
     import ChooseSaveLocationScreen from "./components/WelcomeScreen/ChooseSaveLocationScreen.svelte";
     import paintDrops from "./images/PaintDropsScuNET2x_Brightness19Saturation10CleanedEffort6Quality90.webp";
     import {I18n} from "./scripts/I18n/I18n";
-    import PopupWindow from "./components/PopupWindow.svelte";
-    import {getThumbnail} from "./scripts/ThumbnailGenerator";
+    import {SaveLoadManager} from "./scripts/SaveLoad/SaveLoadManager";
 
     /**
      * Sets the background image of the body to the image of the selected board
      */
-    selectedBoardId.subscribe(async boardId => {
-        if (!$savefileSet)
+    $effect(() => {
+        if (!isSaveLocationSet.value)
         {
-            await info("No save file has been set");
             document.body.style.backgroundImage = `url('${paintDrops.replace(/'/g, "\\'")}')`;
             document.body.style.backgroundColor = `transparent`;
         }
@@ -29,7 +25,6 @@
         }
     });
 
-
     // The code below makes it so when we lose focus by alt+tabbing, the last element gets refocused when we alt+tab/switch back to the Takma tab. Otherwise it gets annoying when trying to type something over and alt+tabbing in between, since you would have to first click on the element you were typing on so it would regain focus, before you would be able to continue typing
     let lastFocusedElement = document.activeElement;
     window.addEventListener("focus", () => lastFocusedElement = document.activeElement, true);
@@ -38,23 +33,42 @@
     window.clearLastFocusedElement = () => {
         lastFocusedElement = null;
     };
+    
+    /**
+     * Loads a save file from disk if a save location is set.
+     * @returns Returns true if the save file was loaded, false otherwise.
+     */
+    async function loadSaveFile(): Promise<Boolean>
+    {
+        if (!isSaveLocationSet.value)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 </script>
 
 <main class="wrapper" id="main">
-<NavBar saveLocationSet={savefileSet.value}/>
-{#if !savefileSet.value}
-    <ChooseSaveLocationScreen/>
-{:else}
-    <NavBar saveLocationSet={true}/>
-    {#if $selectedBoardId === ""}
-        <div class="scroll-container">
-        <!--If we also want to be able to scroll on the board screen, we should ideally place it in this div. But we don't want that; we only want to be able to scroll in the lists, not the entire board screen itself.-->
-            <WelcomeScreen/>
-        </div>
+{#await loadSaveFile()}
+    <h1>{I18n.t("loadSaveFile")}</h1>
+{:then isSaveFileLoaded}
+    <NavBar/>
+    {#if !isSaveFileLoaded}
+        <ChooseSaveLocationScreen/>
     {:else}
-        <BoardScreen/>
+        {#if selectedBoardId.value === ""}
+            <div class="scroll-container">
+                <!--If we also want to be able to scroll on the board screen, we should ideally place it in this div. But we don't want that; we only want to be able to scroll in the lists, not the entire board screen itself.-->
+                <WelcomeScreen/>
+            </div>
+        {:else}
+            <BoardScreen/>
+        {/if}
     {/if}
-{/if}
+{/await}
 </main>
 
 <style>

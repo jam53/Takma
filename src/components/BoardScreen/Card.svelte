@@ -6,10 +6,8 @@
         selectedBoardId,
         selectedCardId,
     } from "../../scripts/Stores.svelte.js";
-    import {exists} from "@tauri-apps/plugin-fs";
     import CardOptionsMenu from "./CardOptionsMenu.svelte";
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
-    import {join} from "@tauri-apps/api/path";
     import {mount} from "svelte";
     import PopupWindow from "../PopupWindow.svelte";
     import {I18n} from "../../scripts/I18n/I18n";
@@ -45,17 +43,7 @@
      */
     async function amountOfExistingAttachments(attachments: string[])
     {
-        let amount = 0;
-
-        for (let attachment of attachments)
-        {
-            if (attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
-            {
-                amount++;
-            }
-        }
-
-        return amount;
+        return attachments.length;
     }
 
     let hovering = $state(false); //Is this component being hovered over

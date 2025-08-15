@@ -1,10 +1,6 @@
 <script lang="ts">
-    import {imageExtensions} from "../../scripts/TakmaDataFolderIO";
-    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
-    import type {Card} from "../../scripts/Board";
-    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
 
     interface Props {
         attachments: string[];
@@ -51,31 +47,13 @@
 
     async function deleteAttachment(pathToFile: string)
     {
-        cardToSave.attachments = cardToSave.attachments.filter(attachment => attachment !== pathToFile);
-        saveCardFunction();
-
-            focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
-        }
-
-        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteAttachment)
-        {
-            await deleteAttachmentFunction();
-        }
-        else
-        {
-            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmAttachmentRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
-
-            if (await popup.getAnswer() === true)
-            {
-                await SaveLoadManager.getData().updateConfirmationPreference("deleteAttachment", popup.getShowConfirmationAgain());
-                await deleteAttachmentFunction();
-            }
-        }
+        attachments = attachments.filter(attachment => attachment !== pathToFile);
+        focusOnCardDetailsFunction(); // If we don't focus on the `CardDetails` component after the user interacted with this `Attachments` component. The `CardDetails` component won't register any keyboard shortcuts like "Esc", since it wouldn't be focussed.
     }
 
     async function getExistingAttachments(): Promise<string[]>
     {
-        return cardToSave.attachments;
+        return attachments;
     }
 </script>
 
@@ -92,7 +70,7 @@
                 <div class="preview"
                      onclick={() => openWithDefaultApp(attachment)}
                 >
-                    {getFileExtension(attachment)}
+                    {attachment.getFileExtension()}
                 </div>
                 <div class="titleAndActionsHolder {isCardFullscreen ? 'titleAndActionsHolderCardFullscreen' : ''}">
                     <p

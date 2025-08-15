@@ -5,15 +5,7 @@ import {
     saveFilePathToTempFile
 } from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {exists} from "@tauri-apps/plugin-fs";
-import {join} from "@tauri-apps/api/path";
-import {debug, info, warn} from "@tauri-apps/plugin-log";
 import {performSearchInText} from "./SearchText";
-import {WebviewWindow} from "@tauri-apps/api/webviewWindow";
-import {emitTo} from "@tauri-apps/api/event";
-import {selectedBoardId} from "./Stores.svelte";
-import {toast} from "svelte-sonner";
-import {I18n} from "./I18n/I18n";
 
 export interface Board
 {
@@ -106,7 +98,6 @@ export interface ShowConfirmationPreferences
  */
 export async function duplicateCard(card: Card, boardId: string, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<Card>
 {
-    debug(`Duplicating card:${card.id} in board:${boardId}`);
     card = structuredClone(card);
 
     card.id = crypto.randomUUID();
@@ -114,33 +105,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
 
     //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
     card.attachments = await Promise.all(card.attachments.map(async attachment => {
-
-        if (!filePathsAbsolute && attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
-        {
-            if (!saveFilesToTemp)
-            {
-                return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36));
-            }
-            else
-            {
-                return await saveFilePathToTempFile(attachment, attachment.getFilename().substring(36));
-            }
-        }
-        else if (filePathsAbsolute && attachment !== "" && await exists(attachment))
-        {
-            if (!saveFilesToTemp)
-            {
-                return await saveAbsoluteFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36));
-            }
-            else
-            {
-                return await saveAbsoluteFilePathToTempFile(attachment, attachment.getFilename().substring(36));
-            }
-        }
-        else
-        {
-            return "";
-        }
+        return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
     }));
 
     if (card.coverImage !== "" && !filePathsAbsolute)
@@ -157,31 +122,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
     }
 
     const imagesInCardDescription: string[] = await SaveLoadManager.getData().getAllLocalMarkdownImagesInCardDescription(card);
-
-    let duplicatedImagesInCardDescription: string[] = [];
-    for (const imgSrc of imagesInCardDescription)
-    {
-        if (!filePathsAbsolute && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), imgSrc)))
-        {
-            duplicatedImagesInCardDescription.push(
-                !saveFilesToTemp ?
-                    await saveFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36)) :
-                    await saveFilePathToTempFile(imgSrc, imgSrc.getFilename().substring(36))
-            );
-        }
-        else if (filePathsAbsolute && await exists(imgSrc))
-        {
-            duplicatedImagesInCardDescription.push(
-                !saveFilesToTemp ?
-                    await saveAbsoluteFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36)) :
-                    await saveAbsoluteFilePathToTempFile(imgSrc, imgSrc.getFilename().substring(36))
-            );
-        }
-        else
-        { //Normally either the `if` or `else if` statement above should be matched and insert something into the `duplicatedImagesInCardDescription` array. Should that however not be the case, we add the original `imgSrc` to the array, to ensure that we do not encounter an index out of bounds exception later, where we replace all of the images in the card's description with the duplicated ones.
-            duplicatedImagesInCardDescription.push(imgSrc);
-        }
-    }
+    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36))));
 
     imagesInCardDescription.forEach((imgSrc, i) => {
         card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i].replace(/\\/g, '/')); //Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths.
@@ -200,7 +141,6 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
  */
 export async function duplicateList(list: List, boardId: string, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<List>
 {
-    debug(`Duplicating list:${list.id} in board:${boardId}`);
     list = structuredClone(list);
 
     list.id = crypto.randomUUID();
@@ -220,7 +160,6 @@ export async function duplicateList(list: List, boardId: string, filePathsAbsolu
  */
 export async function duplicateBoard(board: Board, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<Board>
 {
-    debug(`Duplicating board:${board.id}`);
     board = structuredClone(board);
 
     board.id = crypto.randomUUID();
@@ -275,38 +214,4 @@ export function cardContainsString(card: Card, searchQuery: string): boolean {
  */
 export function openReadOnlyWindow(card: Card)
 {
-    const windowLabel = `card-details-read-only-${card.id}`;
-    
-    const readOnlyWindow = new WebviewWindow(windowLabel, {
-        title: `${card.title} (${I18n.t("readOnly")})`,
-        url: `card-details-read-only.html`,
-        resizable: true,
-        width: 900,
-        height: 700
-    });
-
-    readOnlyWindow.once('tauri://created', () => {
-        info("Opening read-only card window for card: " + card.id);
-
-        // Delay to ensure the window's event listener is ready to receive the data
-        setTimeout(() => {
-            const theme = document.documentElement.getAttribute("data-theme") ?? "light";
-            
-            emitTo(windowLabel, "card-data", {
-                card,
-                labels: card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)),
-                theme,
-                cardIsReadOnlyMessage: I18n.t("cardIsReadOnly"),
-                dueDateMessage: (new Date(parseInt(card.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'}),
-                completedMessage: I18n.t("completed"),
-                checklistMessage: I18n.t("checklist"),
-                attachmentsMessage: I18n.t("attachments"),
-            }).catch(e => console.error("Failed to emit card data event:", e));
-        }, 1000);
-    });
-    
-    readOnlyWindow.once('tauri://error', e => {
-        warn("Failed to open read-only card window. " + e.payload);
-        toast.warning(I18n.t("cardAlreadyOpenInSeparateWindow"));
-    });
 }

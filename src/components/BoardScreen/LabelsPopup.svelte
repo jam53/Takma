@@ -33,7 +33,6 @@
     } from "../../scripts/Stores.svelte.js";
     import type {Label} from "../../scripts/Board";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {info} from "@tauri-apps/plugin-log";
     import {mount} from "svelte";
     import PopupWindow from "../PopupWindow.svelte";
 
@@ -67,7 +66,6 @@
 
     function openContextMenu(e: MouseEvent)
     {
-        info(`Opening labels popup in board:${selectedBoardId.value} with the following labels: "${labelIds}"`);
         showMenu = true
         browser = {
             w: window.innerWidth,
