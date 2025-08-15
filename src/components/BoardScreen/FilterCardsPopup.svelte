@@ -17,7 +17,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
     import {cardFilters, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {clickOutside} from "../../scripts/ClickOutside";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {info} from "@tauri-apps/plugin-log";
 
     interface Props {
         clickEvent: MouseEvent,
@@ -36,7 +35,6 @@ Inspired from: Context Menu https://svelte.dev/repl/3a33725c3adb4f57b46b597f9dad
 
     export function openContextMenu(e: MouseEvent)
     {
-        info("Opening filter cards popup for board:" + selectedBoardId.value);
         showMenu = true
         browser = {
             w: window.innerWidth,

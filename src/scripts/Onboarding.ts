@@ -1,14 +1,9 @@
 import introJs from "intro.js";
 import "intro.js/introjs.css";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {readDir} from "@tauri-apps/plugin-fs";
-import {resolve, resolveResource, resourceDir} from "@tauri-apps/api/path";
-import {shuffle} from "./KnuthShuffle";
 import CardCreationDateVideo from "../videos/OnboardingCardCreationDate.mp4";
 import ShiftClickDeleteCardVideo from "../videos/OnboardingShiftClickDeleteCard.mp4";
 import {I18n} from "./I18n/I18n";
-import {relaunch} from "@tauri-apps/plugin-process";
-import {info} from "@tauri-apps/plugin-log";
 
 /**
  * This function starts the onboarding for the welcome screen. Once the onboarding for the welcome screen is finished, it calls the function that handles the onboarding for the board screen
@@ -17,7 +12,6 @@ import {info} from "@tauri-apps/plugin-log";
  */
 export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: string) => void, setSelectedCard: (id: string) => void)
 {
-    info("Started onboarding");
     let onboardingStepComplete = false;
     let canExit = true;
 
@@ -25,11 +19,9 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         steps:[
             {title: I18n.t("welcomeToTakma"), intro:I18n.t("quickGuideEssentials")},
             {intro: I18n.t("redoOnboardingProcess"), element: document.getElementById("onboardingButton")},
-            {intro: I18n.t("takmaWebPreviewExplanation"), element: document.getElementById("takmaWebPreviewButton")},
             {intro: I18n.t("dueDatesOverviewExplanation"), element: document.getElementById("dueDatesOverviewButton")},
             {intro: I18n.t("searchBarShortcutsExplanation"), element: document.querySelector(".searchIcon")},
             {intro: I18n.t("closeWithCtrlShiftWExplanation")},
-            {intro: I18n.t("createNewBoards"), element: document.querySelector(".createButton")},
         ],
         disableInteraction: true,
         tooltipClass: "IntroJsCSSOverride",
@@ -41,9 +33,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
     }).onComplete(async () => {
         onboardingStepComplete = true;
 
-        const includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
-        shuffle(includedImagesPaths);
-        const boardBg = includedImagesPaths[0];
+        const boardBg = "";
 
         const boardId = await SaveLoadManager.getData().createNewBoard(I18n.t("onboarding"), boardBg); //Create a new board that will be used for the rest of the onboarding. This board will be deleted at the end of the onboarding
         const listId = SaveLoadManager.getData().createNewList(boardId, I18n.t("listTitle"));
@@ -56,7 +46,6 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
         {
-            info("Exiting onboarding");
             SaveLoadManager.getData().onboardingCompleted = true; // Even if the user exits the onboarding process prematurely, mark it as complete in the savefile to prevent it from starting automatically at the next startup
         }
     }).start();
@@ -81,7 +70,6 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
             {title: I18n.t("boardScreen"), intro:I18n.t("efficientTaskManagement")},
             {intro: I18n.t("returnToHomeScreen"), element: document.querySelector(".takmaLogo"), disableInteraction: true},
             {intro: I18n.t("renameBoardTitle"), element: document.querySelector(".boardTitle")},
-            {intro: I18n.t("setNewBoardBackground"), element: document.getElementById("body")},
             {intro: I18n.t("copyBoardLink"), element: document.getElementById("copyLinkButton")},
             {intro: I18n.t("deleteCardShiftClick") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${ShiftClickDeleteCardVideo} autoplay loop width=300</video></video></div>`, element: document.querySelector(".cardContainer"), disableInteraction: true},
             {intro: I18n.t("rearrangeCardsDragDrop"), element: document.querySelector(".cardContainer"), disableInteraction: true},
@@ -99,12 +87,11 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
         onboardingStepComplete = true;
         setSelectedCard(currentCardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
-        startCardDetailsScreenOnBoarding(currentBoardId);
+        startCardDetailsScreenOnBoarding(currentBoardId, returnToWelcomeScreen);
     }).onExit(async () => {
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
         {
-            info("Exiting onboarding");
             SaveLoadManager.getData().onboardingCompleted = true; // Even if the user exits the onboarding process prematurely, mark it as complete in the savefile to prevent it from starting automatically at the next startup
             await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
             returnToWelcomeScreen();
@@ -115,8 +102,9 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
 /**
  * This function starts the onboarding for the card details screen.
  * @param currentBoardId The id of the board the onboarding is taking place on
+ * @param returnToWelcomeScreen Function used to return to the welcome screen after exiting or completing the onboarding
  */
-export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
+export async function startCardDetailsScreenOnBoarding(currentBoardId: string, returnToWelcomeScreen: () => void)
 {
     await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `onComplete()` has been executed. So we just need to wait until it's actually removed from the DOM
 
@@ -128,8 +116,6 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
             {intro: I18n.t("autoSaveCardEdits"), element: document.querySelector(".popup")},
             {intro: I18n.t("viewCreationDateHover") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${CardCreationDateVideo} autoplay loop width=208 height=74</video></div>`, element: document.querySelector(".separator")},
             {intro: I18n.t("markdownCardDescriptions"), element: document.querySelector(".editor-content")},
-            {intro: I18n.t("addAttachmentsDragDrop"), element: document.getElementById("cardDetailsAttachmentsButton")},
-            {intro: I18n.t("addCover"), element: document.getElementById("cardDetailsCoverButton")},
             {intro: I18n.t("copyCardLink"), element: document.getElementById("cardDetailsCopyLinkButton")},
             {intro: I18n.t("cardFullscreen"), element: document.querySelector(".fullScreenButton")},
         ],
@@ -141,11 +127,10 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
         exitOnEsc: false,
         exitOnOverlayClick: false
     }).onExit(async () => {
-        info("Exiting onboarding");
         SaveLoadManager.getData().onboardingCompleted = true;
         await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding
         canExit = true;
-        await relaunch(); //Relaunch Takma. We could in theory also just refresh the front-end AKA webview using `location.reload()` or `returnToWelcomeScreen()`. However, if we do that the title bar and navbar get rendered on top of each other for some reason
+        returnToWelcomeScreen();
     }).start();
 }
 

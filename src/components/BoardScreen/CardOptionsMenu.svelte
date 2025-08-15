@@ -130,15 +130,6 @@
             'name': 'hr',
         },
         {
-            'name': 'openInNewWindow',
-            'onClick': () => {
-                openReadOnlyWindow(card);
-                optionsMenu.closeContextMenu();
-            },
-            'displayText': I18n.t("openInNewWindow"),
-            'svg': '<svg class="listOptionsMenuIcons" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M384 224v184a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40h167.48M336 64h112v112M224 288 440 72"></path></svg>'
-        },
-        {
             'name': 'copyCard',
             'onClick': copyCard,
             'displayText': I18n.t("copyCard"),

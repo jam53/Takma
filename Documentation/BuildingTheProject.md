@@ -6,7 +6,5 @@
         - MAJOR version when making major (breaking) changes.
         - MINOR version when adding new features or improvements.
         - PATCH version when making bugfixes or small improvements.
-
-
 - Run `npm i`.
 - Run `npm run build`, the generated files will be placed inside `/dist`.
