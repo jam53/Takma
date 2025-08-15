@@ -197,10 +197,18 @@ export default interface Translation
     markdownGuide: string;
     moveChecklistUp: string;
     moveChecklistDown: string;
+    saveFileNotValid: string;
+    enterURL: string;
+    loadTakmaJsonFromOnlineSource: string;
+    welcomeToTakmaWebPreview: string;
+    thisIsALimitedDemo: string;
+    selectFile: string;
+    uploadLocalTakmaJson: string;
     takmaWebPreview: string;
     takmaWebPreviewExplanation: string;
     closeWithCtrlShiftWExplanation: string;
     shortcutNotAvailableDuringOnboarding: string;
+    takmaPWAExplanation: string;
     searchBarShortcutsExplanation: string;
     orderLists: string;
     completed: string;

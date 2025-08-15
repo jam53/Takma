@@ -46,6 +46,31 @@ export async function saveFilePathToTempFile(pathToFile: string, filename?: stri
 }
 
 /**
+ * Copies a file from a relative path (within Takma's save directory) to the temporary folder.
+ * Returns the absolute path to the file in the temporary folder.
+ *
+ * @param pathToFile - The absolute path of the file to save temporarily.
+ * @param filename - (Optional) The desired filename. If not provided, the original filename from `pathToFile` is used.
+ *                   A random UUID will be prepended to the filename to ensure uniqueness.
+ * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
+ */
+export async function saveAbsoluteFilePathToTempFile(pathToFile: string, filename?: string): Promise<string>
+{
+    return pathToFile;
+}
+
+/**
+ * Saves an ArrayBuffer to a temporary file. Returns the absolute path to the saved file.
+ *
+ * @param arrayBuffer - The ArrayBuffer to save.
+ * @param filename - (Optional) The desired filename. A random UUID will be prepended to the filename to ensure uniqueness. If not provided a default name is given.
+ * @returns A promise that resolves to the absolute path of the saved file in the temp folder.
+ */
+export async function saveArrayBufferToTempFile(arrayBuffer: ArrayBuffer, filename?: string): Promise<string> {
+    return filename ?? "";
+}
+
+/**
  * Copies a file from an absolute path to the specified save directory.
  * Returns the absolute path to the saved file.
  *

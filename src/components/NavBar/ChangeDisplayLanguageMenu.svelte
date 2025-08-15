@@ -31,16 +31,8 @@
      */
     async function setDisplayLanguage(language: string)
     {
-        // If the save location for the save file hasn't been set yet. I.e. when the user opened Takma for the first time and is presented the ChooseSaveLocation screen. The user still has the ability to pick a display language.
-        // Which is why this function will store the language preference temporarily in the browser's local storage if that is the case. Once a save location has been set, the language preference is saved to Takma's save file.
-        if (localStorage.getItem("saveDirectoryPath") === null)
-        {
-            localStorage.setItem("displayLanguage", language);
-        }
-        else
-        {
-            await SaveLoadManager.getData().setDisplayLanguage(language);
-        }
+        localStorage.setItem("displayLanguage", language);
+        await SaveLoadManager.getData().setDisplayLanguage(language);
     }
 
     let menuItems = [

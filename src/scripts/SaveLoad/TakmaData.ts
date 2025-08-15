@@ -1,5 +1,5 @@
 import {SaveLoadManager} from "./SaveLoadManager";
-import type {Board, Card, Label, List, sortBoardsFunctionName, windowState} from "../Board";
+import type {Board, Card, Label, List, ShowConfirmationPreferences, SortBoardsFunctionName, WindowState} from "../Board";
 import {saveAbsoluteFilePathToSaveDirectory} from "../TakmaDataFolderIO";
 
 /**
@@ -53,7 +53,6 @@ export class TakmaData
      */
     set darkTheme(value: boolean)
     {
-        debug("Toggle dark theme preference to: " + value);
         this._darkTheme = value;
         SaveLoadManager.saveToDisk();
     }
@@ -71,7 +70,6 @@ export class TakmaData
      */
     set cardsFullscreen(value: boolean)
     {
-        debug("Toggle card fullscreen preference to: " + value);
         this._cardsFullscreen = value;
         SaveLoadManager.saveToDisk();
     }
@@ -121,7 +119,6 @@ export class TakmaData
      */
     set sortBoardsFunctionName(sortBoardsFunctionName: SortBoardsFunctionName)
     {
-        debug("Change boards sort order to: " + sortBoardsFunctionName);
         this._sortBoardsFunctionName = sortBoardsFunctionName;
         SaveLoadManager.saveToDisk();
     }
@@ -139,7 +136,6 @@ export class TakmaData
      */
     public async setDisplayLanguage(value: string)
     {
-        await debug("Set display language to: " + value);
         this._displayLanguage = value;
         await SaveLoadManager.saveToDisk();
     }
@@ -191,7 +187,6 @@ export class TakmaData
      */
     set showLabelsText(value: boolean)
     {
-        debug("Toggle show labels text preference to: " + value);
         this._showLabelsText = value;
         SaveLoadManager.saveToDisk();
     }
@@ -217,7 +212,6 @@ export class TakmaData
      */
     set boards(boards: Board[])
     {
-        debug("Replacing all existing boards");
         this._boards = boards;
         SaveLoadManager.saveToDisk();
     }
@@ -269,7 +263,6 @@ export class TakmaData
         this.incrementTotalBoardsCreated();
         await SaveLoadManager.saveToDisk();
 
-        await debug("Created new board: " + board.id);
         return boardId;
     }
 
@@ -278,7 +271,6 @@ export class TakmaData
      */
     public setBoardTitle(id: string, title: string): void
     {
-        debug(`Set title of board:${id} to "${title}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === id);
 
         this._boards[indexOfBoard].title = title;
@@ -290,7 +282,6 @@ export class TakmaData
      */
     public async deleteBoard(id: string): Promise<void>
     {
-        debug("Delete board:" + id);
         this._boards = this.boards.filter(board => board.id != id);
         await SaveLoadManager.saveToDisk();
     }
@@ -302,7 +293,6 @@ export class TakmaData
      */
     public setBoardBackgroundImage(id: string, pathToImage: string): void
     {
-        debug(`Set background image of board:${id} to "${pathToImage}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === id);
 
         this._boards[indexOfBoard].backgroundImagePath = pathToImage;
@@ -338,7 +328,6 @@ export class TakmaData
 
         this.incrementTotalListsCreated();
         SaveLoadManager.saveToDisk();
-        debug(`Created new list: ${list.id} with ${list.cards.length} cards`);
         return list.id;
     }
 
@@ -380,7 +369,6 @@ export class TakmaData
      */
     public setLists(boardId: string, lists: List[]): void
     {
-        debug("Replacing all lists for board: " + boardId);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         this._boards[indexOfBoard].lists = lists;
 
@@ -415,7 +403,6 @@ export class TakmaData
         this.incrementTotalCardsCreated();
         SaveLoadManager.saveToDisk();
 
-        debug("Created new card: " + card.id);
         return card.id;
     }
 
@@ -424,7 +411,6 @@ export class TakmaData
      */
     public setListTitle(title: string, boardId: string, listId: string): void
     {
-        debug(`Setting list title "${title}" for list:${listId} in board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -437,7 +423,6 @@ export class TakmaData
      */
     public deleteList(boardId: string, listId: string): void
     {
-        debug(`Deleting list:${listId} in board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const listIndexToDelete = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -451,7 +436,6 @@ export class TakmaData
      */
     public deleteCard(boardId: string, cardId: string): void
     {
-        debug(`Deleting card:${cardId} in board:${boardId}`);
         const indexOfBoard: number = this._boards.findIndex(board => board.id === boardId);
         let indexOfList: number;
         let indexOfCardToDelete: number;
@@ -480,7 +464,6 @@ export class TakmaData
      */
     public updateList(boardId: string, listId: string, newListContent: List)
     {
-        debug(`Replacing list: ${listId} in board: ${boardId} with list: ${newListContent.id}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const listIndexToReplace = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -494,7 +477,6 @@ export class TakmaData
      */
     public getCard(boardId: string, cardId: string): Card|null
     {
-        debug(`Retrieving card:${cardId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         for (const list of board.lists)
@@ -521,7 +503,6 @@ export class TakmaData
             return;
         }
 
-        debug(`Replacing card: ${cardId} in board: ${boardId} with: ${card.id}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         let currentList: List;
 
@@ -547,7 +528,6 @@ export class TakmaData
      */
     public getLabel(boardId: string, labelId: string): Label
     {
-        debug(`Getting label:${labelId} in board:${boardId}`);
         let board: Board = this._boards.find(board => board.id === boardId);
 
         return board.labels.find(label => label.id === labelId);
@@ -558,7 +538,6 @@ export class TakmaData
      */
     public addLabelToBoard(boardId: string, label: Label)
     {
-        debug(`Adding label: ${label.id} to board: ${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].labels.push(label)
@@ -571,7 +550,6 @@ export class TakmaData
      */
     public setLabelTitle(boardId: string, labelId: string, title: string)
     {
-        debug(`Setting title of label: ${labelId} in board: ${boardId} to "${title}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
@@ -585,7 +563,6 @@ export class TakmaData
      */
     public editLabelColor(boardId: string, labelId: string, labelColor: string, labelTitleColor: string)
     {
-        debug(`Editing label:${labelId} in board:${boardId}, replacing label color "${labelColor}" and label title color "${labelTitleColor}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabel = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
@@ -600,7 +577,6 @@ export class TakmaData
      */
     public removeLabel(boardId: string, labelId: string)
     {
-        debug(`Removing label:${labelId} from board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfLabelInBoard = this._boards[indexOfBoard].labels.findIndex(label => label.id === labelId);
 
@@ -636,7 +612,6 @@ export class TakmaData
      */
     public setBoardLastOpenedTime(boardId: string, lastOpenedTime: number = Date.now())
     {
-        debug(`Setting last opened timed of board:${boardId} to "${lastOpenedTime}"`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
 
         this._boards[indexOfBoard].lastOpened = lastOpenedTime;
@@ -649,7 +624,6 @@ export class TakmaData
      */
     public toggleBoardFavourity(boardId: string)
     {
-        debug(`Toggling the favourite preference for board:${boardId}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         this._boards[indexOfBoard].favourite = !this._boards[indexOfBoard].favourite;
 
@@ -665,7 +639,6 @@ export class TakmaData
      */
     public addCardToList(card: Card, boardId: string, listId: string, indexToInsert: number = -1): void
     {
-        debug(`Inserting card: ${card.id} into list: ${listId} in board: ${boardId} at position ${indexToInsert}`);
         const indexOfBoard = this._boards.findIndex(board => board.id === boardId);
         const indexOfList = this._boards[indexOfBoard].lists.findIndex(list => list.id === listId);
 
@@ -703,7 +676,6 @@ export class TakmaData
      */
     public async getAllFilesRelatedToBoard(boardId: string): Promise<string[]>
     {
-        debug(`Retrieving all files tied to board:${boardId}`);
         let files: string[] = [];
 
         const board = this.getBoard(boardId);
@@ -735,12 +707,23 @@ export class TakmaData
         const markdownImageLinkRegex = /!\[[^\]]*\]\((?<imgSrc>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
         //This regex only matches image links with forward slashes, so we have to make sure that all image links in a card's description use forward slashes.
 
-        const tempDirPath = (await SaveLoadManager.getTempDirectoryPath()).replace(/\\/g, '/'); //Since the path will be compared to Markdown image links, which are formatted using forward slashes. Ensure the file path uses forward slashes, converting any backslashes from Windows file paths.
-
         return [... new Set( //This ensures that if multiple ![]() markdown images refer to the same URL/file, each URL appears only once in the array
             [...card.description.matchAll(markdownImageLinkRegex)]
                 .map(match => match.groups?.imgSrc).filter(imgSrc => imgSrc !== undefined)
-        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()) || imgSrc.startsWith(tempDirPath)); //We only want to retain images that are stored in locations managed by Takma. I.e. Takma's save directory or Takma's temporary folder, not paths to image files somewhere else on disk nor http/https urls to images
+        )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory())); //We only want to retain images that are stored in Takma's save directory, not paths to image files somewhere else on disk nor http/https urls to images
+    }
+
+    /**
+     * Checks if the user is on a mobile device by analyzing the user agent string.
+     *
+     * @returns {boolean} - Returns true if the user is on a mobile device, false otherwise.
+     */
+    public isUserOnMobile(): boolean
+    {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        // Regular expression to match various mobile devices from http://detectmobilebrowsers.com/
+        return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(userAgent) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(userAgent.substr(0, 4));
     }
 
     /**
@@ -817,19 +800,6 @@ export class TakmaData
 
         SaveLoadManager.saveToDisk();
         return updatedLabelIds;
-    }
-
-    /**
-     * Checks if the user is on a mobile device by analyzing the user agent string.
-     *
-     * @returns {boolean} - Returns true if the user is on a mobile device, false otherwise.
-     */
-    public isUserOnMobile(): boolean
-    {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-        // Regular expression to match various mobile devices from http://detectmobilebrowsers.com/
-        return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(userAgent) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(userAgent.substr(0, 4));
     }
     //endregion
 }

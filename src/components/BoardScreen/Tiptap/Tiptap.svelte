@@ -17,7 +17,6 @@
     import {Link} from "@tiptap/extension-link";
     import {selectedBoardId} from "../../../scripts/Stores.svelte.js";
     import {I18n} from "../../../scripts/I18n/I18n";
-    import {open as openDialog} from "@tauri-apps/plugin-dialog";
     import {TakmaLinkExtensionSvelte} from "../../../scripts/Tiptap/TakmaLinkExtension.svelte";
     import {Underline} from "@tiptap/extension-underline";
     import {TextStyle} from "@tiptap/extension-text-style";
@@ -32,8 +31,8 @@
     import {DetailsContent} from "../../../scripts/Tiptap/DetailsContent";
     import {DetailsSummary} from "../../../scripts/Tiptap/DetailsSummary";
     import {Details} from "../../../scripts/Tiptap/Details";
+    import {toast} from "svelte-sonner";
     import {Placeholder} from "@tiptap/extension-placeholder";
-    import {openUrl} from "@tauri-apps/plugin-opener";
     import TextEditorActionButtons from "./TextEditorActionButtons.svelte";
 
     interface Props {
@@ -72,20 +71,6 @@
             editorProps: {
                 attributes: {
                     spellcheck: "false"
-                },
-                handleClickOn(view, pos, node, nodePos, event, direct) {
-                    const targetElement = event.target as HTMLElement;
-
-                    // Handle LMB clicks on regular http/https links using Tauri's `openUrl()` to ensure it opens in the user's default browser rather than in a new Tauri window
-                    if(event.button === 0 && targetElement.closest("a")?.hasAttribute('href'))
-                    {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        openUrl(targetElement.closest("a")!.getAttribute('href')!);
-                        return true; // Signals that the "click" was handled
-                    }
-
-                    return false; // Let Tiptap handle other clicks
                 },
             },
             extensions: [
@@ -377,22 +362,7 @@
     /**
      * Handles inserting an image into the Tiptap editor by showing a file picker to select an image file from disk
      */
-    async function handleInsertImageFile()
-    {
-        const selected = await openDialog({
-            multiple: false,
-            filters: [{
-                name: I18n.t("image"),
-                extensions: imageExtensions
-            }]
-        });
-
-        if (selected !== null && typeof(selected) === "string")
-        {
-            let imgUrl = (await saveAbsoluteFilePathToSaveDirectory(selected, selectedBoardId.value)).replace(/\\/g, '/') // Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths
-            runCommand(chain => chain.setImage({src: imgUrl}));
-        }
-    }
+    async function handleInsertImageFile() { }
 </script>
 
 <!-- Tiptap text editor component -->

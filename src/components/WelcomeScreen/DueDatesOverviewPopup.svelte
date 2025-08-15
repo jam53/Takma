@@ -45,13 +45,11 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {dueDatesOverviewPopupIsVisible, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {info} from "@tauri-apps/plugin-log";
 
     let showPopup = $state(true); dueDatesOverviewPopupIsVisible.value = true;
 
     onMount(() =>
     {
-        info("Opening due dates overview popup");
         window.addEventListener("keydown", listenToKeyDown);
     });
 
@@ -88,7 +86,6 @@
 
     function getAllCardsWithDueDates(): CardWithDueDate[]
     {
-        info("Fetching all cards with due dates");
         let allDueDates: CardWithDueDate[] = [];
         SaveLoadManager.getData().boards.forEach(board =>
             board.lists.forEach(list =>

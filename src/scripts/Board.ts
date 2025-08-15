@@ -4,9 +4,6 @@ import {
     saveFilePathToTempFile
 } from "./TakmaDataFolderIO";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
-import {exists} from "@tauri-apps/plugin-fs";
-import {join} from "@tauri-apps/api/path";
-import {debug} from "@tauri-apps/plugin-log";
 
 export interface Board
 {
@@ -99,7 +96,6 @@ export interface ShowConfirmationPreferences
  */
 export async function duplicateCard(card: Card, boardId: string, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<Card>
 {
-    debug(`Duplicating card:${card.id} in board:${boardId}`);
     card = structuredClone(card);
 
     card.id = crypto.randomUUID();
@@ -107,33 +103,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
 
     //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
     card.attachments = await Promise.all(card.attachments.map(async attachment => {
-
-        if (!filePathsAbsolute && attachment !== "" && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), attachment)))
-        {
-            if (!saveFilesToTemp)
-            {
-                return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36));
-            }
-            else
-            {
-                return await saveFilePathToTempFile(attachment, attachment.getFilename().substring(36));
-            }
-        }
-        else if (filePathsAbsolute && attachment !== "" && await exists(attachment))
-        {
-            if (!saveFilesToTemp)
-            {
-                return await saveAbsoluteFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36));
-            }
-            else
-            {
-                return await saveAbsoluteFilePathToTempFile(attachment, attachment.getFilename().substring(36));
-            }
-        }
-        else
-        {
-            return "";
-        }
+        return await saveFilePathToSaveDirectory(attachment, boardId, attachment.getFilename().substring(36)); //We need to duplicate the attachments, this way the attachments on this card wont be deleted if the user deletes attachments from the original card or vice versa
     }));
 
     if (card.coverImage !== "" && !filePathsAbsolute)
@@ -150,31 +120,7 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
     }
 
     const imagesInCardDescription: string[] = await SaveLoadManager.getData().getAllLocalMarkdownImagesInCardDescription(card);
-
-    let duplicatedImagesInCardDescription: string[] = [];
-    for (const imgSrc of imagesInCardDescription)
-    {
-        if (!filePathsAbsolute && await exists(await join(SaveLoadManager.getSaveDirectoryPath(), imgSrc)))
-        {
-            duplicatedImagesInCardDescription.push(
-                !saveFilesToTemp ?
-                    await saveFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36)) :
-                    await saveFilePathToTempFile(imgSrc, imgSrc.getFilename().substring(36))
-            );
-        }
-        else if (filePathsAbsolute && await exists(imgSrc))
-        {
-            duplicatedImagesInCardDescription.push(
-                !saveFilesToTemp ?
-                    await saveAbsoluteFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36)) :
-                    await saveAbsoluteFilePathToTempFile(imgSrc, imgSrc.getFilename().substring(36))
-            );
-        }
-        else
-        { //Normally either the `if` or `else if` statement above should be matched and insert something into the `duplicatedImagesInCardDescription` array. Should that however not be the case, we add the original `imgSrc` to the array, to ensure that we do not encounter an index out of bounds exception later, where we replace all of the images in the card's description with the duplicated ones.
-            duplicatedImagesInCardDescription.push(imgSrc);
-        }
-    }
+    const duplicatedImagesInCardDescription: string[] = await Promise.all(imagesInCardDescription.map(async imgSrc => await saveFilePathToSaveDirectory(imgSrc, boardId, imgSrc.getFilename().substring(36))));
 
     imagesInCardDescription.forEach((imgSrc, i) => {
         card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i].replace(/\\/g, '/')); //Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths.
@@ -193,7 +139,6 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
  */
 export async function duplicateList(list: List, boardId: string, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<List>
 {
-    debug(`Duplicating list:${list.id} in board:${boardId}`);
     list = structuredClone(list);
 
     list.id = crypto.randomUUID();
@@ -213,7 +158,6 @@ export async function duplicateList(list: List, boardId: string, filePathsAbsolu
  */
 export async function duplicateBoard(board: Board, filePathsAbsolute: boolean = false, saveFilesToTemp: boolean = false): Promise<Board>
 {
-    debug(`Duplicating board:${board.id}`);
     board = structuredClone(board);
 
     board.id = crypto.randomUUID();

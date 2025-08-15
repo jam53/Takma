@@ -1,107 +1,137 @@
 <script lang="ts">
-    import {open as openDialog} from "@tauri-apps/plugin-dialog"
-    import {appLocalDataDir, join, normalize, resolveResource} from "@tauri-apps/api/path";
     import {I18n} from "../../scripts/I18n/I18n";
-    import {info} from "@tauri-apps/plugin-log";
-    import {openPath} from "@tauri-apps/plugin-opener";
-    import {invoke} from "@tauri-apps/api/core";
-    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import {mount} from "svelte";
     import PopupWindow from "../PopupWindow.svelte";
+    import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
+    import {isSaveLocationSet} from "../../scripts/Stores.svelte";
+    import {mount} from "svelte";
 
-    async function setSaveLocation(saveDirectoryPath: string)
+    function setSavefile(fileContents: string)
     {
-        // If true this means the user already has a save file but wants to change its location, meaning we should move it from the previous location to the new one
-        if (!(localStorage.getItem("saveDirectoryPath") === null)) {
-            const from = await join(localStorage.getItem("saveDirectoryPath")!, SaveLoadManager.getSaveDirectoryName());
-            const to = await join(saveDirectoryPath, SaveLoadManager.getSaveDirectoryName());
-
-            try
-            {
-                info(`Moving save directory from "${from}" to "${to}"`)
-                await invoke('move_directory', {from, to});
-            }
-            catch
-            {
-                const popup = mount(PopupWindow, {props: {title: I18n.t("folderExistsTitle"), description: I18n.t("folderExistsDescription", saveDirectoryPath), buttonType: "ok"}, target: document.body, intro: true});
-                await popup.getAnswer();
-                return;
-            }
-        }
-
-        info(`Setting save directory path to: "${saveDirectoryPath}"`);
-        localStorage.setItem("saveDirectoryPath", await normalize(saveDirectoryPath));
-        location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
-    }
-
-    async function handleDirectorySelection()
-    {
-        const selectedDirectory = await openDialog({
-            directory: true,
-            multiple: false,
+        SaveLoadManager.loadSaveFile(fileContents, () => {
+            isSaveLocationSet.value = true;
+            document.body.style.backgroundImage = "";
+            document.body.style.backgroundColor = `var(--background-color)`;
         });
-        if (selectedDirectory !== null && typeof(selectedDirectory) === "string")
+    }
+
+    async function handleURLSelection()
+    {
+        const popup = mount(PopupWindow, {props: {title: I18n.t("enterURL"), description: I18n.t("loadTakmaJsonFromOnlineSource"), inputValue: localStorage.getItem("savefileURL"), buttonType: "input"}, target: document.body, intro: true});
+
+        if (await popup.getAnswer() === true)
         {
-            await setSaveLocation(selectedDirectory);
+            let savefileURL = (await popup.getInputFieldAnswer()).trim();
+
+            let response = await fetch(savefileURL);
+
+            localStorage.setItem("savefileURL", savefileURL)
+            setSavefile(await response.text());
         }
     }
+
+    async function handleFileSelection(e)
+    {
+        const file = e.target.files[0];
+
+        if (file)
+        {
+            setSavefile(await file.text());
+        }
+    }
+
+    let installPWAPrompt: BeforeInstallPromptEvent | undefined = $state();
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); // Prevents the default mini-infobar or install dialog from appearing on mobile
+        installPWAPrompt = e;
+    });
 </script>
 
-<h1 class="title">
-    {I18n.t("storeDataLocation")}
-</h1>
-<div class="optionsHolder">
-    <div>
-        <span class="defaultTag">
-            {I18n.t("default")}
-        </span>
-        <div class="option" onclick={async () => await setSaveLocation(await appLocalDataDir())}>
-            <h1>
-                {I18n.t("localAppData")}
-            </h1>
-            <p>
-                {I18n.t("storeDataLocalAppData")}
-            </p>
-            <p>
-                {I18n.t("recommendedChoice")}
-            </p>
+<div class="container">
+    <h1 class="title">
+        {I18n.t("welcomeToTakmaWebPreview")}
+    </h1>
+    <div class="bottom">
+        <div class="description">
+            <pre>
+                {@html I18n.t("thisIsALimitedDemo", "<a href='https://jam54.com/download.html'>Jam54 Launcher</a>", "<a href='https://github.com/jam53/Takma/releases/latest'>GitHub</a>")}
+            </pre>
+        </div>
+        {#if installPWAPrompt}
+            <div class="description descriptionClickable" onclick={() => installPWAPrompt.prompt()}>
+                <pre>{I18n.t("takmaPWAExplanation")}</pre>
+            </div>
+        {/if}
+        <div class="optionsHolder">
+            <div>
+                <span class="defaultTag">
+                    {I18n.t("default")}
+                </span>
+                <label for="file-upload">
+                    <input id="file-upload" type="file" accept=".json" onchange={handleFileSelection}
+                    />
+                    <div class="option">
+                        <h1>
+                            {I18n.t("selectFile")}
+                        </h1>
+                        <p>
+                            {I18n.t("uploadLocalTakmaJson")}
+                        </p>
+                    </div>
+                </label>
+            </div>
+            <div>
+                <span class="defaultTag" style="visibility: hidden">
+                    {I18n.t("default")}
+                </span>
+                <div class="option" onclick={async () => await handleURLSelection()}>
+                    <h1>
+                        {I18n.t("enterURL")}
+                    </h1>
+                    <p>
+                        {I18n.t("loadTakmaJsonFromOnlineSource")}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="licenseAgreement">
+            <span>
+                {I18n.t("acceptTermsAndConditions")}<a onclick={async () => {
+                    let response = await fetch("LICENSE.txt");
+
+                    mount(PopupWindow, {props: {title: I18n.t("licenseAgreement").capitalizeFirstLetter(), description: await response.text(), buttonType: "ok"}, target: document.body, intro: true});
+                }}>{I18n.t("licenseAgreement")}</a>
+            </span>
         </div>
     </div>
-    <div>
-        <span class="defaultTag" style="visibility: hidden">
-            {I18n.t("default")}
-        </span>
-        <div class="option" onclick={async () => await handleDirectorySelection()}>
-            <h1>
-                {I18n.t("customSaveLocation")}
-            </h1>
-            <p>
-                {I18n.t("storeDataCustomSaveLocation")}
-            </p>
-            <p>
-                {I18n.t("storeDataCustomSaveLocationDescription")}
-            </p>
-        </div>
-    </div>
-</div>
-<div class="licenseAgreement">
-    <span>
-        {I18n.t("acceptTermsAndConditions")}<a onclick={async () => openPath(await resolveResource("resources/LICENSE.txt"))}>{I18n.t("licenseAgreement")}</a>
-    </span>
 </div>
 
 <style>
+    .container {
+        display: flex;
+        flex-flow: column;
+        gap: 1em;
+
+        height: 100%;
+        margin-top: 0.5em;
+        overflow-y: auto;
+    }
+
     .title {
         text-align: center;
         font-size: xxx-large;
         color: white;
+        margin-left: 1em;
+        margin-right: 1em;
     }
 
     .optionsHolder {
         display: flex;
-        justify-content: space-evenly;
-        height: 70%;
+        flex-wrap: wrap;
+        justify-content: center;
+        column-gap: 5em;
+        row-gap: 2em;
         align-items: center;
+        margin: 1em 1em 0 1em;
         color: white;
     }
 
@@ -120,8 +150,8 @@
     .option {
         border: 3px solid white;
         border-radius: 1em;
-        width: 30vw;
-        height: 40vh;
+        max-width: 20em;
+        height: 15em;
         padding: 1em;
         overflow-y: auto;
         backdrop-filter: blur(10px);
@@ -157,18 +187,21 @@
     }
 
     .licenseAgreement {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        padding: 0.5em;
+        margin-top: auto;
+        padding-bottom: 0.5em;
         color: white;
-        width: 100%;
         text-align: center;
+        background-color: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    @media only screen and (max-width: 768px) {
+        .licenseAgreement {
+            padding-bottom: 4em;
+        }
     }
 
     .licenseAgreement span {
-        background-color: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
         border-radius: 1em;
         color: dimgrey;
     }
@@ -186,5 +219,56 @@
 
     p {
         font-size: large;
+    }
+
+    .description {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin: 0 2em;
+        max-width: 50em;
+    }
+
+    .description pre {
+        font-size: large;
+        white-space: pre-line;
+        text-align: center;
+        margin: 0;
+        padding: 1em 0.75em;
+
+        background-color: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(5px);
+        -webkit-box-shadow: 0 0 0.6em rgba(0, 0, 0, 0.75);
+        border-radius: 1em;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .descriptionClickable pre {
+        cursor: pointer;
+
+        /*  needed for firefox to have a valid output */
+        --transparency: 100%;
+        /**/
+        transition: --transparency 0.4s, all 0.4s;
+        background: linear-gradient(transparent var(--transparency), #404040);
+    }
+
+    .descriptionClickable:hover pre {
+        cursor: pointer;
+        border: 3px solid var(--accent);
+        --transparency:30%;
+        -webkit-box-shadow: 0 0 1em rgba(var(--main-text-rgb-values), 0.25);
+    }
+
+    .bottom {
+        display: flex;
+        flex-flow: column wrap;
+        align-content: center;
+        gap: 2em;
+        flex-grow: 1;
+    }
+
+    input[type="file"] {
+        display: none;
     }
 </style>

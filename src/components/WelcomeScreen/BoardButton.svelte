@@ -2,8 +2,8 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {mount} from "svelte";
     import {scale} from "svelte/transition";
-    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import BoardOptionsMenu from "./BoardOptionsMenu.svelte";
+    import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {selectedBoardId} from "../../scripts/Stores.svelte.js";
     import type {Board} from "../../scripts/Board";
 
