@@ -4,7 +4,6 @@
     import StarterKit from '@tiptap/starter-kit';
     import {BubbleMenu} from "@tiptap/extension-bubble-menu";
     import Bold from '@tiptap/extension-bold';
-    import {Markdown} from "tiptap-markdown";
     import {CodeBlockLowlight} from "@tiptap/extension-code-block-lowlight";
     import {all, createLowlight} from "lowlight";
     import {TaskItem} from "@tiptap/extension-task-item";
@@ -35,6 +34,7 @@
     import {Placeholder} from "@tiptap/extension-placeholder";
     import {openUrl} from "@tauri-apps/plugin-opener";
     import TextEditorActionButtons from "./TextEditorActionButtons.svelte";
+    import {Markdown} from "@tiptap/markdown";
 
     interface Props {
         cardDescription: string;
@@ -69,6 +69,7 @@
         editor = new Editor({
             element: editorElement,
             content: parseTakmaLinks(cardDescription),
+            contentType: 'markdown',
             editorProps: {
                 attributes: {
                     spellcheck: "false"
@@ -92,50 +93,27 @@
                 StarterKit.configure({
                     codeBlock: false,
                     bold: false,
+                    link: false,
+                    underline: false,
                 }),
-                // Bubble menu, display above selected text or when in a table
                 BubbleMenu.configure({
                     element: bubbleMenuElement,
-                    tippyOptions: {
-                        duration: 100,
-                        placement: 'top-start',
+                    options: {
+                        placement: "top-start"
                     },
-                    shouldShow: ({ editor, state }) => {
-                        const { selection } = state;
-                        const { $from: from, empty } = selection;
-                        // Show if text is selected OR if the cursor is inside a table
-                        return editor.isEditable && (!empty || editor.isActive('table'));
-                    }
                 }),
                 // Floating menu, for actions on empty lines
                 FloatingMenu.configure({
                     element: floatingMenuElement,
-                    tippyOptions: {
-                        duration: 100,
-                        placement: 'top-start',
-                    },
-                    shouldShow: ({ editor, state }) => {
-                        const { selection } = state;
-                        const { $from: from, empty } = selection;
-
-                        return (
-                            editor.isEditable &&
-                            empty &&
-                            from.parent.isTextblock && // Is the immediate container a text block?
-                            from.parent.content.size === 0 && // Is it empty?
-                            !editor.isActive('table')
-                        );
+                    options: {
+                        placement: 'top-start'
                     },
                 }),
                 Markdown.configure({
-                    html: true, // Allow HTML input/output
-                    tightLists: true, // No <p> inside <li> in markdown output
-                    tightListClass: 'tight', // Add class to <ul> allowing you to remove <p> margins when tight
-                    bulletListMarker: '-', // <li> prefix in markdown output
-                    linkify: true, // Create links from "https://..." text
-                    breaks: false, // Whether or not new lines (\n) in markdown input are converted to <br>
-                    transformPastedText: true, // Allow to paste Markdown text in the editor
-                    transformCopiedText: false, // Whether or not copied text is transformed to Markdown
+                    markedOptions: {
+                        gfm: true,
+                        breaks: true,
+                    }
                 }),
                 CodeBlockLowlight.configure({
                     exitOnTripleEnter: false,
@@ -256,7 +234,7 @@
                 isTextStyle = editor?.isActive('textStyle') ?? false;
             },
             onUpdate: ({editor}) => {
-                cardDescription = editor.storage.markdown.getMarkdown();
+                cardDescription = editor.getMarkdown();
             },
         });
     });
@@ -677,13 +655,22 @@
 
 <style>
     .floating-menu, .bubble-menu {
+        /*
+         * Hide the menus by default.
+         * Tiptap will dynamically add `style="visibility: visible; opacity: 1;"` to show them.
+         */
+        visibility: hidden;
+        opacity: 0;
+
         display: flex;
         flex-wrap: wrap;
+        max-width: 22em;
         background-color: var(--background-color);
         padding: 0.25em;
         border-radius: 5px;
         box-shadow: 0 0 0.6em rgba(var(--main-text-rgb-values), 0.25);
         pointer-events: auto; /* Allow interaction */
+        z-index: 1;
     }
 
     .menu-button {
