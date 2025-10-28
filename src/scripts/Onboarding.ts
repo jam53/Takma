@@ -21,12 +21,12 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
     let onboardingStepComplete = false;
     let canExit = true;
 
-    introJs().onbeforeexit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
+    introJs.tour().onBeforeExit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
         steps:[
             {title: I18n.t("welcomeToTakma"), intro:I18n.t("quickGuideEssentials")},
-            {intro: I18n.t("redoOnboardingProcess"), element: document.querySelector(".startOnboarding")},
+            {intro: I18n.t("redoOnboardingProcess"), element: document.getElementById("onboardingButton")},
             {intro: I18n.t("takmaWebPreviewExplanation"), element: document.getElementById("takmaWebPreviewButton")},
-            {intro: I18n.t("dueDatesOverviewExplanation"), element: document.querySelector(".dueDatesOverviewButton")},
+            {intro: I18n.t("dueDatesOverviewExplanation"), element: document.getElementById("dueDatesOverviewButton")},
             {intro: I18n.t("searchBarShortcutsExplanation"), element: document.querySelector(".searchIcon")},
             {intro: I18n.t("closeWithCtrlShiftWExplanation")},
             {intro: I18n.t("createNewBoards"), element: document.querySelector(".createButton")},
@@ -38,7 +38,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         doneLabel: I18n.t("done"),
         exitOnEsc: false,
         exitOnOverlayClick: false
-    }).oncomplete(async () => {
+    }).onComplete(async () => {
         onboardingStepComplete = true;
 
         const includedImagesPaths = await Promise.all((await readDir((await resolveResource("resources/backgrounds/")))).map(async fileEntry => await resolve(await resourceDir(), "resources", "backgrounds", fileEntry.name)));
@@ -52,7 +52,7 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
         setSelectedBoard(boardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
         startBoardScreenOnBoarding(boardId, cardId, setSelectedCard, () => {setSelectedCard(""); setSelectedBoard("");});
-    }).onexit(() => {
+    }).onExit(() => {
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
         {
@@ -71,18 +71,18 @@ export default function startWelcomeScreenOnBoarding(setSelectedBoard: (id: stri
  */
 export async function startBoardScreenOnBoarding(currentBoardId: string, currentCardId: string, setSelectedCard: (id: string) => void, returnToWelcomeScreen: () => void)
 {
-    await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `oncomplete()` has been executed. So we just need to wait until it's actually removed from the DOM
+    await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `onComplete()` has been executed. So we just need to wait until it's actually removed from the DOM
 
     let onboardingStepComplete = false;
     let canExit = true;
 
-    await introJs().onbeforeexit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
+    await introJs.tour().onBeforeExit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
         steps:[
             {title: I18n.t("boardScreen"), intro:I18n.t("efficientTaskManagement")},
             {intro: I18n.t("returnToHomeScreen"), element: document.querySelector(".takmaLogo"), disableInteraction: true},
             {intro: I18n.t("renameBoardTitle"), element: document.querySelector(".boardTitle")},
             {intro: I18n.t("setNewBoardBackground"), element: document.getElementById("body")},
-            {intro: I18n.t("copyBoardLink"), element: document.querySelector(".copyLinkButton")},
+            {intro: I18n.t("copyBoardLink"), element: document.getElementById("copyLinkButton")},
             {intro: I18n.t("deleteCardShiftClick") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${ShiftClickDeleteCardVideo} autoplay loop width=300</video></video></div>`, element: document.querySelector(".cardContainer"), disableInteraction: true},
             {intro: I18n.t("rearrangeCardsDragDrop"), element: document.querySelector(".cardContainer"), disableInteraction: true},
             {intro: I18n.t("rearrangeListsDragDrop"), element: document.querySelector(".list"), disableInteraction: true},
@@ -95,12 +95,12 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
         doneLabel: I18n.t("done"),
         exitOnEsc: false,
         exitOnOverlayClick: false
-    }).oncomplete(async () => {
+    }).onComplete(async () => {
         onboardingStepComplete = true;
         setSelectedCard(currentCardId); //Sets the selectedBoardId.value Svelte store, i.e. opens the boardscreen
         canExit = true;
         startCardDetailsScreenOnBoarding(currentBoardId);
-    }).onexit(async () => {
+    }).onExit(async () => {
         // If the user exits the onboarding process before completing it
         if (!onboardingStepComplete)
         {
@@ -118,16 +118,16 @@ export async function startBoardScreenOnBoarding(currentBoardId: string, current
  */
 export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
 {
-    await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `oncomplete()` has been executed. So we just need to wait until it's actually removed from the DOM
+    await waitForIntroJsRemovalFromDOM(); //We can't start another instance of IntroJs before the current one is removed. It gets removed automatically when the onboarding is complete + the last line in `onComplete()` has been executed. So we just need to wait until it's actually removed from the DOM
 
     let canExit = true;
 
-    await introJs().onbeforeexit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
+    await introJs.tour().onBeforeExit(() => canExit /*Makes it so we cant exit the onboarding by pressing esc, click on overlay or the skip AKA close button*/).setOptions({
         steps:[
             {title: I18n.t("cardDetailsScreen"), intro:I18n.t("editCardDetailsHub")},
             {intro: I18n.t("autoSaveCardEdits"), element: document.querySelector(".popup")},
             {intro: I18n.t("viewCreationDateHover") + `<br><div style='display: flex; justify-content: center; align-items: center'><video src=${CardCreationDateVideo} autoplay loop width=208 height=74</video></div>`, element: document.querySelector(".separator")},
-            {intro: I18n.t("markdownCardDescriptions"), element: document.querySelector(".renderedDescriptionHolder")},
+            {intro: I18n.t("markdownCardDescriptions"), element: document.querySelector(".editor-content")},
             {intro: I18n.t("addAttachmentsDragDrop"), element: document.getElementById("cardDetailsAttachmentsButton")},
             {intro: I18n.t("addCover"), element: document.getElementById("cardDetailsCoverButton")},
             {intro: I18n.t("copyCardLink"), element: document.getElementById("cardDetailsCopyLinkButton")},
@@ -140,7 +140,7 @@ export async function startCardDetailsScreenOnBoarding(currentBoardId: string)
         doneLabel: I18n.t("done"),
         exitOnEsc: false,
         exitOnOverlayClick: false
-    }).onexit(async () => {
+    }).onExit(async () => {
         info("Exiting onboarding");
         SaveLoadManager.getData().onboardingCompleted = true;
         await SaveLoadManager.getData().deleteBoard(currentBoardId); // Delete the board that was created during the onboarding

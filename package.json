@@ -44,7 +44,7 @@
         "@tiptap/markdown": "^3.9.0",
         "@tiptap/pm": "^3.9.0",
         "@tiptap/starter-kit": "^3.9.0",
-        "intro.js": "^7.2.0",
+        "intro.js": "^8.3.2",
         "lowlight": "^3.3.0",
         "svelte-dnd-action": "^0.9.61",
         "svelte-sonner": "^1.0.4",
