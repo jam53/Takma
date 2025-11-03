@@ -2,7 +2,7 @@
     import BoardButton from "./BoardButton.svelte";
     import NewBoardPopup from "./NewBoardPopup.svelte";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Board} from "../../scripts/Board";
+    import {type Board} from "../../scripts/Board";
     import {searchBarValue, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {mount, onMount} from "svelte";
@@ -12,6 +12,7 @@
     import {debug, info} from "@tauri-apps/plugin-log";
     import {slide} from "svelte/transition";
     import {debounce} from "../../scripts/Debounce";
+    import {performSearchInText} from "../../scripts/SearchText";
 
     let lazyLoaded = $state(false); //Wordt op true gezet eenmaal er één NewBoardPopup werd aangemaakt, en alle high res images dus geladen zijn. Raadpleeg de uitleg bij deze variabele in NewBoardPopup voor meer informatie
 
@@ -58,13 +59,13 @@
     });
 
     const isFavouriteBoard: (board: Board) => boolean
-        = board => board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && board.favourite && !board.archived;
+        = board => performSearchInText(searchBarValue.value, board.title.toLowerCase()) && board.favourite && !board.archived;
 
     const isRegularBoard: (board: Board) => boolean
-        = board => board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && !board.favourite && !board.archived;
+        = board => performSearchInText(searchBarValue.value, board.title.toLowerCase()) && !board.favourite && !board.archived;
 
     const isArchivedBoard: (board: Board) => boolean
-        = board => board.title.toLowerCase().includes(searchBarValue.value.toLowerCase().trim()) && board.archived;
+        = board => performSearchInText(searchBarValue.value, board.title.toLowerCase()) && board.archived;
 
     let showArchivedBoards = $state(false);
 </script>

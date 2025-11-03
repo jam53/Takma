@@ -2,7 +2,7 @@
     "name": "Takma",
     "private": true,
     "version": "1.7.6",
-    "build": 732,
+    "build": 733,
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -45,6 +45,7 @@
         "@tiptap/pm": "^3.9.0",
         "@tiptap/starter-kit": "^3.9.0",
         "intro.js": "^8.3.2",
+        "leven": "^4.1.0",
         "lowlight": "^3.3.0",
         "svelte-dnd-action": "^0.9.65",
         "svelte-sonner": "^1.0.5",

@@ -1,5 +1,6 @@
 import {
-    saveAbsoluteFilePathToSaveDirectory, saveAbsoluteFilePathToTempFile,
+    saveAbsoluteFilePathToSaveDirectory,
+    saveAbsoluteFilePathToTempFile,
     saveFilePathToSaveDirectory,
     saveFilePathToTempFile
 } from "./TakmaDataFolderIO";
@@ -7,6 +8,7 @@ import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {exists} from "@tauri-apps/plugin-fs";
 import {join} from "@tauri-apps/api/path";
 import {debug} from "@tauri-apps/plugin-log";
+import {performSearchInText} from "./SearchText";
 
 export interface Board
 {
@@ -236,4 +238,27 @@ export async function duplicateBoard(board: Board, filePathsAbsolute: boolean = 
     board.lists = await Promise.all(board.lists.map(async list => await duplicateList(list, board.id, filePathsAbsolute, saveFilesToTemp)));
 
     return board;
+}
+
+/**
+ * Checks if a card contains a given string in its searchable content
+ * using a flexible search strategy (exact, all-words, or fuzzy).
+ *
+ * @param card The Card object to search within.
+ * @param searchQuery The string to search for.
+ * @returns True if the string is found, false otherwise.
+ */
+export function cardContainsString(card: Card, searchQuery: string): boolean {
+    // Gather all searchable content into a single string.
+    // Concatenating fields ensures that a search for multiple unquoted words
+    // (e.g., 'title word description word') can match a card where those words
+    // are spread across the title, description, and checklist items.
+    const searchableText = (
+        card.title + ' ' +
+        card.description + ' ' +
+        card.checklists.map(checklist => checklist.title).join(' ') + ' ' +
+        card.checklists.flatMap(checklist => checklist.todos).map(todo => todo.content).join(' ')
+    ).toLowerCase();
+
+    return performSearchInText(searchQuery, searchableText);
 }

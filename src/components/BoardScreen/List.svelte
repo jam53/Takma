@@ -1,7 +1,7 @@
 <script lang="ts">
     import {slide} from "svelte/transition";
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
-    import type {Card as CardInterface, List} from "../../scripts/Board";
+    import {type Card as CardInterface, cardContainsString, type List} from "../../scripts/Board";
     import {cardFilters, searchBarValue, selectedBoardId} from "../../scripts/Stores.svelte.js";
     import {dndzone} from "svelte-dnd-action";
     import {flip} from "svelte/animate";
@@ -103,14 +103,7 @@
 
     function shouldCardBeHidden(card: CardInterface)
     {
-        const searchValue: string = searchBarValue.value.toLowerCase().trim();
-
-        return !(
-            card.title.toLowerCase().includes(searchValue) ||
-            card.description.toLowerCase().includes(searchValue) ||
-            card.checklists.some(checklist => checklist.title.toLowerCase().includes(searchValue)) ||
-            card.checklists.some(checklist => checklist.todos.some(todo => todo.content.toLowerCase().includes(searchValue)))
-        );
+        return !(cardContainsString(card, searchBarValue.value));
     }
 
     let titleHolderElement: HTMLElement;
