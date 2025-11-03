@@ -284,6 +284,18 @@ export let en: Translation = {
     folderExistsTitle: "Cannot move save data",
     folderExistsDescription: "<div class='markdown-body'><p>Takma cannot move the save data because a folder named <code>Takma</code> already exists in the chosen directory: <pre><code>$|00|$</code></pre></p><p>To proceed, please select a new location or ensure the target directory does not already contain a folder named <code>Takma</code>.</p></div>",
     showAllButtons: "Show all buttons",
+    searchTips: `<p><strong>Search Tips:</strong></p>
+                <ul>
+                    <li>Type words to search all cards. Fuzzy search is supported: typos like <code>chese</code> will
+                        match <code>cheese</code>.
+                    </li>
+                    <li>Use quotes for exact phrases: <code>"time flies"</code>.</li>
+                </ul>`,
+    cards: "CARDS",
+    boards: "BOARDS",
+    showAllCards: "Show all cards (including those from archived boards).",
+    hideArchivedCards: "Hide cards from archived boards.",
+    noResultsFound: "No results found.",
 };
 
 export let ar: Translation = {
@@ -570,6 +582,16 @@ export let ar: Translation = {
     folderExistsTitle: "لا يمكن نقل بيانات الحفظ",
     folderExistsDescription: "<div class='markdown-body'><p>لا يمكن لـ Takma نقل بيانات الحفظ لأن مجلدًا باسم <code>Takma</code> موجود بالفعل في الدليل المختار: <pre><code>$|00|$</code></pre></p><p>للمتابعة، يرجى تحديد موقع جديد أو التأكد من أن الدليل الهدف لا يحتوي بالفعل على مجلد باسم <code>Takma</code>.</p></div>",
     showAllButtons: "إظهار جميع الأزرار",
+    searchTips: `<p><strong>نصائح البحث:</strong></p>
+                 <ul>
+                     <li>اكتب كلمات للبحث في جميع البطاقات. البحث التقريبي مدعوم: الأخطاء الإملائية مثل <code>chese</code> ستطابق <code>cheese</code>.</li>
+                     <li>استخدم علامات الاقتباس للعبارات الدقيقة: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "البطاقات",
+    boards: "الألواح",
+    showAllCards: "عرض جميع البطاقات (بما في ذلك البطاقات من الألواح المؤرشفة).",
+    hideArchivedCards: "إخفاء البطاقات من الألواح المؤرشفة.",
+    noResultsFound: "لم يتم العثور على نتائج.",
 };
 
 export let de: Translation = {
@@ -856,6 +878,16 @@ export let de: Translation = {
     folderExistsTitle: "Speicherdaten können nicht verschoben werden",
     folderExistsDescription: "<div class='markdown-body'><p>Takma kann die Speicherdaten nicht verschieben, da im ausgewählten Verzeichnis bereits ein Ordner mit dem Namen <code>Takma</code> existiert: <pre><code>$|00|$</code></pre></p><p>Um fortzufahren, wählen Sie bitte einen neuen Ort aus oder stellen Sie sicher, dass das Zielverzeichnis nicht bereits einen Ordner mit dem Namen <code>Takma</code> enthält.</p></div>",
     showAllButtons: "Alle Schaltflächen anzeigen",
+    searchTips: `<p><strong>Suchhinweise:</strong></p>
+                 <ul>
+                     <li>Gib Wörter ein, um alle Karten zu durchsuchen. Fuzzy-Suche wird unterstützt: Tippfehler wie <code>chese</code> werden <code>cheese</code> entsprechen.</li>
+                     <li>Verwende Anführungszeichen für genaue Phrasen: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "KARTEN",
+    boards: "BOARDS",
+    showAllCards: "Alle Karten anzeigen (einschließlich der aus archivierten Boards).",
+    hideArchivedCards: "Karten aus archivierten Boards ausblenden.",
+    noResultsFound: "Keine Ergebnisse gefunden.",
 };
 
 export let es: Translation = {
@@ -1142,6 +1174,16 @@ export let es: Translation = {
     folderExistsTitle: "No se pueden mover los datos de guardado",
     folderExistsDescription: "<div class='markdown-body'><p>Takma no puede mover los datos de guardado porque ya existe una carpeta llamada <code>Takma</code> en el directorio elegido: <pre><code>$|00|$</code></pre></p><p>Para continuar, selecciona una nueva ubicación o asegúrate de que el directorio de destino no contenga ya una carpeta llamada <code>Takma</code>.</p></div>",
     showAllButtons: "Mostrar todos los botones",
+    searchTips: `<p><strong>Consejos de búsqueda:</strong></p>
+                 <ul>
+                     <li>Escribe palabras para buscar en todas las tarjetas. Se admite búsqueda difusa: errores como <code>chese</code> coincidirán con <code>cheese</code>.</li>
+                     <li>Usa comillas para frases exactas: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "TARJETAS",
+    boards: "TABLEROS",
+    showAllCards: "Mostrar todas las tarjetas (incluidas las de tableros archivados).",
+    hideArchivedCards: "Ocultar tarjetas de tableros archivados.",
+    noResultsFound: "No se encontraron resultados.",
 };
 
 export let et: Translation = {
@@ -1428,6 +1470,16 @@ export let et: Translation = {
     folderExistsTitle: "Salvestusandmete teisaldamine nurjus",
     folderExistsDescription: "<div class='markdown-body'><p>Takma ei saa salvestusandmeid teisaldada, kuna valitud kataloogis on juba olemas kaust nimega <code>Takma</code>: <pre><code>$|00|$</code></pre></p><p>Jätkamiseks vali palun uus asukoht või veendu, et sihtkataloogis ei oleks juba kausta nimega <code>Takma</code>.</p></div>",
     showAllButtons: "Kuva kõik nupud",
+    searchTips: `<p><strong>Otsingunõuanded:</strong></p>
+                 <ul>
+                     <li>Sisesta sõnad, et otsida kõigist kaartidest. Hägune otsing toetatud: kirjavead nagu <code>chese</code> vastevad <code>cheese</code>.</li>
+                     <li>Kasutage täpse fraasi jaoks jutumärke: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "KAARDID",
+    boards: "LAUAD",
+    showAllCards: "Näita kõiki kaarte (ka arhiivitud laudade kaarte).",
+    hideArchivedCards: "Peida arhiivitud laudade kaardid.",
+    noResultsFound: "Tulemusi ei leitud.",
 };
 
 export let fr: Translation = {
@@ -1714,6 +1766,16 @@ export let fr: Translation = {
     folderExistsTitle: "Impossible de déplacer les données de sauvegarde",
     folderExistsDescription: "<div class='markdown-body'><p>Takma ne peut pas déplacer les données de sauvegarde car un dossier nommé <code>Takma</code> existe déjà dans le répertoire choisi : <pre><code>$|00|$</code></pre></p><p>Pour continuer, veuillez sélectionner un nouvel emplacement ou vous assurer que le répertoire cible ne contient pas déjà un dossier nommé <code>Takma</code>.</p></div>",
     showAllButtons: "Afficher tous les boutons",
+    searchTips: `<p><strong>Conseils de recherche :</strong></p>
+                 <ul>
+                     <li>Tapez des mots pour rechercher toutes les cartes. La recherche approximative est prise en charge : les fautes de frappe comme <code>chese</code> correspondront à <code>cheese</code>.</li>
+                     <li>Utilisez des guillemets pour des phrases exactes : <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "CARTES",
+    boards: "TABLEAUX",
+    showAllCards: "Afficher toutes les cartes (y compris celles des tableaux archivés).",
+    hideArchivedCards: "Masquer les cartes des tableaux archivés.",
+    noResultsFound: "Aucun résultat trouvé.",
 };
 
 export let hi: Translation = {
@@ -2000,6 +2062,16 @@ export let hi: Translation = {
     folderExistsTitle: "सेव डेटा को मूव नहीं किया जा सका",
     folderExistsDescription: "<div class='markdown-body'><p>Takma सेव डेटा को मूव नहीं कर सकता क्योंकि चुनी गई डायरेक्टरी में <code>Takma</code> नामक एक फ़ोल्डर पहले से मौजूद है: <pre><code>$|00|$</code></pre></p><p>आगे बढ़ने के लिए, कृपया एक नई लोकेशन चुनें या सुनिश्चित करें कि टारगेट डायरेक्टरी में पहले से <code>Takma</code> नामक कोई फ़ोल्डर न हो।</p></div>",
     showAllButtons: "सभी बटन दिखाएँ",
+    searchTips: `<p><strong>खोज सुझाव:</strong></p>
+                 <ul>
+                     <li>सभी कार्ड खोजने के लिए शब्द टाइप करें। फज़ी खोज समर्थित है: <code>chese</code> जैसी टाइपो <code>cheese</code> से मेल खाएगी।</li>
+                     <li>सटीक वाक्यांशों के लिए उद्धरण चिह्न का उपयोग करें: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "कार्ड",
+    boards: "बोर्ड",
+    showAllCards: "सभी कार्ड दिखाएँ (संग्रहीत बोर्डों के कार्ड सहित)।",
+    hideArchivedCards: "संग्रहीत बोर्डों के कार्ड छुपाएँ।",
+    noResultsFound: "कोई परिणाम नहीं मिला।",
 };
 
 export let id: Translation = {
@@ -2286,6 +2358,16 @@ export let id: Translation = {
     folderExistsTitle: "Tidak dapat memindahkan data simpanan",
     folderExistsDescription: "<div class='markdown-body'><p>Takma tidak dapat memindahkan data simpanan karena folder bernama <code>Takma</code> sudah ada di direktori yang dipilih: <pre><code>$|00|$</code></pre></p><p>Untuk melanjutkan, silakan pilih lokasi baru atau pastikan direktori target tidak berisi folder bernama <code>Takma</code>.</p></div>",
     showAllButtons: "Tampilkan semua tombol",
+    searchTips: `<p><strong>Tips Pencarian:</strong></p>
+                 <ul>
+                     <li>Ketik kata untuk mencari semua kartu. Pencarian fuzzy didukung: kesalahan ketik seperti <code>chese</code> akan cocok dengan <code>cheese</code>.</li>
+                     <li>Gunakan tanda kutip untuk frasa tepat: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "KARTU",
+    boards: "BOARD",
+    showAllCards: "Tampilkan semua kartu (termasuk dari board yang diarsipkan).",
+    hideArchivedCards: "Sembunyikan kartu dari board yang diarsipkan.",
+    noResultsFound: "Tidak ada hasil ditemukan.",
 };
 
 export let ja: Translation = {
@@ -2572,6 +2654,16 @@ export let ja: Translation = {
     folderExistsTitle: "保存データを移動できません",
     folderExistsDescription: "<div class='markdown-body'><p>選択したディレクトリに<code>Takma</code>という名前のフォルダが既に存在するため、Takmaは保存データを移動できません：<pre><code>$|00|$</code></pre></p><p>続行するには、新しい場所を選択するか、ターゲットディレクトリに<code>Takma</code>という名前のフォルダが含まれていないことを確認してください。</p></div>",
     showAllButtons: "すべてのボタンを表示",
+    searchTips: `<p><strong>検索のヒント:</strong></p>
+                 <ul>
+                     <li>すべてのカードを検索するために単語を入力します。あいまい検索もサポート: <code>chese</code> のようなタイプミスは <code>cheese</code> に一致します。</li>
+                     <li>正確なフレーズには引用符を使用してください: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "カード",
+    boards: "ボード",
+    showAllCards: "すべてのカードを表示（アーカイブ済みボードのカードも含む）。",
+    hideArchivedCards: "アーカイブ済みボードのカードを非表示にする。",
+    noResultsFound: "結果が見つかりません。",
 };
 
 export let ko: Translation = {
@@ -2858,6 +2950,16 @@ export let ko: Translation = {
     folderExistsTitle: "저장 데이터를 이동할 수 없습니다",
     folderExistsDescription: "<div class='markdown-body'><p>선택한 디렉토리에 <code>Takma</code>라는 이름의 폴더가 이미 존재하여 Takma가 저장 데이터를 이동할 수 없습니다: <pre><code>$|00|$</code></pre></p><p>계속하려면 새 위치를 선택하거나 대상 디렉토리에 <code>Takma</code>라는 이름의 폴더가 없는지 확인하십시오.</p></div>",
     showAllButtons: "모든 버튼 표시",
+    searchTips: `<p><strong>검색 팁:</strong></p>
+                 <ul>
+                     <li>모든 카드를 검색하려면 단어를 입력하세요. 퍼지 검색 지원: <code>chese</code> 같은 오타는 <code>cheese</code>와 일치합니다.</li>
+                     <li>정확한 문구는 따옴표를 사용하세요: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "카드",
+    boards: "보드",
+    showAllCards: "모든 카드 표시 (보관된 보드 포함).",
+    hideArchivedCards: "보관된 보드의 카드 숨기기.",
+    noResultsFound: "결과가 없습니다.",
 };
 
 export let nl: Translation = {
@@ -3144,6 +3246,16 @@ export let nl: Translation = {
     folderExistsTitle: "Kan opslaggegevens niet verplaatsen",
     folderExistsDescription: "<div class='markdown-body'><p>Takma kan de opslaggegevens niet verplaatsen omdat er al een map met de naam <code>Takma</code> bestaat in de gekozen map: <pre><code>$|00|$</code></pre></p><p>Selecteer een nieuwe locatie of zorg ervoor dat de doelmap nog geen map met de naam <code>Takma</code> bevat om door te gaan.</p></div>",
     showAllButtons: "Toon alle knoppen",
+    searchTips: `<p><strong>Zoektips:</strong></p>
+                 <ul>
+                     <li>Typ woorden om alle kaarten te doorzoeken. Fuzzy search wordt ondersteund: typefouten zoals <code>chese</code> komen overeen met <code>cheese</code>.</li>
+                     <li>Gebruik aanhalingstekens voor exacte zinnen: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "KAARTEN",
+    boards: "BORDEN",
+    showAllCards: "Alle kaarten weergeven (inclusief die van gearchiveerde borden).",
+    hideArchivedCards: "Kaarten van gearchiveerde borden verbergen.",
+    noResultsFound: "Geen resultaten gevonden.",
 };
 
 export let pt: Translation = {
@@ -3430,6 +3542,16 @@ export let pt: Translation = {
     folderExistsTitle: "Não é possível mover os dados salvos",
     folderExistsDescription: "<div class='markdown-body'><p>O Takma não pode mover os dados salvos porque já existe uma pasta chamada <code>Takma</code> no diretório escolhido: <pre><code>$|00|$</code></pre></p><p>Para prosseguir, selecione um novo local ou certifique-se de que o diretório de destino ainda não contenha uma pasta chamada <code>Takma</code>.</p></div>",
     showAllButtons: "Mostrar todos os botões",
+    searchTips: `<p><strong>Dicas de pesquisa:</strong></p>
+                 <ul>
+                     <li>Digite palavras para pesquisar em todos os cartões. Pesquisa aproximada suportada: erros de digitação como <code>chese</code> corresponderão a <code>cheese</code>.</li>
+                     <li>Use aspas para frases exatas: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "CARTÕES",
+    boards: "QUADROS",
+    showAllCards: "Mostrar todos os cartões (incluindo os de quadros arquivados).",
+    hideArchivedCards: "Ocultar cartões de quadros arquivados.",
+    noResultsFound: "Nenhum resultado encontrado.",
 };
 
 export let ru: Translation = {
@@ -3716,6 +3838,16 @@ export let ru: Translation = {
     folderExistsTitle: "Не удалось переместить данные сохранения",
     folderExistsDescription: "<div class='markdown-body'><p>Takma не может переместить данные сохранения, так как в выбранном каталоге уже существует папка с именем <code>Takma</code>: <pre><code>$|00|$</code></pre></p><p>Чтобы продолжить, выберите новое место или убедитесь, что в целевом каталоге еще нет папки с именем <code>Takma</code>.</p></div>",
     showAllButtons: "Показать все кнопки",
+    searchTips: `<p><strong>Советы по поиску:</strong></p>
+                 <ul>
+                     <li>Введите слова, чтобы искать по всем карточкам. Поддерживается нечеткий поиск: опечатки вроде <code>chese</code> совпадут с <code>cheese</code>.</li>
+                     <li>Используйте кавычки для точных фраз: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "КАРТОЧКИ",
+    boards: "ДОСКИ",
+    showAllCards: "Показать все карточки (включая архивные доски).",
+    hideArchivedCards: "Скрыть карточки с архивных досок.",
+    noResultsFound: "Результаты не найдены.",
 };
 
 export let tr: Translation = {
@@ -4002,6 +4134,16 @@ export let tr: Translation = {
     folderExistsTitle: "Kayıt verileri taşınamıyor",
     folderExistsDescription: "<div class='markdown-body'><p>Takma, seçilen dizinde zaten <code>Takma</code> adında bir klasör bulunduğu için kayıt verilerini taşıyamıyor: <pre><code>$|00|$</code></pre></p><p>Devam etmek için lütfen yeni bir konum seçin veya hedef dizinde <code>Takma</code> adında bir klasör bulunmadığından emin olun.</p></div>",
     showAllButtons: "Tüm düğmeleri göster",
+    searchTips: `<p><strong>Arama İpuçları:</strong></p>
+                 <ul>
+                     <li>Tüm kartlarda aramak için kelimeler yazın. Hatalı yazım araması desteklenir: <code>chese</code> gibi hatalar <code>cheese</code> ile eşleşir.</li>
+                     <li>Tam ifadeler için tırnak işaretleri kullanın: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "KARTLAR",
+    boards: "PANOLAR",
+    showAllCards: "Tüm kartları göster (arşivlenmiş panolardakiler dahil).",
+    hideArchivedCards: "Arşivlenmiş panolardaki kartları gizle.",
+    noResultsFound: "Sonuç bulunamadı.",
 };
 
 export let zh: Translation = {
@@ -4288,4 +4430,14 @@ export let zh: Translation = {
     folderExistsTitle: "无法移动保存数据",
     folderExistsDescription: "<div class='markdown-body'><p>Takma 无法移动保存数据，因为所选目录中已存在名为 <code>Takma</code> 的文件夹：<pre><code>$|00|$</code></pre></p><p>要继续，请选择一个新位置，或确保目标目录中尚不存在名为 <code>Takma</code> 的文件夹。</p></div>",
     showAllButtons: "显示所有按钮",
+    searchTips: `<p><strong>搜索提示：</strong></p>
+                 <ul>
+                     <li>输入词语以搜索所有卡片。支持模糊搜索：拼写错误如 <code>chese</code> 将匹配 <code>cheese</code>。</li>
+                     <li>使用引号进行精确短语搜索: <code>"time flies"</code>.</li>
+                 </ul>`,
+    cards: "卡片",
+    boards: "看板",
+    showAllCards: "显示所有卡片（包括已归档看板中的卡片）。",
+    hideArchivedCards: "隐藏已归档看板中的卡片。",
+    noResultsFound: "未找到结果。",
 };

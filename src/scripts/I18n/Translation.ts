@@ -243,4 +243,10 @@ export default interface Translation
     folderExistsTitle: string;
     folderExistsDescription: string;
     showAllButtons: string;
+    searchTips: string;
+    cards: string;
+    boards: string;
+    showAllCards: string;
+    hideArchivedCards: string;
+    noResultsFound: string;
 }

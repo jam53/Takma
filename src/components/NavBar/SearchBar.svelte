@@ -4,10 +4,12 @@
     import {SaveLoadManager} from "../../scripts/SaveLoad/SaveLoadManager";
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
+    import SearchBox from "./SearchBox.svelte";
 
     let searchBar: HTMLInputElement = $state();
     let containingDiv: HTMLElement = $state();
     let searchBarIcon: HTMLElement = $state();
+    let showSearchBox = $state(false);
 
     function collapseSearchBar()
     {
@@ -17,6 +19,8 @@
 
         searchBarValue.value = "";
         searchBar.blur();
+
+        showSearchBox = false;
     }
 
     function showSearchBar()
@@ -26,6 +30,8 @@
 
         searchBar.focus();
         searchBar.select();
+
+        showSearchBox = selectedBoardId.value === ""; // Don't show search box on board screen, only on welcome screen
     }
 
     $effect(() => {
@@ -63,10 +69,12 @@
            bind:this={searchBar}
            bind:value={searchBarValue.value}
            onchange={showSearchBar}
+           onfocus={showSearchBar}
            onkeydown={handleKeyDown}
            onblur={() => searchBarValue.value === "" && collapseSearchBar()}
     />
 </div>
+<SearchBox {showSearchBox} closeSearchBar={collapseSearchBar}/>
 
 <style>
     .containingDiv {
