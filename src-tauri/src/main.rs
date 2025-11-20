@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::Emitter;
+use tauri::{AppHandle, Emitter, Manager, Runtime};
 use tauri_plugin_deep_link::DeepLinkExt;
 use std::fs;
 use std::path::Path;
@@ -19,6 +19,7 @@ fn main() {
           if argv.len() > 1 {
               // Emit the deep link event only if there's a second argument
               println!("A new app instance was opened with {argv:?}. A `deep-link-received` event was emitted with the payload {:?} to the frontend. The newly opened app instance was closed, as Takma only allows a single active instance.", argv[1]);
+              focus_main_window(app.clone());
               app.emit("deep-link-received", &argv[1]).unwrap();
           } else {
               println!("A new app instance was opened by the user, this instance was closed as Takma only allows a single instance to be running at a given time.");
@@ -48,6 +49,14 @@ fn main() {
         .invoke_handler(tauri::generate_handler![move_directory])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn focus_main_window<R: Runtime>(app: AppHandle<R>) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.show();
+        let _ = window.unminimize();
+        let _ = window.set_focus();
+    }
 }
 
 #[tauri::command]
