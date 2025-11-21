@@ -44,7 +44,7 @@
 
         if (SaveLoadManager.getData().totalCardsCreated >= 25 && !SaveLoadManager.getData().easterEggBoardAdded)
         { //If the user has created more than 25 cards, add the easter egg board to their savefile
-            const boards = SaveLoadManager.getData().boards;
+            await info("Creating easter egg board");
 
             const easterEggBoard = I18n.t("easterEggBoard");
             easterEggBoard.backgroundImagePath = await saveAbsoluteFilePathToSaveDirectory(await resolveResource("resources/EasterEggBoardBg.webp"), easterEggBoard.id);
@@ -53,7 +53,6 @@
 
 
             boards.push(easterEggBoard);
-            SaveLoadManager.getData().boards = boards;
             SaveLoadManager.getData().easterEggBoardAdded = true;
         }
     });
