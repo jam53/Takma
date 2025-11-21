@@ -13,7 +13,7 @@
     import {I18n} from "./scripts/I18n/I18n";
     import {listen} from "@tauri-apps/api/event";
     import PopupWindow from "./components/PopupWindow.svelte";
-    import {convertFileSrc} from "@tauri-apps/api/core";
+    import {convertFileSrc, invoke} from "@tauri-apps/api/core";
     import {join} from "@tauri-apps/api/path";
     import {toast} from "svelte-sonner";
     import {mount} from "svelte";
@@ -71,9 +71,8 @@
         }
     }
 
-    // listen to the 'deep-link-received' event
-    listen("deep-link-received", event => {
-        let takmaLink = event.payload;
+    async function handleDeepLink(takmaLink: string)
+    {
         info("Received deep link: " + takmaLink);
         const takmaLinkPattern = /takma:\/\/([\w-]+)(?:\/([\w-]+))?/i; //Link to a card `takma://<board id>/<card id>`. Link to a board `takma://<board id>`
         // `takma:\/\/` - This part matches the literal characters "takma://" in the string.
@@ -90,6 +89,7 @@
 
         try
         {
+            await loadSaveFile();
             boardTitle = SaveLoadManager.getData().getBoard(boardId).title;
             cardTitle = SaveLoadManager.getData().getCard(boardId, cardId).title;
         }
@@ -119,7 +119,31 @@
                 selectedCardId.value = "";
             }
         }
+    }
+
+    // listen to the 'deep-link-received' event
+    listen("deep-link-received", event => {
+        const takmaLink = event.payload as string;
+        handleDeepLink(takmaLink);
     });
+    processPendingDeepLink();
+
+    async function processPendingDeepLink()
+    {
+        try
+        {
+            const pendingLink = await invoke<string | null>("take_pending_deep_link");
+
+            if (pendingLink)
+            {
+                handleDeepLink(pendingLink);
+            }
+        }
+        catch (err)
+        {
+            error(`Failed to process pending deep link: ${err}`);
+        }
+    }
 
     // The code below makes it so when we lose focus by alt+tabbing, the last element gets refocused when we alt+tab/switch back to the Takma tab. Otherwise it gets annoying when trying to type something over and alt+tabbing in between, since you would have to first click on the element you were typing on so it would regain focus, before you would be able to continue typing
     let lastFocusedElement = document.activeElement;
