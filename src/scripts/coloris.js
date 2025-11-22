@@ -1062,6 +1062,12 @@
             if ((key === 'Escape' || (key.toLowerCase() === "w" && event.ctrlKey)) && isOpen) {
                 closePicker(true);
                 event.stopPropagation();
+            } else if (key === 'Enter' && isOpen) {
+                // Pick the current color and close the picker when Enter is pressed
+                pickColor();
+                closePicker();
+                event.stopPropagation();
+                event.preventDefault();
 
                 // Display focus rings when using the keyboard
             } else if (navKeys.includes(key)) {
