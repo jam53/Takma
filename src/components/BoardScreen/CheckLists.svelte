@@ -275,6 +275,11 @@
 
     .checklistTopTitleHolder textarea::placeholder {
         color: var(--main-text);
+        transition: 0.3s;
+    }
+
+    .checklistTopTitleHolder:hover textarea::placeholder, .checklistTopTitleHolder textarea:focus::placeholder {
+        color: var(--unselected-button);
     }
 
     .checklistTopTitleHolder svg {
