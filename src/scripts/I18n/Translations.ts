@@ -245,7 +245,7 @@ export let en: Translation = {
     searchBarShortcutsExplanation: "You can open the search bar by clicking on it or by using the keyboard shortcut CTRL + SHIFT + F. To close it, simply press ESC.",
     orderLists: "Order lists",
     completed: "Completed",
-    markAsComplete: "Mark as complete", 
+    markAsComplete: "Mark as complete",
     markAsIncomplete: "Mark as incomplete",
     cardStatus: "Card status",
     complete: "Complete",
@@ -296,6 +296,7 @@ export let en: Translation = {
     showAllCards: "Show all cards (including those from archived boards).",
     hideArchivedCards: "Hide cards from archived boards.",
     noResultsFound: "No results found.",
+    typeSlashForCommands: "Type '/' for commands",
 };
 
 export let ar: Translation = {
@@ -592,6 +593,7 @@ export let ar: Translation = {
     showAllCards: "عرض جميع البطاقات (بما في ذلك البطاقات من الألواح المؤرشفة).",
     hideArchivedCards: "إخفاء البطاقات من الألواح المؤرشفة.",
     noResultsFound: "لم يتم العثور على نتائج.",
+    typeSlashForCommands: "اكتب '/' للأوامر",
 };
 
 export let de: Translation = {
@@ -888,6 +890,7 @@ export let de: Translation = {
     showAllCards: "Alle Karten anzeigen (einschließlich der aus archivierten Boards).",
     hideArchivedCards: "Karten aus archivierten Boards ausblenden.",
     noResultsFound: "Keine Ergebnisse gefunden.",
+    typeSlashForCommands: "Tippe '/' für Befehle",
 };
 
 export let es: Translation = {
@@ -1184,6 +1187,7 @@ export let es: Translation = {
     showAllCards: "Mostrar todas las tarjetas (incluidas las de tableros archivados).",
     hideArchivedCards: "Ocultar tarjetas de tableros archivados.",
     noResultsFound: "No se encontraron resultados.",
+    typeSlashForCommands: "Escribe '/' para comandos",
 };
 
 export let et: Translation = {
@@ -1480,6 +1484,7 @@ export let et: Translation = {
     showAllCards: "Näita kõiki kaarte (ka arhiivitud laudade kaarte).",
     hideArchivedCards: "Peida arhiivitud laudade kaardid.",
     noResultsFound: "Tulemusi ei leitud.",
+    typeSlashForCommands: "Sisesta '/' käsude jaoks",
 };
 
 export let fr: Translation = {
@@ -1776,6 +1781,7 @@ export let fr: Translation = {
     showAllCards: "Afficher toutes les cartes (y compris celles des tableaux archivés).",
     hideArchivedCards: "Masquer les cartes des tableaux archivés.",
     noResultsFound: "Aucun résultat trouvé.",
+    typeSlashForCommands: "Tapez '/' pour les commandes",
 };
 
 export let hi: Translation = {
@@ -2072,6 +2078,7 @@ export let hi: Translation = {
     showAllCards: "सभी कार्ड दिखाएँ (संग्रहीत बोर्डों के कार्ड सहित)।",
     hideArchivedCards: "संग्रहीत बोर्डों के कार्ड छुपाएँ।",
     noResultsFound: "कोई परिणाम नहीं मिला।",
+    typeSlashForCommands: "आदेशों के लिए '/' टाइप करें",
 };
 
 export let id: Translation = {
@@ -2368,6 +2375,7 @@ export let id: Translation = {
     showAllCards: "Tampilkan semua kartu (termasuk dari board yang diarsipkan).",
     hideArchivedCards: "Sembunyikan kartu dari board yang diarsipkan.",
     noResultsFound: "Tidak ada hasil ditemukan.",
+    typeSlashForCommands: "Ketik '/' untuk perintah",
 };
 
 export let ja: Translation = {
@@ -2664,6 +2672,7 @@ export let ja: Translation = {
     showAllCards: "すべてのカードを表示（アーカイブ済みボードのカードも含む）。",
     hideArchivedCards: "アーカイブ済みボードのカードを非表示にする。",
     noResultsFound: "結果が見つかりません。",
+    typeSlashForCommands: "コマンドには '/' を入力",
 };
 
 export let ko: Translation = {
@@ -2960,6 +2969,7 @@ export let ko: Translation = {
     showAllCards: "모든 카드 표시 (보관된 보드 포함).",
     hideArchivedCards: "보관된 보드의 카드 숨기기.",
     noResultsFound: "결과가 없습니다.",
+    typeSlashForCommands: "명령어를 위해 '/' 입력",
 };
 
 export let nl: Translation = {
@@ -3256,6 +3266,7 @@ export let nl: Translation = {
     showAllCards: "Alle kaarten weergeven (inclusief die van gearchiveerde borden).",
     hideArchivedCards: "Kaarten van gearchiveerde borden verbergen.",
     noResultsFound: "Geen resultaten gevonden.",
+    typeSlashForCommands: "Typ '/' voor commando's",
 };
 
 export let pt: Translation = {
@@ -3552,6 +3563,7 @@ export let pt: Translation = {
     showAllCards: "Mostrar todos os cartões (incluindo os de quadros arquivados).",
     hideArchivedCards: "Ocultar cartões de quadros arquivados.",
     noResultsFound: "Nenhum resultado encontrado.",
+    typeSlashForCommands: "Digite '/' para comandos",
 };
 
 export let ru: Translation = {
@@ -3848,6 +3860,7 @@ export let ru: Translation = {
     showAllCards: "Показать все карточки (включая архивные доски).",
     hideArchivedCards: "Скрыть карточки с архивных досок.",
     noResultsFound: "Результаты не найдены.",
+    typeSlashForCommands: "Введите '/' для команд",
 };
 
 export let tr: Translation = {
@@ -4144,6 +4157,7 @@ export let tr: Translation = {
     showAllCards: "Tüm kartları göster (arşivlenmiş panolardakiler dahil).",
     hideArchivedCards: "Arşivlenmiş panolardaki kartları gizle.",
     noResultsFound: "Sonuç bulunamadı.",
+    typeSlashForCommands: "Komutlar için '/' yazın",
 };
 
 export let zh: Translation = {
@@ -4440,4 +4454,5 @@ export let zh: Translation = {
     showAllCards: "显示所有卡片（包括已归档看板中的卡片）。",
     hideArchivedCards: "隐藏已归档看板中的卡片。",
     noResultsFound: "未找到结果。",
+    typeSlashForCommands: "输入 '/' 以使用命令",
 };

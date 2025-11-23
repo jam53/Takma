@@ -249,4 +249,5 @@ export default interface Translation
     showAllCards: string;
     hideArchivedCards: string;
     noResultsFound: string;
+    typeSlashForCommands: string;
 }

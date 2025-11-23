@@ -103,11 +103,30 @@
                     },
                 }),
                 // Floating menu, for actions on empty lines
-                FloatingMenu.configure({
-                    element: floatingMenuElement,
-                    options: {
-                        placement: 'top-start'
+                FloatingMenu.extend({
+                    addOptions() {
+                        return {
+                            ...this.parent?.(),
+                            placement: 'top-start',
+                            shouldShow: ({ editor, view, state }) => {
+                                const { selection } = state;
+                                const anchor = selection.$anchor;
+
+                                const currentNode = anchor.parent;
+
+                                if (currentNode.type.name !== 'paragraph' && currentNode.type.name !== 'heading') {
+                                    return false;
+                                }
+
+                                const nodeText = currentNode.textContent;
+
+                                // Only show if the line contains only '/' (with optional whitespace)
+                                return nodeText.trim() === '/';
+                            },
+                        };
                     },
+                }).configure({
+                    element: floatingMenuElement,
                 }),
                 Markdown.configure({
                     markedOptions: {
@@ -223,7 +242,9 @@
                 DetailsContent,
                 DetailsSummary,
                 Placeholder.configure({
-                    placeholder: I18n.t("addDetailedDescriptionMarkdown"),
+                    placeholder: ({ editor }) => {
+                        return editor.getMarkdown() === "" ? I18n.t("addDetailedDescriptionMarkdown") :  I18n.t("typeSlashForCommands");
+                    },
                 }),
             ],
             onTransaction: () => {
@@ -280,6 +301,34 @@
         {
             command(editor.chain().focus()).run();
         }
+    }
+
+    /**
+     * Removes the '/' character from the current line if it exists, then runs the provided command.
+     * This is used when the floating menu is triggered by typing '/'.
+     */
+    const runCommandAndRemoveSlash = (command: (chain: ReturnType<Editor['chain']>) => ReturnType<Editor['chain']>) => {
+        if (!editor) return;
+        
+        const { state } = editor;
+        const { selection } = state;
+        const anchor = selection.$anchor;
+        const currentNode = anchor.parent;
+        
+        if (currentNode.textContent.trim() === '/') {
+            // Select the entire node content and delete it
+            const nodeStart = anchor.start(anchor.depth);
+            const nodeEnd = anchor.end(anchor.depth);
+            
+            // Delete the entire content of the node (which is just '/')
+            editor.chain()
+                .focus()
+                .setTextSelection({ from: nodeStart, to: nodeEnd })
+                .deleteSelection()
+                .run();
+        }
+        
+        command(editor.chain().focus()).run();
     }
 
     const setLink = () => {
@@ -348,7 +397,7 @@
 
         if (imgUrl)
         {
-            runCommand(chain => chain.setImage({src: imgUrl}));
+            runCommandAndRemoveSlash(chain => chain.setImage({src: imgUrl}));
         }
     }
 
@@ -368,7 +417,7 @@
         if (selected !== null && typeof(selected) === "string")
         {
             let imgUrl = (await saveAbsoluteFilePathToSaveDirectory(selected, selectedBoardId.value)).replace(/\\/g, '/') // Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths
-            runCommand(chain => chain.setImage({src: imgUrl}));
+            runCommandAndRemoveSlash(chain => chain.setImage({src: imgUrl}));
         }
     }
 </script>
@@ -387,7 +436,7 @@
     {#if editor}
         {#if !isHeading}
             <button
-                    onclick={() => runCommand(chain => chain.toggleHeading({ level: 1 }))}
+                    onclick={() => runCommandAndRemoveSlash(chain => chain.toggleHeading({ level: 1 }))}
                     class:active={editor.isActive('heading', { level: 1 })}
                     class="menu-button"
                         title={I18n.t("heading")}
@@ -396,7 +445,7 @@
             </button>
         {:else}
             <button
-                    onclick={() => runCommand(chain => chain.toggleHeading({ level: 1 }))}
+                    onclick={() => runCommandAndRemoveSlash(chain => chain.toggleHeading({ level: 1 }))}
                     class:active={editor.isActive('heading', { level: 1 })}
                     class="menu-button"
                     title={I18n.t("heading")}
@@ -422,35 +471,35 @@
         {/if}
 
         <button
-                onclick={() => runCommand(chain => chain.toggleCodeBlock())}
+                onclick={() => runCommandAndRemoveSlash(chain => chain.toggleCodeBlock())}
                 class="menu-button"
                 title={I18n.t("codeBlock")}
         >
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"></path></svg>
         </button>
         <button
-                onclick={() => runCommand(chain => chain.toggleBlockquote())}
+                onclick={() => runCommandAndRemoveSlash(chain => chain.toggleBlockquote())}
                 class="menu-button"
                 title={I18n.t("quote")}
         >
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M0 216C0 149.7 53.7 96 120 96l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72zm256 0c0-66.3 53.7-120 120-120l8 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-8 0c-30.9 0-56 25.1-56 56l0 8 64 0c35.3 0 64 28.7 64 64l0 64c0 35.3-28.7 64-64 64l-64 0c-35.3 0-64-28.7-64-64l0-32 0-32 0-72z"></path></svg>
         </button>
         <button
-                onclick={() => runCommand(chain => chain.toggleBulletList())}
+                onclick={() => runCommandAndRemoveSlash(chain => chain.toggleBulletList())}
                 class="menu-button"
                 title={`${I18n.t("genericList")} (Ctrl + Shift + 8)`}
         >
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"></path></svg>
         </button>
         <button
-                onclick={() => runCommand(chain => chain.toggleOrderedList())}
+                onclick={() => runCommandAndRemoveSlash(chain => chain.toggleOrderedList())}
                 class="menu-button"
                 title={`${I18n.t("numberedList")}  (Ctrl + Shift + 7)`}
         >
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M61.77 401l17.5-20.15a19.92 19.92 0 0 0 5.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 0 0-8 8v16a8 8 0 0 0 8 8h22.83a157.41 157.41 0 0 0-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33 0 15.94 2.44 15.94 9.09 0 4.72-4.2 8.22-14.36 8.22a41.54 41.54 0 0 1-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16 0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-160H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16V80a16 16 0 0 0-16-16zm0 320H176a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h320a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zM16 160h64a8 8 0 0 0 8-8v-16a8 8 0 0 0-8-8H64V40a8 8 0 0 0-8-8H32a8 8 0 0 0-7.14 4.42l-8 16A8 8 0 0 0 24 64h8v64H16a8 8 0 0 0-8 8v16a8 8 0 0 0 8 8zm-3.91 160H80a8 8 0 0 0 8-8v-16a8 8 0 0 0-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44 0-29.06-25-39.56-44.47-39.56-21.36 0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44 0 0 1 9.46-3.84c3.33 0 9.28 1.56 9.28 8.75C51 248.19 0 257.31 0 304.59v4C0 316 5.08 320 12.09 320z"></path></svg>
         </button>
         <button
-                onclick={() => runCommand(chain => chain.setHorizontalRule())}
+                onclick={() => runCommandAndRemoveSlash(chain => chain.setHorizontalRule())}
                 class="menu-button"
                 title={I18n.t("insertHorizontalLine")}
         >
@@ -471,13 +520,13 @@
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg"><path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM64 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm152 32c5.3 0 10.2 2.6 13.2 6.9l88 128c3.4 4.9 3.7 11.3 1 16.5s-8.2 8.6-14.2 8.6l-88 0-40 0-48 0-48 0c-5.8 0-11.1-3.1-13.9-8.1s-2.8-11.2 .2-16.1l48-80c2.9-4.8 8.1-7.8 13.7-7.8s10.8 2.9 13.7 7.8l12.8 21.4 48.3-70.2c3-4.3 7.9-6.9 13.2-6.9z"></path></svg>
         </button>
         <button
-                onclick={() => runCommand(chain => chain.insertTable({ rows: 3, cols: 3, withHeaderRow: true }))}
+                onclick={() => runCommandAndRemoveSlash(chain => chain.insertTable({ rows: 3, cols: 3, withHeaderRow: true }))}
                 class="menu-button"
                 title={I18n.t("insertTable")}
         >
             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M64 256l0-96 160 0 0 96L64 256zm0 64l160 0 0 96L64 416l0-96zm224 96l0-96 160 0 0 96-160 0zM448 256l-160 0 0-96 160 0 0 96zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"></path></svg>
         </button>
-        <button onclick={() => runCommand(chain => chain.setDetails())}
+        <button onclick={() => runCommandAndRemoveSlash(chain => chain.setDetails())}
                 class="menu-button"
                 title={I18n.t("collapsibleSection")}
         >
@@ -828,5 +877,16 @@
         float: left;
         height: 0;
         pointer-events: none;
+    }
+
+    :global(.ProseMirror p.is-empty::before) {
+        /* Use the content from the data attribute added by the Tiptap placeholder extension */
+        content: attr(data-placeholder);
+
+        /* Styling to make it look like ghost text */
+        color: var(--border);
+        float: left; /* Helps with layout, e.g. placing cursor in front of the placeholder text */
+        height: 0; /* Prevents the placeholder from affecting line height */
+        pointer-events: none; /* Allows clicks to pass through to the underlying editor */
     }
 </style>
