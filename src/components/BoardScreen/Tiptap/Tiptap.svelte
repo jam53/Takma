@@ -59,6 +59,31 @@
     let isHeading = $state(false);
     let isTextStyle = $state(false);
 
+    /**
+     * Pre-processes Markdown content to insert a Zero Width Space (ZWSP)
+     * before standalone inline images. This fixes a Tiptap V3 schema validation issue
+     * (contentMatchAt) when an inline node is the first element after an empty block.
+     * @param markdownContent The original Markdown string.
+     * @returns The processed Markdown string.
+     */
+    function ensureBlockWrapperForImages(markdownContent: string): string {
+        const ZWSP = '\u200B';
+
+        // Regex: Finds an image markdown link: ![]()
+        //        that is preceded only by the start of the string (^) or one or more newline characters (\n+).
+        // The image link itself is captured in group 2.
+        const imageOnlyRegex = /(\n|^)(\s*!\[.*?\]\(.*?\))/g;
+
+        markdownContent = markdownContent.replace(imageOnlyRegex, (match, p1_preceding, p2_image) => {
+            // p1_preceding is the preceding newlines/start of string
+            // p2_image is the image markdown
+
+            return p1_preceding + ZWSP + p2_image.trim();
+        });
+
+        return markdownContent;
+    }
+
     onMount(() => {
         if (!bubbleMenuElement || !floatingMenuElement)
         {
@@ -68,7 +93,7 @@
 
         editor = new Editor({
             element: editorElement,
-            content: parseTakmaLinks(cardDescription),
+            content: ensureBlockWrapperForImages(parseTakmaLinks(cardDescription)),
             contentType: 'markdown',
             editorProps: {
                 attributes: {
