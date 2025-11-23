@@ -1,9 +1,10 @@
-import {mkdir, exists, writeFile} from "@tauri-apps/plugin-fs";
+import {exists, writeFile, readFile} from "@tauri-apps/plugin-fs";
 import {convertFileSrc} from "@tauri-apps/api/core";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {join} from "@tauri-apps/api/path";
 import {imageExtensions} from "./TakmaDataFolderIO";
 import XXH from "xxhashjs";
+import ThumbnailWorker from "./Thumbnail.worker.ts?worker";
 
 /**
  * Retrieves a thumbnail for the given image path and target size. If a cached thumbnail already exists, it returns the cached version.
@@ -23,63 +24,80 @@ export async function getThumbnail(imgPath: string, maxPixelSize: number, imgPat
     let absoluteImgPath = imgPathIsAbsolute ? imgPath : await join(SaveLoadManager.getSaveDirectoryPath(), imgPath); // Image paths in Takma are stored relative to the save directory. This resolves the relative path to an absolute one.
     let absoluteThumbnailPath = await join(await SaveLoadManager.getTempDirectoryPath(), hashedImgName);
 
-    if (await exists(absoluteThumbnailPath))
+    // We don't generate thumbnails for GIFs, to preserve their motion.
+    if (absoluteImgPath.getFileExtension().toLowerCase() === "gif" || !imageExtensions.includes(absoluteImgPath.getFileExtension().toLowerCase()))
+    {
+        return convertFileSrc(absoluteImgPath);
+    }
+    else if (await exists(absoluteThumbnailPath))
     {
         return convertFileSrc(absoluteThumbnailPath);
     }
     else
     {
-        generateThumbnail(absoluteImgPath, maxPixelSize, absoluteThumbnailPath); // We don't await this function since we want the thumbnail generation to happen in the background, instead we immediately return the full res image below
+        generateThumbnailInWorker(absoluteImgPath, maxPixelSize, absoluteThumbnailPath); // We don't await this function since we want the thumbnail generation to happen in the background, instead we immediately return the full res image below
         return convertFileSrc(absoluteImgPath); // Return the original full-resolution image while the thumbnail is being generated asynchronously.
     }
 }
 
 /**
- * Generates a thumbnail for the given image by scaling it to the target size and saves it to the specified directory.
+ * Generates a thumbnail inside a Web Worker for the given image by scaling it to the target size and saves it to the specified directory.
+ *
+ * The worker:
+ * - receives an ArrayBuffer (original image data)
+ * - decodes and scales it using OffscreenCanvas
+ * - sends back a WebP buffer
+ *
+ * This avoids blocking the main UI thread.
  *
  * @param {string} imgPath - The path to the source image.
  * @param {number} maxPixelSize - The maximum pixel size for the thumbnail's longest side (width or height).
  * @param {string} thumbnailPath - The absolute path where the thumbnail will be saved.
  * @returns {Promise<string>} - A promise that resolves to the URL of the saved thumbnail.
  */
-async function generateThumbnail(imgPath: string, maxPixelSize: number, thumbnailPath: string): Promise<string>
+async function generateThumbnailInWorker(
+    imgPath: string,
+    maxPixelSize: number,
+    thumbnailPath: string
+): Promise<string>
 {
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext('2d')
-    if (!ctx)
-    {
-        console.error('Context not available');
-        return Promise.resolve(convertFileSrc(imgPath));
-    }
-
     return new Promise(async (resolve, reject) => {
-        if (imgPath.getFileExtension() === "gif")
-        { // We don't generate thumbnails for GIFs, to preserve their motion.
-            resolve(convertFileSrc(imgPath));
-        }
-        else if (imageExtensions.includes(imgPath.getFileExtension().toLowerCase()))
-        {
-            const img = new Image();
-            img.onerror = reject;
-            img.onload = () => {
-                const scaleRatio = maxPixelSize / Math.min(img.width, img.height);
-                const w = img.width * scaleRatio;
-                const h = img.height * scaleRatio;
-                canvas.width = w;
-                canvas.height = h;
-                ctx.drawImage(img, 0, 0, w, h);
-                canvas.toBlob(async blob => {
-                    await mkdir(thumbnailPath.getDirectoryPath(), {recursive: true});
-                    await writeFile(thumbnailPath, new Uint8Array(await blob!.arrayBuffer()));
-                    resolve(convertFileSrc(thumbnailPath));
+        const worker = new ThumbnailWorker();
+
+        worker.onmessage = async (
+            e: MessageEvent<{ buffer?: ArrayBuffer; error?: string }>
+        ) => {
+            if (e.data.error) {
+                console.error("Thumbnail worker error:", e.data.error);
+                worker.terminate();
+                reject(new Error(e.data.error));
+                return;
+            }
+
+            try {
+                const buffer = e.data.buffer!;
+                await writeFile(thumbnailPath, new Uint8Array(buffer));
+                worker.terminate();
+                resolve(convertFileSrc(thumbnailPath));
+            } catch (err) {
+                worker.terminate();
+                reject(err);
+            }
+        };
+
+        try {
+            const fileBytes: Uint8Array = await readFile(imgPath);
+
+            worker.postMessage(
+                {
+                    fileBytes: fileBytes.buffer,
+                    maxPixelSize,
                 },
-                "image/webp", 0.85);
-            };
-
-            img.crossOrigin = "anonymous"; //Enable cross-origin access for external URLs.
-            // If we don't do this, the URL we get from `convertFileSrc()` (https://asset.localhost/...) will be seen as an external URL and therefore we won't be allowed to call `canvas.toDataUrl()`. Because that will throw the error "toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported."
-
-            img.src = convertFileSrc(imgPath);
+                [fileBytes.buffer] // Transfer ownership to worker
+            );
+        } catch (err) {
+            worker.terminate();
+            reject(err);
         }
-    })
+    });
 }
