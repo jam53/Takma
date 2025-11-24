@@ -802,7 +802,7 @@ html[data-theme="light"] {
 .markdown-body pre>code {
   padding: 0;
   margin: 0;
-  word-break: normal;
+  word-break: break-word; /*%% Changed, original was: word-break: normal;*/
   background: transparent;
   border: 0;
   white-space: break-spaces; /*%% Changed, original was: white-space: pre;*/
