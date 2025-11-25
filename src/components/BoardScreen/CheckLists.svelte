@@ -175,7 +175,7 @@
                 </span>
                 <progress id={`checklist-progress-${checklist.id}`} value={tweenProgressBarValue(checklist.id, amountOfTodosInChecklist(checklist, true) / amountOfTodosInChecklist(checklist))}></progress>
             </div>
-            <div class="todosHolder" use:dndzone={{items: checklist.todos, type:"todo", dropTargetStyle: {}, zoneTabIndex: -1}} onconsider={e => checklist.todos = e.detail.items} onfinalize={e => checklist.todos = e.detail.items}>
+            <div class="todosHolder" use:dndzone={{items: checklist.todos, type:"todo", dropTargetStyle: {}, zoneTabIndex: -1, zoneItemTabIndex: -1}} onconsider={e => checklist.todos = e.detail.items} onfinalize={e => checklist.todos = e.detail.items}>
                 {#each checklist.todos as todo, j (todo.id)}
                     <div class="todoContainer"
                          in:slide|global={{duration: 0}}
