@@ -304,7 +304,7 @@
         padding: 0.25em 0.5em;
     }
 
-    :global(.markdown-body p), :global(.markdown-body li) {
+    .markdown-body :global(p), .markdown-body :global(li) {
         color: var(--main-text);
     }
 
