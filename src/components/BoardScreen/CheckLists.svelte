@@ -115,7 +115,8 @@
                           onkeydown={e => {
                               if (e.key === "Enter")
                               {
-                                  e.target.blur(); //Unfocus the textarea element
+                                  e.preventDefault();
+                                  addTodoItem(checklist.id);
                               }
                           }}
                           disabled={readOnly}
