@@ -3,7 +3,8 @@
   "description": "Capability for the main window",
   "local": true,
   "windows": [
-    "main"
+    "main",
+    "card-details-read-only-*"
   ],
   "permissions": [
     "core:default",
@@ -34,6 +35,7 @@
     "core:window:allow-set-size",
     "core:window:allow-set-position",
     "core:window:allow-start-dragging",
+    "core:webview:allow-create-webview-window",
     "shell:allow-open",
     "dialog:allow-open",
     "dialog:allow-save",

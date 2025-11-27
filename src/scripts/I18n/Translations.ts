@@ -297,6 +297,10 @@ export let en: Translation = {
     hideArchivedCards: "Hide cards from archived boards.",
     noResultsFound: "No results found.",
     typeSlashForCommands: "Type '/' for commands",
+    openInNewWindow: "Open in new window",
+    readOnly: "read-only",
+    cardIsReadOnly: "This card is read-only.",
+    cardAlreadyOpenInSeparateWindow: "This card has already been opened in a separate window.",
 };
 
 export let ar: Translation = {
@@ -594,6 +598,10 @@ export let ar: Translation = {
     hideArchivedCards: "إخفاء البطاقات من الألواح المؤرشفة.",
     noResultsFound: "لم يتم العثور على نتائج.",
     typeSlashForCommands: "اكتب '/' للأوامر",
+    openInNewWindow: "فتح في نافذة جديدة",
+    readOnly: "للقراءة فقط",
+    cardIsReadOnly: "هذه البطاقة للقراءة فقط.",
+    cardAlreadyOpenInSeparateWindow: "تم فتح هذه البطاقة بالفعل في نافذة منفصلة.",
 };
 
 export let de: Translation = {
@@ -891,6 +899,10 @@ export let de: Translation = {
     hideArchivedCards: "Karten aus archivierten Boards ausblenden.",
     noResultsFound: "Keine Ergebnisse gefunden.",
     typeSlashForCommands: "Tippe '/' für Befehle",
+    openInNewWindow: "In neuem Fenster öffnen",
+    readOnly: "schreibgeschützt",
+    cardIsReadOnly: "Diese Karte ist schreibgeschützt.",
+    cardAlreadyOpenInSeparateWindow: "Diese Karte wurde bereits in einem separaten Fenster geöffnet.",
 };
 
 export let es: Translation = {
@@ -1188,6 +1200,10 @@ export let es: Translation = {
     hideArchivedCards: "Ocultar tarjetas de tableros archivados.",
     noResultsFound: "No se encontraron resultados.",
     typeSlashForCommands: "Escribe '/' para comandos",
+    openInNewWindow: "Abrir en una nueva ventana",
+    readOnly: "solo lectura",
+    cardIsReadOnly: "Esta tarjeta es de solo lectura.",
+    cardAlreadyOpenInSeparateWindow: "Esta tarjeta ya se ha abierto en una ventana separada.",
 };
 
 export let et: Translation = {
@@ -1485,6 +1501,10 @@ export let et: Translation = {
     hideArchivedCards: "Peida arhiivitud laudade kaardid.",
     noResultsFound: "Tulemusi ei leitud.",
     typeSlashForCommands: "Sisesta '/' käsude jaoks",
+    openInNewWindow: "Ava uues aknas",
+    readOnly: "ainult lugemiseks",
+    cardIsReadOnly: "See kaart on ainult lugemiseks.",
+    cardAlreadyOpenInSeparateWindow: "See kaart on juba avatud eraldi aknas.",
 };
 
 export let fr: Translation = {
@@ -1782,6 +1802,10 @@ export let fr: Translation = {
     hideArchivedCards: "Masquer les cartes des tableaux archivés.",
     noResultsFound: "Aucun résultat trouvé.",
     typeSlashForCommands: "Tapez '/' pour les commandes",
+    openInNewWindow: "Ouvrir dans une nouvelle fenêtre",
+    readOnly: "lecture seule",
+    cardIsReadOnly: "Cette carte est en lecture seule.",
+    cardAlreadyOpenInSeparateWindow: "Cette carte a déjà été ouverte dans une fenêtre séparée.",
 };
 
 export let hi: Translation = {
@@ -2079,6 +2103,10 @@ export let hi: Translation = {
     hideArchivedCards: "संग्रहीत बोर्डों के कार्ड छुपाएँ।",
     noResultsFound: "कोई परिणाम नहीं मिला।",
     typeSlashForCommands: "आदेशों के लिए '/' टाइप करें",
+    openInNewWindow: "नई विंडो में खोलें",
+    readOnly: "केवल पढ़ने के लिए",
+    cardIsReadOnly: "यह कार्ड केवल पढ़ने के लिए है।",
+    cardAlreadyOpenInSeparateWindow: "यह कार्ड पहले ही एक अलग विंडो में खोला जा चुका है।",
 };
 
 export let id: Translation = {
@@ -2376,6 +2404,10 @@ export let id: Translation = {
     hideArchivedCards: "Sembunyikan kartu dari board yang diarsipkan.",
     noResultsFound: "Tidak ada hasil ditemukan.",
     typeSlashForCommands: "Ketik '/' untuk perintah",
+    openInNewWindow: "Buka di jendela baru",
+    readOnly: "hanya baca",
+    cardIsReadOnly: "Kartu ini hanya dapat dibaca.",
+    cardAlreadyOpenInSeparateWindow: "Kartu ini sudah dibuka di jendela terpisah.",
 };
 
 export let ja: Translation = {
@@ -2673,6 +2705,10 @@ export let ja: Translation = {
     hideArchivedCards: "アーカイブ済みボードのカードを非表示にする。",
     noResultsFound: "結果が見つかりません。",
     typeSlashForCommands: "コマンドには '/' を入力",
+    openInNewWindow: "新しいウィンドウで開く",
+    readOnly: "読み取り専用",
+    cardIsReadOnly: "このカードは読み取り専用です。",
+    cardAlreadyOpenInSeparateWindow: "このカードはすでに別のウィンドウで開かれています。",
 };
 
 export let ko: Translation = {
@@ -2970,6 +3006,10 @@ export let ko: Translation = {
     hideArchivedCards: "보관된 보드의 카드 숨기기.",
     noResultsFound: "결과가 없습니다.",
     typeSlashForCommands: "명령어를 위해 '/' 입력",
+    openInNewWindow: "새 창에서 열기",
+    readOnly: "읽기 전용",
+    cardIsReadOnly: "이 카드는 읽기 전용입니다.",
+    cardAlreadyOpenInSeparateWindow: "이 카드는 이미 별도의 창에서 열려 있습니다.",
 };
 
 export let nl: Translation = {
@@ -3267,6 +3307,10 @@ export let nl: Translation = {
     hideArchivedCards: "Kaarten van gearchiveerde borden verbergen.",
     noResultsFound: "Geen resultaten gevonden.",
     typeSlashForCommands: "Typ '/' voor commando's",
+    openInNewWindow: "In nieuw venster openen",
+    readOnly: "alleen-lezen",
+    cardIsReadOnly: "Deze kaart is alleen-lezen.",
+    cardAlreadyOpenInSeparateWindow: "Deze kaart is al in een apart venster geopend.",
 };
 
 export let pt: Translation = {
@@ -3564,6 +3608,10 @@ export let pt: Translation = {
     hideArchivedCards: "Ocultar cartões de quadros arquivados.",
     noResultsFound: "Nenhum resultado encontrado.",
     typeSlashForCommands: "Digite '/' para comandos",
+    openInNewWindow: "Abrir em nova janela",
+    readOnly: "somente leitura",
+    cardIsReadOnly: "Este cartão é somente leitura.",
+    cardAlreadyOpenInSeparateWindow: "Este cartão já foi aberto em uma janela separada.",
 };
 
 export let ru: Translation = {
@@ -3861,6 +3909,10 @@ export let ru: Translation = {
     hideArchivedCards: "Скрыть карточки с архивных досок.",
     noResultsFound: "Результаты не найдены.",
     typeSlashForCommands: "Введите '/' для команд",
+    openInNewWindow: "Открыть в новом окне",
+    readOnly: "только для чтения",
+    cardIsReadOnly: "Эта карточка доступна только для чтения.",
+    cardAlreadyOpenInSeparateWindow: "Эта карточка уже открыта в отдельном окне.",
 };
 
 export let tr: Translation = {
@@ -4158,6 +4210,10 @@ export let tr: Translation = {
     hideArchivedCards: "Arşivlenmiş panolardaki kartları gizle.",
     noResultsFound: "Sonuç bulunamadı.",
     typeSlashForCommands: "Komutlar için '/' yazın",
+    openInNewWindow: "Yeni pencerede aç",
+    readOnly: "salt okunur",
+    cardIsReadOnly: "Bu kart salt okunurdur.",
+    cardAlreadyOpenInSeparateWindow: "Bu kart zaten ayrı bir pencerede açılmış.",
 };
 
 export let zh: Translation = {
@@ -4455,4 +4511,8 @@ export let zh: Translation = {
     hideArchivedCards: "隐藏已归档看板中的卡片。",
     noResultsFound: "未找到结果。",
     typeSlashForCommands: "输入 '/' 以使用命令",
+    openInNewWindow: "在新窗口中打开",
+    readOnly: "只读",
+    cardIsReadOnly: "此卡片为只读模式。",
+    cardAlreadyOpenInSeparateWindow: "此卡片已在单独窗口中打开。",
 };

@@ -40,12 +40,14 @@
         cardDescription: string;
         getImageUrl: (imageSrc: string) => string;
         switchToPlainTextEditor: () => void;
+        editable?: boolean;
     }
 
     let {
         cardDescription = $bindable(),
         getImageUrl,
         switchToPlainTextEditor,
+        editable = true,
     }: Props = $props();
 
     let editorElement: HTMLDivElement;
@@ -95,6 +97,7 @@
             element: editorElement,
             content: ensureBlockWrapperForImages(parseTakmaLinks(cardDescription)),
             contentType: 'markdown',
+            editable: editable,
             editorProps: {
                 attributes: {
                     spellcheck: "false"
@@ -448,10 +451,10 @@
 </script>
 
 <!-- Tiptap text editor component -->
-<div bind:this={editorElement} class="editor-content" />
+<div bind:this={editorElement} class="editor-content" class:noBorder={!editable}></div>
 
 <!-- Buttons to switch to the plain text editor, copy the description as Markdown or to copy the description as plain text -->
-{#if cardDescription && editor}
+{#if cardDescription && editor && editable}
     <TextEditorActionButtons {cardDescription} tiptapEditor={editor} otherEditorName={I18n.t("plainTextEditor")} switchToOtherTextEditor={switchToPlainTextEditor}/>
 {/if}
 
@@ -805,6 +808,10 @@
     .editor-content :global(.ProseMirror-focused), .editor-content:hover :global(.ProseMirror) {
         box-shadow: 0 0 0 0;
         border: 2px solid var(--accent);
+    }
+
+    .noBorder :global(.ProseMirror-focused), .noBorder:hover :global(.ProseMirror) {
+        border: 2px solid transparent;
     }
 
     .editor-content :global(a) {

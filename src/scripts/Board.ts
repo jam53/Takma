@@ -7,8 +7,13 @@ import {
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {exists} from "@tauri-apps/plugin-fs";
 import {join} from "@tauri-apps/api/path";
-import {debug} from "@tauri-apps/plugin-log";
+import {debug, info, warn} from "@tauri-apps/plugin-log";
 import {performSearchInText} from "./SearchText";
+import {WebviewWindow} from "@tauri-apps/api/webviewWindow";
+import {emitTo} from "@tauri-apps/api/event";
+import {selectedBoardId} from "./Stores.svelte";
+import {toast} from "svelte-sonner";
+import {I18n} from "./I18n/I18n";
 
 export interface Board
 {
@@ -261,4 +266,47 @@ export function cardContainsString(card: Card, searchQuery: string): boolean {
     ).toLowerCase();
 
     return performSearchInText(searchQuery, searchableText);
+}
+
+/**
+ * Opens a new window to display a given card, this window doesn't allow any changes to be made to the card though. The separate window is considered a read-only view of the card.
+ *
+ * @param card - The card object to display in the read-only window
+ */
+export function openReadOnlyWindow(card: Card)
+{
+    const windowLabel = `card-details-read-only-${card.id}`;
+    
+    const readOnlyWindow = new WebviewWindow(windowLabel, {
+        title: `${card.title} (${I18n.t("readOnly")})`,
+        url: `card-details-read-only.html`,
+        resizable: true,
+        width: 900,
+        height: 700
+    });
+
+    readOnlyWindow.once('tauri://created', () => {
+        info("Opening read-only card window for card: " + card.id);
+
+        // Delay to ensure the window's event listener is ready to receive the data
+        setTimeout(() => {
+            const theme = document.documentElement.getAttribute("data-theme") ?? "light";
+            
+            emitTo(windowLabel, "card-data", {
+                card,
+                labels: card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)),
+                theme,
+                cardIsReadOnlyMessage: I18n.t("cardIsReadOnly"),
+                dueDateMessage: (new Date(parseInt(card.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'}),
+                completedMessage: I18n.t("completed"),
+                checklistMessage: I18n.t("checklist"),
+                attachmentsMessage: I18n.t("attachments"),
+            }).catch(e => console.error("Failed to emit card data event:", e));
+        }, 1000);
+    });
+    
+    readOnlyWindow.once('tauri://error', e => {
+        warn("Failed to open read-only card window. " + e.payload);
+        toast.warning(I18n.t("cardAlreadyOpenInSeparateWindow"));
+    });
 }

@@ -16,13 +16,17 @@
         addAttachmentFunction: Function;
         focusOnCardDetailsFunction: Function;
         isCardFullscreen: boolean;
+        readOnly?: boolean;
+        attachmentsTitle?: string;
     }
 
     let {
         attachments = $bindable(),
         addAttachmentFunction,
         focusOnCardDetailsFunction,
-        isCardFullscreen
+        isCardFullscreen,
+        readOnly = false,
+        attachmentsTitle = undefined,
     }: Props = $props();
 
     /**
@@ -112,7 +116,7 @@
     <hr>
     <div class="titleBar">
         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-width="2" d="M22,12 C22,12 19.0000009,15.0000004 13.0000004,21.0000004 C6.99999996,27.0000004 -2.00000007,18.0000004 3.99999994,12.0000004 C9.99999996,6.00000037 9,7.00000011 13,3.00000008 C17,-0.999999955 23,4.99999994 19,9.00000005 C15,13.0000002 12.0000004,16.0000007 9.99999995,18.0000004 C7.99999952,20 5,17 6.99999995,15.0000004 C8.99999991,13.0000007 16,6 16,6"></path></svg>
-        <span>{I18n.t("attachments")}</span>
+        <span>{attachmentsTitle ?? I18n.t("attachments")}</span>
     </div>
     <div class="attachmentsHolder">
         {#each attachments as attachment}
@@ -155,23 +159,27 @@
                         >
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.564 4.42a.75.75 0 0 0-1.378-.59l-6.75 15.75a.75.75 0 0 0 1.378.59l6.75-15.75ZM7 18.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"></path></svg>
                         </button>
-                        <button title={I18n.t("deleteAttachment")} id="deleteButton"
-                                onclick={async () => deleteAttachment(attachment)}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 24 24" fill="currentColor">
-                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                        {#if !readOnly}
+                            <button title={I18n.t("deleteAttachment")} id="deleteButton"
+                                    onclick={async () => deleteAttachment(attachment)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 24 24" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        {/if}
                     </div>
                 </div>
             </div>
         {/each}
     </div>
-    <button class="addAttachmentButton"
-            onclick={addAttachmentFunction}
-    >
-        {I18n.t("addAnAttachment")}
-    </button>
+    {#if !readOnly}
+        <button class="addAttachmentButton"
+                onclick={addAttachmentFunction}
+        >
+            {I18n.t("addAnAttachment")}
+        </button>
+    {/if}
 {/if}
 {/await}
 

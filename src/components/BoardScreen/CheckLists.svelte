@@ -15,11 +15,15 @@
     interface Props {
         checklists: Checklist[];
         focusOnCardDetailsFunction: Function;
+        readOnly?: boolean;
+        checklistTitlePlaceholder?: string;
     }
 
     let {
         checklists = $bindable(),
-        focusOnCardDetailsFunction
+        focusOnCardDetailsFunction,
+        readOnly = false,
+        checklistTitlePlaceholder = undefined,
     }: Props = $props();
 
     /**
@@ -97,11 +101,14 @@
     {#each checklists as checklist, i (checklist.id)}
         <div animate:flip="{{duration: 500}}">
             <div class="checklistTop">
-                <div id={`checklistTopTitleHolder-${checklist.id}`} class="checklistTopTitleHolder">
+                <div id={`checklistTopTitleHolder-${checklist.id}`}
+                     class="checklistTopTitleHolder"
+                     class:noBorder={readOnly}
+                >
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M168.531 215.469l-29.864 29.864 96 96L448 128l-29.864-29.864-183.469 182.395-66.136-65.062zm236.802 189.864H106.667V106.667H320V64H106.667C83.198 64 64 83.198 64 106.667v298.666C64 428.802 83.198 448 106.667 448h298.666C428.802 448 448 428.802 448 405.333V234.667h-42.667v170.666z"></path></svg>
                     <textarea
                           bind:value={checklist.title}
-                          placeholder={I18n.t("checklist")}
+                          placeholder={checklistTitlePlaceholder ?? I18n.t("checklist")}
                           spellcheck="false"
                           onfocus={() => document.getElementById(`checklistTopTitleHolder-${checklist.id}`).classList.add("typingChecklistTitle")}
                           onfocusout={() => document.getElementById(`checklistTopTitleHolder-${checklist.id}`).classList.remove("typingChecklistTitle")}
@@ -111,63 +118,66 @@
                                   e.target.blur(); //Unfocus the textarea element
                               }
                           }}
+                          disabled={readOnly}
                 ></textarea>
                 </div>
-                <div class="checklistTopButtonsHolder">
-                    {#if i !== 0}
-                        <!--We don't want the user to move up the first checklist-->
-                        <button title={I18n.t("moveChecklistUp")}
-                                onclick={() => moveChecklist(i, -1)}
-                        >
-                            <svg stroke="currentColor" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 217.9L383 345c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.3-24.6 0-34L273 167c-9.1-9.1-23.7-9.3-33.1-.7L95 310.9c-4.7 4.7-7 10.9-7 17s2.3 12.3 7 17c9.4 9.4 24.6 9.4 33.9 0l127.1-127z"></path></svg>
-                        </button>
-                    {/if}
-                    {#if i + 1 !== checklists.length}
-                        <!--We don't want the user to move down the last checklist-->
-                        <button title={I18n.t("moveChecklistDown")}
-                                onclick={() => moveChecklist(i, 1)}
-                        >
-                            <svg stroke="currentColor" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z"></path></svg>
-                        </button>
-                    {/if}
-                    {#if checklists.length >= 2}
-                        <button title={I18n.t("sortChecklists")}
-                                onclick={e => mount(OrderChecklistsMenu, {
-                                    props: {
-                                        clickEvent: e,
-                                        checklists,
-                                        focusOnCardDetailsFunction
-                                    },
-                                    target: document.body, intro: true
-                                })}
-                        >
-                            <svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" /></svg>
-                        </button>
-                    {/if}
-                    <button title={I18n.t("delete")} onclick={async () => {
-                        const deleteChecklistFunction = () => {
-                            checklists = checklists.filter(checklistt => checklistt.id !== checklist.id);
-                            focusOnCardDetailsFunction(); // If we don't focus on the CardDetails component after the user clicked on a button of this CheckLists component. The CardDetails component won't register any keyboard shortcuts like "Esc", since it wouldn\'t be focussed.
-                        }
+                {#if !readOnly}
+                    <div class="checklistTopButtonsHolder">
+                        {#if i !== 0}
+                            <!--We don't want the user to move up the first checklist-->
+                            <button title={I18n.t("moveChecklistUp")}
+                                    onclick={() => moveChecklist(i, -1)}
+                            >
+                                <svg stroke="currentColor" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 217.9L383 345c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.3-24.6 0-34L273 167c-9.1-9.1-23.7-9.3-33.1-.7L95 310.9c-4.7 4.7-7 10.9-7 17s2.3 12.3 7 17c9.4 9.4 24.6 9.4 33.9 0l127.1-127z"></path></svg>
+                            </button>
+                        {/if}
+                        {#if i + 1 !== checklists.length}
+                            <!--We don't want the user to move down the last checklist-->
+                            <button title={I18n.t("moveChecklistDown")}
+                                    onclick={() => moveChecklist(i, 1)}
+                            >
+                                <svg stroke="currentColor" fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z"></path></svg>
+                            </button>
+                        {/if}
+                        {#if checklists.length >= 2}
+                            <button title={I18n.t("sortChecklists")}
+                                    onclick={e => mount(OrderChecklistsMenu, {
+                                        props: {
+                                            clickEvent: e,
+                                            checklists,
+                                            focusOnCardDetailsFunction
+                                        },
+                                        target: document.body, intro: true
+                                    })}
+                            >
+                                <svg class="listOptionsMenuIcons" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" /></svg>
+                            </button>
+                        {/if}
+                        <button title={I18n.t("delete")} onclick={async () => {
+                            const deleteChecklistFunction = () => {
+                                checklists = checklists.filter(checklistt => checklistt.id !== checklist.id);
+                                focusOnCardDetailsFunction(); // If we don't focus on the CardDetails component after the user clicked on a button of this CheckLists component. The CardDetails component won't register any keyboard shortcuts like "Esc", since it wouldn\'t be focussed.
+                            }
 
-                        if (!SaveLoadManager.getData().showConfirmationPreferences.deleteChecklist)
-                        {
-                            deleteChecklistFunction();
-                        }
-                        else
-                        {
-                            const popup = mount(PopupWindow, {props: {description: I18n.t("confirmChecklistRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
-
-                            if (await popup.getAnswer() === true)
+                            if (!SaveLoadManager.getData().showConfirmationPreferences.deleteChecklist)
                             {
-                                await SaveLoadManager.getData().updateConfirmationPreference("deleteChecklist", popup.getShowConfirmationAgain())
                                 deleteChecklistFunction();
                             }
-                        }
-                    }}>
-                        {I18n.t("delete")}
-                    </button>
-                </div>
+                            else
+                            {
+                                const popup = mount(PopupWindow, {props: {description: I18n.t("confirmChecklistRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+                                if (await popup.getAnswer() === true)
+                                {
+                                    await SaveLoadManager.getData().updateConfirmationPreference("deleteChecklist", popup.getShowConfirmationAgain())
+                                    deleteChecklistFunction();
+                                }
+                            }
+                        }}>
+                            {I18n.t("delete")}
+                        </button>
+                    </div>
+                {/if}
             </div>
             <div class="checklistProgressBar">
                 <span id={`checklist-span-${checklist.id}`}>
@@ -175,7 +185,7 @@
                 </span>
                 <progress id={`checklist-progress-${checklist.id}`} value={tweenProgressBarValue(checklist.id, amountOfTodosInChecklist(checklist, true) / amountOfTodosInChecklist(checklist))}></progress>
             </div>
-            <div class="todosHolder" use:dndzone={{items: checklist.todos, type:"todo", dropTargetStyle: {}, zoneTabIndex: -1, zoneItemTabIndex: -1}} onconsider={e => checklist.todos = e.detail.items} onfinalize={e => checklist.todos = e.detail.items}>
+            <div class="todosHolder" use:dndzone={{items: checklist.todos, type:"todo", dropTargetStyle: {}, zoneTabIndex: -1, zoneItemTabIndex: -1, dragDisabled: readOnly}} onconsider={e => checklist.todos = e.detail.items} onfinalize={e => checklist.todos = e.detail.items}>
                 {#each checklist.todos as todo, j (todo.id)}
                     <div class="todoContainer"
                          in:slide|global={{duration: 0}}
@@ -198,6 +208,7 @@
                                 oninput={e => {
                                     todo.completed = e.target.checked;
                                 }}
+                                style={`pointer-events: ${readOnly ? "none" : "auto"}`}
                         />
                         <textarea
                               id={`todo-${todo.id}`}
@@ -211,26 +222,32 @@
                                   }
                               }}
                               spellcheck="false"
+                              readonly={readOnly}
+                              class:noFocusBorder={readOnly}
                         ></textarea>
-                        <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 4.625C6.12132 4.625 6.625 4.12132 6.625 3.5C6.625 2.87868 6.12132 2.375 5.5 2.375C4.87868 2.375 4.375 2.87868 4.375 3.5C4.375 4.12132 4.87868 4.625 5.5 4.625ZM9.5 4.625C10.1213 4.625 10.625 4.12132 10.625 3.5C10.625 2.87868 10.1213 2.375 9.5 2.375C8.87868 2.375 8.375 2.87868 8.375 3.5C8.375 4.12132 8.87868 4.625 9.5 4.625ZM10.625 7.5C10.625 8.12132 10.1213 8.625 9.5 8.625C8.87868 8.625 8.375 8.12132 8.375 7.5C8.375 6.87868 8.87868 6.375 9.5 6.375C10.1213 6.375 10.625 6.87868 10.625 7.5ZM5.5 8.625C6.12132 8.625 6.625 8.12132 6.625 7.5C6.625 6.87868 6.12132 6.375 5.5 6.375C4.87868 6.375 4.375 6.87868 4.375 7.5C4.375 8.12132 4.87868 8.625 5.5 8.625ZM10.625 11.5C10.625 12.1213 10.1213 12.625 9.5 12.625C8.87868 12.625 8.375 12.1213 8.375 11.5C8.375 10.8787 8.87868 10.375 9.5 10.375C10.1213 10.375 10.625 10.8787 10.625 11.5ZM5.5 12.625C6.12132 12.625 6.625 12.1213 6.625 11.5C6.625 10.8787 6.12132 10.375 5.5 10.375C4.87868 10.375 4.375 10.8787 4.375 11.5C4.375 12.1213 4.87868 12.625 5.5 12.625Z" fill="currentColor"></path></svg>
-                        <svg class="deleteTodoButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                             onclick={() => {
-                                 checklist.todos = checklist.todos.filter(todoo => todoo.id !== todo.id);
-                             }}
-                        >
-                            <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
-                        </svg>
+                        {#if !readOnly}
+                            <svg stroke="currentColor" fill="none" stroke-width="0" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 4.625C6.12132 4.625 6.625 4.12132 6.625 3.5C6.625 2.87868 6.12132 2.375 5.5 2.375C4.87868 2.375 4.375 2.87868 4.375 3.5C4.375 4.12132 4.87868 4.625 5.5 4.625ZM9.5 4.625C10.1213 4.625 10.625 4.12132 10.625 3.5C10.625 2.87868 10.1213 2.375 9.5 2.375C8.87868 2.375 8.375 2.87868 8.375 3.5C8.375 4.12132 8.87868 4.625 9.5 4.625ZM10.625 7.5C10.625 8.12132 10.1213 8.625 9.5 8.625C8.87868 8.625 8.375 8.12132 8.375 7.5C8.375 6.87868 8.87868 6.375 9.5 6.375C10.1213 6.375 10.625 6.87868 10.625 7.5ZM5.5 8.625C6.12132 8.625 6.625 8.12132 6.625 7.5C6.625 6.87868 6.12132 6.375 5.5 6.375C4.87868 6.375 4.375 6.87868 4.375 7.5C4.375 8.12132 4.87868 8.625 5.5 8.625ZM10.625 11.5C10.625 12.1213 10.1213 12.625 9.5 12.625C8.87868 12.625 8.375 12.1213 8.375 11.5C8.375 10.8787 8.87868 10.375 9.5 10.375C10.1213 10.375 10.625 10.8787 10.625 11.5ZM5.5 12.625C6.12132 12.625 6.625 12.1213 6.625 11.5C6.625 10.8787 6.12132 10.375 5.5 10.375C4.87868 10.375 4.375 10.8787 4.375 11.5C4.375 12.1213 4.87868 12.625 5.5 12.625Z" fill="currentColor"></path></svg>
+                            <svg class="deleteTodoButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                 onclick={() => {
+                                     checklist.todos = checklist.todos.filter(todoo => todoo.id !== todo.id);
+                                 }}
+                            >
+                                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+                            </svg>
+                        {/if}
                     </div>
                 {/each}
             </div>
-            <button
-                id={`addTodoButton-${checklist.id}`}
-                class="addTodoButton"
-                style={`margin-bottom: ${i === checklists.length - 1 ? "0.5em" : "2em"}`}
-                onclick={() => addTodoItem(checklist.id)}
-            >
-                {I18n.t("addItem")}
-            </button>
+            {#if !readOnly}
+                <button
+                    id={`addTodoButton-${checklist.id}`}
+                    class="addTodoButton"
+                    style={`margin-bottom: ${i === checklists.length - 1 ? "0.5em" : "2em"}`}
+                    onclick={() => addTodoItem(checklist.id)}
+                >
+                    {I18n.t("addItem")}
+                </button>
+            {/if}
         </div>
     {/each}
 {/if}
@@ -261,6 +278,14 @@
         box-shadow: none;
     }
 
+    .noBorder:hover {
+        border: 2px solid transparent;
+    }
+
+    .noFocusBorder:focus-visible {
+        box-shadow: none;
+    }
+
     .checklistTopTitleHolder textarea {
         font-weight: bold;
         font-size: large;
@@ -271,6 +296,7 @@
         border: none;
         resize: none;
         field-sizing: content;
+        color: var(--main-text);
     }
 
     .checklistTopTitleHolder textarea::placeholder {
@@ -278,7 +304,7 @@
         transition: 0.3s;
     }
 
-    .checklistTopTitleHolder:hover textarea::placeholder, .checklistTopTitleHolder textarea:focus::placeholder {
+    .checklistTopTitleHolder:hover textarea:not(:disabled)::placeholder, .checklistTopTitleHolder textarea:focus:not(:disabled)::placeholder {
         color: var(--unselected-button);
     }
 
@@ -330,6 +356,7 @@
         flex: 1;
         accent-color: var(--accent);
         height: 1.2em;
+        pointer-events: none;
     }
 
     .checklistProgressBar progress[value="1"]{

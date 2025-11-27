@@ -250,4 +250,8 @@ export default interface Translation
     hideArchivedCards: string;
     noResultsFound: string;
     typeSlashForCommands: string;
+    openInNewWindow: string;
+    readOnly: string;
+    cardIsReadOnly: string;
+    cardAlreadyOpenInSeparateWindow: string;
 }
