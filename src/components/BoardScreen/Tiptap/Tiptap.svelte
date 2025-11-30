@@ -976,6 +976,15 @@ ${contentText}
         text-decoration: underline;
     }
 
+    /* Ensures hyperlinked text remains visually distinct when selected.
+       Standard selection highlighting overrides the text color, making links look identical to plain text. */
+    .editor-content :global(a::selection) {
+        color: var(--color-accent-fg);
+        text-decoration: underline;
+
+        background-color: rgba(var(--main-text-rgb-values), 0.1);
+    }
+
     :global(.details) {
         display: flex;
         gap: 0.25rem;
