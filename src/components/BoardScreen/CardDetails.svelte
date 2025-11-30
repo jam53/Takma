@@ -83,15 +83,17 @@
     }
 
     // Automatically save the selected card when any changes are made
-    let debouncedSaveCard = debounce((cardToSave: Card, boardId: string, cardId: string) => SaveLoadManager.getData().updateCard(cardToSave, boardId, cardId));
+    let debouncedSaveCard = debounce((cardToSave: Card, boardId: string, cardId: string) => {
+        debug("Saving card: " + cardToSave.id);
+        SaveLoadManager.getData().updateCard(cardToSave, boardId, cardId);
+    });
     $effect(() => {
         if (card)
         {
-            debug("Saving card: " + card.id);
             debouncedSaveCard($state.snapshot(card), selectedBoardId.value, selectedCardId.value);
             refreshCard(card);
         }
-    })
+    });
 
     let overlayElement: HTMLElement | null = $state(null);
 
