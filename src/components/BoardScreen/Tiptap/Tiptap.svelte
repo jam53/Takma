@@ -28,13 +28,11 @@
         saveAbsoluteFilePathToSaveDirectory,
         saveFileToSaveDirectory
     } from "../../../scripts/TakmaDataFolderIO";
-    import {DetailsContent} from "../../../scripts/Tiptap/DetailsContent";
-    import {DetailsSummary} from "../../../scripts/Tiptap/DetailsSummary";
-    import {Details} from "../../../scripts/Tiptap/Details";
     import {Placeholder} from "@tiptap/extension-placeholder";
     import {openUrl} from "@tauri-apps/plugin-opener";
     import TextEditorActionButtons from "./TextEditorActionButtons.svelte";
     import {Markdown} from "@tiptap/markdown";
+    import Details, {DetailsContent, DetailsSummary} from "@tiptap/extension-details";
 
     interface Props {
         cardDescription: string;
@@ -61,31 +59,6 @@
     let isHeading = $state(false);
     let isTextStyle = $state(false);
 
-    /**
-     * Pre-processes Markdown content to insert a Zero Width Space (ZWSP)
-     * before standalone inline images. This fixes a Tiptap V3 schema validation issue
-     * (contentMatchAt) when an inline node is the first element after an empty block.
-     * @param markdownContent The original Markdown string.
-     * @returns The processed Markdown string.
-     */
-    function ensureBlockWrapperForImages(markdownContent: string): string {
-        const ZWSP = '\u200B';
-
-        // Regex: Finds an image markdown link: ![]()
-        //        that is preceded only by the start of the string (^) or one or more newline characters (\n+).
-        // The image link itself is captured in group 2.
-        const imageOnlyRegex = /(\n|^)(\s*!\[.*?\]\(.*?\))/g;
-
-        markdownContent = markdownContent.replace(imageOnlyRegex, (match, p1_preceding, p2_image) => {
-            // p1_preceding is the preceding newlines/start of string
-            // p2_image is the image markdown
-
-            return p1_preceding + ZWSP + p2_image.trim();
-        });
-
-        return markdownContent;
-    }
-
     onMount(() => {
         if (!bubbleMenuElement || !floatingMenuElement)
         {
@@ -95,7 +68,7 @@
 
         editor = new Editor({
             element: editorElement,
-            content: ensureBlockWrapperForImages(parseTakmaLinks(cardDescription)),
+            content: normalizeContentForTiptapEditor(cardDescription),
             contentType: 'markdown',
             editable: editable,
             editorProps: {
@@ -283,7 +256,7 @@
                 isTextStyle = editor?.isActive('textStyle') ?? false;
             },
             onUpdate: ({editor}) => {
-                cardDescription = editor.getMarkdown();
+                cardDescription = tiptapDetailsSummaryToMarkdownSyntax(editor.getMarkdown());
             },
             onCreate: ({editor}) => {
                 // Force placeholder to show on initial load if editor is empty
@@ -458,6 +431,175 @@
             let imgUrl = (await saveAbsoluteFilePathToSaveDirectory(selected, selectedBoardId.value)).replace(/\\/g, '/') // Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths
             runCommandAndRemoveSlash(chain => chain.setImage({src: imgUrl}));
         }
+    }
+
+    /**
+     * Runs all custom parsing logic required before loading content into the Tiptap editor.
+     *
+     * @param markdownContent The raw Markdown string.
+     * @returns The fully processed Markdown string ready for the Tiptap editor.
+     */
+    function normalizeContentForTiptapEditor(markdownContent: string): string {
+        markdownContent = parseTakmaLinks(markdownContent);
+        markdownContent = ensureBlockWrapperForImages(markdownContent);
+        markdownContent = markdownDetailsSummaryToTiptapSyntax(markdownContent);
+
+        return markdownContent;
+    }
+
+    /**
+     * Pre-processes Markdown content to insert a Zero Width Space (ZWSP)
+     * before standalone inline images. This fixes a Tiptap V3 schema validation issue
+     * (contentMatchAt) when an inline node is the first element after an empty block.
+     * @param markdownContent The original Markdown string.
+     * @returns The processed Markdown string.
+     */
+    function ensureBlockWrapperForImages(markdownContent: string): string {
+        const ZWSP = '\u200B';
+
+        // Regex: Finds an image markdown link: ![]()
+        //        that is preceded only by the start of the string (^) or one or more newline characters (\n+).
+        // The image link itself is captured in group 2.
+        const imageOnlyRegex = /(\n|^)(\s*!\[.*?\]\(.*?\))/g;
+
+        markdownContent = markdownContent.replace(imageOnlyRegex, (match, p1_preceding, p2_image) => {
+            // p1_preceding is the preceding newlines/start of string
+            // p2_image is the image markdown
+
+            return p1_preceding + ZWSP + p2_image.trim();
+        });
+
+        return markdownContent;
+    }
+
+    /**
+     * Converts Tiptap specific ":::details" Markdown syntax into standard HTML <details> and <summary> tags.
+     *
+     * @param text The raw markdown from Tiptap's editor.getMarkdown().
+     * @returns Markdown mixed with standard HTML <details> and <summary> tags.
+     */
+    function tiptapDetailsSummaryToMarkdownSyntax(text: string): string {
+        while (true) {
+            // Find all openers
+            // We list "detailsSummary" and "detailsContent" BEFORE "details"
+            // so the regex doesn't prematurely match the "details" prefix.
+            const openerRegex = /^:::(detailsSummary|detailsContent|details)(.*)$/gm;
+
+            let lastOpener = null;
+            let match;
+
+            // Find the deepest/last nested block
+            while ((match = openerRegex.exec(text)) !== null) {
+                lastOpener = match;
+            }
+
+            if (!lastOpener) break;
+
+            const [fullLine, tagName, params] = lastOpener;
+            const startIndex = lastOpener.index;
+
+            // Find the closer ":::"
+            const textAfterOpener = text.slice(startIndex + fullLine.length);
+            const closerRegex = /^:::$/m;
+            const closerMatch = closerRegex.exec(textAfterOpener);
+
+            if (!closerMatch) break;
+
+            const closerIndexRelative = closerMatch.index;
+            const closerLength = closerMatch[0].length;
+
+            // Extract and Trim Content
+            const rawContent = textAfterOpener.slice(0, closerIndexRelative);
+            const content = rawContent.trim();
+
+            // Generate Replacement HTML
+            let replacement = "";
+            if (tagName === "detailsSummary") {
+                replacement = `<summary>${content}</summary>`;
+            } else if (tagName === "detailsContent") {
+                // Unwrap content: Just return the text inside
+                replacement = content;
+            } else if (tagName === "details") {
+                // Check for {open} in the params captured from the first line
+                const openAttr = params && params.includes("{open}") ? " open" : "";
+                replacement = `<details${openAttr}>\n${content}\n</details>`;
+            }
+
+            // Replace
+            const totalBlockLength = fullLine.length + closerIndexRelative + closerLength;
+            text = text.slice(0, startIndex) + replacement + text.slice(startIndex + totalBlockLength);
+        }
+
+        return text;
+    }
+
+    /**
+     * Converts standard HTML <details> and <summary> tags back into Tiptap specific ":::details" Markdown syntax.
+     *
+     * @param text The text containing HTML <details> and <summary> tags
+     * @returns Text converted back to Tiptap Markdown syntax
+     */
+    function markdownDetailsSummaryToTiptapSyntax(text: string): string {
+        // We loop until no <details> tags remain in the text
+        while (true) {
+            // REGEX EXPLANATION:
+            // <details\b([^>]*)>       -> Match opening tag and capture attributes (Group 1)
+            // (                         -> Start Group 2 (The Content)
+            //   (?:                     -> Start non-capturing group for repetition
+            //     (?!<details\b)        -> Negative Lookahead: Stop if we see a nested <details> start tag
+            //     [\s\S]                -> Match ANY character (including newlines!)
+            //   )*?                     -> Repeat lazily
+            // )                         -> End Group 2
+            // <\/details>               -> Match closing tag
+            const leafDetailsRegex = /<details\b([^>]*)>((?:(?!<details\b)[\s\S])*?)<\/details>/i;
+
+            const match = text.match(leafDetailsRegex);
+
+            // If no match is found, we are done
+            if (!match) break;
+
+            // Perform the replacement for this specific block
+            text = text.replace(leafDetailsRegex, (wholeMatch, attrs, innerContent) => {
+                const openSyntax = attrs && attrs.toLowerCase().includes("open") ? " {open}" : "";
+
+                // Extract <summary> using the same [\s\S] trick for safety
+                const summaryRegex = /<summary>([\s\S]*?)<\/summary>/i;
+                const summaryMatch = innerContent.match(summaryRegex);
+
+                let summaryText = "Details"; // Default fallback
+                let contentText = innerContent;
+
+                if (summaryMatch) {
+                    summaryText = summaryMatch[1].trim();
+                    // Remove the summary tag to leave just the content
+                    contentText = innerContent.replace(summaryRegex, "").trim();
+                } else {
+                    contentText = innerContent.trim();
+                }
+
+                // Return Tiptap Format
+                // We ensure there are blank lines between every block so Tiptap parses it correctly.
+                return `
+:::details${openSyntax}
+
+:::detailsSummary
+
+${summaryText}
+
+:::
+
+:::detailsContent
+
+${contentText}
+
+:::
+
+:::
+`;
+            });
+        }
+
+        return text;
     }
 </script>
 
