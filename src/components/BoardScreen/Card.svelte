@@ -141,11 +141,11 @@
             {/each}
         </div>
         <div class="title">
-            {#if card.complete}
-                <svg stroke="var(--success)" fill="var(--success)" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
-            {/if}
             <span class="cardTitle" style={`text-decoration: ${card.complete ? "line-through" : "none"}; color: ${card.complete ? "var(--success)" : "inherit"}`}>
-                {card.title}
+            {#if card.complete}
+                <svg stroke-width="0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
+            {/if}<!--
+                -->{card.title}
             </span>
         </div>
         {#await amountOfExistingAttachments(card.attachments)}
@@ -284,6 +284,17 @@
 
     .cardTitle {
         word-break: break-word;
+    }
+
+    .cardTitle svg {
+        min-width: 1em;
+        min-height: 1em;
+        width: 1em;
+        height: 1em;
+        stroke: var(--success);
+        fill: var(--success);
+        margin-right: 0.4em;
+        vertical-align: -0.12em;
     }
 
     .dueDateRed {
