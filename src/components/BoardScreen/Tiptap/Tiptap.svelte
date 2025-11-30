@@ -285,6 +285,17 @@
             onUpdate: ({editor}) => {
                 cardDescription = editor.getMarkdown();
             },
+            onCreate: ({editor}) => {
+                // Force placeholder to show on initial load if editor is empty
+                // This ensures the placeholder is visible without requiring user interaction
+                if (editor.getMarkdown() === "") {
+                    // Trigger a view update to show the placeholder
+                    // This forces the placeholder extension to re-evaluate and display
+                    const { state, view } = editor;
+                    const transaction = state.tr;
+                    view.dispatch(transaction);
+                }
+            },
         });
     });
 
