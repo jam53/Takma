@@ -46,8 +46,19 @@
     import {dueDatesOverviewPopupIsVisible, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {info} from "@tauri-apps/plugin-log";
+    import { ScheduleXCalendar } from '@schedule-x/svelte';
+    import {
+        type CalendarEventExternal,
+        createCalendar,
+        createViewDay,
+        createViewMonthAgenda,
+        createViewWeek
+    } from '@schedule-x/calendar';
+    import '@schedule-x/theme-default/dist/index.css';
+    import 'temporal-polyfill/global';
 
     let showPopup = $state(true); dueDatesOverviewPopupIsVisible.value = true;
+    let showCalendarView = $state(false);
 
     onMount(() =>
     {
@@ -154,6 +165,71 @@
             }
         });
     }
+
+    function openCard(boardId: string, cardId: string) {
+        selectedBoardId.value = boardId;
+        selectedCardId.value = cardId;
+        closePopup();
+    }
+
+    function getScheduleXCalendar() {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const removeHtmlTags = (text: string) => text.replace(/<\/?\s?[a-z][^>]*>/gi, "");
+
+        return createCalendar({
+            locale: SaveLoadManager.getData().displayLanguage,
+            timezone,
+            views: [createViewDay(), createViewWeek(), createViewMonthAgenda()],
+            isDark: SaveLoadManager.getData().darkTheme,
+            showWeekNumbers: true,
+            callbacks: {
+                onEventClick(calendarEvent: CalendarEventExternal, _: UIEvent) {
+                    openCard(calendarEvent.customKeys.boardId, calendarEvent.customKeys.cardId);
+                },
+            },
+            calendars: {
+                cards: {
+                    colorName: "cards",
+                    lightColors: {
+                        main: window.getComputedStyle(document.body).getPropertyValue("--accent"),
+                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--accent"),
+                        container: "#cce4f2",
+                    },
+                    darkColors: {
+                        main: window.getComputedStyle(document.body).getPropertyValue("--accent"),
+                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--accent"),
+                        container: "#26344b",
+                    },
+                },
+                completedCards: {
+                    colorName: "completedCards",
+                    lightColors: {
+                        main: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
+                        container: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemBackgroundSuccess"),
+                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
+                    },
+                    darkColors: {
+                        main: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
+                        container: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemBackgroundSuccess"),
+                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
+                    },
+                },
+            },
+            events: getAllCardsWithDueDates().map(cardWithDueDate => {
+                return {
+                    id: cardWithDueDate.cardId,
+                    calendarId: cardWithDueDate.complete ? "completedCards" : "cards",
+                    title: removeHtmlTags(selectedBoardId.value === "" ? cardWithDueDate.titleWithBoardName : cardWithDueDate.titleWithListName),
+                    start: Temporal.Instant.fromEpochMilliseconds(cardWithDueDate.dueDate).toZonedDateTimeISO(timezone),
+                    end: Temporal.Instant.fromEpochMilliseconds(cardWithDueDate.dueDate).toZonedDateTimeISO(timezone).add({hours: 1}),
+                    customKeys: {
+                        boardId: cardWithDueDate.boardId,
+                        cardId: cardWithDueDate.cardId
+                    }
+                };
+            })
+        });
+    }
 </script>
 
 {#if showPopup}
@@ -171,37 +247,49 @@
                 </svg>
             </div>
             <hr/>
-            {#if getAllCardsWithDueDates().length === 0 && selectedBoardId.value === ""}
-                <span>{I18n.t("noCardsWithDueDates")}</span>
-            {:else if getAllCardsWithDueDates().length === 0 && selectedBoardId.value !== ""}
-                <span>{I18n.t("noCardsWithDueDatesOnThisBoard")}</span>
-            {/if}
-            {#each calculateAllDueDates() as dueDateValue}
-                {#if dueDateValue.dueDates.length > 0}
-                    <h2>{dueDateValue.title}</h2>
+            <button class="calendarListButton"
+                    onclick={() => showCalendarView = !showCalendarView}
+            >
+                {#if showCalendarView}
+                    <svg style="width: 1.5em; height: 1.5em" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"></path></svg>
+                {:else}
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L64 64C28.7 64 0 92.7 0 128l0 16 0 48L0 448c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-256 0-48 0-16c0-35.3-28.7-64-64-64l-40 0 0-40c0-13.3-10.7-24-24-24s-24 10.7-24 24l0 40L152 64l0-40zM48 192l352 0 0 256c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256z"></path></svg>
                 {/if}
-                {#each dueDateValue.dueDates as dueDateItem}
-                    <div class="dueDateItem" class:danger={dueDateValue.color === "danger"} class:warning={dueDateValue.color === "warning"} class:success={dueDateValue.color === "success"}
-                         onclick={() => {
-                             selectedBoardId.value = dueDateItem.boardId;
-                             selectedCardId.value = dueDateItem.cardId;
-                             closePopup();
-                         }}
-                    >
-                        <h4>
-                            {#if selectedBoardId.value === ""}
-                                {@html dueDateItem.titleWithBoardName}
-                            {:else}
-                                {@html dueDateItem.titleWithListName}
-                            {/if}
-                        </h4>
-                        <hr>
-                        <span>
-                            {(new Date(parseInt(dueDateItem.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}
-                        </span>
-                    </div>
+                <span>
+                    {showCalendarView ? I18n.t("openListView") : I18n.t("openCalendarView")}
+                </span>
+            </button>
+            {#if !showCalendarView}
+                {#if getAllCardsWithDueDates().length === 0 && selectedBoardId.value === ""}
+                    <span>{I18n.t("noCardsWithDueDates")}</span>
+                {:else if getAllCardsWithDueDates().length === 0 && selectedBoardId.value !== ""}
+                    <span>{I18n.t("noCardsWithDueDatesOnThisBoard")}</span>
+                {/if}
+                {#each calculateAllDueDates() as dueDateValue}
+                    {#if dueDateValue.dueDates.length > 0}
+                        <h2>{dueDateValue.title}</h2>
+                    {/if}
+                    {#each dueDateValue.dueDates as dueDateItem}
+                        <div class="dueDateItem" class:danger={dueDateValue.color === "danger"} class:warning={dueDateValue.color === "warning"} class:success={dueDateValue.color === "success"}
+                             onclick={() => openCard(dueDateItem.boardId, dueDateItem.cardId)}
+                        >
+                            <h4>
+                                {#if selectedBoardId.value === ""}
+                                    {@html dueDateItem.titleWithBoardName}
+                                {:else}
+                                    {@html dueDateItem.titleWithListName}
+                                {/if}
+                            </h4>
+                            <hr>
+                            <span>
+                                {(new Date(parseInt(dueDateItem.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}
+                            </span>
+                        </div>
+                    {/each}
                 {/each}
-            {/each}
+            {:else}
+                <ScheduleXCalendar calendarApp="{getScheduleXCalendar()}" />
+            {/if}
         </div>
     </div>
 {/if}
@@ -312,5 +400,77 @@
     .dueDateItem hr {
         border: 1px solid currentColor;
         filter: opacity(50%);
+    }
+
+    .calendarListButton {
+        display: flex;
+        background-color: var(--border);
+        border-radius: 4px;
+        border: none;
+        align-items: center;
+        gap: 0.5em;
+        cursor: pointer;
+        transition: 0.3s;
+        height: 2em;
+        font-size: medium;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 0.5em;
+        color: var(--main-text);
+    }
+
+    .calendarListButton:hover {
+        filter: brightness(70%);
+    }
+
+    .calendarListButton svg {
+        width: 1.25em;
+        height: 1.25em;
+    }
+
+    :global(.sx-svelte-calendar-wrapper) {
+        width: 80vw;
+    }
+
+    /* Ensure navigation arrows are visible */
+    :global(.sx__forward-backward-navigation) {
+        display: flex !important;
+    }
+
+    /* Ensure today button is visible */
+    :global(.sx__today-button) {
+        display: inline-block !important;
+    }
+
+    :global(.sx__event) {
+        cursor: pointer;
+    }
+
+    :root, :global(.is-dark) {
+        /* The `--sx` related properties are for the ScheduleXCalendar component */
+        --sx-color-primary: var(--accent);
+        --sx-color-on-primary: white;
+        --sx-color-primary-container: var(--border);
+        --sx-color-on-primary-container: var(--accent);
+        --sx-color-surface-dim: var(--border);
+        --sx-color-surface-container: var(--border);
+        --sx-color-surface-container-low: var(--border);
+        --sx-color-surface-container-high: var(--border);
+        --sx-color-background: var(--background-color);
+        --sx-color-outline: var(--selected-button);
+        --sx-color-outline-variant: var(--border);
+    }
+
+    :global(.sx__calendar) {
+        border: transparent;
+        border-radius: 0;
+    }
+
+    :global(.sx__calendar-header__week-number), :global(.is-dark .sx__calendar-header__week-number) {
+        background-color: var(--border);
+    }
+
+    :global(.sx__month-agenda-week__week-number), :global(.is-dark .sx__month-agenda-week__week-number) {
+        background-color: var(--border);
     }
 </style>

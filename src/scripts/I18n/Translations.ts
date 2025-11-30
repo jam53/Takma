@@ -301,6 +301,8 @@ export let en: Translation = {
     readOnly: "read-only",
     cardIsReadOnly: "This card is read-only.",
     cardAlreadyOpenInSeparateWindow: "This card has already been opened in a separate window.",
+    openCalendarView: "Open calendar view",
+    openListView: "Open list view",
 };
 
 export let ar: Translation = {
@@ -602,6 +604,8 @@ export let ar: Translation = {
     readOnly: "للقراءة فقط",
     cardIsReadOnly: "هذه البطاقة للقراءة فقط.",
     cardAlreadyOpenInSeparateWindow: "تم فتح هذه البطاقة بالفعل في نافذة منفصلة.",
+    openCalendarView: "افتح عرض التقويم",
+    openListView: "افتح عرض القائمة",
 };
 
 export let de: Translation = {
@@ -903,6 +907,8 @@ export let de: Translation = {
     readOnly: "schreibgeschützt",
     cardIsReadOnly: "Diese Karte ist schreibgeschützt.",
     cardAlreadyOpenInSeparateWindow: "Diese Karte wurde bereits in einem separaten Fenster geöffnet.",
+    openCalendarView: "Kalenderansicht öffnen",
+    openListView: "Listenansicht öffnen",
 };
 
 export let es: Translation = {
@@ -1204,6 +1210,8 @@ export let es: Translation = {
     readOnly: "solo lectura",
     cardIsReadOnly: "Esta tarjeta es de solo lectura.",
     cardAlreadyOpenInSeparateWindow: "Esta tarjeta ya se ha abierto en una ventana separada.",
+    openCalendarView: "Abrir vista de calendario",
+    openListView: "Abrir vista de lista",
 };
 
 export let et: Translation = {
@@ -1505,6 +1513,8 @@ export let et: Translation = {
     readOnly: "ainult lugemiseks",
     cardIsReadOnly: "See kaart on ainult lugemiseks.",
     cardAlreadyOpenInSeparateWindow: "See kaart on juba avatud eraldi aknas.",
+    openCalendarView: "Ava kalendrivaade",
+    openListView: "Ava loendivaade",
 };
 
 export let fr: Translation = {
@@ -1806,6 +1816,8 @@ export let fr: Translation = {
     readOnly: "lecture seule",
     cardIsReadOnly: "Cette carte est en lecture seule.",
     cardAlreadyOpenInSeparateWindow: "Cette carte a déjà été ouverte dans une fenêtre séparée.",
+    openCalendarView: "Ouvrir la vue calendrier",
+    openListView: "Ouvrir la vue liste",
 };
 
 export let hi: Translation = {
@@ -2107,6 +2119,8 @@ export let hi: Translation = {
     readOnly: "केवल पढ़ने के लिए",
     cardIsReadOnly: "यह कार्ड केवल पढ़ने के लिए है।",
     cardAlreadyOpenInSeparateWindow: "यह कार्ड पहले ही एक अलग विंडो में खोला जा चुका है।",
+    openCalendarView: "कैलेंडर दृश्य खोलें",
+    openListView: "सूची दृश्य खोलें",
 };
 
 export let id: Translation = {
@@ -2408,6 +2422,8 @@ export let id: Translation = {
     readOnly: "hanya baca",
     cardIsReadOnly: "Kartu ini hanya dapat dibaca.",
     cardAlreadyOpenInSeparateWindow: "Kartu ini sudah dibuka di jendela terpisah.",
+    openCalendarView: "Buka tampilan kalender",
+    openListView: "Buka tampilan daftar",
 };
 
 export let ja: Translation = {
@@ -2709,6 +2725,8 @@ export let ja: Translation = {
     readOnly: "読み取り専用",
     cardIsReadOnly: "このカードは読み取り専用です。",
     cardAlreadyOpenInSeparateWindow: "このカードはすでに別のウィンドウで開かれています。",
+    openCalendarView: "カレンダー表示を開く",
+    openListView: "リスト表示を開く",
 };
 
 export let ko: Translation = {
@@ -3010,6 +3028,8 @@ export let ko: Translation = {
     readOnly: "읽기 전용",
     cardIsReadOnly: "이 카드는 읽기 전용입니다.",
     cardAlreadyOpenInSeparateWindow: "이 카드는 이미 별도의 창에서 열려 있습니다.",
+    openCalendarView: "달력 보기 열기",
+    openListView: "목록 보기 열기",
 };
 
 export let nl: Translation = {
@@ -3311,6 +3331,8 @@ export let nl: Translation = {
     readOnly: "alleen-lezen",
     cardIsReadOnly: "Deze kaart is alleen-lezen.",
     cardAlreadyOpenInSeparateWindow: "Deze kaart is al in een apart venster geopend.",
+    openCalendarView: "Kalenderweergave openen",
+    openListView: "Lijstweergave openen",
 };
 
 export let pt: Translation = {
@@ -3612,6 +3634,8 @@ export let pt: Translation = {
     readOnly: "somente leitura",
     cardIsReadOnly: "Este cartão é somente leitura.",
     cardAlreadyOpenInSeparateWindow: "Este cartão já foi aberto em uma janela separada.",
+    openCalendarView: "Abrir vista de calendário",
+    openListView: "Abrir vista de lista",
 };
 
 export let ru: Translation = {
@@ -3913,6 +3937,8 @@ export let ru: Translation = {
     readOnly: "только для чтения",
     cardIsReadOnly: "Эта карточка доступна только для чтения.",
     cardAlreadyOpenInSeparateWindow: "Эта карточка уже открыта в отдельном окне.",
+    openCalendarView: "Открыть вид календаря",
+    openListView: "Открыть вид списка",
 };
 
 export let tr: Translation = {
@@ -4214,6 +4240,8 @@ export let tr: Translation = {
     readOnly: "salt okunur",
     cardIsReadOnly: "Bu kart salt okunurdur.",
     cardAlreadyOpenInSeparateWindow: "Bu kart zaten ayrı bir pencerede açılmış.",
+    openCalendarView: "Takvim görünümünü aç",
+    openListView: "Liste görünümünü aç",
 };
 
 export let zh: Translation = {
@@ -4515,4 +4543,6 @@ export let zh: Translation = {
     readOnly: "只读",
     cardIsReadOnly: "此卡片为只读模式。",
     cardAlreadyOpenInSeparateWindow: "此卡片已在单独窗口中打开。",
+    openCalendarView: "打开日历视图",
+    openListView: "打开列表视图",
 };

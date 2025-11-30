@@ -1,0 +1,328 @@
+diff --git a/node_modules/@schedule-x/calendar/dist/core.cjs.js b/node_modules/@schedule-x/calendar/dist/core.cjs.js
+index 990d1a1..d884c94 100644
+--- a/node_modules/@schedule-x/calendar/dist/core.cjs.js
++++ b/node_modules/@schedule-x/calendar/dist/core.cjs.js
+@@ -349,6 +349,59 @@ var WeekDay;
+ 
+ const DEFAULT_LOCALE = 'en-US';
+ const DEFAULT_FIRST_DAY_OF_WEEK = WeekDay.MONDAY;
++
++/**
++ * Normalizes a simple language code (e.g., "en", "zh") to a full locale code (e.g., "en-US", "zh-CN").
++ * Maps to all locales supported by ScheduleX calendar. If the locale is already in full format, returns it as-is.
++ * If the locale doesn't match a known language, falls back to "en-US" (English).
++ */
++const normalizeLocale = (locale) => {
++    if (!locale) {
++        return 'en-US'; // Default to English if no locale provided
++    }
++    if (locale.includes('-')) {
++        // Already in full format, check if it's supported
++        const supportedLocales = [
++            'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'en-GB', 'en-US', 'es-ES', 'et-EE', 'fi-FI',
++            'fr-FR', 'fr-CH', 'hr-HR', 'id-ID', 'it-IT', 'ja-JP', 'ko-KR', 'ky-KG', 'lt-LT',
++            'mk-MK', 'nl-NL', 'pl-PL', 'pt-BR', 'ro-RO', 'ru-RU', 'sk-SK', 'sl-SI', 'sr-Latn-RS',
++            'sr-RS', 'sv-SE', 'tr-TR', 'uk-UA', 'zh-CN', 'zh-TW'
++        ];
++        return supportedLocales.includes(locale) ? locale : 'en-US';
++    }
++    const localeMap = {
++        'ca': 'ca-ES',      // Catalan
++        'cs': 'cs-CZ',      // Czech
++        'da': 'da-DK',      // Danish
++        'de': 'de-DE',      // German
++        'en': 'en-US',      // English (US)
++        'es': 'es-ES',      // Spanish
++        'et': 'et-EE',      // Estonian
++        'fi': 'fi-FI',      // Finnish
++        'fr': 'fr-FR',      // French
++        'hr': 'hr-HR',      // Croatian
++        'id': 'id-ID',      // Indonesian
++        'it': 'it-IT',      // Italian
++        'ja': 'ja-JP',      // Japanese
++        'ko': 'ko-KR',      // Korean
++        'ky': 'ky-KG',      // Kyrgyz
++        'lt': 'lt-LT',      // Lithuanian
++        'mk': 'mk-MK',      // Macedonian
++        'nl': 'nl-NL',      // Dutch
++        'pl': 'pl-PL',      // Polish
++        'pt': 'pt-BR',      // Portuguese (Brazilian)
++        'ro': 'ro-RO',      // Romanian
++        'ru': 'ru-RU',      // Russian
++        'sk': 'sk-SK',      // Slovak
++        'sl': 'sl-SI',      // Slovenian
++        'sr': 'sr-Latn-RS', // Serbian (Latin)
++        'sv': 'sv-SE',      // Swedish
++        'tr': 'tr-TR',      // Turkish
++        'uk': 'uk-UA',      // Ukrainian
++        'zh': 'zh-CN',      // Chinese (Simplified)
++    };
++    return localeMap[locale.toLowerCase()] || 'en-US';
++};
+ const DEFAULT_EVENT_COLOR_NAME = 'primary';
+ 
+ class CalendarEventImpl {
+@@ -1139,7 +1192,10 @@ function ViewSelection() {
+     const viewLabelId = randomStringId();
+     const [availableViews, setAvailableViews] = hooks.useState([]);
+     signals.useSignalEffect(() => {
+-        if ($app.calendarState.isCalendarSmall.value) {
++        if (!$app.config.isResponsive.value) {
++            setAvailableViews($app.config.views.value);
++        }
++        else if ($app.calendarState.isCalendarSmall.value) {
+             setAvailableViews($app.config.views.value.filter((view) => view.hasSmallScreenCompat));
+         }
+         else {
+@@ -5063,6 +5119,7 @@ class CalendarConfigImpl {
+     constructor(locale = DEFAULT_LOCALE, firstDayOfWeek = DEFAULT_FIRST_DAY_OF_WEEK, defaultView = InternalViewName.Week, views = [], dayBoundaries = DEFAULT_DAY_BOUNDARIES, weekOptions, calendars = {}, plugins = {}, isDark = false, isResponsive = true, callbacks = {}, _customComponentFns = {}, minDate = undefined, maxDate = undefined, monthGridOptions = {
+         nEventsPerDay: 4,
+     }, theme = undefined, translations = {}, showWeekNumbers = false, timezone = 'UTC') {
++        locale = normalizeLocale(locale);
+         Object.defineProperty(this, "defaultView", {
+             enumerable: true,
+             configurable: true,
+@@ -5347,12 +5404,12 @@ class CalendarConfigBuilder {
+         const maxDate = this.maxDate
+             ? Temporal.PlainDate.from(this.maxDate)
+             : undefined;
+-        return new CalendarConfigImpl(this.locale || DEFAULT_LOCALE, typeof this.firstDayOfWeek === 'number'
++        return new CalendarConfigImpl(normalizeLocale(this.locale || DEFAULT_LOCALE), typeof this.firstDayOfWeek === 'number'
+             ? this.firstDayOfWeek
+             : DEFAULT_FIRST_DAY_OF_WEEK, this.defaultView || InternalViewName.Week, this.views || [], this.dayBoundaries || DEFAULT_DAY_BOUNDARIES, this.weekOptions, this.calendars, this.plugins, this.isDark, this.isResponsive, this.callbacks, {}, minDate, maxDate, this.monthGridOptions, this.theme, this.translations, this.showWeekNumbers, this.timezone);
+     }
+     withLocale(locale) {
+-        this.locale = locale;
++        this.locale = normalizeLocale(locale);
+         return this;
+     }
+     withTranslations(translation) {
+@@ -5806,7 +5863,7 @@ class ConfigBuilder {
+         return new ConfigImpl(this.locale, this.firstDayOfWeek, this.timezone, this.min, this.max, this.placement, this.listeners, this.style, this.teleportTo, this.label, this.name, this.disabled, this.hasPlaceholder);
+     }
+     withLocale(locale) {
+-        this.locale = locale;
++        this.locale = normalizeLocale(locale);
+         return this;
+     }
+     withFirstDayOfWeek(firstDayOfWeek) {
+diff --git a/node_modules/@schedule-x/calendar/dist/core.js b/node_modules/@schedule-x/calendar/dist/core.js
+index 674d713..2927b6c 100644
+--- a/node_modules/@schedule-x/calendar/dist/core.js
++++ b/node_modules/@schedule-x/calendar/dist/core.js
+@@ -347,6 +347,59 @@ var WeekDay;
+ 
+ const DEFAULT_LOCALE = 'en-US';
+ const DEFAULT_FIRST_DAY_OF_WEEK = WeekDay.MONDAY;
++
++/**
++ * Normalizes a simple language code (e.g., "en", "zh") to a full locale code (e.g., "en-US", "zh-CN").
++ * Maps to all locales supported by ScheduleX calendar. If the locale is already in full format, returns it as-is.
++ * If the locale doesn't match a known language, falls back to "en-US" (English).
++ */
++const normalizeLocale = (locale) => {
++    if (!locale) {
++        return 'en-US'; // Default to English if no locale provided
++    }
++    if (locale.includes('-')) {
++        // Already in full format, check if it's supported
++        const supportedLocales = [
++            'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'en-GB', 'en-US', 'es-ES', 'et-EE', 'fi-FI',
++            'fr-FR', 'fr-CH', 'hr-HR', 'id-ID', 'it-IT', 'ja-JP', 'ko-KR', 'ky-KG', 'lt-LT',
++            'mk-MK', 'nl-NL', 'pl-PL', 'pt-BR', 'ro-RO', 'ru-RU', 'sk-SK', 'sl-SI', 'sr-Latn-RS',
++            'sr-RS', 'sv-SE', 'tr-TR', 'uk-UA', 'zh-CN', 'zh-TW'
++        ];
++        return supportedLocales.includes(locale) ? locale : 'en-US';
++    }
++    const localeMap = {
++        'ca': 'ca-ES',      // Catalan
++        'cs': 'cs-CZ',      // Czech
++        'da': 'da-DK',      // Danish
++        'de': 'de-DE',      // German
++        'en': 'en-US',      // English (US)
++        'es': 'es-ES',      // Spanish
++        'et': 'et-EE',      // Estonian
++        'fi': 'fi-FI',      // Finnish
++        'fr': 'fr-FR',      // French
++        'hr': 'hr-HR',      // Croatian
++        'id': 'id-ID',      // Indonesian
++        'it': 'it-IT',      // Italian
++        'ja': 'ja-JP',      // Japanese
++        'ko': 'ko-KR',      // Korean
++        'ky': 'ky-KG',      // Kyrgyz
++        'lt': 'lt-LT',      // Lithuanian
++        'mk': 'mk-MK',      // Macedonian
++        'nl': 'nl-NL',      // Dutch
++        'pl': 'pl-PL',      // Polish
++        'pt': 'pt-BR',      // Portuguese (Brazilian)
++        'ro': 'ro-RO',      // Romanian
++        'ru': 'ru-RU',      // Russian
++        'sk': 'sk-SK',      // Slovak
++        'sl': 'sl-SI',      // Slovenian
++        'sr': 'sr-Latn-RS', // Serbian (Latin)
++        'sv': 'sv-SE',      // Swedish
++        'tr': 'tr-TR',      // Turkish
++        'uk': 'uk-UA',      // Ukrainian
++        'zh': 'zh-CN',      // Chinese (Simplified)
++    };
++    return localeMap[locale.toLowerCase()] || 'en-US';
++};
+ const DEFAULT_EVENT_COLOR_NAME = 'primary';
+ 
+ class CalendarEventImpl {
+@@ -1137,7 +1190,10 @@ function ViewSelection() {
+     const viewLabelId = randomStringId();
+     const [availableViews, setAvailableViews] = useState([]);
+     useSignalEffect(() => {
+-        if ($app.calendarState.isCalendarSmall.value) {
++        if (!$app.config.isResponsive.value) {
++            setAvailableViews($app.config.views.value);
++        }
++        else if ($app.calendarState.isCalendarSmall.value) {
+             setAvailableViews($app.config.views.value.filter((view) => view.hasSmallScreenCompat));
+         }
+         else {
+@@ -5061,6 +5117,7 @@ class CalendarConfigImpl {
+     constructor(locale = DEFAULT_LOCALE, firstDayOfWeek = DEFAULT_FIRST_DAY_OF_WEEK, defaultView = InternalViewName.Week, views = [], dayBoundaries = DEFAULT_DAY_BOUNDARIES, weekOptions, calendars = {}, plugins = {}, isDark = false, isResponsive = true, callbacks = {}, _customComponentFns = {}, minDate = undefined, maxDate = undefined, monthGridOptions = {
+         nEventsPerDay: 4,
+     }, theme = undefined, translations = {}, showWeekNumbers = false, timezone = 'UTC') {
++        locale = normalizeLocale(locale);
+         Object.defineProperty(this, "defaultView", {
+             enumerable: true,
+             configurable: true,
+@@ -5345,12 +5402,12 @@ class CalendarConfigBuilder {
+         const maxDate = this.maxDate
+             ? Temporal.PlainDate.from(this.maxDate)
+             : undefined;
+-        return new CalendarConfigImpl(this.locale || DEFAULT_LOCALE, typeof this.firstDayOfWeek === 'number'
++        return new CalendarConfigImpl(normalizeLocale(this.locale || DEFAULT_LOCALE), typeof this.firstDayOfWeek === 'number'
+             ? this.firstDayOfWeek
+             : DEFAULT_FIRST_DAY_OF_WEEK, this.defaultView || InternalViewName.Week, this.views || [], this.dayBoundaries || DEFAULT_DAY_BOUNDARIES, this.weekOptions, this.calendars, this.plugins, this.isDark, this.isResponsive, this.callbacks, {}, minDate, maxDate, this.monthGridOptions, this.theme, this.translations, this.showWeekNumbers, this.timezone);
+     }
+     withLocale(locale) {
+-        this.locale = locale;
++        this.locale = normalizeLocale(locale);
+         return this;
+     }
+     withTranslations(translation) {
+@@ -5804,7 +5861,7 @@ class ConfigBuilder {
+         return new ConfigImpl(this.locale, this.firstDayOfWeek, this.timezone, this.min, this.max, this.placement, this.listeners, this.style, this.teleportTo, this.label, this.name, this.disabled, this.hasPlaceholder);
+     }
+     withLocale(locale) {
+-        this.locale = locale;
++        this.locale = normalizeLocale(locale);
+         return this;
+     }
+     withFirstDayOfWeek(firstDayOfWeek) {
+diff --git a/node_modules/@schedule-x/calendar/dist/core.umd.js b/node_modules/@schedule-x/calendar/dist/core.umd.js
+index a5b7cd0..8fa4dbe 100644
+--- a/node_modules/@schedule-x/calendar/dist/core.umd.js
++++ b/node_modules/@schedule-x/calendar/dist/core.umd.js
+@@ -345,8 +345,61 @@
+       WeekDay[WeekDay["SUNDAY"] = 7] = "SUNDAY";
+   })(WeekDay || (WeekDay = {}));
+ 
+-  const DEFAULT_LOCALE = 'en-US';
+-  const DEFAULT_FIRST_DAY_OF_WEEK = WeekDay.MONDAY;
++const DEFAULT_LOCALE = 'en-US';
++const DEFAULT_FIRST_DAY_OF_WEEK = WeekDay.MONDAY;
++
++/**
++ * Normalizes a simple language code (e.g., "en", "zh") to a full locale code (e.g., "en-US", "zh-CN").
++ * Maps to all locales supported by ScheduleX calendar. If the locale is already in full format, returns it as-is.
++ * If the locale doesn't match a known language, falls back to "en-US" (English).
++ */
++const normalizeLocale = (locale) => {
++    if (!locale) {
++        return 'en-US'; // Default to English if no locale provided
++    }
++    if (locale.includes('-')) {
++        // Already in full format, check if it's supported
++        const supportedLocales = [
++            'ca-ES', 'cs-CZ', 'da-DK', 'de-DE', 'en-GB', 'en-US', 'es-ES', 'et-EE', 'fi-FI',
++            'fr-FR', 'fr-CH', 'hr-HR', 'id-ID', 'it-IT', 'ja-JP', 'ko-KR', 'ky-KG', 'lt-LT',
++            'mk-MK', 'nl-NL', 'pl-PL', 'pt-BR', 'ro-RO', 'ru-RU', 'sk-SK', 'sl-SI', 'sr-Latn-RS',
++            'sr-RS', 'sv-SE', 'tr-TR', 'uk-UA', 'zh-CN', 'zh-TW'
++        ];
++        return supportedLocales.includes(locale) ? locale : 'en-US';
++    }
++    const localeMap = {
++        'ca': 'ca-ES',      // Catalan
++        'cs': 'cs-CZ',      // Czech
++        'da': 'da-DK',      // Danish
++        'de': 'de-DE',      // German
++        'en': 'en-US',      // English (US)
++        'es': 'es-ES',      // Spanish
++        'et': 'et-EE',      // Estonian
++        'fi': 'fi-FI',      // Finnish
++        'fr': 'fr-FR',      // French
++        'hr': 'hr-HR',      // Croatian
++        'id': 'id-ID',      // Indonesian
++        'it': 'it-IT',      // Italian
++        'ja': 'ja-JP',      // Japanese
++        'ko': 'ko-KR',      // Korean
++        'ky': 'ky-KG',      // Kyrgyz
++        'lt': 'lt-LT',      // Lithuanian
++        'mk': 'mk-MK',      // Macedonian
++        'nl': 'nl-NL',      // Dutch
++        'pl': 'pl-PL',      // Polish
++        'pt': 'pt-BR',      // Portuguese (Brazilian)
++        'ro': 'ro-RO',      // Romanian
++        'ru': 'ru-RU',      // Russian
++        'sk': 'sk-SK',      // Slovak
++        'sl': 'sl-SI',      // Slovenian
++        'sr': 'sr-Latn-RS', // Serbian (Latin)
++        'sv': 'sv-SE',      // Swedish
++        'tr': 'tr-TR',      // Turkish
++        'uk': 'uk-UA',      // Ukrainian
++        'zh': 'zh-CN',      // Chinese (Simplified)
++    };
++    return localeMap[locale.toLowerCase()] || 'en-US';
++};
+   const DEFAULT_EVENT_COLOR_NAME = 'primary';
+ 
+   class CalendarEventImpl {
+@@ -1137,7 +1190,10 @@
+       const viewLabelId = randomStringId();
+       const [availableViews, setAvailableViews] = hooks.useState([]);
+       signals.useSignalEffect(() => {
+-          if ($app.calendarState.isCalendarSmall.value) {
++          if (!$app.config.isResponsive.value) {
++              setAvailableViews($app.config.views.value);
++          }
++          else if ($app.calendarState.isCalendarSmall.value) {
+               setAvailableViews($app.config.views.value.filter((view) => view.hasSmallScreenCompat));
+           }
+           else {
+@@ -5061,6 +5117,7 @@
+       constructor(locale = DEFAULT_LOCALE, firstDayOfWeek = DEFAULT_FIRST_DAY_OF_WEEK, defaultView = InternalViewName.Week, views = [], dayBoundaries = DEFAULT_DAY_BOUNDARIES, weekOptions, calendars = {}, plugins = {}, isDark = false, isResponsive = true, callbacks = {}, _customComponentFns = {}, minDate = undefined, maxDate = undefined, monthGridOptions = {
+           nEventsPerDay: 4,
+       }, theme = undefined, translations = {}, showWeekNumbers = false, timezone = 'UTC') {
++          locale = normalizeLocale(locale);
+           Object.defineProperty(this, "defaultView", {
+               enumerable: true,
+               configurable: true,
+@@ -5345,12 +5402,12 @@
+           const maxDate = this.maxDate
+               ? Temporal.PlainDate.from(this.maxDate)
+               : undefined;
+-          return new CalendarConfigImpl(this.locale || DEFAULT_LOCALE, typeof this.firstDayOfWeek === 'number'
++          return new CalendarConfigImpl(normalizeLocale(this.locale || DEFAULT_LOCALE), typeof this.firstDayOfWeek === 'number'
+               ? this.firstDayOfWeek
+               : DEFAULT_FIRST_DAY_OF_WEEK, this.defaultView || InternalViewName.Week, this.views || [], this.dayBoundaries || DEFAULT_DAY_BOUNDARIES, this.weekOptions, this.calendars, this.plugins, this.isDark, this.isResponsive, this.callbacks, {}, minDate, maxDate, this.monthGridOptions, this.theme, this.translations, this.showWeekNumbers, this.timezone);
+       }
+       withLocale(locale) {
+-          this.locale = locale;
++          this.locale = normalizeLocale(locale);
+           return this;
+       }
+       withTranslations(translation) {
+@@ -5804,7 +5861,7 @@
+           return new ConfigImpl(this.locale, this.firstDayOfWeek, this.timezone, this.min, this.max, this.placement, this.listeners, this.style, this.teleportTo, this.label, this.name, this.disabled, this.hasPlaceholder);
+       }
+       withLocale(locale) {
+-          this.locale = locale;
++          this.locale = normalizeLocale(locale);
+           return this;
+       }
+       withFirstDayOfWeek(firstDayOfWeek) {

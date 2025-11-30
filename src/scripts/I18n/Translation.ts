@@ -254,4 +254,6 @@ export default interface Translation
     readOnly: string;
     cardIsReadOnly: string;
     cardAlreadyOpenInSeparateWindow: string;
+    openCalendarView: string;
+    openListView: string;
 }
