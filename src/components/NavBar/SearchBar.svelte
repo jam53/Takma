@@ -5,6 +5,7 @@
     import {toast} from "svelte-sonner";
     import {I18n} from "../../scripts/I18n/I18n";
     import SearchBox from "./SearchBox.svelte";
+    import {clickOutside} from "../../scripts/ClickOutside";
 
     let searchBar: HTMLInputElement = $state();
     let containingDiv: HTMLElement = $state();
@@ -19,6 +20,9 @@
 
         searchBarValue.value = "";
         searchBar.blur();
+
+        // Clear App.svelte's `lastFocusedElement`, so it won't refocus the search bar after alt-tabbing back into Takma
+        window.clearLastFocusedElement?.();
 
         showSearchBox = false;
     }
@@ -71,7 +75,8 @@
            onchange={showSearchBar}
            onfocus={showSearchBar}
            onkeydown={handleKeyDown}
-           onblur={() => searchBarValue.value === "" && collapseSearchBar()}
+           use:clickOutside
+           onclick_outside={() => searchBarValue.value === "" && collapseSearchBar()}
     />
 </div>
 <SearchBox {showSearchBox} closeSearchBar={collapseSearchBar}/>

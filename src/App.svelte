@@ -150,6 +150,10 @@
     window.addEventListener("focus", () => lastFocusedElement = document.activeElement, true);
     window.addEventListener("blur", () => lastFocusedElement?.focus());
 
+    window.clearLastFocusedElement = () => {
+        lastFocusedElement = null;
+    };
+
     /**
      * This function will be called when this component enters the DOM, AKA for this component in particular when the app is launched. It then restores the window state Takma was in the last time it was open.
      * This function also does some checks to make sure the window can fit on the screen. In the event that the window wouldn't fit on screen, it gets repositioned and made smaller.
