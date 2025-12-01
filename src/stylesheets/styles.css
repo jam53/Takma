@@ -4,22 +4,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
-
-    --sdt-bg-main: transparent; /* The `--sdt` related properties are for the datepicker in the DueDatePopup.svelte component */
-    --sdt-shadow-color: transparent;
-    --sdt-color: var(--main-text);
-    --sdt-primary: var(--accent);
-    --sdt-btn-bg-hover: var(--border);
-    --sdt-btn-header-bg-hover: var(--border);
-    --sdt-color-selected: var(--main-text);
-    --sdt-today-indicator: var(--accent);
-    --sdt-clock-bg: var(--border);
-    --sdt-today-bg: var(--accent-button-hover);
-    --sdt-today-color: white;
-    --sdt-clear-color: var(--danger);
-    --sdt-clear-bg: transparent;
-    --sdt-clear-hover-color: white;
-    --sdt-clear-hover-bg: var(--danger);
 }
 
 html[data-theme="light"] {

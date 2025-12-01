@@ -138,4 +138,39 @@
     .title {
         text-align: center;
     }
+
+    :root {
+        /* The `--sdt` related properties are for the SveltyPicker date picker */
+        --sdt-bg-main: transparent;
+        --sdt-shadow-color: transparent;
+        --sdt-color: var(--main-text);
+        --sdt-primary: var(--accent);
+        --sdt-btn-bg-hover: var(--border);
+        --sdt-btn-header-bg-hover: var(--border);
+        --sdt-color-selected: var(--main-text);
+        --sdt-today-indicator: var(--accent);
+        --sdt-clock-bg: var(--border);
+        --sdt-today-bg: var(--accent-button-hover);
+        --sdt-today-color: white;
+        --sdt-clear-color: var(--danger);
+        --sdt-clear-bg: transparent;
+        --sdt-clear-hover-color: white;
+        --sdt-clear-hover-bg: var(--danger);
+        --sdt-table-today-indicator: var(--accent);
+        --sdt-bg-selected: var(--accent);
+    }
+
+    :global(.sdt-svg) {
+        fill: var(--main-text) !important;
+    }
+
+    :global(.sdt-action-btn) {
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    :global(.std-btn:hover), :global(.sdt-time-btn:hover) {
+        background-color: var(--border) !important;
+        transition: 0.3s;
+    }
 </style>
