@@ -256,4 +256,5 @@ export default interface Translation
     cardAlreadyOpenInSeparateWindow: string;
     openCalendarView: string;
     openListView: string;
+    couldntSaveSaveFile: string;
 }

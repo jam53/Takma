@@ -303,6 +303,7 @@ export let en: Translation = {
     cardAlreadyOpenInSeparateWindow: "This card has already been opened in a separate window.",
     openCalendarView: "Open calendar view",
     openListView: "Open list view",
+    couldntSaveSaveFile: "Couldn't save the save file: $|00|$",
 };
 
 export let ar: Translation = {
@@ -606,6 +607,7 @@ export let ar: Translation = {
     cardAlreadyOpenInSeparateWindow: "تم فتح هذه البطاقة بالفعل في نافذة منفصلة.",
     openCalendarView: "افتح عرض التقويم",
     openListView: "افتح عرض القائمة",
+    couldntSaveSaveFile: "تعذر حفظ ملف الحفظ: $|00|$",
 };
 
 export let de: Translation = {
@@ -909,6 +911,7 @@ export let de: Translation = {
     cardAlreadyOpenInSeparateWindow: "Diese Karte wurde bereits in einem separaten Fenster geöffnet.",
     openCalendarView: "Kalenderansicht öffnen",
     openListView: "Listenansicht öffnen",
+    couldntSaveSaveFile: "Die Speicherdatei konnte nicht gespeichert werden: $|00|$",
 };
 
 export let es: Translation = {
@@ -1212,6 +1215,7 @@ export let es: Translation = {
     cardAlreadyOpenInSeparateWindow: "Esta tarjeta ya se ha abierto en una ventana separada.",
     openCalendarView: "Abrir vista de calendario",
     openListView: "Abrir vista de lista",
+    couldntSaveSaveFile: "No se pudo guardar el archivo de guardado: $|00|$",
 };
 
 export let et: Translation = {
@@ -1515,6 +1519,7 @@ export let et: Translation = {
     cardAlreadyOpenInSeparateWindow: "See kaart on juba avatud eraldi aknas.",
     openCalendarView: "Ava kalendrivaade",
     openListView: "Ava loendivaade",
+    couldntSaveSaveFile: "Salvestusfaili ei saanud salvestada: $|00|$",
 };
 
 export let fr: Translation = {
@@ -1818,6 +1823,7 @@ export let fr: Translation = {
     cardAlreadyOpenInSeparateWindow: "Cette carte a déjà été ouverte dans une fenêtre séparée.",
     openCalendarView: "Ouvrir la vue calendrier",
     openListView: "Ouvrir la vue liste",
+    couldntSaveSaveFile: "Impossible d'enregistrer le fichier de sauvegarde : $|00|$",
 };
 
 export let hi: Translation = {
@@ -2121,6 +2127,7 @@ export let hi: Translation = {
     cardAlreadyOpenInSeparateWindow: "यह कार्ड पहले ही एक अलग विंडो में खोला जा चुका है।",
     openCalendarView: "कैलेंडर दृश्य खोलें",
     openListView: "सूची दृश्य खोलें",
+    couldntSaveSaveFile: "सेव फ़ाइल को सहेजा नहीं जा सका: $|00|$",
 };
 
 export let id: Translation = {
@@ -2424,6 +2431,7 @@ export let id: Translation = {
     cardAlreadyOpenInSeparateWindow: "Kartu ini sudah dibuka di jendela terpisah.",
     openCalendarView: "Buka tampilan kalender",
     openListView: "Buka tampilan daftar",
+    couldntSaveSaveFile: "Tidak dapat menyimpan file simpanan: $|00|$",
 };
 
 export let ja: Translation = {
@@ -2727,6 +2735,7 @@ export let ja: Translation = {
     cardAlreadyOpenInSeparateWindow: "このカードはすでに別のウィンドウで開かれています。",
     openCalendarView: "カレンダー表示を開く",
     openListView: "リスト表示を開く",
+    couldntSaveSaveFile: "セーブファイルを保存できませんでした: $|00|$",
 };
 
 export let ko: Translation = {
@@ -3030,6 +3039,7 @@ export let ko: Translation = {
     cardAlreadyOpenInSeparateWindow: "이 카드는 이미 별도의 창에서 열려 있습니다.",
     openCalendarView: "달력 보기 열기",
     openListView: "목록 보기 열기",
+    couldntSaveSaveFile: "세이브 파일을 저장하지 못했습니다: $|00|$",
 };
 
 export let nl: Translation = {
@@ -3333,6 +3343,7 @@ export let nl: Translation = {
     cardAlreadyOpenInSeparateWindow: "Deze kaart is al in een apart venster geopend.",
     openCalendarView: "Kalenderweergave openen",
     openListView: "Lijstweergave openen",
+    couldntSaveSaveFile: "Het savebestand kon niet worden opgeslagen: $|00|$",
 };
 
 export let pt: Translation = {
@@ -3636,6 +3647,7 @@ export let pt: Translation = {
     cardAlreadyOpenInSeparateWindow: "Este cartão já foi aberto em uma janela separada.",
     openCalendarView: "Abrir vista de calendário",
     openListView: "Abrir vista de lista",
+    couldntSaveSaveFile: "Não foi possível salvar o arquivo de salvamento: $|00|$",
 };
 
 export let ru: Translation = {
@@ -3939,6 +3951,7 @@ export let ru: Translation = {
     cardAlreadyOpenInSeparateWindow: "Эта карточка уже открыта в отдельном окне.",
     openCalendarView: "Открыть вид календаря",
     openListView: "Открыть вид списка",
+    couldntSaveSaveFile: "Не удалось сохранить файл сохранения: $|00|$",
 };
 
 export let tr: Translation = {
@@ -4242,6 +4255,7 @@ export let tr: Translation = {
     cardAlreadyOpenInSeparateWindow: "Bu kart zaten ayrı bir pencerede açılmış.",
     openCalendarView: "Takvim görünümünü aç",
     openListView: "Liste görünümünü aç",
+    couldntSaveSaveFile: "Kayıt dosyası kaydedilemedi: $|00|$",
 };
 
 export let zh: Translation = {
@@ -4545,4 +4559,5 @@ export let zh: Translation = {
     cardAlreadyOpenInSeparateWindow: "此卡片已在单独窗口中打开。",
     openCalendarView: "打开日历视图",
     openListView: "打开列表视图",
+    couldntSaveSaveFile: "无法保存存档文件：$|00|$",
 };

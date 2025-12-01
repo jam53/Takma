@@ -6,6 +6,7 @@ import {I18n} from "../I18n/I18n";
 import {tempDir} from "@tauri-apps/api/path";
 import "../StringExtensions.ts";
 import {debug, info, warn} from "@tauri-apps/plugin-log";
+import {toast} from "svelte-sonner";
 
 /**
  * This class is used to save/load data within Takma
@@ -80,7 +81,13 @@ export class SaveLoadManager
     public static async saveToDisk(): Promise<void>
     {
         debug("Saving save file to disk");
-        await writeTextFile(await join(this.getSaveDirectoryPath(), this.saveFilename), JSON.stringify(this.data, null, 0));
+        try {
+            await writeTextFile(await join(this.getSaveDirectoryPath(), this.saveFilename), JSON.stringify(this.data, null, 0));
+        }
+        catch (e) {
+            toast.error(I18n.t("couldntSaveSaveFile", e as string));
+            throw e;
+        }
     }
 
     /**
