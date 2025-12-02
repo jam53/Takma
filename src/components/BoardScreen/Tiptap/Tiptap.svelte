@@ -205,7 +205,19 @@
                         ];
                     },
                 }),
-                TextStyle, // Needs to be added before the Color extension
+                TextStyle.extend({
+                    renderMarkdown: (node: any, helpers: any) => {
+                        const color = node.attrs?.color;
+                        if (color) {
+                            // Wrap content with HTML span containing color style
+                            // Note: If multiple adjacent text nodes have different colors,
+                            // they may be grouped here. This is fixed in post-processing
+                            // by the fixGroupedColorSpans function.
+                            return `<span style="color: ${color}">${helpers.renderChildren(node)}</span>`;
+                        }
+                        return helpers.renderChildren(node);
+                    },
+                }), // Needs to be added before the Color extension
                 Color,
                 Image.configure({
                     inline: true,
@@ -256,7 +268,9 @@
                 isTextStyle = editor?.isActive('textStyle') ?? false;
             },
             onUpdate: ({editor}) => {
-                cardDescription = tiptapDetailsSummaryToMarkdownSyntax(editor.getMarkdown());
+                let markdown = editor.getMarkdown();
+                markdown = fixGroupedColorSpans(markdown, editor);
+                cardDescription = tiptapDetailsSummaryToMarkdownSyntax(markdown);
             },
             onCreate: ({editor}) => {
                 // Force placeholder to show on initial load if editor is empty
@@ -268,6 +282,10 @@
                     const transaction = state.tr;
                     view.dispatch(transaction);
                 }
+                
+                // Post-process the content to inject color information from HTML spans
+                // This handles cases where inline HTML in markdown isn't recognized as HTML tokens
+                injectColorFromHTMLSpans(editor);
             },
         });
     });
@@ -600,6 +618,276 @@ ${contentText}
         }
 
         return text;
+    }
+
+    /**
+     * Fixes incorrectly grouped color spans in markdown.
+     * When multiple adjacent text nodes have different colors, Tiptap's markdown renderer
+     * sometimes groups them into a single span. This function splits them correctly.
+     */
+    function fixGroupedColorSpans(markdown: string, editor: Editor): string {
+        if (!editor) return markdown;
+
+        // Get the editor's JSON to see what colors each character should have
+        const json = editor.getJSON();
+        if (!json.content) return markdown;
+
+        // Build a map of character positions to their colors
+        const colorMap: Array<{ text: string; color: string | null; index: number }> = [];
+
+        function traverseNode(node: any, textOffset: number): number {
+            if (node.type === 'text' && node.text) {
+                const colorMark = node.marks?.find((m: any) => m.type === 'textStyle' && m.attrs?.color);
+                const color = colorMark?.attrs?.color || null;
+
+                for (let i = 0; i < node.text.length; i++) {
+                    colorMap.push({
+                        text: node.text[i],
+                        color,
+                        index: textOffset + i
+                    });
+                }
+
+                return textOffset + node.text.length;
+            }
+
+            if (node.content && Array.isArray(node.content)) {
+                let currentOffset = textOffset;
+                for (const child of node.content) {
+                    currentOffset = traverseNode(child, currentOffset);
+                }
+                return currentOffset;
+            }
+
+            return textOffset;
+        }
+
+        traverseNode(json, 0);
+
+        // Find all color spans in the markdown
+        const colorSpanRegex = /<span\s+style\s*=\s*["']color:\s*([^"']+)["'][^>]*>(.*?)<\/span>/gis;
+        const matches: Array<{ fullMatch: string; color: string; content: string; index: number }> = [];
+
+        let match;
+        while ((match = colorSpanRegex.exec(markdown)) !== null) {
+            matches.push({
+                fullMatch: match[0],
+                color: match[1].trim(),
+                content: match[2],
+                index: match.index
+            });
+        }
+
+        // Process each color span
+        let result = markdown;
+        let offset = 0; // Track offset from previous replacements
+
+        for (const spanMatch of matches) {
+            const spanContent = spanMatch.content;
+
+            // Find the position of this span's content in the color map
+            // We need to find where this text appears in the editor's content
+            const spanStartInMarkdown = spanMatch.index + offset;
+
+            // Try to find the text in the color map
+            // Since we don't have exact position mapping, we'll search for the text pattern
+            let foundStart = -1;
+            for (let i = 0; i < colorMap.length - spanContent.length + 1; i++) {
+                const segment = colorMap.slice(i, i + spanContent.length).map(c => c.text).join('');
+                if (segment === spanContent) {
+                    foundStart = i;
+                    break;
+                }
+            }
+
+            // If we found the text and it has multiple colors, split it
+            if (foundStart !== -1 && spanContent.length > 1) {
+                const segmentColors = colorMap.slice(foundStart, foundStart + spanContent.length).map(c => c.color);
+                const uniqueColors = new Set(segmentColors.filter(Boolean));
+
+                // If there are multiple colors, split the span
+                if (uniqueColors.size > 1) {
+                    let splitContent = '';
+                    let currentColor: string | null = null;
+                    let currentText = '';
+
+                    for (let i = 0; i < spanContent.length; i++) {
+                        const charColor = colorMap[foundStart + i]?.color || null;
+
+                        if (charColor !== currentColor) {
+                            // Color changed - close previous span and start new one
+                            if (currentText) {
+                                if (currentColor) {
+                                    splitContent += `<span style="color: ${currentColor}">${currentText}</span>`;
+                                } else {
+                                    splitContent += currentText;
+                                }
+                            }
+                            currentColor = charColor;
+                            currentText = spanContent[i];
+                        } else {
+                            currentText += spanContent[i];
+                        }
+                    }
+
+                    // Close the last span
+                    if (currentText) {
+                        if (currentColor) {
+                            splitContent += `<span style="color: ${currentColor}">${currentText}</span>`;
+                        } else {
+                            splitContent += currentText;
+                        }
+                    }
+
+                    // Replace the grouped span with the split version
+                    const before = result.substring(0, spanStartInMarkdown);
+                    const after = result.substring(spanStartInMarkdown + spanMatch.fullMatch.length);
+                    result = before + splitContent + after;
+                    offset += splitContent.length - spanMatch.fullMatch.length;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Post-processes the editor content to inject color information from HTML spans in the original markdown.
+     * This handles cases where inline HTML in markdown isn't recognized as HTML tokens by the parser.
+     */
+    function injectColorFromHTMLSpans(editor: Editor) {
+        if (!editor) return;
+        
+        // Get the original markdown to find HTML color spans
+        const originalMarkdown = cardDescription;
+        if (!originalMarkdown) return;
+
+        // Find all HTML color spans in the markdown
+        const colorSpanRegex = /<span\s+style\s*=\s*["']([^"']*color[^"']*)["'][^>]*>(.*?)<\/span>/gis;
+        const colorSpans: Array<{ color: string; text: string; index: number }> = [];
+
+        let match;
+        while ((match = colorSpanRegex.exec(originalMarkdown)) !== null) {
+            const styleAttr = match[1];
+            const content = match[2];
+            const colorMatch = styleAttr.match(/color\s*:\s*([^;]+)/i);
+
+            if (colorMatch) {
+                const color = colorMatch[1].trim();
+                // Find the position of this span in the markdown (before HTML tags)
+                const beforeSpan = originalMarkdown.substring(0, match.index);
+                const plainTextBefore = beforeSpan.replace(/<[^>]+>/g, ''); // Remove all HTML tags
+                const textIndex = plainTextBefore.length;
+
+                colorSpans.push({
+                    color,
+                    text: content,
+                    index: textIndex
+                });
+            }
+        }
+
+        if (colorSpans.length === 0) return;
+
+        // Get the current editor JSON and create a deep copy to modify
+        const json = JSON.parse(JSON.stringify(editor.getJSON()));
+        if (!json.content) return;
+
+        // Traverse the JSON to find text nodes and apply color marks
+        function applyColorsToNode(node: any, textOffset: number, usedSpans: Set<number>): number {
+            if (node.type === 'text' && node.text) {
+                const nodeStart = textOffset;
+                const nodeEnd = textOffset + node.text.length;
+                
+                // Check each color span to see if it matches this text node
+                for (let i = 0; i < colorSpans.length; i++) {
+                    if (usedSpans.has(i)) continue; // Skip already used spans
+                    
+                    const span = colorSpans[i];
+                    const spanStart = span.index;
+                    const spanEnd = span.index + span.text.length;
+                    
+                    // Try to find the span's text in this node's text
+                    // We use a more flexible matching approach
+                    const textIndex = node.text.indexOf(span.text);
+                    
+                    if (textIndex !== -1) {
+                        // Found the text in this node
+                        // Check if the position is approximately correct
+                        const expectedRelativeStart = Math.max(0, spanStart - nodeStart);
+                        const positionDiff = Math.abs(textIndex - expectedRelativeStart);
+                        
+                        // Allow small position differences (markdown parser might split differently)
+                        if (positionDiff <= 5 || textIndex === 0) {
+                            // Check if this is an exact match (entire node)
+                            const isExactMatch = textIndex === 0 && span.text.length === node.text.length;
+                            
+                            if (isExactMatch) {
+                                // Exact match - apply color to entire node
+                                // Create a new marks array to ensure proper structure
+                                const existingMarks = (node.marks || []).filter((m: any) => m.type !== 'textStyle');
+                                const newMarks = [
+                                    ...existingMarks,
+                                    {
+                                        type: 'textStyle',
+                                        attrs: { color: span.color }
+                                    }
+                                ];
+                                node.marks = newMarks;
+                                
+                                console.log(`Applied color ${span.color} to text node: "${node.text}"`);
+                                
+                                usedSpans.add(i);
+                                break; // Only apply one color per node
+                            } else if (textIndex === 0 && node.text.startsWith(span.text)) {
+                                // Partial match at the start - apply color to entire node for now
+                                // (Ideally we'd split, but this is a workaround)
+                                const existingMarks = (node.marks || []).filter((m: any) => m.type !== 'textStyle');
+                                const newMarks = [
+                                    ...existingMarks,
+                                    {
+                                        type: 'textStyle',
+                                        attrs: { color: span.color }
+                                    }
+                                ];
+                                node.marks = newMarks;
+                                
+                                console.log(`Applied color ${span.color} to partial text node: "${node.text}" (matched "${span.text}")`);
+                                
+                                usedSpans.add(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return textOffset + node.text.length;
+            }
+
+            if (node.content && Array.isArray(node.content)) {
+                let currentOffset = textOffset;
+                for (const child of node.content) {
+                    currentOffset = applyColorsToNode(child, currentOffset, usedSpans);
+                }
+                return currentOffset;
+            }
+
+            return textOffset;
+        }
+        
+        // Track which spans have been used
+        const usedSpans = new Set<number>();
+
+        // Apply colors to all nodes
+        applyColorsToNode(json, 0, usedSpans);
+
+        // Debug: log to verify marks are being added
+        console.log('Color spans found:', colorSpans);
+        console.log('Modified JSON sample (first text node with marks):', 
+            JSON.stringify(json.content?.[0]?.content?.find((n: any) => n.type === 'text' && n.marks), null, 2));
+
+        // Update the editor with the modified JSON
+        editor.commands.setContent(json);
     }
 </script>
 
