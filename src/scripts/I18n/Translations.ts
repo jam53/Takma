@@ -304,6 +304,7 @@ export let en: Translation = {
     openCalendarView: "Open calendar view",
     openListView: "Open list view",
     couldntSaveSaveFile: "Couldn't save the save file: $|00|$",
+    clearFormatting: "Clear formatting",
 };
 
 export let ar: Translation = {
@@ -608,6 +609,7 @@ export let ar: Translation = {
     openCalendarView: "افتح عرض التقويم",
     openListView: "افتح عرض القائمة",
     couldntSaveSaveFile: "تعذر حفظ ملف الحفظ: $|00|$",
+    clearFormatting: "مسح التنسيق",
 };
 
 export let de: Translation = {
@@ -912,6 +914,7 @@ export let de: Translation = {
     openCalendarView: "Kalenderansicht öffnen",
     openListView: "Listenansicht öffnen",
     couldntSaveSaveFile: "Die Speicherdatei konnte nicht gespeichert werden: $|00|$",
+    clearFormatting: "Formatierung löschen",
 };
 
 export let es: Translation = {
@@ -1216,6 +1219,7 @@ export let es: Translation = {
     openCalendarView: "Abrir vista de calendario",
     openListView: "Abrir vista de lista",
     couldntSaveSaveFile: "No se pudo guardar el archivo de guardado: $|00|$",
+    clearFormatting: "Borrar formato",
 };
 
 export let et: Translation = {
@@ -1520,6 +1524,7 @@ export let et: Translation = {
     openCalendarView: "Ava kalendrivaade",
     openListView: "Ava loendivaade",
     couldntSaveSaveFile: "Salvestusfaili ei saanud salvestada: $|00|$",
+    clearFormatting: "Eemalda vormindus",
 };
 
 export let fr: Translation = {
@@ -1824,6 +1829,7 @@ export let fr: Translation = {
     openCalendarView: "Ouvrir la vue calendrier",
     openListView: "Ouvrir la vue liste",
     couldntSaveSaveFile: "Impossible d'enregistrer le fichier de sauvegarde : $|00|$",
+    clearFormatting: "Effacer la mise en forme",
 };
 
 export let hi: Translation = {
@@ -2128,6 +2134,7 @@ export let hi: Translation = {
     openCalendarView: "कैलेंडर दृश्य खोलें",
     openListView: "सूची दृश्य खोलें",
     couldntSaveSaveFile: "सेव फ़ाइल को सहेजा नहीं जा सका: $|00|$",
+    clearFormatting: "फ़ॉर्मेटिंग हटाएँ",
 };
 
 export let id: Translation = {
@@ -2432,6 +2439,7 @@ export let id: Translation = {
     openCalendarView: "Buka tampilan kalender",
     openListView: "Buka tampilan daftar",
     couldntSaveSaveFile: "Tidak dapat menyimpan file simpanan: $|00|$",
+    clearFormatting: "Hapus pemformatan",
 };
 
 export let ja: Translation = {
@@ -2736,6 +2744,7 @@ export let ja: Translation = {
     openCalendarView: "カレンダー表示を開く",
     openListView: "リスト表示を開く",
     couldntSaveSaveFile: "セーブファイルを保存できませんでした: $|00|$",
+    clearFormatting: "書式をクリア",
 };
 
 export let ko: Translation = {
@@ -3040,6 +3049,7 @@ export let ko: Translation = {
     openCalendarView: "달력 보기 열기",
     openListView: "목록 보기 열기",
     couldntSaveSaveFile: "세이브 파일을 저장하지 못했습니다: $|00|$",
+    clearFormatting: "서식 지우기",
 };
 
 export let nl: Translation = {
@@ -3344,6 +3354,7 @@ export let nl: Translation = {
     openCalendarView: "Kalenderweergave openen",
     openListView: "Lijstweergave openen",
     couldntSaveSaveFile: "Het savebestand kon niet worden opgeslagen: $|00|$",
+    clearFormatting: "Opmaak wissen",
 };
 
 export let pt: Translation = {
@@ -3648,6 +3659,7 @@ export let pt: Translation = {
     openCalendarView: "Abrir vista de calendário",
     openListView: "Abrir vista de lista",
     couldntSaveSaveFile: "Não foi possível salvar o arquivo de salvamento: $|00|$",
+    clearFormatting: "Limpar formatação",
 };
 
 export let ru: Translation = {
@@ -3952,6 +3964,7 @@ export let ru: Translation = {
     openCalendarView: "Открыть вид календаря",
     openListView: "Открыть вид списка",
     couldntSaveSaveFile: "Не удалось сохранить файл сохранения: $|00|$",
+    clearFormatting: "Очистить форматирование",
 };
 
 export let tr: Translation = {
@@ -4256,6 +4269,7 @@ export let tr: Translation = {
     openCalendarView: "Takvim görünümünü aç",
     openListView: "Liste görünümünü aç",
     couldntSaveSaveFile: "Kayıt dosyası kaydedilemedi: $|00|$",
+    clearFormatting: "Biçimlendirmeyi temizle",
 };
 
 export let zh: Translation = {
@@ -4560,4 +4574,5 @@ export let zh: Translation = {
     openCalendarView: "打开日历视图",
     openListView: "打开列表视图",
     couldntSaveSaveFile: "无法保存存档文件：$|00|$",
+    clearFormatting: "清除格式",
 };

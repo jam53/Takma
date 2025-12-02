@@ -257,4 +257,5 @@ export default interface Translation
     openCalendarView: string;
     openListView: string;
     couldntSaveSaveFile: string;
+    clearFormatting: string;
 }
