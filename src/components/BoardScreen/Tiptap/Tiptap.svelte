@@ -203,6 +203,10 @@
                             }),
                         ];
                     },
+                    // Ensure underline is serialized as `__text__` in Markdown instead of the default `++text++`
+                    renderMarkdown: (mark: any, helpers: any) => {
+                        return `__${helpers.renderChildren(mark)}__`;
+                    },
                 }),
                 TextStyle.extend({
                     renderMarkdown: (node: any, helpers: any) => {
@@ -459,8 +463,28 @@
         markdownContent = parseTakmaLinks(markdownContent);
         markdownContent = ensureBlockWrapperForImages(markdownContent);
         markdownContent = markdownDetailsSummaryToTiptapSyntax(markdownContent);
+        markdownContent = convertDoubleUnderscoreUnderlineToPlusSyntax(markdownContent);
 
         return markdownContent;
+    }
+
+    /**
+     * Converts Markdown underline written as `__text__` into Tiptap's default underline
+     * syntax `++text++` before the Markdown content is parsed by the Tiptap Markdown
+     * extension.
+     *
+     * This ensures that:
+     * - existing content stored with `__underline__` is interpreted as underline (not bold),
+     * - while our custom `renderMarkdown` on the underline mark still serializes back to `__text__`.
+     */
+    function convertDoubleUnderscoreUnderlineToPlusSyntax(markdownContent: string): string {
+        // Match any `__text__` span (no newlines inside), and convert it to `++text++`
+        // so that Tiptap's Markdown parser treats it as underline, not bold.
+        const underlineRegex = /__(?!\s+__)([^_\n]+?)__(?!_)/gm;
+
+        return markdownContent.replace(underlineRegex, (match, content) => {
+            return `++${content}++`;
+        });
     }
 
     /**
