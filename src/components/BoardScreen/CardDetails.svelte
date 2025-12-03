@@ -78,7 +78,6 @@
 
     // Automatically save the selected card when any changes are made
     let debouncedSaveCard = debounce((cardToSave: Card, boardId: string, cardId: string) => {
-        debug("Saving card: " + cardToSave.id);
         SaveLoadManager.getData().updateCard(cardToSave, boardId, cardId);
     });
     $effect(() => {
