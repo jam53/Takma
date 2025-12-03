@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2025-12-03
+### Added
+- Add search box to search for cards across boards. ([4bdaf7e8](https://github.com/jam53/Takma/commit/4bdaf7e82f2b5e66c7db52a0fcea47c31f7e7c38))
+- Introduce fuzzy search logic for cards and boards. ([0df82af4](https://github.com/jam53/Takma/commit/0df82af43b29112234978f6ae2ba9b091c2b1e1f))
+- Allow cards to be opened in a new read-only window. ([5a585188](https://github.com/jam53/Takma/commit/5a585188f893166fd2e4080ffd2580c1bc037003))
+- (tiptap): Support underlined text using `__` syntax. ([9b9f82ad](https://github.com/jam53/Takma/commit/9b9f82ad43c02eb42aa427554679d945651b5c9a))
+- (due-dates-popup): Add calendar view. ([1346067b](https://github.com/jam53/Takma/commit/1346067b2cdf095ae6a6d7bf7bc223596e07fb89))
+- (checklists): Add todo item upon pressing Enter in checklist title. ([63cfc200](https://github.com/jam53/Takma/commit/63cfc200d2d1edd2ac30f2d6cb54ca5bd098d964))
+- (labels): Allow selecting color picker color with Enter key. ([75930f0e](https://github.com/jam53/Takma/commit/75930f0e8df00143e54ec5f71e2f6f981de1800c))
+- (save-load-manager): Show error toast if we are unable to save the save file. ([d9ce49fe](https://github.com/jam53/Takma/commit/d9ce49fe0b4b337a8d805afd99c7ed9269c8fa63))
+
+### Changed
+- Upgrade Tiptap to v3. ([9f5dad79](https://github.com/jam53/Takma/commit/9f5dad7972110f9059705aecce7b7dfc6958c5bd))
+- Upgrade Intro.js to v8. ([842e3ebd](https://github.com/jam53/Takma/commit/842e3ebd77f3e702086e970ee7fcbfaf0456a221))
+- (tiptap): Replace always-visible floating menu with a user-friendly slash-triggered menu (`/`) on empty lines. ([3cb7739a](https://github.com/jam53/Takma/commit/3cb7739afe308e60aa2026c48abb3453e975371b))
+- (tiptap): Make hyperlinked text more distinct when selected to differentiate from browser selection highlight. ([d35288d0](https://github.com/jam53/Takma/commit/d35288d00a8a3b9000c30a8262d044ebc33a5a99))
+- (tiptap): Migrate to v3 DetailsSummary extension and remove custom v2 build. ([dd505295](https://github.com/jam53/Takma/commit/dd5052951488166790aba45ed82600c0740f9a05))
+- (card): Color completed card titles green and move the existing checkmark from below the title to before it. ([add6bf28](https://github.com/jam53/Takma/commit/add6bf285c8e3257c8f368bf88247747d3557659))
+- (card): Turn all icons green when a card is marked as completed. ([bb3183e5](https://github.com/jam53/Takma/commit/bb3183e5501cab9a284798b8ca984ae06f1f8706))
+- (checklists): Change title color upon hover/focus for placeholder text. ([871e8812](https://github.com/jam53/Takma/commit/871e8812b3d4de51bcfc5f132b1c3317c59e3ae0))
+- Enable devtools in prod build. ([9d43a087](https://github.com/jam53/Takma/commit/9d43a087f393602bf27e35feacef345a34e1ed9b))
+- Move thumbnail generation to web worker. ([318b976f](https://github.com/jam53/Takma/commit/318b976f4a38f41a598942512bf7cf4763239773))
+- Update dependencies. ([a137fcfc](https://github.com/jam53/Takma/commit/a137fcfc138a9fe5ee75f11c497cb4f843fa6446), [43bf877f](https://github.com/jam53/Takma/commit/43bf877faec1464c2535c0b96de03a79913edf32))
+
+### Fixed
+- (card): Show delete confirmation popup when deleting a card using `Shift`+Click. ([7a57a77f](https://github.com/jam53/Takma/commit/7a57a77ff2aada434d87c9a7c64fafa48e3b53bb))
+- (tiptap): Correctly roundtrip colored text to and from markdown. Fixes regression where applying color in the editor was not reflected in saved markdown after Tiptap v3 upgrade. ([bc2408d6](https://github.com/jam53/Takma/commit/bc2408d67a9f1f6340f41be17803a80b4e6664b3))
+- (tiptap): Always show clear formatting button in bubble menu. ([2f521b43](https://github.com/jam53/Takma/commit/2f521b4358df0a45b14634e27628cd6eff7a03d0))
+- (tiptap): Display placeholder in empty card description by default instead of only after focus. ([9289739f](https://github.com/jam53/Takma/commit/9289739f67f86f9b226a3ce0cf61c66f2f17867a))
+- (tiptap): Fix paragraph text color being overridden by global CSS selectors. ([047a0a3f](https://github.com/jam53/Takma/commit/047a0a3f873f68f5ddecd7c704d6cf109c2ee6a2))
+- (tiptap): Fix schema validation errors when an inline image is the only element on a line by prepending a zero-width space. ([b88f028c](https://github.com/jam53/Takma/commit/b88f028c7068ae65bd398af5760d54c9c6ec0d64))
+- (search-bar): Prevent closed search bar from being refocused after alt-tabbing back into Takma. ([e4182949](https://github.com/jam53/Takma/commit/e418294928ed9cb0c23afb88ae97ab8155bdd5ae))
+- (due-date-popup): Set colors based on color theme. ([962d583f](https://github.com/jam53/Takma/commit/962d583f9578377d1b38a74737cdb8530ff4de76))
+- (due-date-chip): Set text color based on color theme. ([59da83d4](https://github.com/jam53/Takma/commit/59da83d4a9e993bbfa136ba7726fb853f3951999))
+- (card): Make completed icon flow inline with text. ([1014c4e6](https://github.com/jam53/Takma/commit/1014c4e60afeced2f5d45dd7a68ac3ab023fa618))
+- (card-details): Log saving the card only when the debounced save executes instead of on every change. ([8d6a9cc6](https://github.com/jam53/Takma/commit/8d6a9cc6fd476605a43346bc456c9ef4ce82a791))
+- (card-details): Fix very long lines in code blocks not wrapping, causing the card details popup to grow off screen. ([7f19d69d](https://github.com/jam53/Takma/commit/7f19d69df7eb6153667a86ca404bdad432684bbb))
+- (card-details): Prevent horizontal overflow with very wide tables in card description. ([11eaf5be](https://github.com/jam53/Takma/commit/11eaf5be9bfc0b283b3e78430d7dd6fd89a3f67a))
+- (card-options-menu): Align "mark as (in)complete" icon and label with the rest of the menu items. ([7b33df4e](https://github.com/jam53/Takma/commit/7b33df4e4e6ab1596fc5d2f870d80a73386b4740))
+- (checklists): Improve keyboard navigation by making checklist item container non-tabbable. ([a546032b](https://github.com/jam53/Takma/commit/a546032b6ead77f48fb03f004d026557a2f38141))
+- Fix deep links not displaying the appropriate linked card/board if Takma wasn't already running. ([1b00d062](https://github.com/jam53/Takma/commit/1b00d0624ce8e1773734b66549fd821e1f2c672b))
+- Ensure deep links focus and bring the Takma window to the front. ([82a7d906](https://github.com/jam53/Takma/commit/82a7d906e0cffbc47ae50d80b9e6b74f66c8651a))
+- Prevent easter egg board override by reactive autosave. ([e11e3ce6](https://github.com/jam53/Takma/commit/e11e3ce6633508b9e9aeedc995a5685a4c01acd5))
+
 ## [1.7.6] - 2025-06-07
 ### Changed
 - (backgrounds): Replace two default background images with higher-resolution versions. ([65be1e36](https://github.com/jam53/Takma/commit/65be1e361104bd4ecb5d33df353af76a8064c37a))
@@ -635,6 +679,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit. ([b28d9a78](https://github.com/jam53/Takma/commit/b28d9a783ffcb7ff30e67e8a11677c66f28667e4))
 
 <!-- Link Definitions -->
+[1.8.0]: https://github.com/jam53/Takma/compare/v1.7.6...v1.8.0
 [1.7.6]: https://github.com/jam53/Takma/compare/v1.7.5...v1.7.6
 [1.7.5]: https://github.com/jam53/Takma/compare/v1.7.4...v1.7.5
 [1.7.4]: https://github.com/jam53/Takma/compare/v1.7.3...v1.7.4
