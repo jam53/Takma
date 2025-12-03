@@ -11,6 +11,8 @@
     import {getThumbnail} from "../../scripts/ThumbnailGenerator";
     import {join} from "@tauri-apps/api/path";
     import {mount} from "svelte";
+    import PopupWindow from "../PopupWindow.svelte";
+    import {I18n} from "../../scripts/I18n/I18n";
 
     interface Props {
         card: Card;
@@ -88,11 +90,28 @@
 </script>
 
 <div class="cardContainer" tabindex="0"
-     onclick={() => {
+     onclick={async () => {
          if (hovering && shiftKeyPressed)
          {
-             SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
-             list = SaveLoadManager.getData().getList(selectedBoardId.value, list.id);
+             const deleteCardFunction = () => {
+                SaveLoadManager.getData().deleteCard(selectedBoardId.value, card.id);
+                list = SaveLoadManager.getData().getList(selectedBoardId.value, list.id);
+             };
+
+             if (!SaveLoadManager.getData().showConfirmationPreferences.deleteCard)
+             {
+                 deleteCardFunction();
+             }
+             else
+             {
+                 const popup = mount(PopupWindow, {props: {description: I18n.t("confirmCardRemoval"), buttonType: "yesno", showConfirmation: true}, target: document.body, intro: true});
+
+                 if (await popup.getAnswer() === true)
+                 {
+                     await SaveLoadManager.getData().updateConfirmationPreference("deleteCard", popup.getShowConfirmationAgain());
+                     deleteCardFunction();
+                 }
+             }
          }
          else
          {
