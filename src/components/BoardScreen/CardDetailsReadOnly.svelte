@@ -3,7 +3,6 @@
     import Attachments from "./Attachments.svelte";
     import CheckLists from "./CheckLists.svelte";
     import DueDateChip from "./DueDateChip.svelte";
-    import {getCurrentWebviewWindow} from "@tauri-apps/api/webviewWindow";
     import TipTap from "./Tiptap/Tiptap.svelte";
 
     interface Props {
@@ -25,13 +24,6 @@
         checklistMessage,
         attachmentsMessage,
     }: Props = $props();
-
-    window.addEventListener("keydown", e => {
-        if (e.key === "Escape" || (e.ctrlKey && e.key.toLowerCase() === "w") || e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "w")
-        {
-            getCurrentWebviewWindow().close();
-        }
-    });
 </script>
 
 <div class="container">
