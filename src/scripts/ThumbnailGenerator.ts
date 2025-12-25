@@ -1,4 +1,4 @@
-import {exists, writeFile, readFile} from "@tauri-apps/plugin-fs";
+import {exists, writeFile, readFile, mkdir} from "@tauri-apps/plugin-fs";
 import {convertFileSrc} from "@tauri-apps/api/core";
 import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
 import {join} from "@tauri-apps/api/path";
@@ -76,6 +76,7 @@ async function generateThumbnailInWorker(
 
             try {
                 const buffer = e.data.buffer!;
+                await mkdir(thumbnailPath.getDirectoryPath(), {recursive: true});
                 await writeFile(thumbnailPath, new Uint8Array(buffer));
                 worker.terminate();
                 resolve(convertFileSrc(thumbnailPath));
