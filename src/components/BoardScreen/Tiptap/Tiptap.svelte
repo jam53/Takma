@@ -297,27 +297,17 @@
       */
     function parseTakmaLinks(markdownContent: string): string
     {
-        // Regex to find takma:// links that are not already inside angle brackets (<...>)
-        // - (?<!<) : Negative lookbehind assertion. Ensures the match doesn't start immediately after '<'.
-        //             This prevents modifying links that are already formatted as autolinks.
-        // - (takma:\/\/[\w-]+(?:\/[\w-]+)?) : Capturing group 1. Matches and captures the actual Takma link string.
-        const takmaRegex = /(?<!<)(takma:\/\/[\w-]+(?:\/[\w-]+)?)/g;
+        // Regex to find takma:// links that are not already wrapped in our span
+        // - (?<!data-takma-link=") keeps already-processed spans intact
+        // - (takma:\/\/[\w-]+(?:\/[\w-]+)?) captures the full link
+        const takmaRegex = /(?<!data-takma-link=")(takma:\/\/[\w-]+(?:\/[\w-]+)?)/g;
 
-        // Replace plain "takma://..." strings with the Markdown autolink format "<takma://...>"
-        markdownContent = markdownContent.replace(takmaRegex, (match, p1_link) => {
-            // Angle brackets `<...>` around a URL (like `<https://google.com>` or `<takma://board/card>`)
-            // represent the Markdown autolink syntax.
-            // By wrapping the plain `takma://` string in these brackets, we are formatting it
-            // in a way that Markdown parsers (like the one used by tiptap-markdown with the `linkify: true` option)
-            // are supposed to recognize as a link during the Markdown-to-HTML conversion phase.
-            // The goal is that the Markdown parser will then convert `<takma://...>`
-            // into an HTML anchor tag (`<a href="takma://...">...</a>`). This intermediate HTML tag can then
-            // be correctly interpreted by your `TakmaLink` extension's `parseHTML` rule
-            // during Tiptap's subsequent internal HTML parsing phase, allowing the creation of the desired custom TakmaLink.svelte node.
-            return `<${p1_link}>`; // Return the link wrapped in angle brackets.
+        // Wrap plain takma links with an inline HTML span that our custom node
+        // parses via parseHTML(). This avoids the Markdown -> link mark path
+        // which would otherwise render as a regular link in TipTap v3.
+        return markdownContent.replace(takmaRegex, (_match, link) => {
+            return `<span data-takma-link="${link}">${link}</span>`;
         });
-
-        return markdownContent;
     }
 
     onDestroy(() => {

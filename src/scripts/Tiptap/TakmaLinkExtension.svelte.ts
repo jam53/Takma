@@ -132,6 +132,14 @@ export const TakmaLinkExtensionSvelte = Node.create<TakmaLinkOptions>({
         ];
     },
 
+    /**
+     * How this node should be represented in Markdown when calling editor.getMarkdown().
+     * We simply serialize back to the original takma://... string so it round-trips.
+     */
+    renderMarkdown(node: any, _helpers: any) {
+        return node.attrs?.takmaLink || "";
+    },
+
     addCommands() {
         return {
             insertTakmaLink: attributes => ({ commands }) => {
@@ -246,21 +254,5 @@ export const TakmaLinkExtensionSvelte = Node.create<TakmaLinkOptions>({
                 },
             };
         };
-    },
-
-    addStorage() {
-        return {
-            markdown: {
-                // Function to serialize this node back to markdown
-                serialize(state: MarkdownSerializerState, node: ProseMirrorNode) {
-                    const link = node.attrs.takmaLink;
-
-                    if (link)
-                    {
-                        state.write(link);
-                    }
-                },
-            }
-        }
     },
 });
