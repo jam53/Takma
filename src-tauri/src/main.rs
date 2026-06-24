@@ -48,7 +48,9 @@ fn main() {
         .setup(|app| {
             #[cfg(desktop)]
             {
-                app.deep_link().register("takma")?;
+                if let Err(e) = app.deep_link().register("takma") {
+                    eprintln! ("Failed to register deep link scheme: {e}");
+                }
                 capture_startup_deep_link(&app.handle());
             }
             Ok(())
