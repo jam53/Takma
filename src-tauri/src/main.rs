@@ -65,6 +65,7 @@ fn main() {
         .plugin(
             tauri_plugin_log::Builder::new()
                 .max_file_size(1 * 1024 * 1024 /* bytes */)
+                .level_for("tao", log::LevelFilter::Info)
                 .build(),
         )
         .invoke_handler(tauri::generate_handler![
