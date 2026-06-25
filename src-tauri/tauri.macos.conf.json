@@ -6,6 +6,7 @@
                 "titleBarStyle": "Overlay",
                 "hiddenTitle": true
             }
-        ]
+        ],
+        "macOSPrivateApi": true
     }
 }
