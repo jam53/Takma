@@ -165,6 +165,7 @@
     import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow"
     import tauriConf from "./src-tauri/tauri.conf.json"
     import takmaLogoUrl from "./src/images/Takma.svg"
+    import { platform } from "@tauri-apps/plugin-os";
 
     const appWindow = getCurrentWebviewWindow();
 
@@ -174,4 +175,13 @@
     document.getElementById('titlebar-minimize').addEventListener('click', () => appWindow.minimize());
     document.getElementById('titlebar-maximize').addEventListener('click', () => appWindow.toggleMaximize());
     document.getElementById('titlebar-close').addEventListener('click', () => appWindow.close());
+
+    if (platform() === "macos") {
+        // If we are on macOS, we want to use the native macOS traffic lights and window controls. To do this, we
+        // clear the content of our custom `titlebar`, but keep the element itself in the DOM. Since we have
+        // `"titleBarStyle": "Overlay"` in our macOS tauri configuration, macOS will overlay the traffic lights on top
+        // of our window. Keeping the empty titlebar element preserves its height, giving the traffic lights the
+        // necessary space at the top so they do not overlap with our application content.
+        document.getElementById("titlebar").innerHTML = "";
+    }
 </script>
