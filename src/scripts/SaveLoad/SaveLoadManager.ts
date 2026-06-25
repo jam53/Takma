@@ -7,6 +7,7 @@ import {tempDir} from "@tauri-apps/api/path";
 import "../StringExtensions.ts";
 import {debug, info, warn} from "@tauri-apps/plugin-log";
 import {toast} from "svelte-sonner";
+import {debounce} from "../Debounce";
 
 /**
  * This class is used to save/load data within Takma
@@ -76,10 +77,17 @@ export class SaveLoadManager
     }
 
     /**
-     * This method saves the variables inside the "data" object as a JSON to the disk.
+     * This method saves the member variables inside the {@link data} object as a JSON file to the disk.
+     *
+     * The actual write however is debounced, making it so that if multiple {@link saveToDisk()} calls are fired at once
+     * or in close proximity of one another, only the last call will be executed and save the savefile to disk.
+     *
+     * This should prevent an edge case where a race condition could occur, where the file is still being written to disk
+     * as another save call comes in. Thus causing a truncated/corrupt save file which would especially cause problem when
+     * the save file is in a cloud synced folder such as OneDrive. Since the sync engine would in those circumstances
+     * sometimes lock the file, leaving Takma unable to save the save file from that point on.
      */
-    public static async saveToDisk(): Promise<void>
-    {
+    public static saveToDisk = debounce(async () => {
         debug("Saving save file to disk");
         try {
             await writeTextFile(await join(this.getSaveDirectoryPath(), this.saveFilename), JSON.stringify(this.data, null, 0));
@@ -88,7 +96,7 @@ export class SaveLoadManager
             toast.error(I18n.t("couldntSaveSaveFile", e as string));
             throw e;
         }
-    }
+    });
 
     /**
      * This method returns an instance of our data class.
