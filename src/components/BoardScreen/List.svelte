@@ -132,9 +132,11 @@
 
     // Automatically save the list object when any changes are made except to it's cards property, as changes to those are tracked and saved elsewhere
     let {cards: _, ...listWithoutCards} = $derived(list);
-    let debouncedSaveList = debounce((boardId: string, listId: string, list: List) => SaveLoadManager.getData().updateList(boardId, listId, list));
-    $effect(() => {
+    let debouncedSaveList = debounce((boardId: string, listId: string, list: List) => {
         debug("Saving list: " + listWithoutCards.id);
+        SaveLoadManager.getData().updateList(boardId, listId, list);
+    });
+    $effect(() => {
         debouncedSaveList(selectedBoardId.value, listWithoutCards.id, untrack(() => $state.snapshot(list)));
     });
 </script>

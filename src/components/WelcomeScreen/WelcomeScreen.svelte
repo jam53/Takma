@@ -28,9 +28,11 @@
 
     let boards: Board[] = $state(SaveLoadManager.getData().boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName)));
     // Automatically saves the boards when any changes are made + ensures they are in the correct order
-    let debouncedSaveBoards = debounce((boardsToSave: Board[]) => SaveLoadManager.getData().boards = boardsToSave);
-    $effect(() => {
+    let debouncedSaveBoards = debounce((boardsToSave: Board[]) => {
         debug("Saving boards");
+        SaveLoadManager.getData().boards = boardsToSave;
+    });
+    $effect(() => {
         debouncedSaveBoards($state.snapshot(boards.sort(sortBoardFunctions.get(SaveLoadManager.getData().sortBoardsFunctionName))));
     })
 
