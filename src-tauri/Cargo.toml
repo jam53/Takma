@@ -13,6 +13,13 @@ edition = "2021"
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+# Despite the `serde` and `serde_json` dependencies appearing as being unused, they
+# should still be included here as they are used internally by Tauri. They are
+# required because the `tauri::generate_context!` macro expands directly within
+# our crate's scope and references them. Removing them results in the error
+# "error[E0433]: cannot find `serde_json` in the crate root" being thrown.
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 tauri = { version = "2", features = ["protocol-asset", "devtools"] }
 tauri-plugin-deep-link = "2"
 tauri-plugin-clipboard-manager = "2.0.1"
