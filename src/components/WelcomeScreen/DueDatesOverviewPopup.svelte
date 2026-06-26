@@ -46,16 +46,8 @@
     import {dueDatesOverviewPopupIsVisible, selectedBoardId, selectedCardId} from "../../scripts/Stores.svelte.js";
     import {I18n} from "../../scripts/I18n/I18n";
     import {info} from "@tauri-apps/plugin-log";
-    import { ScheduleXCalendar } from '@schedule-x/svelte';
-    import {
-        type CalendarEventExternal,
-        createCalendar,
-        createViewDay,
-        createViewMonthAgenda,
-        createViewWeek
-    } from '@schedule-x/calendar';
-    import '@schedule-x/theme-default/dist/index.css';
-    import 'temporal-polyfill/global';
+    import {Calendar, TimeGrid, DayGrid} from '@event-calendar/core';
+    import '@event-calendar/core/index.css';
 
     let showPopup = $state(true); dueDatesOverviewPopupIsVisible.value = true;
     let showCalendarView = $state(false);
@@ -89,9 +81,11 @@
 
     interface CardWithDueDate
     {
-        titleWithBoardName: string,
-        titleWithListName: string,
+        boardTitle: string,
+        listTitle: string,
+        cardTitle: string,
         dueDate: number,
+        dueDateIsAllDayEvent: boolean,
         boardId: string,
         cardId: string,
         complete: boolean,
@@ -100,14 +94,17 @@
     function getAllCardsWithDueDates(): CardWithDueDate[]
     {
         info("Fetching all cards with due dates");
+
         let allDueDates: CardWithDueDate[] = [];
         SaveLoadManager.getData().boards.forEach(board =>
             board.lists.forEach(list =>
                 list.cards.filter(card => card.dueDate !== null).forEach(card =>
                     allDueDates.push({
-                        titleWithBoardName: "<b>" + board.title + "</b> | " + card.title,
-                        titleWithListName: "<b>" + list.title + "</b> | " + card.title,
+                        boardTitle: board.title,
+                        listTitle: list.title,
+                        cardTitle: card.title,
                         dueDate: parseInt(card.dueDate!),
+                        dueDateIsAllDayEvent: card.dueDateIsAllDayEvent,
                         boardId: board.id,
                         cardId: card.id,
                         complete: card.complete
@@ -172,64 +169,127 @@
         closePopup();
     }
 
-    function getScheduleXCalendar() {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const removeHtmlTags = (text: string) => text.replace(/<\/?\s?[a-z][^>]*>/gi, "");
-
-        return createCalendar({
+    function getCalendarOptions() {
+        return {
+            view: 'timeGridWeek',
             locale: SaveLoadManager.getData().displayLanguage,
-            timezone,
-            views: [createViewDay(), createViewWeek(), createViewMonthAgenda()],
-            isDark: SaveLoadManager.getData().darkTheme,
-            showWeekNumbers: true,
-            callbacks: {
-                onEventClick(calendarEvent: CalendarEventExternal, _: UIEvent) {
-                    openCard(calendarEvent.customKeys.boardId, calendarEvent.customKeys.cardId);
-                },
+            weekNumbers: true,
+            allDayContent: I18n.t("allDay"),
+            height: '65vh', // We need to define a height, in order for the `scrollTime` property to work
+            scrollTime: new Date().toTimeString().split(' ')[0], // Scrolls to the current time in the calendar view
+            nowIndicator: true,
+            displayEventEnd: false,
+            firstDay: 1,
+            views: {
+                timeGridWeek: {
+                    titleFormat: { year: 'numeric', month: 'long', day: 'numeric' },
+                    dayHeaderFormat: { weekday: 'long', day: 'numeric' }
+                }
             },
-            calendars: {
-                cards: {
-                    colorName: "cards",
-                    lightColors: {
-                        main: window.getComputedStyle(document.body).getPropertyValue("--accent"),
-                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--accent"),
-                        container: "#cce4f2",
-                    },
-                    darkColors: {
-                        main: window.getComputedStyle(document.body).getPropertyValue("--accent"),
-                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--accent"),
-                        container: "#26344b",
-                    },
-                },
-                completedCards: {
-                    colorName: "completedCards",
-                    lightColors: {
-                        main: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
-                        container: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemBackgroundSuccess"),
-                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
-                    },
-                    darkColors: {
-                        main: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
-                        container: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemBackgroundSuccess"),
-                        onContainer: window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess"),
-                    },
-                },
+            buttonText: {
+                today: I18n.t("sveltyPicker").todayBtn,
+                timeGridDay: I18n.t("day"),
+                timeGridWeek: I18n.t("week"),
+                dayGridMonth: I18n.t("month")
+            },
+            headerToolbar: {
+                start: 'prev,next today',
+                center: 'title',
+                end: 'timeGridDay,timeGridWeek,dayGridMonth'
+            },
+            eventClick: (info: any) => {
+                openCard(info.event.extendedProps.boardId, info.event.extendedProps.cardId);
+            },
+            // Custom event content renderer to securely build and format calendar events:
+            // 1. Escaping: Using programmatic DOM construction (document.createElement and textContent)
+            //    rather than raw HTML template strings ensures the browser automatically escapes the event
+            //    title and metadata, preventing potential HTML injection or layout rendering bugs.
+            // 2. Accurate Time formatting: Instead of displaying the grid's visual block start time, we display
+            //    the actual due date's local start time. This is especially important for late-night tasks starting
+            //    at/after 23:00, which we shift back by 1 hour on the grid (see events mapping below) so they
+            //    don't bleed past midnight into the next day.
+            eventContent: (info: any) => {
+                const bodyDiv = document.createElement('div');
+                bodyDiv.className = 'ec-event-body';
+
+                if (!info.event.allDay) {
+                    const timeElement = document.createElement('time');
+                    timeElement.className = 'ec-event-time';
+
+                    const realDate = new Date(info.event.extendedProps.dueDate);
+                    timeElement.textContent = realDate.toLocaleTimeString(
+                        SaveLoadManager.getData().displayLanguage,
+                        { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }
+                    );
+
+                    bodyDiv.appendChild(timeElement);
+                }
+
+                const titleElement = document.createElement('h4');
+                titleElement.className = 'ec-event-title';
+                titleElement.textContent = info.event.title;
+                bodyDiv.appendChild(titleElement);
+
+                return { domNodes: [bodyDiv] };
             },
             events: getAllCardsWithDueDates().map(cardWithDueDate => {
+                let start = new Date(cardWithDueDate.dueDate);
+                let end: Date;
+
+                if (cardWithDueDate.dueDateIsAllDayEvent) {
+                    start.setHours(0, 0, 0, 0);
+                    end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+                } else {
+                    const hour = start.getHours();
+                    // The EventCalendar component requires both a start and an end time to draw them as blocks in the
+                    // calendar view. Because our due dates represent a single point in time we need to calculate an
+                    // appropriate start/end date.
+                    // - Normal Case: We shift the end time forward by 1 hour (adding 1 hour) to display a standard
+                    //   1-hour block in the grid.
+                    // - Late-Night Case (>= 23:00): If we were to add 1 hour to the end time, the event block would
+                    //   cross the midnight boundary and visually span into the next day, which is misleading.
+                    //   To prevent this bleed-over while still preserving the same 1-hour block size, we shift the
+                    //   start time 1 hour back on the grid and set the end time to the original due date.
+                    // Note: The custom eventContent renderer (defined above) reads the original un-shifted due date
+                    // to display the correct time label on the event, regardless of these grid layout adjustments.
+                    if (hour >= 23) {
+                        start.setHours(hour - 1);
+                        end = new Date(cardWithDueDate.dueDate);
+                    } else {
+                        end = new Date(cardWithDueDate.dueDate + 60 * 60 * 1000);
+                    }
+                }
+
+                const accentColor = window.getComputedStyle(document.body).getPropertyValue("--accent");
+                const successTextColor = window.getComputedStyle(document.body).getPropertyValue("--dueDateItemColorSuccess");
+                const successBackgroundColor = window.getComputedStyle(document.body).getPropertyValue("--dueDateItemBackgroundSuccess");
+
                 return {
                     id: cardWithDueDate.cardId,
-                    calendarId: cardWithDueDate.complete ? "completedCards" : "cards",
-                    title: removeHtmlTags(selectedBoardId.value === "" ? cardWithDueDate.titleWithBoardName : cardWithDueDate.titleWithListName),
-                    start: Temporal.Instant.fromEpochMilliseconds(cardWithDueDate.dueDate).toZonedDateTimeISO(timezone),
-                    end: Temporal.Instant.fromEpochMilliseconds(cardWithDueDate.dueDate).toZonedDateTimeISO(timezone).add({hours: 1}),
-                    customKeys: {
+                    title: selectedBoardId.value === ""
+                        ? `${cardWithDueDate.boardTitle} | ${cardWithDueDate.cardTitle}`
+                        : `${cardWithDueDate.listTitle} | ${cardWithDueDate.cardTitle}`,
+                    start,
+                    end,
+                    allDay: cardWithDueDate.dueDateIsAllDayEvent,
+                    backgroundColor: cardWithDueDate.complete ? successBackgroundColor : accentColor,
+                    textColor: cardWithDueDate.complete ? successTextColor : "white",
+                    extendedProps: {
                         boardId: cardWithDueDate.boardId,
-                        cardId: cardWithDueDate.cardId
+                        cardId: cardWithDueDate.cardId,
+                        dueDate: cardWithDueDate.dueDate
                     }
                 };
             })
-        });
+        };
     }
+
+    const escapeHtml = (text: string) => text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 </script>
 
 {#if showPopup}
@@ -275,20 +335,22 @@
                         >
                             <h4>
                                 {#if selectedBoardId.value === ""}
-                                    {@html dueDateItem.titleWithBoardName}
+                                    {@html "<b>" + escapeHtml(dueDateItem.boardTitle) + "</b> | " + escapeHtml(dueDateItem.cardTitle)}
                                 {:else}
-                                    {@html dueDateItem.titleWithListName}
+                                    {@html "<b>" + escapeHtml(dueDateItem.listTitle) + "</b> | " + escapeHtml(dueDateItem.cardTitle)}
                                 {/if}
                             </h4>
                             <hr>
                             <span>
-                                {(new Date(parseInt(dueDateItem.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}
+                                {(new Date(parseInt(dueDateItem.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, dueDateItem.dueDateIsAllDayEvent ? {dateStyle: "full"} : {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'})}
                             </span>
                         </div>
                     {/each}
                 {/each}
             {:else}
-                <ScheduleXCalendar calendarApp="{getScheduleXCalendar()}" />
+                <div class="ec-wrapper" class:ec-dark={SaveLoadManager.getData().darkTheme}>
+                    <Calendar plugins={[TimeGrid, DayGrid]} options={getCalendarOptions()} />
+                </div>
             {/if}
         </div>
     </div>
@@ -428,49 +490,39 @@
         height: 1.25em;
     }
 
-    :global(.sx-svelte-calendar-wrapper) {
+    .ec-wrapper {
         width: 80vw;
     }
 
-    /* Ensure navigation arrows are visible */
-    :global(.sx__forward-backward-navigation) {
-        display: flex !important;
+    .ec-wrapper :global(.ec-main) {
+        border-radius: 4px;
     }
 
-    /* Ensure today button is visible */
-    :global(.sx__today-button) {
-        display: inline-block !important;
+    /* The `--ec` related properties are for the <Calendar> component from "@event-calendar/core" */
+    .ec-wrapper :global(.ec) {
+        --ec-bg-color: var(--background-color);
+        --ec-text-color: var(--main-text);
+        --ec-border-color: var(--border);
+        --ec-button-bg-color: var(--border);
+        --ec-button-border-color: var(--border);
+        --ec-button-text-color: var(--main-text);
+        --ec-button-active-bg-color: var(--accent);
+        --ec-button-active-border-color: var(--accent);
+        --ec-button-active-text-color: white;
+        --ec-today-bg-color: var(--border);
+        --ec-highlight-color: var(--border);
+        --ec-event-bg-color: var(--accent);
+        --ec-event-text-color: white;
+        --ec-now-indicator-color: var(--danger);
     }
 
-    :global(.sx__event) {
+    .ec-wrapper :global(.ec-event) {
         cursor: pointer;
     }
 
-    :root, :global(.is-dark) {
-        /* The `--sx` related properties are for the ScheduleXCalendar component */
-        --sx-color-primary: var(--accent);
-        --sx-color-on-primary: white;
-        --sx-color-primary-container: var(--border);
-        --sx-color-on-primary-container: var(--accent);
-        --sx-color-surface-dim: var(--border);
-        --sx-color-surface-container: var(--border);
-        --sx-color-surface-container-low: var(--border);
-        --sx-color-surface-container-high: var(--border);
-        --sx-color-background: var(--background-color);
-        --sx-color-outline: var(--selected-button);
-        --sx-color-outline-variant: var(--border);
-    }
-
-    :global(.sx__calendar) {
-        border: transparent;
-        border-radius: 0;
-    }
-
-    :global(.sx__calendar-header__week-number), :global(.is-dark .sx__calendar-header__week-number) {
-        background-color: var(--border);
-    }
-
-    :global(.sx__month-agenda-week__week-number), :global(.is-dark .sx__month-agenda-week__week-number) {
-        background-color: var(--border);
+    .ec-wrapper :global(.ec-event-title) {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 </style>

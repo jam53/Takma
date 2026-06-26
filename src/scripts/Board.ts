@@ -47,6 +47,7 @@ export interface Card
     checklists: Checklist[],
     labelIds: string[], //The label ids in this array refer to ids of the labels in the board to which this card belongs to
     dueDate: string | null, //The due date of this card in unix milliseconds, null if there is no due date
+    dueDateIsAllDayEvent: boolean, // When true, the due date's time isn't taken into consideration. The due date is assumed to be an all-day event that spans the entire day. When false, the time of the due date is also taken into account alongside the day.
     complete: boolean,
 }
 
@@ -297,7 +298,13 @@ export function openReadOnlyWindow(card: Card)
                 labels: card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)),
                 theme,
                 cardIsReadOnlyMessage: I18n.t("cardIsReadOnly"),
-                dueDateMessage: (new Date(parseInt(card.dueDate))).toLocaleString(SaveLoadManager.getData().displayLanguage, {dateStyle: "full", timeStyle: "short", hourCycle: 'h23'}),
+                dueDateMessage:
+                    (new Date(parseInt(card.dueDate))).toLocaleString(
+                        SaveLoadManager.getData().displayLanguage,
+                        card.dueDateIsAllDayEvent
+                            ? { dateStyle: "full" }
+                            : { dateStyle: "full", timeStyle: "short", hourCycle: 'h23' }
+                    ),
                 completedMessage: I18n.t("completed"),
                 checklistMessage: I18n.t("checklist"),
                 attachmentsMessage: I18n.t("attachments"),

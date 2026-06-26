@@ -413,6 +413,7 @@ export class TakmaData
             checklists: [],
             labelIds: [],
             dueDate: null,
+            dueDateIsAllDayEvent: false,
             complete: false,
         };
 

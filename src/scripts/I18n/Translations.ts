@@ -305,6 +305,11 @@ export let en: Translation = {
     openListView: "Open list view",
     couldntSaveSaveFile: "Couldn't save the save file: $|00|$",
     clearFormatting: "Clear formatting",
+    saveAsAllDayDueDate: "Save as all-day (no time)",
+    allDay: "All-day",
+    day: "Day",
+    week: "Week",
+    month: "Month",
 };
 
 export let ar: Translation = {
@@ -610,6 +615,11 @@ export let ar: Translation = {
     openListView: "افتح عرض القائمة",
     couldntSaveSaveFile: "تعذر حفظ ملف الحفظ: $|00|$",
     clearFormatting: "مسح التنسيق",
+    saveAsAllDayDueDate: "حفظ كطوال اليوم (بدون وقت)",
+    allDay: "طوال اليوم",
+    day: "يوم",
+    week: "أسبوع",
+    month: "شهر",
 };
 
 export let de: Translation = {
@@ -915,6 +925,11 @@ export let de: Translation = {
     openListView: "Listenansicht öffnen",
     couldntSaveSaveFile: "Die Speicherdatei konnte nicht gespeichert werden: $|00|$",
     clearFormatting: "Formatierung löschen",
+    saveAsAllDayDueDate: "Als ganztägig speichern (ohne Uhrzeit)",
+    allDay: "Ganztägig",
+    day: "Tag",
+    week: "Woche",
+    month: "Monat",
 };
 
 export let es: Translation = {
@@ -1220,6 +1235,11 @@ export let es: Translation = {
     openListView: "Abrir vista de lista",
     couldntSaveSaveFile: "No se pudo guardar el archivo de guardado: $|00|$",
     clearFormatting: "Borrar formato",
+    saveAsAllDayDueDate: "Guardar como todo el día (sin hora)",
+    allDay: "Todo el día",
+    day: "Día",
+    week: "Semana",
+    month: "Mes",
 };
 
 export let et: Translation = {
@@ -1525,6 +1545,11 @@ export let et: Translation = {
     openListView: "Ava loendivaade",
     couldntSaveSaveFile: "Salvestusfaili ei saanud salvestada: $|00|$",
     clearFormatting: "Eemalda vormindus",
+    saveAsAllDayDueDate: "Salvesta kogu päevaks (ilma kellaajata)",
+    allDay: "Kogu päev",
+    day: "Päev",
+    week: "Nädal",
+    month: "Kuu",
 };
 
 export let fr: Translation = {
@@ -1830,6 +1855,11 @@ export let fr: Translation = {
     openListView: "Ouvrir la vue liste",
     couldntSaveSaveFile: "Impossible d'enregistrer le fichier de sauvegarde : $|00|$",
     clearFormatting: "Effacer la mise en forme",
+    saveAsAllDayDueDate: "Enregistrer comme toute la journée (sans heure)",
+    allDay: "Toute la journée",
+    day: "Jour",
+    week: "Semaine",
+    month: "Mois",
 };
 
 export let hi: Translation = {
@@ -2135,6 +2165,11 @@ export let hi: Translation = {
     openListView: "सूची दृश्य खोलें",
     couldntSaveSaveFile: "सेव फ़ाइल को सहेजा नहीं जा सका: $|00|$",
     clearFormatting: "फ़ॉर्मेटिंग हटाएँ",
+    saveAsAllDayDueDate: "पूरे दिन के रूप में सहेजें (कोई समय नहीं)",
+    allDay: "पूरे दिन",
+    day: "दिन",
+    week: "सप्ताह",
+    month: "महीना",
 };
 
 export let id: Translation = {
@@ -2440,6 +2475,11 @@ export let id: Translation = {
     openListView: "Buka tampilan daftar",
     couldntSaveSaveFile: "Tidak dapat menyimpan file simpanan: $|00|$",
     clearFormatting: "Hapus pemformatan",
+    saveAsAllDayDueDate: "Simpan sebagai sepanjang hari (tanpa waktu)",
+    allDay: "Sepanjang hari",
+    day: "Hari",
+    week: "Minggu",
+    month: "Bulan",
 };
 
 export let ja: Translation = {
@@ -2745,6 +2785,11 @@ export let ja: Translation = {
     openListView: "リスト表示を開く",
     couldntSaveSaveFile: "セーブファイルを保存できませんでした: $|00|$",
     clearFormatting: "書式をクリア",
+    saveAsAllDayDueDate: "終日として保存 (時間なし)",
+    allDay: "終日",
+    day: "日",
+    week: "週",
+    month: "月",
 };
 
 export let ko: Translation = {
@@ -3050,6 +3095,11 @@ export let ko: Translation = {
     openListView: "목록 보기 열기",
     couldntSaveSaveFile: "세이브 파일을 저장하지 못했습니다: $|00|$",
     clearFormatting: "서식 지우기",
+    saveAsAllDayDueDate: "종일로 저장 (시간 없음)",
+    allDay: "종일",
+    day: "일",
+    week: "주",
+    month: "월",
 };
 
 export let nl: Translation = {
@@ -3355,6 +3405,11 @@ export let nl: Translation = {
     openListView: "Lijstweergave openen",
     couldntSaveSaveFile: "Het savebestand kon niet worden opgeslagen: $|00|$",
     clearFormatting: "Opmaak wissen",
+    saveAsAllDayDueDate: "Opslaan als hele dag (zonder tijd)",
+    allDay: "Hele dag",
+    day: "Dag",
+    week: "Week",
+    month: "Maand",
 };
 
 export let pt: Translation = {
@@ -3660,6 +3715,11 @@ export let pt: Translation = {
     openListView: "Abrir vista de lista",
     couldntSaveSaveFile: "Não foi possível salvar o arquivo de salvamento: $|00|$",
     clearFormatting: "Limpar formatação",
+    saveAsAllDayDueDate: "Salvar como dia inteiro (sem hora)",
+    allDay: "Dia inteiro",
+    day: "Dia",
+    week: "Semana",
+    month: "Mês",
 };
 
 export let ru: Translation = {
@@ -3965,6 +4025,11 @@ export let ru: Translation = {
     openListView: "Открыть вид списка",
     couldntSaveSaveFile: "Не удалось сохранить файл сохранения: $|00|$",
     clearFormatting: "Очистить форматирование",
+    saveAsAllDayDueDate: "Сохранить на весь день (без времени)",
+    allDay: "Весь день",
+    day: "День",
+    week: "Неделя",
+    month: "Месяц",
 };
 
 export let tr: Translation = {
@@ -4270,6 +4335,11 @@ export let tr: Translation = {
     openListView: "Liste görünümünü aç",
     couldntSaveSaveFile: "Kayıt dosyası kaydedilemedi: $|00|$",
     clearFormatting: "Biçimlendirmeyi temizle",
+    saveAsAllDayDueDate: "Tüm gün olarak kaydet (saat olmadan)",
+    allDay: "Tüm gün",
+    day: "Gün",
+    week: "Hafta",
+    month: "Ay",
 };
 
 export let zh: Translation = {
@@ -4575,4 +4645,9 @@ export let zh: Translation = {
     openListView: "打开列表视图",
     couldntSaveSaveFile: "无法保存存档文件：$|00|$",
     clearFormatting: "清除格式",
+    saveAsAllDayDueDate: "保存为全天 (无具体时间)",
+    allDay: "全天",
+    day: "日",
+    week: "周",
+    month: "月",
 };

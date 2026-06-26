@@ -11,6 +11,7 @@
         clickEvent: MouseEvent;
         dueDate: string;
         setDueDate: (dueDate: string) => void; // Unfortunately we can't create a two-way binding using `$bindable()` since this component gets created using the `mount()` method which doesn't allow for two-way binding as creating a component with `<Foo bind:bar={value}/>` does. Hence the workaround using `setBar()`
+        setDueDateIsAllDayEvent: (allDay: boolean) => void;
         focusOnCardDetailsFunction: Function;
     }
 
@@ -18,6 +19,7 @@
         clickEvent,
         dueDate,
         setDueDate,
+        setDueDateIsAllDayEvent,
         focusOnCardDetailsFunction,
     }: Props = $props();
 
@@ -58,16 +60,23 @@
     {
         showMenu = false;
         focusOnCardDetailsFunction(); //If we don't do this after closing the Popup, the CardDetails element wouldn't be selected (as it lost focus as soon as the Popup element was displayed). Therefore CardDetails wouldn't register the on:keydown event. Instead the Board would register that. If we would then press Escape or Ctrl+W. The board would close, whereas it should be the CardDetails element that is open that should be the one to actually close
-        setDueDate(dueDate);
     }
 
     function onDateChange(e: DateChange)
     {
+        setDueDate(dueDate);
+
         // Close the Due Date Popup automatically when the user clears the date (`e.value === null`)
         // or finishes selecting the date and time (`e.event === "minute," indicating all fields are set), but do not close it prematurely if only the `e.event === "date"` or `e.event === "hour"` has been set.
         if (e.value === null || e.event === "minute")
         {
             closeContextMenu();
+        }
+
+        // If the time of the due date changes (so not the date but specifically the hour or the minute),
+        // ensure that the due date is no longer seen as an all day event.
+        if (e.event === "hour" || e.event === "minute") {
+            setDueDateIsAllDayEvent(false);
         }
     }
 
@@ -97,6 +106,20 @@
             closeContextMenu();
         }
     }
+
+    /**
+     * Closes the due date popup and saves the due date as an all-day due date, this implies that the due date is just
+     * a day, rather than a day AND an associated time.
+     */
+    function saveAsAllDayEvent() {
+        let dateWithoutTime = new Date(parseInt(dueDate));
+        dateWithoutTime.setHours(0, 0, 0, 0);
+        dueDate = dateWithoutTime.getTime().toString();
+        setDueDate(dueDate);
+
+        setDueDateIsAllDayEvent(true);
+        closeContextMenu();
+    }
 </script>
 
 {#if showMenu}
@@ -111,7 +134,13 @@
                 {I18n.t("dueDate")}
             </h3>
             <br>
-            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={dueDate} i18n={I18n.t("sveltyPicker")} {onDateChange}/>
+            <SveltyPicker todayBtn mode="datetime" clearBtn pickerOnly autocommit={true} weekStart={1} format="t" bind:value={dueDate} i18n={I18n.t("sveltyPicker")} {onDateChange}>
+                <button
+                        class="onlyVisibleWhenInSveltyPickerTimePickerView"
+                        onclick={saveAsAllDayEvent}>
+                    {I18n.t("saveAsAllDayDueDate")}
+                </button>
+            </SveltyPicker>
         </div>
     </nav>
 {/if}
@@ -172,5 +201,31 @@
     :global(.std-btn:hover), :global(.sdt-time-btn:hover) {
         background-color: var(--border) !important;
         transition: 0.3s;
+    }
+
+    .onlyVisibleWhenInSveltyPickerTimePickerView {
+        display: none;
+    }
+
+    /* When the `.sdt-timer` style class exists, this means the time picker view of Svelty Picker is active. The
+     existence of the `.sdt-timer` style class activates this style class. This style class then makes the element
+     its applied to visible, by overriding the `display: none` value. */
+    :global(.sdt-component-wrap:has(.sdt-timer)) .onlyVisibleWhenInSveltyPickerTimePickerView {
+        display: inline-block;
+    }
+
+    button {
+        border: none;
+        padding: 0.5em;
+        width: 100%;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: medium;
+        transition: 0.3s;
+        background: var(--border);
+    }
+
+    button:hover {
+        background: var(--unselected-button);
     }
 </style>

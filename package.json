@@ -2,21 +2,18 @@
     "name": "Takma",
     "private": true,
     "version": "1.8.0",
-    "build": 829,
+    "build": 838,
     "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "tauri": "node updateBuild.cjs && tauri",
-        "postinstall": "patch-package"
+        "tauri": "node updateBuild.cjs && tauri"
     },
     "dependencies": {
+        "@event-calendar/core": "^5.7.1",
         "@floating-ui/dom": "^1.7.4",
-        "@schedule-x/calendar": "^3.4.2",
-        "@schedule-x/svelte": "^3.0.0",
-        "@schedule-x/theme-default": "^3.4.2",
         "@tauri-apps/api": "^2.9.1",
         "@tauri-apps/plugin-clipboard-manager": "^2.3.2",
         "@tauri-apps/plugin-deep-link": "^2.4.5",
@@ -56,7 +53,6 @@
         "svelte-sonner": "^1.0.7",
         "svelty-picker": "^6.1.6",
         "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1",
-        "temporal-polyfill": "^0.3.0",
         "xxhashjs": "^0.2.2"
     },
     "devDependencies": {
@@ -66,7 +62,6 @@
         "@types/node": "^24.10.1",
         "@types/xxhashjs": "^0.2.4",
         "fs-extra": "^11.3.2",
-        "patch-package": "^8.0.1",
         "svelte": "^5.45.3",
         "svelte-check": "^4.3.4",
         "svelte-preprocess": "^6.0.3",

@@ -258,4 +258,9 @@ export default interface Translation
     openListView: string;
     couldntSaveSaveFile: string;
     clearFormatting: string;
+    saveAsAllDayDueDate: string;
+    allDay: string;
+    day: string;
+    week: string;
+    month: string;
 }
