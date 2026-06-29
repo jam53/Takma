@@ -18,55 +18,62 @@
         location.reload();
     }
 
-    function sortByCreationDateAscending()
+    async function sortByCreationDateAscending()
     {
         SaveLoadManager.getData().sortBoardsFunctionName = "sortByCreationDateAscending";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 
-    function sortByCreationDateDescending()
+    async function sortByCreationDateDescending()
     {
         SaveLoadManager.getData().sortBoardsFunctionName = "sortByCreationDateDescending";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 
-    function sortByMostRecentlyOpened()
+    async function sortByMostRecentlyOpened()
     {
         SaveLoadManager.getData().sortBoardsFunctionName = "sortByMostRecentlyOpened";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 
-    function sortByLeastRecentlyOpened()
+    async function sortByLeastRecentlyOpened()
     {
         SaveLoadManager.getData().sortBoardsFunctionName = "sortByLeastRecentlyOpened";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 
-    function sortAlphabeticallyAscending()
+    async function sortAlphabeticallyAscending()
     {
         SaveLoadManager.getData().sortBoardsFunctionName = "sortAlphabeticallyAscending";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 
-    function sortAlphabeticallyDescending()
+    async function sortAlphabeticallyDescending()
     {
         SaveLoadManager.getData().sortBoardsFunctionName = "sortAlphabeticallyDescending";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 
-    function sortShuffle()
+    async function sortShuffle()
     {
         let boards = SaveLoadManager.getData().boards;
         SaveLoadManager.getData().boards = shuffle(boards);
 
         SaveLoadManager.getData().sortBoardsFunctionName = "dontSort";
 
+        await SaveLoadManager.saveToDiskImmediately();
         refreshWelcomeScreen();
     }
 

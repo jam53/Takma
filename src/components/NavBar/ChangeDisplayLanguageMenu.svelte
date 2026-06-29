@@ -31,6 +31,7 @@
         else
         {
             await SaveLoadManager.getData().setDisplayLanguage(language);
+            await SaveLoadManager.saveToDiskImmediately();
         }
     }
 

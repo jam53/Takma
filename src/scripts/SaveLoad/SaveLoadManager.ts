@@ -72,8 +72,7 @@ export class SaveLoadManager
             }
         }
 
-        await this.saveToDisk(); //Normally we would just save the exact same json that's already saved to the disk. The only exception to this is when there are new default values (i.e. a there was an update, that added additional data/variables to the save file)
-        //, then we will actually write new stuff to the save file
+        await this.saveToDiskImmediately(); // Normally we would just save the exact same JSON file that's already saved to the disk. The only exception to this is when there are new default values (i.e. a there was an update, that added additional data/variables to the save file), then we will actually write new stuff to the save file.
     }
 
     /**
@@ -86,8 +85,25 @@ export class SaveLoadManager
      * as another save call comes in. Thus causing a truncated/corrupt save file which would especially cause problem when
      * the save file is in a cloud synced folder such as OneDrive. Since the sync engine would in those circumstances
      * sometimes lock the file, leaving Takma unable to save the save file from that point on.
+     *
+     * ---
+     *
+     * Note: Because this function is debounced, it returns void and cannot be awaited. The file is NOT guaranteed to be
+     * saved to disk immediately when this returns. If you need to ensure the save is completed before running another
+     * action (e.g. before a reload), use {@link saveToDiskImmediately()} instead.
      */
-    public static saveToDisk = debounce(async () => {
+    public static saveToDisk: () => void = debounce(async () => {
+        await SaveLoadManager.saveToDiskImmediately();
+    });
+
+    /**
+     * Immediately persists the save file to disk, bypassing the debounce in {@link saveToDisk()}.
+     *
+     * Use this instead of {@link saveToDisk()} when the save needs to be completed before a subsequent
+     * operation, e.g. before a {@link location.reload()} call.
+     */
+    public static async saveToDiskImmediately(): Promise<void>
+    {
         debug("Saving save file to disk");
         try {
             await writeTextFile(await join(this.getSaveDirectoryPath(), this.saveFilename), JSON.stringify(this.data, null, 0));
@@ -96,7 +112,7 @@ export class SaveLoadManager
             toast.error(I18n.t("couldntSaveSaveFile", e as string));
             throw e;
         }
-    });
+    }
 
     /**
      * This method returns an instance of our data class.

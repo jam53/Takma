@@ -144,7 +144,7 @@ export class TakmaData
     {
         await debug("Set display language to: " + value);
         this._displayLanguage = value;
-        await SaveLoadManager.saveToDisk();
+        SaveLoadManager.saveToDisk();
     }
 
     /**
@@ -270,7 +270,7 @@ export class TakmaData
         }
 
         this.incrementTotalBoardsCreated();
-        await SaveLoadManager.saveToDisk();
+        SaveLoadManager.saveToDisk();
 
         await debug("Created new board: " + board.id);
         return boardId;
@@ -295,7 +295,7 @@ export class TakmaData
     {
         debug("Delete board:" + id);
         this._boards = this.boards.filter(board => board.id != id);
-        await SaveLoadManager.saveToDisk();
+        SaveLoadManager.saveToDisk();
 
         await remove(await join(SaveLoadManager.getSaveDirectoryPath(), SaveLoadManager.getBoardFilesDirectory(), id), {recursive: true});
     }
@@ -713,7 +713,7 @@ export class TakmaData
         this._windowState.x = x;
         this._windowState.y = y;
 
-        // SaveLoadManager.saveToDisk(); //We aren't saving on purpose, otherwise it becomes really laggy when resizing/dragging the window. These changes will be saved to disk, the next time another function changes some state and calls `SaveLoadManager.saveToDisk()`
+        SaveLoadManager.saveToDisk();
     }
 
     /**
@@ -725,7 +725,7 @@ export class TakmaData
         this._windowState.height = height;
         this._windowState.fullscreen = fullscreen;
 
-        // SaveLoadManager.saveToDisk(); //We aren't saving on purpose, otherwise it becomes really laggy when resizing/dragging the window. These changes will be saved to disk, the next time another function changes some state and calls `SaveLoadManager.saveToDisk()`
+        SaveLoadManager.saveToDisk();
     }
 
     /**
@@ -788,7 +788,7 @@ export class TakmaData
      */
     public async updateConfirmationPreference(key: keyof ShowConfirmationPreferences, value: boolean): Promise<void> {
         this._showConfirmationPreferences[key] = value;
-        await SaveLoadManager.saveToDisk();
+        SaveLoadManager.saveToDisk();
     }
 
     /**
