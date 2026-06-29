@@ -17,7 +17,10 @@
     import {join} from "@tauri-apps/api/path";
     import {toast} from "svelte-sonner";
     import {mount} from "svelte";
-    import {error, info, warn} from "@tauri-apps/plugin-log";
+    import {debug, error, info, warn} from "@tauri-apps/plugin-log";
+    import {getVersion} from "@tauri-apps/api/app";
+    import {build} from "../package.json";
+    import {platform} from "@tauri-apps/plugin-os";
 
     const appWindow = getCurrentWebviewWindow();
 
@@ -254,6 +257,23 @@
             return true;
         }
     }
+
+    async function versionCheck() {
+        try {
+            const currentVersion = `${await getVersion()} (${build})`;
+
+            const response = await fetch(`https://cdn.jam54.com/Artifacts/applicationsVersions.properties?TakmaVersionCheck&v=${currentVersion}&os=${platform()}`, { cache: "no-store" });
+            const latestVersion = ((await response.text()).match(/^appVersion10\s*=\s*(.+)$/m))![1].trim();
+
+            await debug(`Installed Takma version: ${currentVersion} - latest available version: ${latestVersion}`);
+        } catch (ex) {
+            await warn(`Failed to perform version check: ${ex}`);
+        }
+
+        // Schedule next version check for 24 hours from now
+        setTimeout(versionCheck, 24 * 60 * 60 * 1000);
+    }
+    !import.meta.env.DEV && versionCheck();
 </script>
 
 <main class="wrapper wrapperNotMaximized" id="main">
