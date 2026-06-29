@@ -69,5 +69,9 @@
         "tslib": "^2.8.1",
         "typescript": "^6.0.3",
         "vite": "^8.1.0"
+    },
+    "allowScripts": {
+        "esbuild@0.28.1": true,
+        "svelte-preprocess@6.0.5": true
     }
 }
