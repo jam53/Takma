@@ -188,6 +188,17 @@ export async function duplicateCard(card: Card, boardId: string, filePathsAbsolu
         card.description = card.description.replaceAll(imgSrc, duplicatedImagesInCardDescription[i].replace(/\\/g, '/')); //Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths.
     })
 
+    card.checklists = card.checklists.map(checklist => {
+        checklist.id = crypto.randomUUID();
+
+        checklist.todos = checklist.todos.map(todo => {
+            todo.id = crypto.randomUUID();
+            return todo;
+        });
+
+        return checklist;
+    });
+
     return card;
 }
 
