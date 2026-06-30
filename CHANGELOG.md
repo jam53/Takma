@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-06-30
+### Added
+- (due-dates-overview-popup): Migrate calendar view from schedule-x to event-calendar and add all-day due date support. ([8d247ec9](https://github.com/jam53/Takma/commit/8d247ec95a1a54a00bd5209f4d20b30982cc4960))
+
+### Changed
+- Allow install scripts for esbuild and svelte-preprocess. ([c73d28f3](https://github.com/jam53/Takma/commit/c73d28f38ebd386ab11e363f2dc3b5686cffbc38))
+- Update dependencies. ([edd6ce1a](https://github.com/jam53/Takma/commit/edd6ce1aae587a0313fc7169f4f6c65040b2d2b5))
+- (setting-up-the-project): Provide more generic install instructions by referring to the official Tauri docs. ([c4e26a55](https://github.com/jam53/Takma/commit/c4e26a55b0544c2b97c8873f35a5414849098e27))
+- Remove unused Rust dependencies. ([496bc39f](https://github.com/jam53/Takma/commit/496bc39f83fadc535b1e5eb664bc7dc41501923b))
+
+### Fixed
+- (tiptap): Resolve state_unsafe_mutation error when clicking TakmaLink. ([7ed28b5d](https://github.com/jam53/Takma/commit/7ed28b5d75958f3376e9c67043640c10dc392939))
+- (choose-save-location-screen): Make UI text more generic instead of referring to a specific windows folder. ([f833da50](https://github.com/jam53/Takma/commit/f833da50f70cf99897cd4ebddd363f2d0afed31f))
+- (tiptap): Prevent autolinking of common file extensions. ([5f295d2e](https://github.com/jam53/Takma/commit/5f295d2e673030244a4d4b4701d3584ab8ba8583))
+- (tiptap): Render markdown images with spaces and handle parentheses in filenames. ([a260bb65](https://github.com/jam53/Takma/commit/a260bb65cb7c4e79dffb07b4b214fa935cd4fa85))
+- (card-details-read-only): Fix failing to render card description if it contained an image. ([46ec726e](https://github.com/jam53/Takma/commit/46ec726edb55b79e490627696b9dbf3d5b59591b))
+- Fix bug where changing display language or sort order for boards wouldn't persist. ([e5b321ff](https://github.com/jam53/Takma/commit/e5b321ff749f88f01153fd1e1c372f1b03e0ea57))
+- Generate new IDs for checklists and todo items when duplicating cards. ([5d970d42](https://github.com/jam53/Takma/commit/5d970d42469ec1acd77f02de60284a00a463690c))
+- (tauri): Allow filesystem plugin to access hidden directories on Linux. ([5d184364](https://github.com/jam53/Takma/commit/5d1843649c3c8de88914aa783ceab269b263a064))
+- Fix regression where removing supposedly unused Rust dependencies caused the build to fail. ([459a6959](https://github.com/jam53/Takma/commit/459a695941ec8ebd30ede5c19a62d9cbf62d987c))
+- Debounce persisting of save file to disk. ([4aa205eb](https://github.com/jam53/Takma/commit/4aa205ebdc4c8c88bfb12d534a298c20a5d2c7c1))
+- Log saving of lists/boards only when the debounced save executes instead of on every change. ([f7e8c942](https://github.com/jam53/Takma/commit/f7e8c9426a309be40c24548f1c07c28a701bfaca))
+- Fix Takma window not being transparent on macOS. ([e881edca](https://github.com/jam53/Takma/commit/e881edca01ec3b32bb3673603e0d0f86420c8c20))
+- Use native macOS traffic lights and window controls on macOS instead of the custom Windows style title bar. ([46ab2fb2](https://github.com/jam53/Takma/commit/46ab2fb2bad1757ab52a1849a2a77a2f942223d6))
+- Fix excessive logging by TAO on macOS. ([6add56b4](https://github.com/jam53/Takma/commit/6add56b436626ce28783fa8f4a669543bf1e6318))
+- Fix app instantly crashing on startup on macOS due to deep link registration. ([896eaef9](https://github.com/jam53/Takma/commit/896eaef9a0e1695bc2611a647c64a386b5fde219))
+- (tiptap): Fix Takma links in card descriptions appearing as normal links on load and disappearing when saving. ([7048eff3](https://github.com/jam53/Takma/commit/7048eff3054a7b5a14fb7b84f1deae07aac90ff0))
+- (thumbnail-generator): Ensure output directory exists before saving thumbnails. ([bde4b67b](https://github.com/jam53/Takma/commit/bde4b67bbcc990a6f37d39c6d5f13d68d5f81e2b))
+
 ## [1.8.0] - 2025-12-03
 ### Added
 - Add search box to search for cards across boards. ([4bdaf7e8](https://github.com/jam53/Takma/commit/4bdaf7e82f2b5e66c7db52a0fcea47c31f7e7c38))
@@ -679,6 +708,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit. ([b28d9a78](https://github.com/jam53/Takma/commit/b28d9a783ffcb7ff30e67e8a11677c66f28667e4))
 
 <!-- Link Definitions -->
+[1.8.1]: https://github.com/jam53/Takma/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/jam53/Takma/compare/v1.7.6...v1.8.0
 [1.7.6]: https://github.com/jam53/Takma/compare/v1.7.5...v1.7.6
 [1.7.5]: https://github.com/jam53/Takma/compare/v1.7.4...v1.7.5
