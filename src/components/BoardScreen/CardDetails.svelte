@@ -284,7 +284,7 @@
                 }
                 else
                 {
-                    let path = (await saveFileToSaveDirectory(file, selectedBoardId.value)).replace(/\\/g, '/'); //Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths.
+                    let path = sanitizeMarkdownImageFilePath(await saveFileToSaveDirectory(file, selectedBoardId.value));
                     onSuccess(path);
                 }
             },
@@ -435,6 +435,21 @@
             reloadLists
         }, target: document.body, intro: true})
     }
+
+    /**
+     * Converts any Windows backslashes in a file path to forward slashes.
+     * 
+     * This is necessary because:
+     * 1. The image is rendered inside a Tauri webview (browser environment), which requires valid URIs 
+     *    with forward slashes for local assets.
+     * 2. Standard Markdown format expects forward slashes for image URLs. Backslashes can be 
+     *    interpreted as escape characters by the Markdown parser, leading to broken image links.
+     * 
+     * @param filePath The raw file path.
+     */
+    function sanitizeMarkdownImageFilePath(filePath: string): string {
+        return filePath.replace(/\\/g, "/");
+    }
 </script>
 
 {#if card !== null}
@@ -496,6 +511,7 @@
                                 <TipTap
                                         bind:cardDescription={card.description}
                                         switchToPlainTextEditor={() => showPlainTextEditor = true}
+                                        {sanitizeMarkdownImageFilePath}
                                 />
                             </div>
                         {/key}

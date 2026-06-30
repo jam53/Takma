@@ -753,6 +753,28 @@ export class TakmaData
     }
 
     /**
+     * Matches Markdown image links and extracts both the source path and the optional hover title.
+     * E.g. Matches: `![alt text](path/to/image.png "Optional Title")`
+     * - Extracts the image URL or file path into the `imgSrc` group.
+     * - Extracts the optional hover-text title (including quotes) if present at the end of the tag into the `optionalpart` group.
+     * - Handles optional `< >` wrappers (e.g. `![alt](<image path.png>)`), matching only the path within `< >`.
+     * - Supports unencoded spaces in the file path.
+     * - Supports one level of nested parentheses in the file path (e.g. `image (1).png`).
+     *
+     * ---
+     *
+     * Note:
+     * This regex uses the global flag (/g), making it stateful via its internal 'lastIndex' property.
+     * Do NOT refactor this into a plain class field property (e.g. `public regex = /.../g;`).
+     * If stored as a field property, the same instance is shared across calls, and `lastIndex` will
+     * not reset to 0, causing subsequent lookups to fail or skip matches. Returning a new instance
+     * via a function or a getter ensures a fresh, safe execution every time.
+     */
+    public get markdownImageLinkRegex() {
+        return /!\[[^\]]*\]\((?:<)?(?<imgSrc>(?:[^()]|\([^()]*\))+?)(?:>)?(?:\s+(?<optionalpart>\".*?\"))?\)/g;
+    }
+
+    /**
      * Extracts all local image file paths referenced in the description of a given card.
      * The function searches for Markdown image links (e.g., ![alt text](path/to/image)) within the card's description
      * and returns an array of distinct paths to the images.
@@ -762,13 +784,10 @@ export class TakmaData
      */
     public async getAllLocalMarkdownImagesInCardDescription(card: Card): Promise<string[]>
     {
-        const markdownImageLinkRegex = /!\[[^\]]*\]\((?<imgSrc>.*?)(?=\"|\))(?<optionalpart>\".*\")?\)/g; //https://stackoverflow.com/questions/44227270/regex-to-parse-image-link-in-markdown
-        //This regex only matches image links with forward slashes, so we have to make sure that all image links in a card's description use forward slashes.
-
         const tempDirPath = (await SaveLoadManager.getTempDirectoryPath()).replace(/\\/g, '/'); //Since the path will be compared to Markdown image links, which are formatted using forward slashes. Ensure the file path uses forward slashes, converting any backslashes from Windows file paths.
 
         return [... new Set( //This ensures that if multiple ![]() markdown images refer to the same URL/file, each URL appears only once in the array
-            [...card.description.matchAll(markdownImageLinkRegex)]
+            [...card.description.matchAll(this.markdownImageLinkRegex)]
                 .map(match => match.groups?.imgSrc).filter(imgSrc => imgSrc !== undefined)
         )].filter(imgSrc => imgSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()) || imgSrc.startsWith(tempDirPath)); //We only want to retain images that are stored in locations managed by Takma. I.e. Takma's save directory or Takma's temporary folder, not paths to image files somewhere else on disk nor http/https urls to images
     }

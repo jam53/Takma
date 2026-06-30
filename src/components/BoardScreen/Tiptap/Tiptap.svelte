@@ -34,17 +34,20 @@
     import {Markdown} from "@tiptap/markdown";
     import Details, {DetailsContent, DetailsSummary} from "@tiptap/extension-details";
     import {getImageUrl} from "../../../scripts/ImageUrl";
+    import {SaveLoadManager} from "../../../scripts/SaveLoad/SaveLoadManager";
 
     interface Props {
         cardDescription: string;
         switchToPlainTextEditor: () => void;
         editable?: boolean;
+        sanitizeMarkdownImageFilePath: (filePath: string) => string;
     }
 
     let {
         cardDescription = $bindable(),
         switchToPlainTextEditor,
         editable = true,
+        sanitizeMarkdownImageFilePath,
     }: Props = $props();
 
     let editorElement: HTMLDivElement;
@@ -242,7 +245,7 @@
                             currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
                                 type: 'image',
                                 attrs: {
-                                    src: (await saveFileToSaveDirectory(file, selectedBoardId.value)).replace(/\\/g, '/') // Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths
+                                    src: sanitizeMarkdownImageFilePath(await saveFileToSaveDirectory(file, selectedBoardId.value))
                                 },
                             }).focus().run()
                         })
@@ -271,6 +274,7 @@
             onUpdate: ({editor}) => {
                 let markdown = editor.getMarkdown();
                 markdown = fixGroupedColorSpans(markdown, editor);
+                markdown = denormalizeSpacesInImagePaths(markdown);
                 cardDescription = tiptapDetailsSummaryToMarkdownSyntax(markdown);
             },
             onCreate: ({editor}) => {
@@ -437,7 +441,7 @@
 
         if (selected !== null && typeof(selected) === "string")
         {
-            let imgUrl = (await saveAbsoluteFilePathToSaveDirectory(selected, selectedBoardId.value)).replace(/\\/g, '/') // Ensure the file path uses forward slashes for Markdown image links, converting any backslashes from Windows file paths
+            let imgUrl = sanitizeMarkdownImageFilePath(await saveAbsoluteFilePathToSaveDirectory(selected, selectedBoardId.value))
             runCommandAndRemoveSlash(chain => chain.setImage({src: imgUrl}));
         }
     }
@@ -453,6 +457,7 @@
         markdownContent = ensureBlockWrapperForImages(markdownContent);
         markdownContent = markdownDetailsSummaryToTiptapSyntax(markdownContent);
         markdownContent = convertDoubleUnderscoreUnderlineToPlusSyntax(markdownContent);
+        markdownContent = normalizeSpacesInImagePaths(markdownContent);
 
         return markdownContent;
     }
@@ -846,7 +851,7 @@ ${contentText}
                                 ];
                                 node.marks = newMarks;
                                 
-                                console.log(`Applied color ${span.color} to text node: "${node.text}"`);
+                                // Applied color `span.color` to text node: `node.text`
                                 
                                 usedSpans.add(i);
                                 break; // Only apply one color per node
@@ -863,7 +868,7 @@ ${contentText}
                                 ];
                                 node.marks = newMarks;
                                 
-                                console.log(`Applied color ${span.color} to partial text node: "${node.text}" (matched "${span.text}")`);
+                                // Applied color `span.color` to partial text node: `node.text` (matched `span.text`);
                                 
                                 usedSpans.add(i);
                                 break;
@@ -892,13 +897,40 @@ ${contentText}
         // Apply colors to all nodes
         applyColorsToNode(json, 0, usedSpans);
 
-        // Debug: log to verify marks are being added
-        console.log('Color spans found:', colorSpans);
-        console.log('Modified JSON sample (first text node with marks):', 
-            JSON.stringify(json.content?.[0]?.content?.find((n: any) => n.type === 'text' && n.marks), null, 2));
-
         // Update the editor with the modified JSON
         editor.commands.setContent(json);
+    }
+
+    /**
+     * Replaces spaces in Markdown image paths with `%20` (URL encoding).
+     *
+     * This ensures Tiptap correctly parses images with spaces in their file paths. 
+     * By default, Tiptap follows the CommonMark spec (https://spec.commonmark.org/0.18/#link-destination), 
+     * which doesn't allow unencoded spaces in image paths unless wrapped in `< >`. 
+     * If spaces aren't encoded as `%20` but left as is, Tiptap parses the `![]()` syntax as a regular text node rather
+     * than an image.
+     */
+    function normalizeSpacesInImagePaths(markdownContent: string): string {
+        return markdownContent.replaceAll(SaveLoadManager.getData().markdownImageLinkRegex, (match, imgSrc) => {
+            return match.replace(imgSrc, imgSrc.replace(/\s/g, "%20"));
+        });
+    }
+
+    /**
+     * Reverts URL-encoded spaces (`%20`) back to regular spaces in Markdown image file paths.
+     * 
+     * This undoes the encoding applied by {@link normalizeSpacesInImagePaths}. We only decode local file paths
+     * and leave `http`/`https` URLs untouched, as they may legitimately require `%20`.
+     */
+    function denormalizeSpacesInImagePaths(markdownContent: string): string {
+        return markdownContent.replaceAll(SaveLoadManager.getData().markdownImageLinkRegex, (match, imgSrc) => {
+            if (!imgSrc.match(/^(http|https)/)) {
+                return match.replace(imgSrc, imgSrc.replaceAll("%20", " "));
+            }
+            else {
+                return match;
+            }
+        });
     }
 </script>
 
