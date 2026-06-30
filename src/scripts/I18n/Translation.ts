@@ -73,8 +73,8 @@ export default interface Translation
     changeDisplayLanguage: string;
     filterCards: string;
     default: string;
-    localAppData: string;
-    storeDataLocalAppData: string;
+    appDataFolder: string;
+    storeDataAppFolder: string;
     recommendedChoice: string;
     customSaveLocation: string;
     storeDataCustomSaveLocation: string;

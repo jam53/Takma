@@ -34,6 +34,11 @@
         location.reload(); // This refreshes our app/website. If we don't do this we would remain on the ChooseSaveLocationScreen.svelte because Svelte wouldn't see that `{#if localstorage.getItem("saveLocation") === null}` had been changed in App.svelte.
     }
 
+    async function getDefaultSaveLocationPath()
+    {
+        return await join(await appLocalDataDir(), SaveLoadManager.getSaveDirectoryName());
+    }
+
     async function handleDirectorySelection()
     {
         const selectedDirectory = await openDialog({
@@ -57,11 +62,13 @@
         </span>
         <div class="option" onclick={async () => await setSaveLocation(await appLocalDataDir())}>
             <h1>
-                {I18n.t("localAppData")}
+                {I18n.t("appDataFolder")}
             </h1>
-            <p>
-                {I18n.t("storeDataLocalAppData")}
-            </p>
+            {#await getDefaultSaveLocationPath() then path}
+                <p class="inline-code-container">
+                    {@html I18n.t("storeDataAppFolder", path)}
+                </p>
+            {/await}
             <p>
                 {I18n.t("recommendedChoice")}
             </p>

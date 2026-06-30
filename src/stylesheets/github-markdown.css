@@ -198,6 +198,7 @@ html[data-theme="light"] {
 }
 
 .markdown-body code,
+.inline-code-container code,
 .markdown-body kbd,
 .markdown-body pre,
 .markdown-body samp {
@@ -429,6 +430,7 @@ html[data-theme="light"] {
 
 .markdown-body tt,
 .markdown-body code,
+.inline-code-container code,
 .markdown-body samp {
   font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
   font-size: 12px;
@@ -773,6 +775,7 @@ html[data-theme="light"] {
 }
 
 .markdown-body code,
+.inline-code-container code,
 .markdown-body tt {
   padding: .2em .4em;
   margin: 0;
@@ -783,6 +786,7 @@ html[data-theme="light"] {
 }
 
 .markdown-body code br,
+.inline-code-container code br,
 .markdown-body tt br {
   display: none;
 }
