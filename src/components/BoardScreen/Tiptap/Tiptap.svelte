@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onDestroy, onMount} from 'svelte';
+    import {onDestroy, onMount, tick} from 'svelte';
     import {Editor, markInputRule} from '@tiptap/core';
     import StarterKit from '@tiptap/starter-kit';
     import {BubbleMenu} from "@tiptap/extension-bubble-menu";
@@ -59,6 +59,7 @@
     let isLinkActive = $state(false);
     let isSelectionEmpty = $state(false);
     let isHeading = $state(false);
+    let isDestroyed = false;
 
     onMount(() => {
         if (!bubbleMenuElement || !floatingMenuElement)
@@ -277,10 +278,20 @@
                 }),
             ],
             onTransaction: () => {
-                isTableActive = editor?.isActive('table') ?? false;
-                isLinkActive = editor?.isActive('link') ?? false;
-                isSelectionEmpty = editor?.state.selection.empty ?? false;
-                isHeading = editor?.isActive('heading') ?? false;
+                // Defer state updates to after Svelte finishes its current reactive batch.
+                // When clicking a TakmaLink, the selectedCardId $state change triggers a synchronous
+                // re-render, during which the editor loses focus. The blur fires a ProseMirror
+                // transaction, and Svelte 5 forbids $state mutations mid-render (`state_unsafe_mutation`).
+                // tick() waits until the current render pass completes before updating.
+                tick().then(() => {
+                    if (isDestroyed) {
+                        return;
+                    }
+                    isTableActive = editor?.isActive('table') ?? false;
+                    isLinkActive = editor?.isActive('link') ?? false;
+                    isSelectionEmpty = editor?.state.selection.empty ?? false;
+                    isHeading = editor?.isActive('heading') ?? false;
+                });
             },
             onUpdate: ({editor}) => {
                 let markdown = editor.getMarkdown();
@@ -325,6 +336,7 @@
     }
 
     onDestroy(() => {
+        isDestroyed = true;
         if (editor)
         {
             editor.destroy();
