@@ -22,12 +22,12 @@
     import {I18n} from "../../scripts/I18n/I18n";
     import PopupWindow from "../PopupWindow.svelte";
     import {listen} from "@tauri-apps/api/event";
-    import {convertFileSrc} from "@tauri-apps/api/core";
     import {debug, info} from "@tauri-apps/plugin-log";
     import TipTap from "./Tiptap/Tiptap.svelte";
     import {debounce} from "../../scripts/Debounce";
     import TextEditorActionButtons from "./Tiptap/TextEditorActionButtons.svelte";
     import DueDateChip from "./DueDateChip.svelte";
+    import {getImageUrl} from "../../scripts/ImageUrl";
 
     interface Props {
         refreshList: (listToRefresh: List) => void;
@@ -96,34 +96,6 @@
     });
 
     let overlayElement: HTMLElement | null = $state(null);
-
-    /**
-     * Returns an URL for an image.
-     *
-     * If the `imageSrc` is already an HTTP or HTTPS URL, it's returned directly.
-     * If `imageSrc` is a path to a local file, a URL is generated for it using the `convertFileSrc` function.
-     *
-     * @param imageSrc - The URL or file path of the image.
-     * @returns The URL of the image.
-     */
-    function getImageUrl(imageSrc: string): string
-    {
-        // If the image is a http or https url
-        if (imageSrc.match(/^(http|https)/))
-        {
-            return imageSrc;
-        }
-        // If the image is saved in Takma's data folder
-        else if (imageSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()))
-        {
-            return convertFileSrc(SaveLoadManager.getSaveDirectoryPath() + imageSrc);
-        }
-        // If the image is stored somewhere locally on disk
-        else
-        {
-            return convertFileSrc(imageSrc);
-        }
-    }
     //endregion
 
     $effect(() => overlayElement && applyMaximizedNotMaximizedStyleClasses());
@@ -523,7 +495,6 @@
                             <div class="markdown-body">
                                 <TipTap
                                         bind:cardDescription={card.description}
-                                        {getImageUrl}
                                         switchToPlainTextEditor={() => showPlainTextEditor = true}
                                 />
                             </div>

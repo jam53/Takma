@@ -33,17 +33,16 @@
     import TextEditorActionButtons from "./TextEditorActionButtons.svelte";
     import {Markdown} from "@tiptap/markdown";
     import Details, {DetailsContent, DetailsSummary} from "@tiptap/extension-details";
+    import {getImageUrl} from "../../../scripts/ImageUrl";
 
     interface Props {
         cardDescription: string;
-        getImageUrl: (imageSrc: string) => string;
         switchToPlainTextEditor: () => void;
         editable?: boolean;
     }
 
     let {
         cardDescription = $bindable(),
-        getImageUrl,
         switchToPlainTextEditor,
         editable = true,
     }: Props = $props();
