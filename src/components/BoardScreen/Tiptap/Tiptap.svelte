@@ -169,6 +169,17 @@
                 Link.configure({
                     openOnClick: true, // Opens link when clicking in editor
                     autolink: true, // If enabled, adds links as you type
+                    shouldAutoLink: (url) => {
+                        // List of extensions which shouldn't be auto linked.
+                        // We do not want these extensions to be auto linked, despite them being valid TLDs, as they
+                        // correspond to well known file types. This prevents confusion when typing a filename and
+                        // having it suddenly turn into a hyperlink.
+                        const ignoredTLDs = [".md", ".zip", ".sh", ".py", ".rs", ".app", ".mov", ".pub"]
+
+                        // Only block the auto link if the text was typed as a plain filename (without a http/https prefix)
+                        // and ends with one of our ignored file extensions.
+                        return !ignoredTLDs.some(ext => !url.toLowerCase().startsWith("http") && url.toLowerCase().endsWith(ext));
+                    },
                     linkOnPaste: true, // Adds a link to the current selection if the pasted content only contains an url
                 }).extend({
                     addKeyboardShortcuts() {
