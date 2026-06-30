@@ -3,6 +3,7 @@ import {I18n} from "../I18n/I18n";
 import "../StringExtensions.ts";
 import PopupWindow from "../../components/PopupWindow.svelte";
 import {mount} from "svelte";
+import {debounce} from "../Debounce";
 
 /**
  * This class is used to save/load data within Takma

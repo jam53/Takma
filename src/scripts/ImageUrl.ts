@@ -1,5 +1,4 @@
-import {convertFileSrc} from "@tauri-apps/api/core";
-import {SaveLoadManager} from "./SaveLoad/SaveLoadManager";
+import {getThumbnail} from "./ThumbnailGenerator";
 
 /**
  * Returns an URL for an image.
@@ -17,14 +16,8 @@ export function getImageUrl(imageSrc: string): string
     {
         return imageSrc;
     }
-    // If the image is saved in Takma's data folder
-    else if (imageSrc.startsWith(SaveLoadManager.getBoardFilesDirectory()))
-    {
-        return convertFileSrc(SaveLoadManager.getSaveDirectoryPath() + imageSrc);
-    }
-    // If the image is stored somewhere locally on disk
     else
     {
-        return convertFileSrc(imageSrc);
+        return getThumbnail(imageSrc);
     }
 }
