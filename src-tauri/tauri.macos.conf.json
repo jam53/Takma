@@ -8,5 +8,10 @@
             }
         ],
         "macOSPrivateApi": true
+    },
+    "bundle": {
+        "macOS": {
+            "signingIdentity": "-"
+        }
     }
 }
