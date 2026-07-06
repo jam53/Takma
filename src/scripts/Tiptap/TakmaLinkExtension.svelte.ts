@@ -80,6 +80,7 @@ export const TakmaLinkExtensionSvelte = Node.create<TakmaLinkOptions>({
                     }
                     return {
                         "data-takma-link": attributes.takmaLink,
+                        style: "display: inline-block;",
                     };
                 },
             },
