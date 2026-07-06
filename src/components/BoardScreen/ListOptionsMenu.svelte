@@ -77,7 +77,7 @@
 
         // Fetch the full Label objects corresponding to these IDs from the current (source) board.
         // These original label definitions are stored alongside the copied list data.
-        copiedList.referencedLabels = uniqueLabelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId));
+        copiedList.referencedLabels = uniqueLabelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)).filter(label => !!label);
 
         optionsMenu.closeContextMenu();
     }

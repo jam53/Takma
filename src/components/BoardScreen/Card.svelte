@@ -142,7 +142,7 @@
     {/if}
     <div class="nonCoverImageContainer">
         <div class="labels">
-            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
+            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)).filter(label => !!label) as label}
                 {#key invalidateLabels.value}
                     <span style="color: {label.titleColor}; background-color: {label.color}"
                           class="{showLabelsText ? 'labelsWithText' : 'labelsWithoutText'}"

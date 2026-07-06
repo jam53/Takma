@@ -63,7 +63,7 @@
 
         // Fetch the full Label objects corresponding to this card's label IDs from the current (source) board.
         // These original label definitions are stored alongside the copied card data.
-        copiedCard.referencedLabels = $state.snapshot(card).labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId));
+        copiedCard.referencedLabels = $state.snapshot(card).labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)).filter(label => !!label);
 
         optionsMenu.closeContextMenu();
     }

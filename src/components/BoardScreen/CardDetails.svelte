@@ -484,7 +484,7 @@
                 <div class="cardMainAreaHolder">
                     <div class="labels">
                         {#key invalidateLabels.value}
-                            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)) as label}
+                            {#each card.labelIds.map(labelId => SaveLoadManager.getData().getLabel(selectedBoardId.value, labelId)).filter(label => !!label) as label}
                                 <div style="background-color: {label.color}"
                                      onclick={mountLabelsPopup}
                                 >

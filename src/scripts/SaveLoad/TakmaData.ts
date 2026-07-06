@@ -575,12 +575,12 @@ export class TakmaData
     /**
      * Given a labelId, returns the label with that labelId
      */
-    public getLabel(boardId: string, labelId: string): Label
+    public getLabel(boardId: string, labelId: string): Label | undefined
     {
         debug(`Getting label:${labelId} in board:${boardId}`);
-        let board: Board = this._boards.find(board => board.id === boardId);
+        let board = this._boards.find(board => board.id === boardId);
 
-        return board.labels.find(label => label.id === labelId);
+        return board?.labels.find(label => label.id === labelId);
     }
 
     /**
