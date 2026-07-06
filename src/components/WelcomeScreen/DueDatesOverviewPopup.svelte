@@ -81,9 +81,8 @@
 
     interface CardWithDueDate
     {
-        boardTitle: string,
-        listTitle: string,
         cardTitle: string,
+        boardOrListTitle: string,
         dueDate: number,
         dueDateIsAllDayEvent: boolean,
         boardId: string,
@@ -100,9 +99,8 @@
             board.lists.forEach(list =>
                 list.cards.filter(card => card.dueDate !== null).forEach(card =>
                     allDueDates.push({
-                        boardTitle: board.title,
-                        listTitle: list.title,
                         cardTitle: card.title,
+                        boardOrListTitle: selectedBoardId.value === "" ? board.title : list.title,
                         dueDate: parseInt(card.dueDate!),
                         dueDateIsAllDayEvent: card.dueDateIsAllDayEvent,
                         boardId: board.id,
@@ -209,28 +207,30 @@
             //    at/after 23:00, which we shift back by 1 hour on the grid (see events mapping below) so they
             //    don't bleed past midnight into the next day.
             eventContent: (info: any) => {
-                const bodyDiv = document.createElement('div');
-                bodyDiv.className = 'ec-event-body';
+                const titleElement = document.createElement("h4");
+                titleElement.className = "ec-event-title";
 
                 if (!info.event.allDay) {
-                    const timeElement = document.createElement('time');
-                    timeElement.className = 'ec-event-time';
-
                     const realDate = new Date(info.event.extendedProps.dueDate);
-                    timeElement.textContent = realDate.toLocaleTimeString(
+                    const timeString = realDate.toLocaleTimeString(
                         SaveLoadManager.getData().displayLanguage,
-                        { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }
+                        { hour: "2-digit", minute: "2-digit", hourCycle: "h23" }
                     );
-
-                    bodyDiv.appendChild(timeElement);
+                    titleElement.title = `${timeString} - ${info.event.title}`;
+                }
+                else {
+                    titleElement.title = info.event.title;
                 }
 
-                const titleElement = document.createElement('h4');
-                titleElement.className = 'ec-event-title';
-                titleElement.textContent = info.event.title;
-                bodyDiv.appendChild(titleElement);
+                const cardTitleSpan = document.createElement("span");
+                cardTitleSpan.textContent = info.event.extendedProps.cardTitle + " | ";
+                titleElement.appendChild(cardTitleSpan);
 
-                return { domNodes: [bodyDiv] };
+                const secondarySpan = document.createElement("b");
+                secondarySpan.textContent = info.event.extendedProps.boardOrListTitle;
+                titleElement.appendChild(secondarySpan);
+
+                return { domNodes: [titleElement] };
             },
             events: getAllCardsWithDueDates().map(cardWithDueDate => {
                 let start = new Date(cardWithDueDate.dueDate);
@@ -266,9 +266,7 @@
 
                 return {
                     id: cardWithDueDate.cardId,
-                    title: selectedBoardId.value === ""
-                        ? `${cardWithDueDate.boardTitle} | ${cardWithDueDate.cardTitle}`
-                        : `${cardWithDueDate.listTitle} | ${cardWithDueDate.cardTitle}`,
+                    title: `${cardWithDueDate.cardTitle} | ${cardWithDueDate.boardOrListTitle}`,
                     start,
                     end,
                     allDay: cardWithDueDate.dueDateIsAllDayEvent,
@@ -277,7 +275,9 @@
                     extendedProps: {
                         boardId: cardWithDueDate.boardId,
                         cardId: cardWithDueDate.cardId,
-                        dueDate: cardWithDueDate.dueDate
+                        dueDate: cardWithDueDate.dueDate,
+                        cardTitle: cardWithDueDate.cardTitle,
+                        boardOrListTitle: cardWithDueDate.boardOrListTitle,
                     }
                 };
             })
@@ -334,11 +334,7 @@
                              onclick={() => openCard(dueDateItem.boardId, dueDateItem.cardId)}
                         >
                             <h4>
-                                {#if selectedBoardId.value === ""}
-                                    {@html "<b>" + escapeHtml(dueDateItem.boardTitle) + "</b> | " + escapeHtml(dueDateItem.cardTitle)}
-                                {:else}
-                                    {@html "<b>" + escapeHtml(dueDateItem.listTitle) + "</b> | " + escapeHtml(dueDateItem.cardTitle)}
-                                {/if}
+                                {@html escapeHtml(dueDateItem.cardTitle) + " | <b>" + escapeHtml(dueDateItem.boardOrListTitle) + "</b>"}
                             </h4>
                             <hr>
                             <span>
@@ -521,8 +517,6 @@
     }
 
     .ec-wrapper :global(.ec-event-title) {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        padding-left: 0.25em;
     }
 </style>
