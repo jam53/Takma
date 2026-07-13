@@ -22,6 +22,13 @@ export default defineConfig(async () => ({
   server: {
     port: 1420,
     strictPort: true,
+    watch: {
+      // Prevents Vite from locking/clashing with Cargo while it
+      // compiles Rust dependencies, which throws a fatal
+      // "EBUSY: resource busy or locked" error if the build
+      // directory is watched by the frontend bundler.
+      ignored: ["**/src-tauri/**"],
+    },
   },
   // to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
